@@ -8,7 +8,6 @@ export type Profile = {
   id: string;
   name: string;
   description: string;
-  replication?: ProfileReplication;
 };
 
 export type IndexedProfiles = {
