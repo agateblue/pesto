@@ -5,7 +5,7 @@
   import DiaryForm from '$lib/components/DiaryForm.svelte'
   import DiaryFeedEntry from '$lib/components/DiaryFeedEntry.svelte'
   
-  $: entries = [] 
+  $: entries = []
 
   const db = new PouchDB('pesto');
 
@@ -27,7 +27,7 @@
 </script>
 <h1>Diary</h1>
 
-<DiaryForm on:created={saveEntry} />
+<DiaryForm on:created={saveEntry} cacheKey="new" />
 
 {#each entries as entry}
   <DiaryFeedEntry bind:entry={entry} />
