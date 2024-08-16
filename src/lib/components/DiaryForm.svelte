@@ -19,7 +19,7 @@
   }
 
 </script>
-{JSON.stringify(tree)}
+
 <form on:submit|preventDefault={handleSubmit}>
   <TextEditor bind:tree={tree} bind:cacheKey={cacheKey} />
   <button type="submit">Submit</button>
