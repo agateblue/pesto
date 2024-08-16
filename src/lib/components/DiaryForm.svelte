@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { v7 as uuidv7 } from 'uuid';
   import TextEditor from './TextEditor.svelte';
   import { createEventDispatcher } from 'svelte';
 
@@ -8,6 +9,7 @@
 
   function handleSubmit () {
     const entry: DiaryEntry = {
+      _id: uuidv7(),
       date: new Date(),
       tree: tree,
     }
