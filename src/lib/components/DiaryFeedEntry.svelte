@@ -5,6 +5,6 @@
 </script>
 
 <article>
-  {@html renderHTML(entry.tree.nodes)}
+  {@html renderHTML(entry.tree.nodes || [])}
   {entry.date}
 </article>
