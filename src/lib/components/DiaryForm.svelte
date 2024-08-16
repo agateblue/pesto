@@ -5,6 +5,8 @@
 
   const dispatch = createEventDispatcher<{created: DiaryEntry}>();
 
+  export let cacheKey: null | string = null
+
   $: tree = {version: 0, nodes: []};
 
   function handleSubmit () {
@@ -19,6 +21,6 @@
 </script>
 {JSON.stringify(tree)}
 <form on:submit|preventDefault={handleSubmit}>
-  <TextEditor bind:tree={tree} />
+  <TextEditor bind:tree={tree} bind:cacheKey={cacheKey} />
   <button type="submit">Submit</button>
 </form>

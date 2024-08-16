@@ -1,12 +1,18 @@
-<script>
+<script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { Editor } from '@tiptap/core';
   import { editorExtensions } from '$lib/editor';
+
+  export let cacheKey: null | string = null
   export let tree
 	let element;
 	let editor;
 
 	onMount(() => {
+    if (cacheKey && tree.nodes.length === 0) {
+      // try to load draft from local storage, if any
+      tree.nodes = JSON.parse(localStorage.getItem(`editor-${cacheKey}`) || '[]')
+    }
 		editor = new Editor({
 			element: element,
 			extensions: editorExtensions,
@@ -17,7 +23,10 @@
         let data = editor.getJSON()
         tree = {
           version: 0,
-          nodes: data.content,
+          nodes: data.content || [],
+        }
+        if (cacheKey) {
+          localStorage.setItem(`editor-${cacheKey}`, JSON.stringify(data.content || []))
         }
 			},
 		});
