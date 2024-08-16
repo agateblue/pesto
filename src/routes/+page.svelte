@@ -19,6 +19,7 @@
     let docs = await db.allDocs({
       include_docs: true,
       limit: 1000,
+      descending: true,
     })
     entries = docs.rows.map(d => {
       return d.doc
