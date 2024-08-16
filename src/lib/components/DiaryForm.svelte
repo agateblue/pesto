@@ -3,24 +3,23 @@
   import TextEditor from './TextEditor.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  const dispatch = createEventDispatcher<{created: DiaryEntry}>();
+  const dispatch = createEventDispatcher<{ created: DiaryEntry }>();
 
-  export let cacheKey: null | string = null
+  export let cacheKey: null | string = null;
 
-  $: tree = {version: 0, nodes: []};
+  $: tree = { version: 0, nodes: [] };
 
-  function handleSubmit () {
+  function handleSubmit() {
     const entry: DiaryEntry = {
       _id: uuidv7(),
       date: new Date(),
-      tree: tree,
-    }
+      tree: tree
+    };
     dispatch('created', entry);
   }
-
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-  <TextEditor bind:tree={tree} bind:cacheKey={cacheKey} />
+  <TextEditor bind:tree bind:cacheKey />
   <button type="submit">Submit</button>
 </form>
