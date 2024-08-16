@@ -1,3 +1,6 @@
+<script>
+  export const ssr = false;
+</script>
 <nav>
   <ul>
     <li><a href="/">Write</a></li>
