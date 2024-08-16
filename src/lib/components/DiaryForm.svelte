@@ -1,21 +1,22 @@
 <script lang="ts">
+  import TextEditor from './TextEditor.svelte';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher<{created: DiaryEntry}>();
 
-  $: entryText = 'Hello';
+  $: tree = {version: 0, nodes: []};
 
   function handleSubmit () {
     const entry: DiaryEntry = {
       date: new Date(),
-      text: entryText,
+      tree: tree,
     }
     dispatch('created', entry);
   }
 
 </script>
-
+{JSON.stringify(tree)}
 <form on:submit|preventDefault={handleSubmit}>
-  <textarea name="content" id="content" bind:value={entryText} />
+  <TextEditor bind:tree={tree} />
   <button type="submit">Submit</button>
 </form>
