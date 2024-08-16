@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { renderHTML } from "$lib/editor";
-  export let entry
-
+  import { renderHTML } from '$lib/editor';
+  export let entry;
 </script>
 
 <article>
