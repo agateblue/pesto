@@ -85,6 +85,10 @@ textarea:not([rows]) {
 
 /* endreset */
 
+html {
+  font-family: Georgia, serif;
+  font-size: 20px;
+}
 body {
   background: var(--background-color);
 }
@@ -119,6 +123,9 @@ button {
   accent-color: var(--primary-color);
 }
 
+svg {
+  vertical-align: middle;
+}
 .editor > div {
   width: 25rem;
   min-height: 50vh;
@@ -130,6 +137,9 @@ button, input[type=submit] {
   padding: var(--space-2);
 }
 
+button:hover, input[type=submit]:hover {
+  cursor: pointer;
+}
 .app > nav {
   border-block-end: var(--layout-separator);
 }
