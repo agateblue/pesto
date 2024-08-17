@@ -39,4 +39,4 @@
   });
 </script>
 
-<div bind:this={element} />
+<div class="editor" bind:this={element} role="textbox" />

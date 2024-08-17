@@ -1,0 +1,148 @@
+:root {
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+
+  --primary-color: rgb(199, 240, 240);
+  --text-color: rgba(44, 44, 44, 1);
+  --font-family: Helvetica, sans-serif;
+  --background-color: white;
+  --layout-separator: 1px solid rgb(120, 112, 112);
+}
+
+/* RESET */
+/* from https://piccalil.li/blog/a-more-modern-css-reset/ */
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body, h1, h2, h3, h4, p,
+figure, blockquote, dl, dd {
+  margin-block-end: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1, h2, h3, h4,
+button, input, label {
+  line-height: 1.1;
+}
+
+h1, h2,
+h3, h4 {
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* endreset */
+
+body {
+  background: var(--background-color);
+}
+
+.wrapper {
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+  max-width: clamp(320px, 90%, 60rem);
+}
+
+/* composition */
+
+.flex__row {
+  display: flex;
+  flex-direction: row;
+}
+.flex__grow {
+  flex-grow: 1;
+}
+
+.flex__justify-end {
+  justify-content: flex-end;
+}
+
+/* blocks */
+input,
+button,
+textarea,
+[contenteditable=true],
+select,
+button {
+  accent-color: var(--primary-color);
+}
+
+.editor > div {
+  width: 25rem;
+  min-height: 50vh;
+}
+
+button, input[type=submit] {
+  background: var(--primary-color);
+  border: none;
+  padding: var(--space-2);
+}
+
+.app > nav {
+  border-block-end: var(--layout-separator);
+}
+.app > nav ul {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  column-gap: var(--space-2);
+}
+
+aside {
+  border-inline-end: var(--layout-separator);
+}
+.diary__entry {
+
+}

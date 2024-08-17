@@ -12,7 +12,8 @@
   function handleSubmit() {
     const entry: DiaryEntry = {
       _id: uuidv7(),
-      date: new Date(),
+      type: 'entry',
+      date: (new Date()).toISOString(),
       tree: tree
     };
     dispatch('created', entry);
@@ -21,5 +22,7 @@
 
 <form on:submit|preventDefault={handleSubmit}>
   <TextEditor bind:tree bind:cacheKey />
-  <button type="submit">Submit</button>
+  <div class="flex__row flex__justify-end">
+    <button type="submit">Submit</button>
+  </div>
 </form>
