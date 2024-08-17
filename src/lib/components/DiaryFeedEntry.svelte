@@ -3,7 +3,7 @@
   export let entry;
 </script>
 
-<article>
+<article class="diary__entry">
   {@html renderHTML(entry.tree.nodes || [])}
   {entry.date}
 </article>

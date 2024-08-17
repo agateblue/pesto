@@ -27,10 +27,14 @@
   });
 </script>
 
-<h1>Diary</h1>
-
-<DiaryForm on:created={saveEntry} cacheKey="new" />
-
-{#each entries as entry}
-  <DiaryFeedEntry bind:entry />
-{/each}
+<div class="flex__row">
+  <aside class="wrapper">
+    <DiaryForm on:created={saveEntry} cacheKey="new" />
+  </aside>
+  
+  <section class="diary | wrapper | flex__grow ">
+    {#each entries as entry}
+      <DiaryFeedEntry bind:entry />
+    {/each}
+  </section>
+</div>
