@@ -35,12 +35,9 @@
   "type": "module",
   "dependencies": {
     "@iconify-json/iconamoon": "^1.1.5",
-    "@tiptap/core": "^2.6.4",
-    "@tiptap/extension-task-item": "^2.6.4",
-    "@tiptap/extension-task-list": "^2.6.4",
-    "@tiptap/pm": "^2.6.4",
-    "@tiptap/starter-kit": "^2.6.4",
+    "dompurify": "^3.1.6",
     "events": "^3.3.0",
+    "marked": "^14.1.0",
     "pouchdb": "^9.0.0",
     "unplugin-icons": "^0.19.2",
     "uuid": "^10.0.0"

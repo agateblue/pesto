@@ -96,7 +96,7 @@ body {
 .wrapper {
   margin-inline: auto;
   padding-inline: var(--space-3);
-  max-width: clamp(320px, 90%, 60rem);
+  max-width: clamp(320px, 90%, 60ch);
 }
 
 /* composition */
@@ -126,10 +126,6 @@ button {
 svg {
   vertical-align: middle;
 }
-.editor > div {
-  width: 25rem;
-  min-height: 50vh;
-}
 
 button, input[type=submit] {
   background: var(--primary-color);
@@ -140,6 +136,9 @@ button, input[type=submit] {
 button:hover, input[type=submit]:hover {
   cursor: pointer;
 }
+textarea {
+  width: 100%;
+}
 .app > nav {
   border-block-end: var(--layout-separator);
 }
@@ -148,11 +147,4 @@ button:hover, input[type=submit]:hover {
   flex-direction: row;
   list-style-type: none;
   column-gap: var(--space-2);
-}
-
-aside {
-  border-inline-end: var(--layout-separator);
-}
-.diary__entry {
-
 }
