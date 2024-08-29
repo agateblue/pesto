@@ -1,27 +1,26 @@
 <script lang="ts">
-  import { v7 as uuidv7 } from 'uuid';
-  import TextEditor from './TextEditor.svelte';
+  import {getNewNote, createOrUpdate} from '../db'
+  import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen'
   const dispatch = createEventDispatcher<{ created: DiaryEntry }>();
 
-  export let cacheKey: null | string = null;
-
-  $: tree = { version: 0, nodes: [] };
+  $: fragments = [];
+  $: note = getNewNote();
 
   function handleSubmit() {
-    const entry: DiaryEntry = {
-      _id: uuidv7(),
-      type: 'entry',
-      date: (new Date()).toISOString(),
-      tree: tree
-    };
-    dispatch('created', entry);
+    createOrUpdate(note)
+    fragments.forEach( fragment => {
+      createOrUpdate(fragment)
+    })
   }
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-  <TextEditor bind:tree bind:cacheKey />
+  <FragmentEditor
+    bind:fragments={fragments}
+    bind:note={note}
+  />
   <div class="flex__row flex__justify-end">
     <button type="submit">
       <IconaMoonPen />
