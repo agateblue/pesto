@@ -7,7 +7,7 @@ import { v7 as uuidv7 } from 'uuid';
 import type { TextFragment, Note, Fragment, DBEntry, FullNote } from '../ambient';
 
 export const db = new PouchDB(
-  'pesto',
+  'main',
   // // see https://github.com/pouchdb/pouchdb/issues/4987#issuecomment-199700504
   // // we try to limit the size of revisions to avoid infinite growth of the database
   // {revs_limit: 10, auto_compaction: true}
