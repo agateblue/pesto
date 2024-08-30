@@ -1,27 +1,32 @@
 <script lang="ts">
-  import { getNewTextFragment } from '$lib/db'
-  import BlockTextEditor from './TextFragmentEditor.svelte';
+  import { clone, cloneDeep } from 'lodash';
+  import TextFragmentEditor from './TextFragmentEditor.svelte';
   import type {Fragment, Note} from '../../ambient.d'
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher<{ 
+    update: {fragments: Fragment[]},
+  }>();
 
   export let fragments: Fragment[];
-  export let note: Note;
 
-  if (fragments.length === 0) {
-    fragments.push(getNewTextFragment(note._id, 'Hello'))
-  }
 
   let elements = {
-    'text': BlockTextEditor
+    'text': TextFragmentEditor
   }
 
-  function updateFragment () {
-
+  function updateFragment (fragment, index) {
+    fragments[index] = cloneDeep(fragment)
+    dispatch('update', {fragments})
   }
 </script>
 
 
 {#each fragments as fragment, i (i)}
-  {i}
-  <svelte:component this={elements[fragment.subtype]} bind:fragment={fragment} on:update={event => updateFragment(event, i)}/>
+  <svelte:component
+    this={elements[fragment.subtype]}
+    fragment={fragment}
+    on:update={event => updateFragment(event.detail.fragment, i)}
+  />
 {/each}
 
