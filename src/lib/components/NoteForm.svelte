@@ -1,30 +1,31 @@
 <script lang="ts">
-  import {getNewNote, createOrUpdate} from '../db'
+  import type { Note, Fragment } from '../../ambient';
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen'
-  const dispatch = createEventDispatcher<{ created: DiaryEntry }>();
 
-  $: fragments = [];
-  $: note = getNewNote();
+  const dispatch = createEventDispatcher<{ 
+    update: {note: Note, fragments: Fragment[]},
+  }>();
 
-  function handleSubmit() {
-    createOrUpdate(note)
-    fragments.forEach( fragment => {
-      createOrUpdate(fragment)
-    })
+  export let fragments: Fragment[]
+  export let note: Note
+
+  function handleUpdate (n: Note, f: Fragment[]) {
+    fragments = f
+    dispatch('update', {note, fragments})
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
+<form on:submit|preventDefault={(e) => {handleUpdate(note, fragments)}}>
   <FragmentEditor
-    bind:fragments={fragments}
-    bind:note={note}
+    fragments={fragments}
+    on:update={(e) => {handleUpdate(note, e.detail.fragments)}}
   />
   <div class="flex__row flex__justify-end">
     <button type="submit">
       <IconaMoonPen />
-      Submit
+      Save
     </button>
   </div>
 </form>

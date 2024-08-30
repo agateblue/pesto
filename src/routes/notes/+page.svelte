@@ -14,10 +14,10 @@
   });
 </script>
 
-<div class="flex__row">
-  <section class="wrapper | flex__grow ">
-    {#each notes as note}
-      <RenderedNote bind:note={note} bind:fragments={fragmentsByNote[note._id]} />
-    {/each}
-  </section>
-</div>
+
+<section class="wrapper | flex__grow ">
+  {#each notes as note}
+    <RenderedNote note={note} fragments={fragmentsByNote[note._id]} />
+    <hr>
+  {/each}
+</section>

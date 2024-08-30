@@ -1,6 +1,15 @@
 <script lang="ts">
-  export let fragment
-</script>
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher<{ 
+    update: {fragment: Fragment},
+  }>();
 
-<textarea class="editor" bind:value={fragment.text} />
+  export let fragment: Fragment
+  $: text = fragment.text
+
+  function handleChange() {
+    dispatch('update', {fragment: {...fragment, text}})
+  }
+</script>
+<textarea class="editor" bind:value={text} on:input={(e) => handleChange()} />
 

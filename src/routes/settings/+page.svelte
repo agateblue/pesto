@@ -10,6 +10,7 @@
       window.localStorage.clear();
       try {
         await db.destroy();
+        location.reload();
       } catch (err) {
         console.log(err);
       }
