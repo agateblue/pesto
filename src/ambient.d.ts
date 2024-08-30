@@ -7,12 +7,12 @@ interface Date {
   toISOString(): TDateISO;
 }
 
-type TYear         = `${number}${number}${number}${number}`;
-type TMonth        = `${number}${number}`;
-type TDay          = `${number}${number}`;
-type THours        = `${number}${number}`;
-type TMinutes      = `${number}${number}`;
-type TSeconds      = `${number}${number}`;
+type TYear = `${number}${number}${number}${number}`;
+type TMonth = `${number}${number}`;
+type TDay = `${number}${number}`;
+type THours = `${number}${number}`;
+type TMinutes = `${number}${number}`;
+type TSeconds = `${number}${number}`;
 type TMilliseconds = `${number}${number}${number}`;
 
 /**
@@ -34,30 +34,30 @@ type TDateISOTime = `${THours}:${TMinutes}:${TSeconds}.${TMilliseconds}`;
  */
 type TDateISO = `${TDateISODate}T${TDateISOTime}Z`;
 
-export type DBEntryID = `${string}/${string}`
+export type DBEntryID = `${string}/${string}`;
 
 export type DBEntry = {
-  _id: DBEntryID,
-  _rev?: string,
-  created_at: TDateISO,
-  modified_at: TDateISO,
-  version: string,  
-}
-
-export type Note = DBEntry & DiaryElement & {
-  _id: `note/${string}`,
-  title: string | null,
-  tags: string[],
+  _id: DBEntryID;
+  _rev?: string;
+  created_at: TDateISO;
+  modified_at: TDateISO;
+  version: string;
 };
 
+export type Note = DBEntry &
+  DiaryElement & {
+    _id: `note/${string}`;
+    title: string | null;
+    tags: string[];
+  };
 
 export type Fragment = DBEntry & {
-  _id: `fragment/${string}`,
-  note_id: string,
-  subtype: 'text' | 'tasks' | 'data',
+  _id: `fragment/${string}`;
+  note_id: string;
+  subtype: 'text' | 'tasks' | 'data';
 };
 
 export type TextFragment = Fragment & {
-  subtype: 'text',
-  text: string
+  subtype: 'text';
+  text: string;
 };

@@ -3,6 +3,6 @@
   export let data;
 </script>
 
-<section class="wrapper | flex__grow ">
+<section class="wrapper | flex__grow">
   <RenderedNote bind:note={data.note} bind:fragments={data.fragments} />
 </section>

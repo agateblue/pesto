@@ -29,8 +29,16 @@ html {
 }
 
 /* Remove default margin in favour of better control in authored CSS */
-body, h1, h2, h3, h4, p,
-figure, blockquote, dl, dd {
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin-block-end: 0;
 }
 
@@ -48,13 +56,20 @@ body {
 }
 
 /* Set shorter line heights on headings and interactive elements */
-h1, h2, h3, h4,
-button, input, label {
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
   line-height: 1.1;
 }
 
-h1, h2,
-h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   text-wrap: balance;
 }
 
@@ -75,7 +90,7 @@ select {
 
 /* Make sure textareas without a rows attribute are not tiny */
 textarea:not([rows]) {
-  min-height: 10em
+  min-height: 10em;
 }
 
 /* Anything that has been anchored to should have extra scroll margin */
@@ -117,7 +132,7 @@ body {
 input,
 button,
 textarea,
-[contenteditable=true],
+[contenteditable='true'],
 select,
 button {
   accent-color: var(--primary-color);
@@ -127,13 +142,15 @@ svg {
   vertical-align: middle;
 }
 
-button, input[type=submit] {
+button,
+input[type='submit'] {
   background: var(--primary-color);
   border: none;
   padding: var(--space-2);
 }
 
-button:hover, input[type=submit]:hover {
+button:hover,
+input[type='submit']:hover {
   cursor: pointer;
 }
 textarea {

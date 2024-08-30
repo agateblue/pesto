@@ -1,6 +1,7 @@
 <script>
   import '../style.css';
 </script>
+
 <nav>
   <ul class="wrapper">
     <li><a href="/">Write</a></li>
