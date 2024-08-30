@@ -61,7 +61,3 @@ export type TextFragment = Fragment & {
   subtype: 'text',
   text: string
 };
-
-export type FullNote = Note & {
-  fragments: Fragment[],
-};
