@@ -1,8 +1,6 @@
 <script lang="ts">
   import PouchDB from 'pouchdb';
 
-  $: entries = [];
-
   const db = new PouchDB('pesto');
 
   async function handleSubmit() {

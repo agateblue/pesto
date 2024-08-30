@@ -5,11 +5,11 @@
   }>();
 
   export let fragment: Fragment;
-  $: text = fragment.text;
+  let text = fragment.text;
 
   function handleChange() {
     dispatch('update', { fragment: { ...fragment, text } });
   }
 </script>
 
-<textarea class="editor" bind:value={text} on:input={(e) => handleChange()} />
+<textarea class="editor" on:keyup={(e) => handleChange()} bind:value={text} />
