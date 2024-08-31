@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { clone, cloneDeep } from 'lodash';
+  import clone from 'lodash/clone';
+  import cloneDeep from 'lodash/cloneDeep';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import type { Fragment, Note } from '../../ambient.d';
   import { createEventDispatcher } from 'svelte';
