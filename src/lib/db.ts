@@ -17,9 +17,9 @@ export function renderMarkdown(text: string): string {
   return DOMPurify.sanitize(marked.parse(text || ''));
 }
 
-export function buildUniqueId(objType, id: string = null) {
+export function buildUniqueId(objType: string, id: string | null = null, options = {}) {
   if (!id) {
-    id = uuidv7();
+    id = uuidv7(options);
   }
   return `${objType}/${id}`;
 }
