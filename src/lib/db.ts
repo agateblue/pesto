@@ -1,12 +1,20 @@
-import { createRxDatabase, type MangoQuery, type RxCollection } from 'rxdb';
+import {
+  createRxDatabase,
+  type MangoQuery,
+  type RxCollection,
+  type RxDatabase,
+  addRxPlugin
+} from 'rxdb';
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 
-import isEqual from 'lodash/isEqual';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
 import { v7 as uuidv7 } from 'uuid';
 import type { TextFragment, Note, Fragment, DBEntry } from '../ambient';
+
+addRxPlugin(RxDBMigrationSchemaPlugin);
 
 export async function getDb() {
   let db = await createRxDatabase({
@@ -65,6 +73,13 @@ export async function getDb() {
     },
     fragments: {
       schema: fragmentSchema
+      // migrationStrategies: {
+      //   1: (oldDoc) => {
+      //     // this is just an index update
+      //     console.log("HELLO")
+      //     return oldDoc;
+      //   }
+      // }
     }
   });
 
@@ -124,4 +139,26 @@ export function groupById(list: Array<Object>, property: string) {
 export async function getById(collection: RxCollection, id: string) {
   let results = await collection.findByIds([id]).exec();
   return results.get(id);
+}
+
+export async function findNotesAndFragments(db: RxDatabase, query: MangoQuery) {
+  let notes = await db.notes.find(query).exec();
+  let ids = notes.map((n) => {
+    return n.id;
+  });
+  console.time('Update notes execution time');
+  let fragments = await db.fragments
+    .find({
+      limit: null,
+      selector: {
+        note_id: { $in: ids }
+      }
+    })
+    .exec();
+  let fragmentsByNote = groupById(fragments, 'note_id');
+  console.timeEnd('Update notes execution time');
+  return {
+    notes,
+    fragmentsByNote
+  };
 }
