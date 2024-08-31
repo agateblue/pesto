@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
-  import { groupById } from '$lib/db';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import { getNewNote, createOrUpdate, getNewTextFragment } from '$lib/db';
+  import { getNewNote, createOrUpdate, getNewTextFragment, findNotesAndFragments } from '$lib/db';
   import type { Note } from '../../ambient.d';
 
   export let data;
@@ -28,10 +27,9 @@
     await updateNotes();
   }
   async function updateNotes() {
-    let fragments = await data.db.fragments.find({}).exec();
-    fragmentsByNote = groupById(fragments, 'note_id');
-    notes = await data.db.notes.find({}).exec();
-    notes.reverse();
+    let result = await findNotesAndFragments(data.db, { limit: 20, sort: [{ id: 'desc' }] });
+    fragmentsByNote = result.fragmentsByNote;
+    notes = result.notes;
   }
   onMount(async () => {
     await updateNotes();
