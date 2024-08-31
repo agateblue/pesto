@@ -33,10 +33,10 @@
     await updateNotes()
   }
   async function updateNotes() {
-    notes = (await fetchAllByType('note')) as Note[];
-    notes.reverse();
     let fragments = (await fetchAllByType('fragment')) as Fragment[];
     fragmentsByNote = groupById(fragments, 'note_id');
+    notes = (await fetchAllByType('note')) as Note[];
+    notes.reverse();
   }
   onMount(async () => {
     await updateNotes()
