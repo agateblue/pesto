@@ -34,30 +34,23 @@ type TDateISOTime = `${THours}:${TMinutes}:${TSeconds}.${TMilliseconds}`;
  */
 type TDateISO = `${TDateISODate}T${TDateISOTime}Z`;
 
-export type DBEntryID = `${string}/${string}`;
+export type DBEntryID = `${string}`;
 
 export type DBEntry = {
-  _id: DBEntryID;
-  _rev?: string;
+  id: DBEntryID;
   created_at: TDateISO;
-  modified_at: TDateISO;
-  version: string;
 };
 
-export type Note = DBEntry &
-  DiaryElement & {
-    _id: `note/${string}`;
-    title: string | null;
-    tags: string[];
-  };
+export type Note = DBEntry & {
+  // title: string | null;
+  // tags: string[];
+};
 
 export type Fragment = DBEntry & {
-  _id: `fragment/${string}`;
   note_id: string;
-  subtype: 'text' | 'tasks' | 'data';
 };
 
 export type TextFragment = Fragment & {
-  subtype: 'text';
-  text: string;
+  type: 'text';
+  data: { text: string };
 };

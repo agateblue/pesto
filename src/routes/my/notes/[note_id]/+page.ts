@@ -1,11 +1,10 @@
-import { getById, fetchMatching, buildUniqueId } from '$lib/db.js';
+import { getById } from '$lib/db.js';
 
-export async function load({ params }) {
-  let noteId = buildUniqueId('note', params.note_id);
+export async function load({ params, parent }) {
+  let data = await parent();
   return {
-    note: (await getById(noteId)) as Note,
-    fragments: (await fetchMatching('fragment', (r: Fragment) => {
-      return r.note_id == noteId;
-    })) as Fragment[]
+    ...data,
+    note: (await getById(data.db.notes, params.note_id)) as Note,
+    fragments: await data.db.fragments.find({ selector: { note_id: params.note_id } }).exec()
   };
 }

@@ -5,10 +5,10 @@
   }>();
 
   export let fragment: Fragment;
-  let text = fragment.text;
+  let text = fragment.data.text;
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, text } });
+    dispatch('update', { fragment: { ...fragment, data: { text } } });
   }
 </script>
 

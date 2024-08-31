@@ -22,7 +22,7 @@
 
 {#each fragments as fragment, i (i)}
   <svelte:component
-    this={elements[fragment.subtype]}
+    this={elements[fragment.type]}
     {fragment}
     on:update={(event) => updateFragment(event.detail.fragment, i)}
   />

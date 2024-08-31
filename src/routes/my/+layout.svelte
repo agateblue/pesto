@@ -1,7 +1,6 @@
 <script>
 </script>
 
-
 <div class="my__layout">
   <aside>
     <nav aria-label="Main menu">

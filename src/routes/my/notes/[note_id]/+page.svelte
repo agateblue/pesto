@@ -4,5 +4,5 @@
 </script>
 
 <section class="wrapper | flex__grow">
-  <RenderedNote bind:note={data.note} bind:fragments={data.fragments} />
+  <RenderedNote note={data.note} fragments={data.fragments} />
 </section>

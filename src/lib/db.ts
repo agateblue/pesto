@@ -1,92 +1,109 @@
+import { createRxDatabase, type MangoQuery, type RxCollection } from 'rxdb';
+import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
+
 import isEqual from 'lodash/isEqual';
-import PouchDB from 'pouchdb';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
 import { v7 as uuidv7 } from 'uuid';
-import type { TextFragment, Note, Fragment, DBEntry, FullNote } from '../ambient';
+import type { TextFragment, Note, Fragment, DBEntry } from '../ambient';
 
-export const db = new PouchDB(
-  'main',
-  // // see https://github.com/pouchdb/pouchdb/issues/4987#issuecomment-199700504
-  // // we try to limit the size of revisions to avoid infinite growth of the database
-  // {revs_limit: 10, auto_compaction: true}
-);
+export async function getDb() {
+  let db = await createRxDatabase({
+    name: 'main',
+    storage: getRxStorageDexie()
+  });
+
+  const noteSchema = {
+    version: 0,
+    primaryKey: 'id',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        maxLength: 40
+      },
+      created_at: {
+        type: 'string',
+        format: 'date-time'
+      }
+    },
+    required: ['id', 'created_at']
+  };
+
+  const fragmentSchema = {
+    version: 0,
+    primaryKey: 'id',
+    type: 'object',
+    properties: {
+      id: {
+        type: 'string',
+        maxLength: 40
+      },
+      note_id: {
+        type: 'string',
+        maxLength: 40
+      },
+      created_at: {
+        type: 'string',
+        format: 'date-time'
+      },
+      type: {
+        type: 'string',
+        enum: ['text']
+      },
+      data: {
+        type: 'object'
+      }
+    },
+    required: ['id', 'created_at', 'note_id', 'data', 'type']
+  };
+
+  await db.addCollections({
+    notes: {
+      schema: noteSchema
+    },
+    fragments: {
+      schema: fragmentSchema
+    }
+  });
+
+  return db;
+}
 
 export function renderMarkdown(text: string): string {
   return DOMPurify.sanitize(marked.parse(text || ''));
 }
 
-export function buildUniqueId(objType: string, id: string | null = null, options = {}) {
-  if (!id) {
-    id = uuidv7(options);
-  }
-  return `${objType}/${id}`;
-}
-export function getIdWithoutType(id: string): string {
-  return id.split('/')[1];
+export function buildUniqueId(options = {}) {
+  return uuidv7(options);
 }
 
 export function getNewNote() {
   return {
-    _id: buildUniqueId('note'),
-    version: '0',
-    created_at: new Date().toISOString(),
-    modified_at: new Date().toISOString(),
-    title: null,
-    tags: []
+    id: buildUniqueId(),
+    created_at: new Date().toISOString()
   } as Note;
 }
 
-export function getNewFragment(noteId: string, subtype: string) {
+export function getNewFragment(noteId: string, type: string, data: object) {
   return {
-    version: '0',
-    _id: buildUniqueId('fragment'),
+    id: buildUniqueId(),
     note_id: noteId,
     created_at: new Date().toISOString(),
-    modified_at: new Date().toISOString(),
-    subtype
+    data,
+    type
   } as Fragment;
 }
 
-export function getNewTextFragment(noteId, content = '') {
+export function getNewTextFragment(noteId: string, content = '') {
   return {
-    ...getNewFragment(noteId, 'text'),
-    text: '' || content
+    ...getNewFragment(noteId, 'text', { text: content || '' })
   } as TextFragment;
 }
 
-export async function createOrUpdate(entry: DBEntry) {
-  if (!entry._rev) {
-    delete entry._rev;
-  }
-
-  // we check if the current entry in DB is identical (except the rev)
-  // to the given one to avoid writing PouchDB data and revisions when unnecessary
-  let existing: DBEntry | null;
-  try {
-    existing = (await db.get(entry._id)) as DBEntry;
-  } catch (e) {
-    existing = null;
-  }
-  if (existing) {
-    let c1: DBEntry = { ...existing };
-    let c2: DBEntry = { ...entry };
-    delete c1._rev;
-    delete c2._rev;
-    if (isEqual(c1, c2)) {
-      console.debug('Entry', entry._id, 'not saved, it matches what is in DB');
-      return entry._rev;
-    }
-  }
-
-  // no existing entry in DB or it needs to be updated
-  console.debug('About to persist: ', entry);
-  let result = await db.put(entry);
-  if (result.ok) {
-    return result.rev;
-  }
-  return null;
+export async function createOrUpdate(collection: RxCollection, entry: DBEntry) {
+  return await collection.upsert(entry);
 }
 
 interface GroupedObjects {
@@ -103,26 +120,8 @@ export function groupById(list: Array<Object>, property: string) {
   });
   return mapping;
 }
-export async function fetchAllByType(type: string) {
-  let result = await db.allDocs({
-    include_docs: true,
-    limit: 100000,
-    descending: false,
-    startkey: `${type}/`
-  });
-  return result.rows.map((r) => {
-    return r.doc as DBEntry;
-  });
-}
 
-export async function getById(id: string) {
-  return await db.get(id);
-}
-
-export async function fetchMatching(type: string, matcher: Function) {
-  let result = await fetchAllByType(type);
-  let matching: DBEntry[] = [];
-  return result.filter((r) => {
-    return matcher(r);
-  });
+export async function getById(collection: RxCollection, id: string) {
+  let results = await collection.findByIds([id]).exec();
+  return results.get(id);
 }
