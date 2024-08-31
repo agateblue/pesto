@@ -6,7 +6,7 @@
 </script>
 
 <article class="diary__note">
-  <a href={`notes/${getIdWithoutType(note._id)}`}>
+  <a href={`/my/notes/${getIdWithoutType(note._id)}`}>
     <time datetime={note.created_at}>{note.created_at}</time>
   </a>
   {#if fragments}

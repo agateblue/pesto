@@ -1,7 +1,7 @@
 <script lang="ts">
   import PouchDB from 'pouchdb';
 
-  const db = new PouchDB('pesto');
+  const db = new PouchDB('main');
 
   async function handleSubmit() {
     if (confirm('Do you confirm data deletion? This action is irreversible.')) {

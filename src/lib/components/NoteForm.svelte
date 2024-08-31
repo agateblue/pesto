@@ -18,9 +18,7 @@
 </script>
 
 <form
-  on:submit|preventDefault={(e) => {
-    handleUpdate(note, fragments);
-  }}
+  on:submit
 >
   <FragmentEditor
     {fragments}
