@@ -17,9 +17,7 @@
   }
 </script>
 
-<form
-  on:submit
->
+<form on:submit>
   <FragmentEditor
     {fragments}
     on:update={(e) => {
