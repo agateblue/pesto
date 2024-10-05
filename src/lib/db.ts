@@ -141,6 +141,12 @@ export async function getById(collection: RxCollection, id: string) {
   return results.get(id);
 }
 
+export async function getByQuery(collection: RxCollection, query: MangoQuery) {
+  let results = await collection.find(query).exec()
+  return results.map(r => {
+    return r.toJSON()
+  })
+}
 export async function findNotesAndFragments(db: RxDatabase, query: MangoQuery) {
   let notes = await db.notes.find(query).exec();
   let ids = notes.map((n) => {
