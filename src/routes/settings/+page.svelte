@@ -9,6 +9,9 @@
       window.localStorage.clear();
       try {
         await data.db.remove();
+        window.indexedDB.databases().then((r) => {
+          for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
+        })
         location.reload();
       } catch (err) {
         console.log(err);
