@@ -67,7 +67,7 @@
 
 <div class="flex__row">
   <section class="wrapper | flex__grow">
-    <a href="/">Back to home</a>
+    <a href="/my">Back to home</a>
     <h1>Clear data</h1>
     <form on:submit|preventDefault={handleSubmit}>
       <p>
