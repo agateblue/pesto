@@ -165,6 +165,48 @@ body {
   justify-content: flex-end;
 }
 
+/* spacing */
+
+.m__block-0 {
+  margin-block: var(--space-0);
+}
+
+.m__block-1 {
+  margin-block: var(--space-1);
+}
+
+.m__block-2 {
+  margin-block: var(--space-2);
+}
+
+.m__block-3 {
+  margin-block: var(--space-3);
+}
+
+.m__block-4 {
+  margin-block: var(--space-4);
+}
+
+.m__inline-0 {
+  margin-inline: var(--space-0);
+}
+
+.m__inline-1 {
+  margin-inline: var(--space-1);
+}
+
+.m__inline-2 {
+  margin-inline: var(--space-2);
+}
+
+.m__inline-3 {
+  margin-inline: var(--space-3);
+}
+
+.m__inline-4 {
+  margin-inline: var(--space-4);
+}
+
 /* blocks */
 input,
 button,
@@ -189,6 +231,14 @@ input[type='submit'] {
 button:hover,
 input[type='submit']:hover {
   cursor: pointer;
+}
+
+.button__link {
+  background: none;
+  text-decoration: underline;
+  color: hsl(from var(--text-color) h s l / 0.7);
+  padding-inline: 0;
+  padding-block: var(--space-1);
 }
 textarea {
   width: 100%;

@@ -10,10 +10,11 @@
     <time datetime={note.created_at}>{note.created_at}</time>
   </a>
   {#if fragments}
-    {#each fragments as fragment}
-      {#if fragment.type === 'text'}
-        {@html renderMarkdown(fragment.data.text)}
-      {/if}
-    {/each}
+  {#each fragments as fragment}
+  {#if fragment.type === 'text'}
+  {@html renderMarkdown(fragment.data.text)}
   {/if}
+  {/each}
+  {/if}
+  <slot name="footer"></slot>
 </article>
