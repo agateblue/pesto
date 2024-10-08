@@ -11,7 +11,7 @@
         await data.db.remove();
         window.indexedDB.databases().then((r) => {
           for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
-        })
+        });
         location.reload();
       } catch (err) {
         console.log(err);
@@ -35,6 +35,7 @@
       }),
       created_at: created_at,
       type: 'text',
+      title: null,
       data: { text: entry.text.trim() },
       note_id: note.id
     };
