@@ -16,7 +16,7 @@
   async function handleUpdate(n: Note, f: Fragment) {
     await createOrUpdate(data.db.notes, n);
 
-    for (const fragment of fragments) {
+    for (const fragment of f) {
       await createOrUpdate(data.db.fragments, fragment);
     }
   }
@@ -33,30 +33,32 @@
   }
 
   async function askDelete(note: Note, fragments: Fragment[]) {
-    if (confirm("Do you want to delete this note?")) {
+    if (confirm('Do you want to delete this note?')) {
       fragments.forEach(async (f) => {
-        await f.remove()
-      })
-      await note.remove()
-      notes = notes.filter(e => {
-        return e.id != note.id
-      })
+        await f.remove();
+      });
+      await note.remove();
+      notes = notes.filter((e) => {
+        return e.id != note.id;
+      });
     }
   }
 
   onMount(async () => {
     await updateNotes();
   });
-
 </script>
 
 <main class="wrapper | flex__grow">
   {#each notes as note}
-    <RenderedNote {note} fragments={fragmentsByNote[note.id]}>
+    <RenderedNote {note} db={data.db} fragments={fragmentsByNote[note.id]}>
       <div class="flex__row flex__justify-end | m__block-2" slot="footer">
-        <button 
+        <button
           class="button__link"
-          on:click={(e) => {askDelete(note, fragmentsByNote[note.id])}}>
+          on:click={(e) => {
+            askDelete(note, fragmentsByNote[note.id]);
+          }}
+        >
           Delete
         </button>
       </div>

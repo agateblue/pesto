@@ -12,7 +12,10 @@ import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
 import { v7 as uuidv7 } from 'uuid';
-import type { TextFragment, Note, Fragment, DBEntry } from '../ambient';
+import type { TextFragment, Note, TodoListFragment, Fragment, DBEntry } from '../ambient';
+
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+addRxPlugin(RxDBDevModePlugin);
 
 addRxPlugin(RxDBMigrationSchemaPlugin);
 
@@ -40,13 +43,16 @@ export async function getDb() {
   };
 
   const fragmentSchema = {
-    version: 0,
+    version: 1,
     primaryKey: 'id',
     type: 'object',
     properties: {
       id: {
         type: 'string',
         maxLength: 40
+      },
+      title: {
+        type: ['string', 'null']
       },
       note_id: {
         type: 'string',
@@ -64,25 +70,24 @@ export async function getDb() {
         type: 'object'
       }
     },
-    required: ['id', 'created_at', 'note_id', 'data', 'type']
+    required: ['id', 'title', 'created_at', 'note_id', 'data', 'type']
   };
 
   await db.addCollections({
+    fragments: {
+      schema: fragmentSchema,
+      autoMigrate: true,
+      migrationStrategies: {
+        1: (oldDoc) => {
+          oldDoc.title = null;
+          return oldDoc;
+        }
+      }
+    },
     notes: {
       schema: noteSchema
-    },
-    fragments: {
-      schema: fragmentSchema
-      // migrationStrategies: {
-      //   1: (oldDoc) => {
-      //     // this is just an index update
-      //     console.log("HELLO")
-      //     return oldDoc;
-      //   }
-      // }
     }
   });
-
   return db;
 }
 
@@ -104,6 +109,7 @@ export function getNewNote() {
 export function getNewFragment(noteId: string, type: string, data: object) {
   return {
     id: buildUniqueId(),
+    title: null,
     note_id: noteId,
     created_at: new Date().toISOString(),
     data,
@@ -117,6 +123,18 @@ export function getNewTextFragment(noteId: string, content = '') {
   } as TextFragment;
 }
 
+export function getNewTodoListFragment(noteId: string, content = '') {
+  return {
+    ...getNewFragment(noteId, 'todolist', { todos: [] })
+  } as TodoListFragment;
+}
+
+export function getNewTodo() {
+  return {
+    text: '',
+    done: false
+  } as Todo;
+}
 export async function createOrUpdate(collection: RxCollection, entry: DBEntry) {
   return await collection.upsert(entry);
 }
@@ -142,10 +160,10 @@ export async function getById(collection: RxCollection, id: string) {
 }
 
 export async function getByQuery(collection: RxCollection, query: MangoQuery) {
-  let results = await collection.find(query).exec()
-  return results.map(r => {
-    return r.toJSON()
-  })
+  let results = await collection.find(query).exec();
+  return results.map((r) => {
+    return r.toJSON();
+  });
 }
 export async function findNotesAndFragments(db: RxDatabase, query: MangoQuery) {
   let notes = await db.notes.find(query).exec();

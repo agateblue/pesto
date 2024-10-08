@@ -48,9 +48,19 @@ export type Note = DBEntry & {
 
 export type Fragment = DBEntry & {
   note_id: string;
+  title: string | null;
 };
 
 export type TextFragment = Fragment & {
   type: 'text';
   data: { text: string };
+};
+
+export type Todo = {
+  text: string;
+  done: boolean;
+};
+export type TodoListFragment = Fragment & {
+  type: 'todolist';
+  data: { todos: Todo[] };
 };

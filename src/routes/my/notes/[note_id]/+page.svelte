@@ -5,8 +5,8 @@
   import type { Note, Fragment } from '../../../../ambient.d';
   export let data;
 
-  let note = data.note
-  let fragments = data.fragments
+  let note = data.note;
+  let fragments = data.fragments;
 
   async function handleUpdate(n: Note, f: Fragment[]) {
     await createOrUpdate(data.db.notes, n.toJSON());
@@ -14,14 +14,12 @@
     for (const fragment of f) {
       await createOrUpdate(data.db.fragments, fragment);
     }
-    fragments = f
+    fragments = f;
   }
 </script>
 
 <section class="wrapper | flex__grow">
-  <RenderedNote {note} {fragments}>
-
-  </RenderedNote>
+  <RenderedNote {note} {fragments}></RenderedNote>
 </section>
 <aside>
   <section class="wrapper">
@@ -32,8 +30,8 @@
         handleUpdate(e.detail.note, e.detail.fragments);
       }}
       on:submit={(e) => {
-        note = e.detail.note
-        fragments = e.detail.fragments
+        note = e.detail.note;
+        fragments = e.detail.fragments;
       }}
     />
   </section>

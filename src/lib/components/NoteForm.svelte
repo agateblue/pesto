@@ -2,7 +2,6 @@
   import type { Note, Fragment } from '../../ambient';
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
-  import IconaMoonPen from 'virtual:icons/iconamoon/pen';
 
   const dispatch = createEventDispatcher<{
     update: { note: Note; fragments: Fragment[] };
@@ -20,14 +19,12 @@
 <form on:submit>
   <FragmentEditor
     {fragments}
+    {note}
     on:update={(e) => {
       handleUpdate(note, e.detail.fragments);
     }}
   />
   <div class="flex__row flex__justify-end">
-    <button type="submit">
-      <IconaMoonPen />
-      Save
-    </button>
+    <button type="submit"> Save </button>
   </div>
 </form>
