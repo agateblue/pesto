@@ -1,15 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import {
+    type TextType
+  } from '$lib/db'
+
   const dispatch = createEventDispatcher<{
-    update: { fragment: Fragment };
+    update: { fragment: TextType };
   }>();
 
-  export let fragment: Fragment;
-  let text = fragment.data.text;
+  export let fragment: TextType;
+  let content = fragment.content;
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, data: { text } } });
+    dispatch('update', { fragment: { ...fragment, content} });
   }
 </script>
 
-<textarea class="editor" on:keyup={(e) => handleChange()} bind:value={text} />
+<textarea class="editor" on:keyup={(e) => handleChange()} bind:value={content} />

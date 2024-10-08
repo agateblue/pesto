@@ -7,11 +7,13 @@
 
   --primary-color: rgb(199, 240, 240);
   --text-color: rgba(44, 44, 44, 1);
+  --text-discrete-color: rgba(125, 125, 125, 1);
   --font-family: Helvetica, sans-serif;
   --background-color: white;
   --layout-separator: 1px solid rgb(120, 112, 112);
 
   --sidebar-background: rgb(240, 240, 240);
+  --button-radius: 2px;
 }
 
 /* RESET */
@@ -161,8 +163,14 @@ body {
   flex-grow: 1;
 }
 
+.flex__gap {
+  gap: var(--space-2);
+}
 .flex__justify-end {
   justify-content: flex-end;
+}
+.flex__justify-between {
+  justify-content: space-between;
 }
 
 /* spacing */
@@ -223,9 +231,11 @@ svg {
 
 button,
 input[type='submit'] {
-  background: var(--primary-color);
+  background: var(--button-color, var(--primary-color));
+  color: var(--button-text-color, var(--text-color));
   border: none;
   padding: var(--space-2);
+  border-radius: var(--button-radius);
 }
 
 button:hover,
@@ -240,6 +250,14 @@ input[type='submit']:hover {
   padding-inline: 0;
   padding-block: var(--space-1);
 }
+.button__outlined {
+  background: none;
+  border: 2px solid var(--button-color, var(--primary-color));
+  color: var(--button-color, var(--primary-color));
+}
+.button__discrete {
+  --button-color: var(--text-discrete-color);
+}
 textarea {
   width: 100%;
 }
@@ -251,4 +269,17 @@ textarea {
   flex-direction: row;
   list-style-type: none;
   column-gap: var(--space-2);
+}
+
+.todolist {
+  list-style: none;
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+}
+.todolist li {
+  margin-block: var(--space-1);
+}
+.todolist input[type='checkbox'] {
+  scale: 1.5;
+  margin-inline-end: var(--space-2);
 }

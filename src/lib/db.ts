@@ -1,88 +1,131 @@
 import {
-  createRxDatabase,
   type MangoQuery,
   type RxCollection,
   type RxDatabase,
-  addRxPlugin
+  type RxDocument,
+  type ExtractDocumentTypeFromTypedRxJsonSchema,
+  type RxJsonSchema,
+  createRxDatabase,
+  addRxPlugin,
+  toTypedRxJsonSchema,
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
-
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
 import { v7 as uuidv7 } from 'uuid';
-import type { TextFragment, Note, Fragment, DBEntry } from '../ambient';
+import type { TextFragment, Note, TodoListFragment, Todo } from '../ambient';
 
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+addRxPlugin(RxDBUpdatePlugin);
+addRxPlugin(RxDBDevModePlugin);
 addRxPlugin(RxDBMigrationSchemaPlugin);
 
+export const noteSchemaLiteral = {
+  version: 0,
+  primaryKey: 'id',
+  type: 'object',
+  required: ['id', 'created_at', 'modified_at', 'tags', 'fragments'],
+  properties: {
+    id: {
+      type: 'string',
+      maxLength: 40
+    },
+    title: {
+      type: ['string', 'null'],
+    },
+    created_at: {
+      type: 'string',
+      format: 'date-time'
+    },
+    modified_at: {
+      type: 'string',
+      format: 'date-time'
+    },
+    tags: {
+      type: 'array',
+      items: {
+        type: 'string',
+      }
+    },
+    fragments: {
+      type: 'object',
+      required: [],
+      properties: {
+        text: {
+          type: 'object',
+          required: ['content'],
+          properties: {
+            content: {
+              type: 'string',
+            }
+          }
+        },
+        todolist: {
+          type: 'object',
+          required: ['todos'],
+          properties: {
+            todos: {
+              type: 'array',
+              minItems: 1,
+              items: {
+                type: 'object',
+                required: ['done', 'text'],
+                properties: {
+                  done: {
+                    type: 'boolean'
+                  },
+                  text: {
+                    type: 'string'
+                  }
+                }
+              }
+            }
+          }
+        },
+      }
+    }
+  },
+} as const;
+
+const noteSchemaTyped = toTypedRxJsonSchema(noteSchemaLiteral);
+
+// aggregate the document type from the schema
+export type NoteDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof noteSchemaTyped>;
+
+export type TextType = NonNullable<NoteDocType["fragments"]["text"]>
+export type TodolistType = NonNullable<NoteDocType["fragments"]["todolist"]>
+export type TodosType = NonNullable<TodolistType["todos"]>
+export type TodoType = TodosType[number]
+
+// create the typed RxJsonSchema from the literal typed object.
+export const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral;
+
+// and then merge all our types
+export type NoteCollection = RxCollection<NoteDocType>;
+
+export type NoteDocument = RxDocument<NoteDocType>;
+
+export type DatabaseCollections = {
+  notes: NoteCollection
+}
+
+export type Database = RxDatabase<DatabaseCollections>
+
 export async function getDb() {
-  let db = await createRxDatabase({
+  let db = await createRxDatabase<Database>({
     name: 'main',
     storage: getRxStorageDexie()
   });
 
-  const noteSchema = {
-    version: 0,
-    primaryKey: 'id',
-    type: 'object',
-    properties: {
-      id: {
-        type: 'string',
-        maxLength: 40
-      },
-      created_at: {
-        type: 'string',
-        format: 'date-time'
-      }
-    },
-    required: ['id', 'created_at']
-  };
-
-  const fragmentSchema = {
-    version: 0,
-    primaryKey: 'id',
-    type: 'object',
-    properties: {
-      id: {
-        type: 'string',
-        maxLength: 40
-      },
-      note_id: {
-        type: 'string',
-        maxLength: 40
-      },
-      created_at: {
-        type: 'string',
-        format: 'date-time'
-      },
-      type: {
-        type: 'string',
-        enum: ['text']
-      },
-      data: {
-        type: 'object'
-      }
-    },
-    required: ['id', 'created_at', 'note_id', 'data', 'type']
-  };
-
+  const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral
   await db.addCollections({
     notes: {
       schema: noteSchema
-    },
-    fragments: {
-      schema: fragmentSchema
-      // migrationStrategies: {
-      //   1: (oldDoc) => {
-      //     // this is just an index update
-      //     console.log("HELLO")
-      //     return oldDoc;
-      //   }
-      // }
     }
   });
-
   return db;
 }
 
@@ -97,26 +140,32 @@ export function buildUniqueId(options = {}) {
 export function getNewNote() {
   return {
     id: buildUniqueId(),
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    modified_at: new Date().toISOString(),
+    title: null,
+    fragments: {},
+    tags: [],
   } as Note;
 }
 
-export function getNewFragment(noteId: string, type: string, data: object) {
+export function getNewTextFragment(content = '') {
   return {
-    id: buildUniqueId(),
-    note_id: noteId,
-    created_at: new Date().toISOString(),
-    data,
-    type
-  } as Fragment;
-}
-
-export function getNewTextFragment(noteId: string, content = '') {
-  return {
-    ...getNewFragment(noteId, 'text', { text: content || '' })
+    content,
   } as TextFragment;
 }
 
+export function getNewTodoListFragment() {
+  return {
+    todos: []
+  } as TodoListFragment;
+}
+
+export function getNewTodo() {
+  return {
+    text: '',
+    done: false
+  } as Todo;
+}
 export async function createOrUpdate(collection: RxCollection, entry: DBEntry) {
   return await collection.upsert(entry);
 }
@@ -125,46 +174,12 @@ interface GroupedObjects {
   [key: string]: Object[];
 }
 
-export function groupById(list: Array<Object>, property: string) {
-  let mapping: GroupedObjects = {};
-  list.forEach((e) => {
-    if (!mapping[e[property]]) {
-      mapping[e[property]] = [];
-    }
-    mapping[e[property]].push(e);
-  });
-  return mapping;
-}
-
 export async function getById(collection: RxCollection, id: string) {
   let results = await collection.findByIds([id]).exec();
   return results.get(id);
 }
 
 export async function getByQuery(collection: RxCollection, query: MangoQuery) {
-  let results = await collection.find(query).exec()
-  return results.map(r => {
-    return r.toJSON()
-  })
-}
-export async function findNotesAndFragments(db: RxDatabase, query: MangoQuery) {
-  let notes = await db.notes.find(query).exec();
-  let ids = notes.map((n) => {
-    return n.id;
-  });
-  console.time('Update notes execution time');
-  let fragments = await db.fragments
-    .find({
-      limit: null,
-      selector: {
-        note_id: { $in: ids }
-      }
-    })
-    .exec();
-  let fragmentsByNote = groupById(fragments, 'note_id');
-  console.timeEnd('Update notes execution time');
-  return {
-    notes,
-    fragmentsByNote
-  };
+  let results = await collection.find(query).exec();
+  return results
 }

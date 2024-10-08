@@ -1,20 +1,27 @@
 <script lang="ts">
-  import { renderMarkdown } from '$lib/db';
-  import type { Note, Fragment } from '../../ambient.d';
-  export let note: Note[];
-  export let fragments: Fragment[];
+  import { renderMarkdown, type Database, type NoteDocument } from '$lib/db';
+  import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
+
+  export let db: Database;
+  export let note: NoteDocument;
 </script>
 
 <article class="diary__note">
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{note.created_at}</time>
   </a>
-  {#if fragments}
-  {#each fragments as fragment}
-  {#if fragment.type === 'text'}
-  {@html renderMarkdown(fragment.data.text)}
+  {#if note.fragments.text}
+    {@html renderMarkdown(note.fragments.text.content)}
   {/if}
-  {/each}
+  {#if note.fragments.todolist}
+    <TodoListFragmentEditor
+      fragment={note.fragments.todolist}
+      on:update={async (e) => {
+        await note.incrementalUpdate({
+          $set: {'fragments.todolist': e.detail.fragment}
+        })
+      }}
+    />
   {/if}
   <slot name="footer"></slot>
 </article>

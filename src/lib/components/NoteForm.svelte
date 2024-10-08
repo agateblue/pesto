@@ -1,33 +1,30 @@
 <script lang="ts">
-  import type { Note, Fragment } from '../../ambient';
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
-  import IconaMoonPen from 'virtual:icons/iconamoon/pen';
-
+  import {
+    type NoteDocument,
+    type Database,
+  } from '$lib/db'
   const dispatch = createEventDispatcher<{
-    update: { note: Note; fragments: Fragment[] };
+    update: { note: NoteDocument};
   }>();
 
-  export let fragments: Fragment[];
-  export let note: Note;
-
-  function handleUpdate(n: Note, f: Fragment[]) {
-    fragments = f;
-    dispatch('update', { note, fragments });
+  export let note: NoteDocument | null;
+  export let db: Database
+  function handleUpdate(n: NoteDocument) {
+    dispatch('update', { note: n });
   }
 </script>
 
 <form on:submit>
   <FragmentEditor
-    {fragments}
+    {note}
+    {db}
     on:update={(e) => {
-      handleUpdate(note, e.detail.fragments);
+      handleUpdate(e.detail.note);
     }}
   />
   <div class="flex__row flex__justify-end">
-    <button type="submit">
-      <IconaMoonPen />
-      Save
-    </button>
+    <button type="submit"> Save </button>
   </div>
 </form>
