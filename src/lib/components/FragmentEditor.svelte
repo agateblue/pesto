@@ -2,45 +2,54 @@
   import cloneDeep from 'lodash/cloneDeep';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
-  import type { Fragment, Note } from '../../ambient.d';
-  import { getNewTextFragment, getNewTodoListFragment } from '$lib/db';
+  import { getNewNote, getNewTextFragment, getNewTodoListFragment, type NoteDocument, type TextType, type TodolistType, type Database} from '$lib/db';
   import { createEventDispatcher } from 'svelte';
   import IconaMoonCheckSquare from 'virtual:icons/iconamoon/check-square';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
 
   const dispatch = createEventDispatcher<{
-    update: { fragments: Fragment[] };
+    update: { note: NoteDocument };
   }>();
 
-  export let fragments: Fragment[];
-  export let note: Note;
+  export let note: NoteDocument | null;
+  export let db: Database;
 
+  let types = ['text', 'todolist']
   let elements = {
     text: TextFragmentEditor,
     todolist: TodoListFragmentEditor
   };
 
-  function updateFragment(fragment, index) {
-    fragments[index] = cloneDeep(fragment);
-    dispatch('update', { fragments });
-  }
-  function addFragment(fragment: Fragment) {
-    fragments = [...fragments, fragment];
+  async function updateFragment(fragmentType: string, fragment: TodolistType | TextType) {
+    if (!note) {
+      let noteData = getNewNote()
+      note = await db.notes.insert(noteData)
+    }
+    let updateData = {}
+    updateData[`fragments.${fragmentType}`] = fragment
+    note = await note.update({
+      $set: updateData
+    })
+    dispatch('update', { note });
   }
 </script>
 
-{#each fragments as fragment, i (i)}
-  <svelte:component
-    this={elements[fragment.type]}
-    {fragment}
-    on:update={(event) => updateFragment(event.detail.fragment, i)}
-  />
-{/each}
+{#if note}
+  {#each types as fragmentType}
+    {#if note.fragments[fragmentType]}
+    <svelte:component
+      this={elements[fragmentType]}
+      fragment={note.fragments[fragmentType]}
+      on:update={(event) => updateFragment(fragmentType, event.detail.fragment)}
+    />
+    {/if}
+  {/each}
+{/if}
 
 <div class="flex__row flex__grow flex__gap">
   <button
     on:click|preventDefault={(e) => {
-      addFragment(getNewTextFragment(note.id));
+      updateFragment('text', getNewTextFragment());
     }}
     class="flex__grow | button__outlined button__discrete"
   >
@@ -48,7 +57,7 @@
   </button>
   <button
     on:click|preventDefault={(e) => {
-      addFragment(getNewTodoListFragment(note.id));
+      updateFragment('todolist', getNewTodoListFragment());
     }}
     class="flex__grow | button__outlined button__discrete"
   >

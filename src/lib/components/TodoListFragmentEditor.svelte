@@ -1,29 +1,28 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import cloneDeep from 'lodash/cloneDeep';
-  import { getNewTodo } from '$lib/db';
-  import FragmentEditor from './FragmentEditor.svelte';
+  import { getNewTodo, type TodolistType, type TodoType } from '$lib/db';
 
   const dispatch = createEventDispatcher<{
-    update: { fragment: Fragment };
+    update: { fragment: TodolistType };
   }>();
 
-  export let fragment: Fragment;
-  fragment = cloneDeep(fragment);
-  let todos: Todo[] = cloneDeep(fragment.data.todos);
+  export let fragment: TodolistType;
+  let todos: TodoType[] = fragment.todos;
   if (todos.length === 0) {
     todos = [...todos, getNewTodo()];
   }
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, data: { todos } } });
+    dispatch('update', { fragment: { ...fragment, todos } });
   }
-  function updateTodo(todo: Todo) {
+  function updateTodo(todo: TodoType) {
     let lastTodo = todos.slice(-1)[0];
     if (lastTodo.text.trim().length) {
       todos = [...todos, getNewTodo()];
     }
     stats = getStats();
+    console.log("HELO", stats, todos)
     handleChange();
   }
   function getStats() {
@@ -51,14 +50,14 @@
 
 <h3>
   Todo-list:
-  <input
+  <!-- <input
     type="text"
     bind:value={fragment.title}
     placeholder="My todolist"
     on:keyup={(e) => {
       handleChange();
     }}
-  />
+  /> -->
   ({stats.done}/{stats.total})
 </h3>
 <ol class="todolist">
