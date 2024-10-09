@@ -47,6 +47,7 @@
 
 <main class="wrapper | flex__grow">
   {#each notes as note}
+  {#key note._rev}
     <RenderedNote {note} db={data.db}>
       <div class="flex__row flex__justify-end | m__block-2" slot="footer">
         <button
@@ -60,6 +61,7 @@
       </div>
     </RenderedNote>
     <hr />
+  {/key}
   {/each}
 </main>
 

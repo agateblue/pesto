@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import TodoRow from './TodoRow.svelte';
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType } from '$lib/db';
 
@@ -16,13 +17,14 @@
   function handleChange() {
     dispatch('update', { fragment: { ...fragment, todos } });
   }
-  function updateTodo(todo: TodoType) {
+  function updateTodo(index: number, todo: TodoType) {
+    todos = cloneDeep(todos)
+    todos[index] = todo
     let lastTodo = todos.slice(-1)[0];
     if (lastTodo.text.trim().length) {
       todos = [...todos, getNewTodo()];
     }
     stats = getStats();
-    console.log("HELO", stats, todos)
     handleChange();
   }
   function getStats() {
@@ -63,21 +65,7 @@
 <ol class="todolist">
   {#each todos as todo, i (i)}
     <li>
-      <input
-        type="checkbox"
-        bind:checked={todo.done}
-        on:change={(e) => {
-          updateTodo(todo);
-        }}
-      />
-      <input
-        type="text"
-        id={`${fragment.id}-${i}`}
-        bind:value={todo.text}
-        on:keyup={(e) => {
-          updateTodo(todo);
-        }}
-      />
+      <TodoRow {todo} on:update={(e) => {updateTodo(i, e.detail.todo)}} />
     </li>
   {/each}
 </ol>

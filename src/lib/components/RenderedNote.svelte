@@ -16,9 +16,8 @@
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
       fragment={note.fragments.todolist}
-      {db}
       on:update={async (e) => {
-        await note.update({
+        await note.incrementalUpdate({
           $set: {'fragments.todolist': e.detail.fragment}
         })
       }}

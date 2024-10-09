@@ -27,9 +27,10 @@
     }
     let updateData = {}
     updateData[`fragments.${fragmentType}`] = fragment
-    note = await note.update({
+    await note.incrementalUpdate({
       $set: updateData
     })
+    note = await note.getLatest()
     dispatch('update', { note });
   }
 </script>
@@ -39,7 +40,7 @@
     {#if note.fragments[fragmentType]}
     <svelte:component
       this={elements[fragmentType]}
-      fragment={note.fragments[fragmentType]}
+      fragment={note.toMutableJSON().fragments[fragmentType]}
       on:update={(event) => updateFragment(fragmentType, event.detail.fragment)}
     />
     {/if}
