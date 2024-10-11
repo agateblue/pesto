@@ -12,7 +12,7 @@
 
   async function handleUpdate(n: NoteDocument) {
     let found = false
-    
+    note = n
     for (const [index, element] of notes.entries()) {
       if (element.id === n.id) {
         found = true
@@ -68,15 +68,22 @@
 <aside>
   <section class="wrapper">
     <slot></slot>
-    <NoteForm
-      {note}
-      db={data.db}
-      on:update={(e) => {
-        handleUpdate(e.detail.note);
-      }}
-      on:submit={(e) => {
-        note = null
-      }}
-    />
+    {#key note?.id}
+      <NoteForm
+        {note}
+        db={data.db}
+        on:update={(e) => {
+          handleUpdate(e.detail.note);
+        }}
+        on:submit={(e) => {
+          console.log("HELLO", e)
+          note = null
+        }}
+      >
+        <div class="flex__row flex__justify-end">
+          <button type="submit"> Save and add new </button>
+        </div>
+      </NoteForm>
+    {/key}
   </section>
 </aside>
