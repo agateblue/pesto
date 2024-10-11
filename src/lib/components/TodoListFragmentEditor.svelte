@@ -6,10 +6,13 @@
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
+    delete: {  };
   }>();
 
   export let fragment: TodolistType;
+  export let showDelete: boolean = true;
   let todos: TodoType[] = fragment.todos;
+
   if (todos.length === 0) {
     todos = [...todos, getNewTodo()];
   }
@@ -50,18 +53,32 @@
   let stats = getStats();
 </script>
 
-<h3>
-  Todo-list:
-  <!-- <input
-    type="text"
-    bind:value={fragment.title}
-    placeholder="My todolist"
-    on:keyup={(e) => {
-      handleChange();
-    }}
-  /> -->
-  ({stats.done}/{stats.total})
-</h3>
+<div class="flex__row | flex__justify-between">
+  <h3>
+    Todo-list:
+    <!-- <input
+      type="text"
+      bind:value={fragment.title}
+      placeholder="My todolist"
+      on:keyup={(e) => {
+        handleChange();
+      }}
+    /> -->
+    ({stats.done}/{stats.total})
+  </h3>
+  {#if showDelete}
+    <button 
+      class="button__link" 
+      on:click|preventDefault={
+        (e) => {
+          if (confirm('Do you want to delete this todolist?')) {
+            dispatch('delete', {})
+          }
+        }}>
+      Delete
+    </button>
+  {/if}
+</div>
 <ol class="todolist">
   {#each todos as todo, i (i)}
     <li>

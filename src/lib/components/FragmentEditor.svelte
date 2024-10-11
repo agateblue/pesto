@@ -20,7 +20,7 @@
     todolist: TodoListFragmentEditor
   };
 
-  async function updateFragment(fragmentType: string, fragment: TodolistType | TextType) {
+  async function updateFragment(fragmentType: string, fragment: TodolistType | TextType | undefined) {
     if (!note) {
       let noteData = getNewNote()
       note = await db.notes.insert(noteData)
@@ -42,26 +42,34 @@
       this={elements[fragmentType]}
       fragment={note.toMutableJSON().fragments[fragmentType]}
       on:update={(event) => updateFragment(fragmentType, event.detail.fragment)}
+      on:delete={
+        (event) => updateFragment(fragmentType, undefined)
+      }
     />
     {/if}
   {/each}
 {/if}
 
-<div class="flex__row flex__grow flex__gap">
-  <button
+<div class="flex__row flex__gap">
+  {#if !note?.fragments.text}
+    <button
     on:click|preventDefault={(e) => {
       updateFragment('text', getNewTextFragment());
     }}
-    class="flex__grow | button__outlined button__discrete"
-  >
-    <IconaMoonPen /> Add text
-  </button>
-  <button
-    on:click|preventDefault={(e) => {
-      updateFragment('todolist', getNewTodoListFragment());
-    }}
-    class="flex__grow | button__outlined button__discrete"
-  >
-    <IconaMoonCheckSquare /> Add todo-list
-  </button>
+        class="button__outlined button__discrete"
+        >
+        <IconaMoonPen /> Add text
+      </button>
+  {/if}
+  {#if !note?.fragments.todolist}
+    <button
+      on:click|preventDefault={(e) => {
+        updateFragment('todolist', getNewTodoListFragment());
+      }}
+      class="button__outlined button__discrete"
+    >
+      <IconaMoonCheckSquare /> Add todo-list
+    </button>
+  
+  {/if}
 </div>

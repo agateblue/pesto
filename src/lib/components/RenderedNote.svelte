@@ -16,6 +16,7 @@
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
       fragment={note.fragments.todolist}
+      showDelete={false}
       on:update={async (e) => {
         await note.incrementalUpdate({
           $set: {'fragments.todolist': e.detail.fragment}
