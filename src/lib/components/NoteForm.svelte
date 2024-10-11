@@ -24,7 +24,5 @@
       handleUpdate(e.detail.note);
     }}
   />
-  <div class="flex__row flex__justify-end">
-    <button type="submit"> Save </button>
-  </div>
+  <slot></slot>
 </form>
