@@ -69,7 +69,7 @@
 <ol class="todolist">
   <li>
     <TodoRow 
-      todo={{text: fragment.title, done: fragment.done, id: 'noop'}} 
+      todo={{text: fragment.title || '', done: fragment.done, id: 'noop'}} 
       on:update={
         (e) => {
           done = e.detail.todo.done
