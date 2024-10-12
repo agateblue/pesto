@@ -6,3 +6,9 @@ export function ignoreTab(handler: Function) {
     handler(e);
   };
 }
+
+export function updateURLParam(window: Window, param: string, value: string) {
+  let url = new URL(window.location.href);
+  url.searchParams.set(param, value)
+  history.pushState(history.state, '', url.href)
+}

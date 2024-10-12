@@ -288,6 +288,8 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
         query.push({ 'fragments.todolist.todos.1': { $exists: true } });
       } else if (token.value === 'done') {
         query.push({ 'fragments.todolist.done': { $eq: true } });
+      }else if (token.value === 'text') {
+        query.push({ 'fragments.text.content': { $exists: true } });
       }
     }
     if (token.type === 'text') {
