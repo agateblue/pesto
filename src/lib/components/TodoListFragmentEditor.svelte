@@ -7,29 +7,29 @@
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
-    delete: {  };
+    delete: {};
   }>();
 
   export let fragment: TodolistType;
   let todos: TodoType[] = fragment.todos;
-  let title: string = fragment.title
-  let done: boolean = fragment.done
+  let title: string = fragment.title;
+  let done: boolean = fragment.done;
 
   function handleChange() {
     dispatch('update', { fragment: { ...fragment, title, done, todos } });
   }
   function updateTodo(index: number, todo: TodoType | null) {
-    todos = cloneDeep(todos)
+    todos = cloneDeep(todos);
     if (todo) {
-      todos[index] = todo
+      todos[index] = todo;
     } else {
-      todos.splice(index, 1)
+      todos.splice(index, 1);
     }
-    todos = todos.filter(t => {
-      return t.text.trim()
-    })
+    todos = todos.filter((t) => {
+      return t.text.trim();
+    });
     if (title) {
-      todos = [...todos, getNewTodo()]
+      todos = [...todos, getNewTodo()];
     }
     stats = getStats();
     handleChange();
@@ -59,45 +59,42 @@
 
 <div class="flex__row | flex__justify-between">
   <h3>
-    Todo-list:
-    ({stats.done}/{stats.total})
+    Todo-list: ({stats.done}/{stats.total})
   </h3>
 </div>
 
-
-
 <ol class="todolist">
   <li>
-    <TodoRow 
-      todo={{text: fragment.title || '', done: fragment.done, id: 'noop'}} 
-      on:update={
-        (e) => {
-          done = e.detail.todo.done
-          title = e.detail.todo.text
-          if (title && todos.length === 0) {
-            todos = [...todos, getNewTodo()]
-          }
-          handleChange()
-          stats = getStats()
+    <TodoRow
+      todo={{ text: fragment.title || '', done: fragment.done, id: 'noop' }}
+      on:update={(e) => {
+        done = e.detail.todo.done;
+        title = e.detail.todo.text;
+        if (title && todos.length === 0) {
+          todos = [...todos, getNewTodo()];
         }
-      }
-      on:delete={
-        (e) => {
-          if (confirm('Do you want to delete this todolist?')) {
-            dispatch('delete', {})
-          }
+        handleChange();
+        stats = getStats();
+      }}
+      on:delete={(e) => {
+        if (confirm('Do you want to delete this todolist?')) {
+          dispatch('delete', {});
         }
-      }
+      }}
     />
-    {#if title} 
+    {#if title}
       <ol class="todolist">
         {#each todos as todo, i (i)}
           <li>
             {#key todo.id}
-              <TodoRow 
+              <TodoRow
                 {todo}
-                on:delete={(e) => {updateTodo(i, null)}}
-                on:update={(e) => {updateTodo(i, e.detail.todo)}} 
+                on:delete={(e) => {
+                  updateTodo(i, null);
+                }}
+                on:update={(e) => {
+                  updateTodo(i, e.detail.todo);
+                }}
               />
             {/key}
           </li>

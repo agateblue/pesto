@@ -1,6 +1,5 @@
 <script>
-  import MainNavigation from "$lib/components/MainNavigation.svelte";
-
+  import MainNavigation from '$lib/components/MainNavigation.svelte';
 </script>
 
 <div class="my__layout">

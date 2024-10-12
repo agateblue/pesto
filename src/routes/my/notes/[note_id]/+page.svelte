@@ -7,16 +7,16 @@
   let note = data.note;
 
   async function handleUpdate(n: NoteDocument) {
-    note = n
+    note = n;
   }
 </script>
 
-<main class="wrapper | flex__grow" >
+<main class="wrapper | flex__grow">
   {#key note._rev}
     <RenderedNote {note}></RenderedNote>
   {/key}
 </main>
-<aside data-fullpage=true>
+<aside data-fullpage="true">
   <section class="wrapper">
     <NoteForm
       {note}

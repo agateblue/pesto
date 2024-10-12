@@ -20,16 +20,16 @@
   }
   function getNoteFromTempoEntry(entry: object) {
     if (!entry.text) {
-      return null
+      return null;
     }
     let created_at: string = entry.date;
-    let msecs = Date.parse(created_at)
+    let msecs = Date.parse(created_at);
     let id: string = buildUniqueId({
       msecs,
       random: Array(16).fill(0),
-      seq: Number(0),
-    })
-    let content: string  = entry.text
+      seq: Number(0)
+    });
+    let content: string = entry.text;
     let note: NoteDocType = {
       id: id,
       title: null,
@@ -46,20 +46,19 @@
   }
 
   function getNoteFromTempoTask(task: object, doneList: number) {
-
     // {"subtasks":[{"label":"Et rachat par Audrey","done":false},{"label":"Rachat de soulte","done":false},{"label":"Désolidarisation prêt","done":false}],"date":"2023-04-11T08:21:21.851Z","text":"Demander notaire pour succession maison","list":0,"category":null,"_id":"2023-04-11T08:21:21.851Z","_rev":"5-bd6f820ede5ef5fd8cff29c434d27962"}
     if (!task.text) {
-      return null
+      return null;
     }
-    let list: number = task.list
+    let list: number = task.list;
     let created_at: string = task.date;
-    let msecs = Date.parse(created_at)
+    let msecs = Date.parse(created_at);
     let id: string = buildUniqueId({
       msecs,
       random: Array(16).fill(0),
-      seq: Number(0),
-    })
-    let content: string  = task.text
+      seq: Number(0)
+    });
+    let content: string = task.text;
     let note: NoteDocType = {
       id: id,
       title: null,
@@ -70,14 +69,14 @@
         todolist: {
           done: list >= doneList,
           title: task.text,
-          todos: task.subtasks.map(t => {
+          todos: task.subtasks.map((t) => {
             return {
               id: buildUniqueId({
-                msecs,
+                msecs
               }),
               done: t.done,
-              text: t.label,
-            }
+              text: t.label
+            };
           })
         }
       }
@@ -91,8 +90,8 @@
     let data: object = JSON.parse(content);
     let entries: [] = data.entries || [];
     let tasks: [] = data?.board?.tasks || [];
-    let boardConfig: object = data?.board?.settings || {lists: []};
-    let doneList = boardConfig.lists.length
+    let boardConfig: object = data?.board?.settings || { lists: [] };
+    let doneList = boardConfig.lists.length;
 
     console.log('Found', entries.length + tasks.length, 'entries to import…');
 
@@ -120,7 +119,6 @@
   }
 </script>
 
-
 <div class="my__layout">
   <MainNavigation />
   <main class="flex__row">
@@ -135,7 +133,7 @@
           <button type="submit"> Remove all data… </button>
         </div>
       </form>
-  
+
       <h1>Import from Tempo (Beta)</h1>
       <form on:submit|preventDefault={handleImportTempo}>
         <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
@@ -154,5 +152,3 @@
     </section>
   </main>
 </div>
-
-

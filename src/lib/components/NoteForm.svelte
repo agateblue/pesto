@@ -1,12 +1,9 @@
 <script lang="ts">
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
-  import {
-    type NoteDocument,
-    type Database,
-  } from '$lib/db'
+  import { type NoteDocument, type Database } from '$lib/db';
   const dispatch = createEventDispatcher<{
-    update: { note: NoteDocument};
+    update: { note: NoteDocument };
   }>();
 
   export let note: NoteDocument | null;

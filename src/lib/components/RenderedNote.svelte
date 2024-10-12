@@ -17,14 +17,14 @@
       fragment={note.fragments.todolist}
       on:update={async (e) => {
         await note.incrementalUpdate({
-          $set: {'fragments.todolist': e.detail.fragment}
-        })
+          $set: { 'fragments.todolist': e.detail.fragment }
+        });
       }}
       on:delete={async (e) => {
         await note.incrementalUpdate({
-          $set: {'fragments.todolist': undefined}
-        })
-        note = await note.getLatest()
+          $set: { 'fragments.todolist': undefined }
+        });
+        note = await note.getLatest();
       }}
     />
   {/if}

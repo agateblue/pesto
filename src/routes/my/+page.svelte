@@ -8,25 +8,24 @@
 
   let notes: NoteDocument[] = [];
 
-  let note: NoteDocument | null = null
+  let note: NoteDocument | null = null;
 
   async function handleUpdate(n: NoteDocument) {
-    let found = false
-    note = n
+    let found = false;
+    note = n;
     for (const [index, element] of notes.entries()) {
       if (element.id === n.id) {
-        found = true
-        notes[index] = n
-        notes = notes
-        break
+        found = true;
+        notes[index] = n;
+        notes = notes;
+        break;
       }
     }
     if (!found) {
       // creation, we insert the note at the top
-      notes = [n, ...notes]
+      notes = [n, ...notes];
     }
   }
-
 
   async function askDelete(note: NoteDocument) {
     if (confirm('Do you want to delete this note?')) {
@@ -46,13 +45,14 @@
   <div class="flex__row | flex__justify-between">
     <button
       class="layout__multi-hidden"
-      on:click={() => {globals.uiState.set("currentPage", () => 'mainMenu')}}>
+      on:click={() => {
+        globals.uiState.set('currentPage', () => 'mainMenu');
+      }}
+    >
       Menu
     </button>
 
-    <a 
-      href="/my/notes/add"
-      class="button | layout__multi-hidden">New note</a>
+    <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
   {#each notes as note}
     {#key note._rev}
@@ -72,15 +72,16 @@
     {/key}
   {/each}
   {#if notes.length > 0}
-    <button 
+    <button
       on:click={async (e) => {
-        let newNotes = await getByQuery(
-          globals.db.notes,
-          { limit: 20, sort: [{ id: 'desc' }], selector: {id: {$lt: notes.slice(-1)[0].id}} }
-        );
-        notes = [...notes, ...newNotes]
-      }}
-      >Load more</button>
+        let newNotes = await getByQuery(globals.db.notes, {
+          limit: 20,
+          sort: [{ id: 'desc' }],
+          selector: { id: { $lt: notes.slice(-1)[0].id } }
+        });
+        notes = [...notes, ...newNotes];
+      }}>Load more</button
+    >
   {/if}
 </main>
 
@@ -94,7 +95,7 @@
           handleUpdate(e.detail.note);
         }}
         on:submit={(e) => {
-          note = null
+          note = null;
         }}
       >
         <div class="flex__row flex__justify-end">
