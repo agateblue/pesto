@@ -2,7 +2,6 @@
   import { renderMarkdown, type Database, type NoteDocument } from '$lib/db';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
-  export let db: Database;
   export let note: NoteDocument;
 </script>
 
@@ -16,11 +15,16 @@
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
       fragment={note.fragments.todolist}
-      showDelete={false}
       on:update={async (e) => {
         await note.incrementalUpdate({
           $set: {'fragments.todolist': e.detail.fragment}
         })
+      }}
+      on:delete={async (e) => {
+        await note.incrementalUpdate({
+          $set: {'fragments.todolist': undefined}
+        })
+        note = await note.getLatest()
       }}
     />
   {/if}

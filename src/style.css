@@ -286,6 +286,12 @@ input[type='submit']:hover {
   padding-inline: 0;
   padding-block: var(--space-1);
 }
+
+.button__icon {
+  background: none;
+  color: hsl(from var(--text-color) h s l / 0.7);
+  padding-block: var(--space-2);
+}
 .button__outlined {
   background: none;
   border: 2px solid var(--button-color, var(--primary-color));
@@ -318,4 +324,13 @@ textarea {
 .todolist input[type='checkbox'] {
   scale: 1.5;
   margin-inline-end: var(--space-2);
+}
+
+.todolist > li > .todolist {
+  margin-inline-start: var(--space-4);
+}
+
+input[type=text].input__discrete {
+  border: none;
+  border-bottom: var(--layout-separator);
 }
