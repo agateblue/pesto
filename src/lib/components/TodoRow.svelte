@@ -32,6 +32,7 @@
   <input
     class="flex__grow | input__discrete"
     type="text"
+    autocomplete="off"
     id={`todo-${todo.id}-text`}
     bind:value={text}
     on:keyup={ignoreTab((e) => {

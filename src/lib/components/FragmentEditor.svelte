@@ -22,12 +22,7 @@
 
   export let note: NoteDocument | null;
   let db = globals.db;
-
-  let types = ['text', 'todolist'];
-  let elements = {
-    text: TextFragmentEditor,
-    todolist: TodoListFragmentEditor
-  };
+  let fragments = note?.toMutableJSON().fragments || {}
 
   async function updateFragment(
     fragmentType: string,
@@ -43,42 +38,20 @@
       $set: updateData
     });
     note = await note.getLatest();
+    fragments = note.fragments
     dispatch('update', { note });
   }
 </script>
 
-{#if note}
-  {#each types as fragmentType}
-    {#if note.fragments[fragmentType]}
-      <svelte:component
-        this={elements[fragmentType]}
-        fragment={note.toMutableJSON().fragments[fragmentType]}
-        on:update={(event) => updateFragment(fragmentType, event.detail.fragment)}
-        on:delete={(event) => updateFragment(fragmentType, undefined)}
-      />
-    {/if}
-  {/each}
-{/if}
 
-<div class="flex__row flex__gap">
-  {#if !note?.fragments.text}
-    <button
-      on:click|preventDefault={(e) => {
-        updateFragment('text', getNewTextFragment());
-      }}
-      class="button__outlined button__discrete"
-    >
-      <IconaMoonPen /> Add text
-    </button>
-  {/if}
-  {#if !note?.fragments.todolist}
-    <button
-      on:click|preventDefault={(e) => {
-        updateFragment('todolist', getNewTodoListFragment());
-      }}
-      class="button__outlined button__discrete"
-    >
-      <IconaMoonCheckSquare /> Add todo-list
-    </button>
-  {/if}
-</div>
+<TextFragmentEditor
+  fragment={fragments.text || getNewTextFragment()}
+  on:update={(event) => updateFragment('text', event.detail.fragment)}
+  on:delete={(event) => updateFragment('text', undefined)}
+/>
+<TodoListFragmentEditor
+  fragment={fragments.todolist || getNewTodoListFragment()}
+  on:update={(event) => updateFragment('todolist', event.detail.fragment)}
+  on:delete={(event) => updateFragment('todolist', undefined)}
+/>
+
