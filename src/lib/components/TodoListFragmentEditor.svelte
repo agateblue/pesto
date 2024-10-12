@@ -84,7 +84,12 @@
         on:update={(e) => {
           done = e.detail.todo.done;
           title = e.detail.todo.text;
-          if (title && todos.length === 0) {
+          if (done) {
+            todos = cloneDeep(todos)
+            todos = todos.map(t => {
+              return {...t, done: true}
+            })
+          } else if (title && todos.length === 0) {
             todos = [...todos, getNewTodo()];
           }
           handleChange();
