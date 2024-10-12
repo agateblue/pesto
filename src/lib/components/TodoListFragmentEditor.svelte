@@ -12,13 +12,14 @@
   export let fragment: TodolistType;
   export let showDelete: boolean = true;
   let todos: TodoType[] = fragment.todos;
+  let title: string = fragment.title
 
   if (todos.length === 0) {
     todos = [...todos, getNewTodo()];
   }
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, todos } });
+    dispatch('update', { fragment: { ...fragment, title, todos } });
   }
   function updateTodo(index: number, todo: TodoType) {
     todos = cloneDeep(todos)
@@ -56,14 +57,14 @@
 <div class="flex__row | flex__justify-between">
   <h3>
     Todo-list:
-    <!-- <input
+    <input
       type="text"
-      bind:value={fragment.title}
+      bind:value={title}
       placeholder="My todolist"
       on:keyup={(e) => {
         handleChange();
       }}
-    /> -->
+    />
     ({stats.done}/{stats.total})
   </h3>
   {#if showDelete}
