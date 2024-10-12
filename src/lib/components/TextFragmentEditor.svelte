@@ -11,21 +11,14 @@
   let content = fragment.content;
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, content } });
+    content = content.trim()
+    if (content) {
+      dispatch('update', { fragment: { ...fragment, content } });
+    } else {
+      dispatch('delete', {  });
+
+    }
   }
 </script>
 
-<div class="flex__row | flex__justify-between">
-  <div></div>
-  <button
-    class="button__link"
-    on:click|preventDefault={(e) => {
-      if (confirm('Do you want to delete this text?')) {
-        dispatch('delete', {});
-      }
-    }}
-  >
-    Delete
-  </button>
-</div>
 <textarea class="editor" on:keyup={(e) => handleChange()} bind:value={content} />

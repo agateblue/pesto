@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import TodoRow from './TodoRow.svelte';
   import cloneDeep from 'lodash/cloneDeep';
-  import { getNewTodo, type TodolistType, type TodoType } from '$lib/db';
+  import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
   import FragmentEditor from './FragmentEditor.svelte';
 
   const dispatch = createEventDispatcher<{
@@ -12,11 +12,17 @@
 
   export let fragment: TodolistType;
   let todos: TodoType[] = fragment.todos;
-  let title: string = fragment.title;
+  let title: string = fragment.title || '';
   let done: boolean = fragment.done;
+  let id: string = buildUniqueId()
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, title, done, todos } });
+    let hasContent = !!title || todos.filter(t => {return t.text.trim()}).length > 0
+    if (hasContent) {
+      dispatch('update', { fragment: { ...fragment, title, done, todos } });
+    } else {
+      dispatch('delete', {})
+    }
   }
   function updateTodo(index: number, todo: TodoType | null) {
     todos = cloneDeep(todos);
@@ -37,7 +43,7 @@
   function getStats() {
     let stats = {
       done: done ? 1 : 0,
-      total: 1,
+      total: title.trim() ? 1 : 0,
       complete: false
     };
     for (const todo of todos) {
@@ -59,30 +65,37 @@
 
 <div class="flex__row | flex__justify-between">
   <h3>
-    Todo-list: ({stats.done}/{stats.total})
+    Todo-list 
+    {#if stats.total}
+      · {stats.done}/{stats.total}
+    {/if}
   </h3>
 </div>
 
 <ol class="todolist">
   <li>
-    <TodoRow
-      todo={{ text: fragment.title || '', done: fragment.done, id: 'noop' }}
-      on:update={(e) => {
-        done = e.detail.todo.done;
-        title = e.detail.todo.text;
-        if (title && todos.length === 0) {
-          todos = [...todos, getNewTodo()];
-        }
-        handleChange();
-        stats = getStats();
-      }}
-      on:delete={(e) => {
-        if (confirm('Do you want to delete this todolist?')) {
-          dispatch('delete', {});
-        }
-      }}
-    />
-    {#if title}
+    {#key id}
+      <TodoRow
+        todo={{ text: title, done: done, id }}
+        on:update={(e) => {
+          done = e.detail.todo.done;
+          title = e.detail.todo.text;
+          if (title && todos.length === 0) {
+            todos = [...todos, getNewTodo()];
+          }
+          handleChange();
+          stats = getStats();
+        }}
+        on:delete={(e) => {
+          title = ''
+          done = false
+          handleChange();
+          stats = getStats();
+          id = buildUniqueId()
+        }}
+      />
+    {/key}
+    {#if stats.total > 1 || title}
       <ol class="todolist">
         {#each todos as todo, i (i)}
           <li>
