@@ -92,9 +92,10 @@
       <NoteForm
         {note}
         on:update={(e) => {
-          handleUpdate(e.detail.note);
+          note = e.detail.note;
         }}
         on:submit={(e) => {
+          handleUpdate(note);
           note = null;
         }}
       >
