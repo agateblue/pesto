@@ -8,10 +8,13 @@ import {
   createRxDatabase,
   addRxPlugin,
   toTypedRxJsonSchema,
+  type RxState,
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { RxDBStatePlugin } from 'rxdb/plugins/state';
+
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
@@ -22,6 +25,7 @@ import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBDevModePlugin);
 addRxPlugin(RxDBMigrationSchemaPlugin);
+addRxPlugin(RxDBStatePlugin);
 
 export const noteSchemaLiteral = {
   version: 0,
@@ -114,6 +118,15 @@ export type DatabaseCollections = {
 
 export type Database = RxDatabase<DatabaseCollections>
 
+export type Globals = {
+  db: null | Database;
+  uiState: null | RxState;
+}
+export const globals: Globals = {
+  db: null,
+  uiState: null,
+}
+
 export async function getDb() {
   let db = await createRxDatabase<Database>({
     name: 'main',
@@ -126,7 +139,9 @@ export async function getDb() {
       schema: noteSchema
     }
   });
-  return db;
+
+  let uiState = await db.addState('ui');
+  return {db, uiState};
 }
 
 export function renderMarkdown(text: string): string {
