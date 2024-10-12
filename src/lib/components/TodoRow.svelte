@@ -23,8 +23,9 @@
   <input
     type="checkbox"
     id={`todo-${todo.id}-done`}
-    bind:checked={done}
+    checked={text.trim() && todo.done}
     on:change={(e) => {
+      done = e.target.checked
       handleChange();
     }}
     disabled={!text.trim()}
