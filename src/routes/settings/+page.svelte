@@ -1,15 +1,14 @@
 <script lang="ts">
   import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { buildUniqueId } from '$lib/db';
-  import type { Fragment, Note, TextFragment } from '../../ambient.d';
-  export let data;
+  import { buildUniqueId, type NoteDocument, globals } from '$lib/db';
+
   let files: File[];
 
   async function handleSubmit() {
     if (confirm('Do you confirm data deletion? This action is irreversible.')) {
       window.localStorage.clear();
       try {
-        await data.db.remove();
+        await globals.db.remove();
         window.indexedDB.databases().then((r) => {
           for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
         });
@@ -19,28 +18,29 @@
       }
     }
   }
-  function getNoteAndFragmentsFromTempoEntry(entry: object) {
-    let created_at = entry.date;
-    let note: Note = {
-      id: buildUniqueId({
-        msecs: new Date(created_at).getTime()
-      }),
-      created_at: created_at
-    };
+  function getNoteFromTempoEntry(entry: object) {
     if (!entry.text) {
-      return null;
+      return null
     }
-    let fragment: TextFragment = {
-      id: buildUniqueId({
-        msecs: new Date(created_at).getTime()
-      }),
-      created_at: created_at,
-      type: 'text',
+    let created_at = entry.date;
+    let msecs = Date.parse(created_at)
+    let id = buildUniqueId({
+      msecs,
+      random: Array(16).fill(0),
+      seq: Number(0),
+    })
+    let note: NoteDocument = {
+      id,
       title: null,
-      data: { text: entry.text.trim() },
-      note_id: note.id
+      created_at: entry.date,
+      modified_at: entry.date,
+      fragments: {
+        text: {
+          content: entry.text
+        }
+      }
     };
-    return [note, fragment];
+    return note;
   }
   async function handleImportTempo() {
     let tempoFile = files[0];
@@ -49,24 +49,20 @@
     let entries: [] = content.entries;
     console.log('Found', entries.length, 'entries to import…');
 
-    let notes: Note[] = [];
-    let fragments: Fragment[] = [];
+    let notes: NoteDocument[] = [];
 
     for (const entry of entries) {
-      let converted: DBEntry[] | null = getNoteAndFragmentsFromTempoEntry(entry);
-      console.log('CONVERTED', converted);
+      let converted: NoteDocument | null = getNoteFromTempoEntry(entry);
+      console.log('CONVERTED', entry, converted);
       if (converted) {
-        notes.push(converted[0]);
-        fragments.push(converted[1]);
+        notes.push(converted);
       }
     }
 
     console.log('Ready to import notes: ', notes.length);
     console.log();
-    let resultNotes = await data.db.notes.bulkInsert(notes);
-    console.log('Ready to import fragments: ', fragments.length);
-    let resultFragments = await data.db.fragments.bulkInsert(fragments);
-    console.log('Finished import', resultNotes, resultFragments);
+    let resultNotes = await globals.db.notes.bulkInsert(notes);
+    console.log('Finished import', resultNotes);
   }
 </script>
 
