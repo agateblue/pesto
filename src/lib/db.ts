@@ -28,7 +28,7 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 
 export const noteSchemaLiteral = {
-  version: 3,
+  version: 5,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -72,7 +72,7 @@ export const noteSchemaLiteral = {
           required: ['todos', 'title', 'done'],
           properties: {
             title: {
-              type: ['string', 'null', 'boolean']
+              type: ['string']
             },
             done: {
               type: 'boolean'
@@ -82,14 +82,17 @@ export const noteSchemaLiteral = {
               minItems: 0,
               items: {
                 type: 'object',
-                required: ['done', 'text'],
+                required: ['id', 'done', 'text'],
                 properties: {
+                  id: {
+                    type: 'string'
+                  },
                   done: {
                     type: 'boolean'
                   },
                   text: {
                     type: 'string'
-                  }
+                  },
                 }
               }
             }
@@ -168,6 +171,22 @@ export async function getDb() {
         },
         3: function (oldDoc) {
           return oldDoc
+        },
+        4: function (oldDoc) {
+          if (oldDoc?.fragments?.todolist) {
+            oldDoc.fragments.todolist.title = oldDoc.fragments.todolist.title || "TODO"
+          }
+          return oldDoc
+        },
+        5: function (oldDoc) {
+          if (oldDoc?.fragments?.todolist) {
+            for (const todo of oldDoc.fragments.todolist.todos) {
+              todo.id = buildUniqueId({
+                msecs: Date.parse(oldDoc.created_at)
+              })
+            }
+          }
+          return oldDoc
         }
       }
     }
@@ -211,6 +230,7 @@ export function getNewTodoListFragment() {
 
 export function getNewTodo() {
   return {
+    id: buildUniqueId(),
     text: '',
     done: false
   } as Todo;

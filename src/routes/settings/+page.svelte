@@ -72,6 +72,9 @@
           title: task.text,
           todos: task.subtasks.map(t => {
             return {
+              id: buildUniqueId({
+                msecs,
+              }),
               done: t.done,
               text: t.label,
             }
