@@ -20,7 +20,6 @@
   <section class="wrapper">
     <NoteForm
       {note}
-      db={data.db}
       on:update={(e) => {
         handleUpdate(e.detail.note);
       }}

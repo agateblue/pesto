@@ -2,7 +2,7 @@
   import cloneDeep from 'lodash/cloneDeep';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
-  import { getNewNote, getNewTextFragment, getNewTodoListFragment, type NoteDocument, type TextType, type TodolistType, type Database} from '$lib/db';
+  import { globals, getNewNote, getNewTextFragment, getNewTodoListFragment, type NoteDocument, type TextType, type TodolistType, type Database} from '$lib/db';
   import { createEventDispatcher } from 'svelte';
   import IconaMoonCheckSquare from 'virtual:icons/iconamoon/check-square';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
@@ -12,7 +12,7 @@
   }>();
 
   export let note: NoteDocument | null;
-  export let db: Database;
+  let db = globals.db
 
   let types = ['text', 'todolist']
   let elements = {
