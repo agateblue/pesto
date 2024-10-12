@@ -14,6 +14,7 @@ import {
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
@@ -29,6 +30,7 @@ if (dev) {
 
 addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
+addRxPlugin(RxDBUpdatePlugin);
 
 export const noteSchemaLiteral = {
   version: 5,
