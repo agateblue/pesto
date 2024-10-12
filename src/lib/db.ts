@@ -28,7 +28,7 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 
 export const noteSchemaLiteral = {
-  version: 2,
+  version: 3,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -69,7 +69,7 @@ export const noteSchemaLiteral = {
         },
         todolist: {
           type: 'object',
-          required: ['todos', 'title'],
+          required: ['todos', 'title', 'done'],
           properties: {
             title: {
               type: ['string', 'null', 'boolean']
@@ -164,6 +164,9 @@ export async function getDb() {
             }
 
           }
+          return oldDoc
+        },
+        3: function (oldDoc) {
           return oldDoc
         }
       }
