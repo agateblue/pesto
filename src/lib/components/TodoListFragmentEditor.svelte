@@ -3,6 +3,7 @@
   import TodoRow from './TodoRow.svelte';
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType } from '$lib/db';
+  import FragmentEditor from './FragmentEditor.svelte';
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
@@ -10,31 +11,33 @@
   }>();
 
   export let fragment: TodolistType;
-  export let showDelete: boolean = true;
   let todos: TodoType[] = fragment.todos;
   let title: string = fragment.title
-
-  if (todos.length === 0) {
-    todos = [...todos, getNewTodo()];
-  }
+  let done: boolean = fragment.done
 
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, title, todos } });
+    dispatch('update', { fragment: { ...fragment, title, done, todos } });
   }
-  function updateTodo(index: number, todo: TodoType) {
+  function updateTodo(index: number, todo: TodoType | null) {
     todos = cloneDeep(todos)
-    todos[index] = todo
-    let lastTodo = todos.slice(-1)[0];
-    if (lastTodo.text.trim().length) {
-      todos = [...todos, getNewTodo()];
+    if (todo) {
+      todos[index] = todo
+    } else {
+      todos.splice(index, 1)
+    }
+    todos = todos.filter(t => {
+      return t.text.trim()
+    })
+    if (title) {
+      todos = [...todos, getNewTodo()]
     }
     stats = getStats();
     handleChange();
   }
   function getStats() {
     let stats = {
-      done: 0,
-      total: 0,
+      done: done ? 1 : 0,
+      total: 1,
       complete: false
     };
     for (const todo of todos) {
@@ -57,33 +60,49 @@
 <div class="flex__row | flex__justify-between">
   <h3>
     Todo-list:
-    <input
-      type="text"
-      bind:value={title}
-      placeholder="My todolist"
-      on:keyup={(e) => {
-        handleChange();
-      }}
-    />
     ({stats.done}/{stats.total})
   </h3>
-  {#if showDelete}
-    <button 
-      class="button__link" 
-      on:click|preventDefault={
+</div>
+
+
+
+<ol class="todolist">
+  <li>
+    <TodoRow 
+      todo={{text: fragment.title, done: fragment.done, id: 'noop'}} 
+      on:update={
+        (e) => {
+          done = e.detail.todo.done
+          title = e.detail.todo.text
+          if (title && todos.length === 0) {
+            todos = [...todos, getNewTodo()]
+          }
+          handleChange()
+          stats = getStats()
+        }
+      }
+      on:delete={
         (e) => {
           if (confirm('Do you want to delete this todolist?')) {
             dispatch('delete', {})
           }
-        }}>
-      Delete
-    </button>
-  {/if}
-</div>
-<ol class="todolist">
-  {#each todos as todo, i (i)}
-    <li>
-      <TodoRow {todo} on:update={(e) => {updateTodo(i, e.detail.todo)}} />
-    </li>
-  {/each}
+        }
+      }
+    />
+    {#if title} 
+      <ol class="todolist">
+        {#each todos as todo, i (i)}
+          <li>
+            {#key todo.id}
+              <TodoRow 
+                {todo}
+                on:delete={(e) => {updateTodo(i, null)}}
+                on:update={(e) => {updateTodo(i, e.detail.todo)}} 
+              />
+            {/key}
+          </li>
+        {/each}
+      </ol>
+    {/if}
+  </li>
 </ol>

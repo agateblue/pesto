@@ -59,7 +59,7 @@
   </div>
   {#each notes as note}
   {#key note._rev}
-    <RenderedNote {note} db={data.db}>
+    <RenderedNote {note}>
       <div class="flex__row flex__justify-end | m__block-2" slot="footer">
         <button
           class="button__link"
