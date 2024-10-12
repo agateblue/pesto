@@ -28,7 +28,7 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 
 export const noteSchemaLiteral = {
-  version: 1,
+  version: 2,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -72,11 +72,14 @@ export const noteSchemaLiteral = {
           required: ['todos', 'title'],
           properties: {
             title: {
-              type: ['string', 'null']
+              type: ['string', 'null', 'boolean']
+            },
+            done: {
+              type: 'boolean'
             },
             todos: {
               type: 'array',
-              minItems: 1,
+              minItems: 0,
               items: {
                 type: 'object',
                 required: ['done', 'text'],
@@ -147,6 +150,19 @@ export async function getDb() {
         1: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
             oldDoc.fragments.todolist.title = null
+          }
+          return oldDoc
+        },
+        2: function (oldDoc) {
+          if (oldDoc?.fragments?.todolist) {
+            oldDoc.fragments.todolist.done = true
+            for (const todo of oldDoc.fragments.todolist.todos) {
+              if (!todo.done) {
+                oldDoc.fragments.todolist.done = false
+                break
+              }
+            }
+
           }
           return oldDoc
         }
