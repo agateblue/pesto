@@ -13,18 +13,20 @@ import {
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
-import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
-
+import { dev } from '$app/environment';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
 import { v7 as uuidv7 } from 'uuid';
 import type { TextFragment, Note, TodoListFragment, Todo } from '../ambient';
 
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-addRxPlugin(RxDBUpdatePlugin);
-addRxPlugin(RxDBDevModePlugin);
+if (dev) {
+  import('rxdb/plugins/dev-mode').then(r => {
+    addRxPlugin(r.RxDBDevModePlugin);
+  })
+}
+
 addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 
