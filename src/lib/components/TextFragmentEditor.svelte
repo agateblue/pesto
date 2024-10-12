@@ -11,12 +11,11 @@
   let content = fragment.content;
 
   function handleChange() {
-    content = content.trim()
+    content = content.trim();
     if (content) {
       dispatch('update', { fragment: { ...fragment, content } });
     } else {
-      dispatch('delete', {  });
-
+      dispatch('delete', {});
     }
   }
 </script>

@@ -22,7 +22,7 @@
 
   export let note: NoteDocument | null;
   let db = globals.db;
-  let fragments = note?.toMutableJSON().fragments || {}
+  let fragments = note?.toMutableJSON().fragments || {};
 
   async function updateFragment(
     fragmentType: string,
@@ -38,11 +38,10 @@
       $set: updateData
     });
     note = await note.getLatest();
-    fragments = note.fragments
+    fragments = note.fragments;
     dispatch('update', { note });
   }
 </script>
-
 
 <TextFragmentEditor
   fragment={fragments.text || getNewTextFragment()}
@@ -54,4 +53,3 @@
   on:update={(event) => updateFragment('todolist', event.detail.fragment)}
   on:delete={(event) => updateFragment('todolist', undefined)}
 />
-
