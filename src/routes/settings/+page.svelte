@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MainNavigation from '$lib/components/MainNavigation.svelte';
   import { buildUniqueId } from '$lib/db';
   import type { Fragment, Note, TextFragment } from '../../ambient.d';
   export let data;
@@ -69,34 +70,39 @@
   }
 </script>
 
-<div class="flex__row">
-  <section class="wrapper | flex__grow">
-    <a href="/my">Back to home</a>
-    <h1>Clear data</h1>
-    <form on:submit|preventDefault={handleSubmit}>
-      <p>
-        Remove all local data including entries, tasks, settings and drafts. You will be asked for
-        confirmation.
-      </p>
-      <div class="flex__row flex__justify-end">
-        <button type="submit"> Remove all data… </button>
-      </div>
-    </form>
 
-    <h1>Import from Tempo (Beta)</h1>
-    <form on:submit|preventDefault={handleImportTempo}>
-      <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
-      <label for="tempo-file">Tempo JSON file</label>
-      <input
-        accept=".json,application/json"
-        id="tempo-file"
-        name="tempo-file"
-        type="file"
-        bind:files
-      />
-      <div class="flex__row flex__justify-end">
-        <button type="submit"> Import </button>
-      </div>
-    </form>
-  </section>
+<div class="my__layout">
+  <MainNavigation />
+  <main class="flex__row">
+    <section class="wrapper | flex__grow">
+      <h1>Clear data</h1>
+      <form on:submit|preventDefault={handleSubmit}>
+        <p>
+          Remove all local data including entries, tasks, settings and drafts. You will be asked for
+          confirmation.
+        </p>
+        <div class="flex__row flex__justify-end">
+          <button type="submit"> Remove all data… </button>
+        </div>
+      </form>
+  
+      <h1>Import from Tempo (Beta)</h1>
+      <form on:submit|preventDefault={handleImportTempo}>
+        <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
+        <label for="tempo-file">Tempo JSON file</label>
+        <input
+          accept=".json,application/json"
+          id="tempo-file"
+          name="tempo-file"
+          type="file"
+          bind:files
+        />
+        <div class="flex__row flex__justify-end">
+          <button type="submit"> Import </button>
+        </div>
+      </form>
+    </section>
+  </main>
 </div>
+
+

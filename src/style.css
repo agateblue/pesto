@@ -121,7 +121,6 @@ body {
 /* composition */
 
 .my__layout {
-  container-type: inline-size;
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -138,21 +137,55 @@ body {
     flex-basis: 40ch;
     border-inline-start: var(--layout-separator);
   }
+  aside, main {
+    display: var(--display, block);
+  }
 }
 
-@container (min-width: 800px) {
-  aside:first-child {
-    flex-basis: 25ch;
-    height: 100vh;
+[data-layout="single-column"] {
+  .my__layout {
+    &:has([data-fullpage=true]) > *:not([data-fullpage=true]) {
+      --display: none;
+    }
+
+    &:not(:has([data-fullpage=true])) main {
+      --display: block;
+      width: 100%; 
+    }
+    &:not(:has([data-fullpage=true])) > *:not(main) {
+      --display: none;
+    }
+    
+    [data-fullpage=true] {
+      width: 100%; 
+    }
   }
-  main {
-    flex-grow: 1.5;
-    height: 100vh;
+}
+
+[data-layout="multi-columns"] {
+  .my__layout {
+    aside:first-child {
+      flex-basis: 25ch;
+      height: 100vh;
+    }
+    main {
+      flex-grow: 1.5;
+      height: 100vh;
+    }
+    aside:last-child {
+      flex-grow: 1;
+      height: 100vh;
+    }
   }
-  aside:last-child {
-    flex-grow: 1;
-    height: 100vh;
-  }
+}
+
+
+[data-layout="multi-columns"] .layout__multi-hidden {
+  display: none;
+}
+
+[data-layout="single-column"] .layout__single-hidden {
+  display: none;
 }
 
 .flex__row {

@@ -11,12 +11,12 @@
   }
 </script>
 
-<section class="wrapper | flex__grow" >
+<main class="wrapper | flex__grow" >
   {#key note._rev}
     <RenderedNote {note}></RenderedNote>
   {/key}
-</section>
-<aside>
+</main>
+<aside data-fullpage=true>
   <section class="wrapper">
     <NoteForm
       {note}

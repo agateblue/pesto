@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import { getNewNote, getNewTextFragment, getByQuery, type NoteDocument } from '$lib/db';
+  import { getNewNote, getNewTextFragment, getByQuery, type NoteDocument, globals } from '$lib/db';
 
   export let data;
 
@@ -46,6 +46,13 @@
 </script>
 
 <main class="wrapper | flex__grow">
+  <div>
+    <button
+      class="layout__multi-hidden"
+      on:click={() => {globals.uiState.set("currentPage", () => 'mainMenu')}}>
+      Menu
+    </button>
+  </div>
   {#each notes as note}
   {#key note._rev}
     <RenderedNote {note} db={data.db}>
@@ -76,7 +83,6 @@
           handleUpdate(e.detail.note);
         }}
         on:submit={(e) => {
-          console.log("HELLO", e)
           note = null
         }}
       >

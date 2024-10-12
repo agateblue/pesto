@@ -1,14 +1,9 @@
 <script>
+  import MainNavigation from "$lib/components/MainNavigation.svelte";
+
 </script>
 
 <div class="my__layout">
-  <aside>
-    <nav aria-label="Main menu">
-      <ul>
-        <li><a href="/">All notes</a></li>
-        <li><a href="/settings">Settings</a></li>
-      </ul>
-    </nav>
-  </aside>
+  <MainNavigation />
   <slot></slot>
 </div>
