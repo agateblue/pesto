@@ -3,6 +3,7 @@
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import debounce from 'lodash/debounce';
+  import { page } from '$app/stores'
   import {
     getByQuery,
     type NoteDocument,
@@ -10,14 +11,16 @@
     getQueryTokens,
     tokensToMangoQuery
   } from '$lib/db';
-
+  import {
+    updateURLParam
+  } from '$lib/ui'
   export let data;
 
   let notes: NoteDocument[] = [];
 
   let note: NoteDocument | null = null;
 
-  let searchQuery: string = '';
+  let searchQuery: string = $page.url.searchParams.get('q') || ''; 
 
   async function handleUpdate(n: NoteDocument) {
     let found = false;
@@ -87,6 +90,7 @@
       on:keyup={debounce(
         async (e) => {
           notes = await getNotes();
+          updateURLParam(window, 'q', searchQuery)
         },
         500,
         { leading: false, trailing: true, maxWait: 1000 }

@@ -29,6 +29,11 @@ describe('query language', () => {
     const expected = [{ 'fragments.todolist.todos.1': { $exists: true } }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
+  it('is:text', () => {
+    const input: QueryToken[] = [{ type: 'is', value: 'text' }];
+    const expected = [{ 'fragments.text.content': { $exists: true } }];
+    expect(tokensToMangoQuery(input)).toStrictEqual(expected);
+  });
   it('basic text', () => {
     const input: QueryToken[] = [{ type: 'text', value: 'hop' }];
     const expected = [
