@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import { getNewNote, getNewTextFragment, getByQuery, type NoteDocument, globals } from '$lib/db';
+  import { getByQuery, type NoteDocument, globals } from '$lib/db';
 
   export let data;
 
@@ -27,9 +27,6 @@
     }
   }
 
-  async function updateNotes() {
-    notes = await getByQuery(data.db.notes, { limit: 20, sort: [{ id: 'desc' }] });
-  }
 
   async function askDelete(note: NoteDocument) {
     if (confirm('Do you want to delete this note?')) {
@@ -41,7 +38,7 @@
   }
 
   onMount(async () => {
-    await updateNotes();
+    notes = await getByQuery(globals.db.notes, { limit: 20, sort: [{ id: 'desc' }] });
   });
 </script>
 
@@ -58,22 +55,33 @@
       class="button | layout__multi-hidden">New note</a>
   </div>
   {#each notes as note}
-  {#key note._rev}
-    <RenderedNote {note}>
-      <div class="flex__row flex__justify-end | m__block-2" slot="footer">
-        <button
-          class="button__link"
-          on:click={(e) => {
-            askDelete(note);
-          }}
-        >
-          Delete
-        </button>
-      </div>
-    </RenderedNote>
-    <hr />
-  {/key}
+    {#key note._rev}
+      <RenderedNote {note}>
+        <div class="flex__row flex__justify-end | m__block-2" slot="footer">
+          <button
+            class="button__link"
+            on:click={(e) => {
+              askDelete(note);
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </RenderedNote>
+      <hr />
+    {/key}
   {/each}
+  {#if notes.length > 0}
+    <button 
+      on:click={async (e) => {
+        let newNotes = await getByQuery(
+          globals.db.notes,
+          { limit: 20, sort: [{ id: 'desc' }], selector: {id: {$lt: notes.slice(-1)[0].id}} }
+        );
+        notes = [...notes, ...newNotes]
+      }}
+      >Load more</button>
+  {/if}
 </main>
 
 <aside>
