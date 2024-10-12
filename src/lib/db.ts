@@ -8,7 +8,7 @@ import {
   createRxDatabase,
   addRxPlugin,
   toTypedRxJsonSchema,
-  type RxState,
+  type RxState
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
@@ -38,7 +38,7 @@ export const noteSchemaLiteral = {
       maxLength: 40
     },
     title: {
-      type: ['string', 'null'],
+      type: ['string', 'null']
     },
     created_at: {
       type: 'string',
@@ -51,7 +51,7 @@ export const noteSchemaLiteral = {
     tags: {
       type: 'array',
       items: {
-        type: 'string',
+        type: 'string'
       }
     },
     fragments: {
@@ -63,7 +63,7 @@ export const noteSchemaLiteral = {
           required: ['content'],
           properties: {
             content: {
-              type: 'string',
+              type: 'string'
             }
           }
         },
@@ -92,15 +92,15 @@ export const noteSchemaLiteral = {
                   },
                   text: {
                     type: 'string'
-                  },
+                  }
                 }
               }
             }
           }
-        },
+        }
       }
     }
-  },
+  }
 } as const;
 
 const noteSchemaTyped = toTypedRxJsonSchema(noteSchemaLiteral);
@@ -108,10 +108,10 @@ const noteSchemaTyped = toTypedRxJsonSchema(noteSchemaLiteral);
 // aggregate the document type from the schema
 export type NoteDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof noteSchemaTyped>;
 
-export type TextType = NonNullable<NoteDocType["fragments"]["text"]>
-export type TodolistType = NonNullable<NoteDocType["fragments"]["todolist"]>
-export type TodosType = NonNullable<TodolistType["todos"]>
-export type TodoType = TodosType[number]
+export type TextType = NonNullable<NoteDocType['fragments']['text']>;
+export type TodolistType = NonNullable<NoteDocType['fragments']['todolist']>;
+export type TodosType = NonNullable<TodolistType['todos']>;
+export type TodoType = TodosType[number];
 
 // create the typed RxJsonSchema from the literal typed object.
 export const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral;
@@ -122,78 +122,77 @@ export type NoteCollection = RxCollection<NoteDocType>;
 export type NoteDocument = RxDocument<NoteDocType>;
 
 export type DatabaseCollections = {
-  notes: NoteCollection
-}
+  notes: NoteCollection;
+};
 
-export type Database = RxDatabase<DatabaseCollections>
+export type Database = RxDatabase<DatabaseCollections>;
 
 export type Globals = {
   db: null | Database;
   uiState: null | RxState;
-}
+};
 export const globals: Globals = {
   db: null,
-  uiState: null,
-}
+  uiState: null
+};
 
 export async function getDb() {
   if (globals.db) {
-    return globals
+    return globals;
   }
   let db = await createRxDatabase<Database>({
     name: 'main',
     storage: getRxStorageDexie()
   });
 
-  const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral
+  const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral;
   await db.addCollections({
     notes: {
       schema: noteSchema,
       migrationStrategies: {
         1: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.title = null
+            oldDoc.fragments.todolist.title = null;
           }
-          return oldDoc
+          return oldDoc;
         },
         2: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.done = true
+            oldDoc.fragments.todolist.done = true;
             for (const todo of oldDoc.fragments.todolist.todos) {
               if (!todo.done) {
-                oldDoc.fragments.todolist.done = false
-                break
+                oldDoc.fragments.todolist.done = false;
+                break;
               }
             }
-
           }
-          return oldDoc
+          return oldDoc;
         },
         3: function (oldDoc) {
-          return oldDoc
+          return oldDoc;
         },
         4: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.title = oldDoc.fragments.todolist.title || "TODO"
+            oldDoc.fragments.todolist.title = oldDoc.fragments.todolist.title || 'TODO';
           }
-          return oldDoc
+          return oldDoc;
         },
         5: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
             for (const todo of oldDoc.fragments.todolist.todos) {
               todo.id = buildUniqueId({
                 msecs: Date.parse(oldDoc.created_at)
-              })
+              });
             }
           }
-          return oldDoc
+          return oldDoc;
         }
       }
     }
   });
 
   let uiState = await db.addState('ui');
-  return {db, uiState};
+  return { db, uiState };
 }
 
 export function renderMarkdown(text: string): string {
@@ -211,13 +210,13 @@ export function getNewNote() {
     modified_at: new Date().toISOString(),
     title: null,
     fragments: {},
-    tags: [],
+    tags: []
   } as Note;
 }
 
 export function getNewTextFragment(content = '') {
   return {
-    content,
+    content
   } as TextFragment;
 }
 
@@ -250,5 +249,5 @@ export async function getById(collection: RxCollection, id: string) {
 
 export async function getByQuery(collection: RxCollection, query: MangoQuery) {
   let results = await collection.find(query).exec();
-  return results
+  return results;
 }

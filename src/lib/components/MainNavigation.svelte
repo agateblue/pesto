@@ -1,13 +1,12 @@
 <script>
+  import { globals } from '$lib/db';
 
-  import {globals} from '$lib/db'
-
-  let sidebarFullpage = false
+  let sidebarFullpage = false;
 
   const observable = globals.uiState.get$('currentPage');
-  observable.subscribe(newValue => {
-    sidebarFullpage = newValue === 'mainMenu'
-});
+  observable.subscribe((newValue) => {
+    sidebarFullpage = newValue === 'mainMenu';
+  });
 </script>
 
 <aside data-fullpage={sidebarFullpage}>

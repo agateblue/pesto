@@ -2,16 +2,12 @@
   import { createEventDispatcher } from 'svelte';
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
 
-  import {
-    type TodoType
-  } from '$lib/db'
-  import {
-    ignoreTab
-  } from '$lib/ui'
+  import { type TodoType } from '$lib/db';
+  import { ignoreTab } from '$lib/ui';
 
   const dispatch = createEventDispatcher<{
     update: { todo: TodoType };
-    delete: {  };
+    delete: {};
   }>();
 
   export let todo: TodoType;
@@ -19,7 +15,7 @@
   let done = todo.done;
 
   function handleChange() {
-    dispatch('update', { todo: { ...todo, text, done} });
+    dispatch('update', { todo: { ...todo, text, done } });
   }
 </script>
 
@@ -43,7 +39,13 @@
     })}
     placeholder="Add new task…"
   />
-  <button class="button__icon" on:click|preventDefault={(e) => {dispatch('delete')}} aria-label="Delete">
+  <button
+    class="button__icon"
+    on:click|preventDefault={(e) => {
+      dispatch('delete');
+    }}
+    aria-label="Delete"
+  >
     <IconaMoonTrash />
   </button>
 </div>
