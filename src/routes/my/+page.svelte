@@ -2,13 +2,22 @@
   import { onMount } from 'svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import { getByQuery, type NoteDocument, globals } from '$lib/db';
+  import debounce from 'lodash/debounce';
+  import {
+    getByQuery,
+    type NoteDocument,
+    globals,
+    getQueryTokens,
+    tokensToMangoQuery
+  } from '$lib/db';
 
   export let data;
 
   let notes: NoteDocument[] = [];
 
   let note: NoteDocument | null = null;
+
+  let searchQuery: string = '';
 
   async function handleUpdate(n: NoteDocument) {
     let found = false;
@@ -36,8 +45,25 @@
     }
   }
 
+  function getSelector(q: string) {
+    if (!q.trim()) {
+      return {};
+    }
+
+    let tokens = getQueryTokens(q);
+    return { $and: tokensToMangoQuery(tokens) };
+  }
+
+  async function getNotes() {
+    return await getByQuery(globals.db.notes, {
+      limit: 20,
+      sort: [{ id: 'desc' }],
+      selector: getSelector(searchQuery)
+    });
+  }
+
   onMount(async () => {
-    notes = await getByQuery(globals.db.notes, { limit: 20, sort: [{ id: 'desc' }] });
+    notes = await getNotes();
   });
 </script>
 
@@ -51,7 +77,21 @@
     >
       Menu
     </button>
-
+    <input
+      type="search"
+      autocomplete="off"
+      name="search"
+      id="search"
+      placeholder="Search"
+      bind:value={searchQuery}
+      on:keyup={debounce(
+        async (e) => {
+          notes = await getNotes();
+        },
+        500,
+        { leading: false, trailing: true, maxWait: 1000 }
+      )}
+    />
     <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
   {#each notes as note}
@@ -77,7 +117,7 @@
         let newNotes = await getByQuery(globals.db.notes, {
           limit: 20,
           sort: [{ id: 'desc' }],
-          selector: { id: { $lt: notes.slice(-1)[0].id } }
+          selector: { id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
         });
         notes = [...notes, ...newNotes];
       }}>Load more</button

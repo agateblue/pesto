@@ -14,14 +14,18 @@
   let todos: TodoType[] = fragment.todos;
   let title: string = fragment.title || '';
   let done: boolean = fragment.done;
-  let id: string = buildUniqueId()
+  let id: string = buildUniqueId();
 
   function handleChange() {
-    let hasContent = !!title || todos.filter(t => {return t.text.trim()}).length > 0
+    let hasContent =
+      !!title ||
+      todos.filter((t) => {
+        return t.text.trim();
+      }).length > 0;
     if (hasContent) {
       dispatch('update', { fragment: { ...fragment, title, done, todos } });
     } else {
-      dispatch('delete', {})
+      dispatch('delete', {});
     }
   }
   function updateTodo(index: number, todo: TodoType | null) {
@@ -65,7 +69,7 @@
 
 <div class="flex__row | flex__justify-between">
   <h3>
-    Todo-list 
+    Todo-list
     {#if stats.total}
       · {stats.done}/{stats.total}
     {/if}
@@ -87,11 +91,11 @@
           stats = getStats();
         }}
         on:delete={(e) => {
-          title = ''
-          done = false
+          title = '';
+          done = false;
           handleChange();
           stats = getStats();
-          id = buildUniqueId()
+          id = buildUniqueId();
         }}
       />
     {/key}

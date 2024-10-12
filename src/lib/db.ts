@@ -8,7 +8,8 @@ import {
   createRxDatabase,
   addRxPlugin,
   toTypedRxJsonSchema,
-  type RxState
+  type RxState,
+  type MangoQuerySelector
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
@@ -250,4 +251,53 @@ export async function getById(collection: RxCollection, id: string) {
 export async function getByQuery(collection: RxCollection, query: MangoQuery) {
   let results = await collection.find(query).exec();
   return results;
+}
+
+export type QueryToken = {
+  type: 'is' | 'text';
+  value: string;
+};
+export function getQueryTokens(q: string) {
+  return q
+    .split(' ')
+    .filter((s) => {
+      return s.trim();
+    })
+    .map((s) => {
+      let raw = s.trim().toLowerCase();
+      if (raw.startsWith('is:')) {
+        return {
+          type: 'is',
+          value: raw.slice(3)
+        } as QueryToken;
+      } else {
+        return {
+          type: 'text',
+          value: raw
+        } as QueryToken;
+      }
+    });
+}
+export function tokensToMangoQuery(tokens: QueryToken[]) {
+  let query = [];
+  for (const token of tokens) {
+    if (token.type === 'is') {
+      if (token.value === 'task') {
+        query.push({ 'fragments.todolist': { $exists: true } });
+      } else if (token.value === 'subtask') {
+        query.push({ 'fragments.todolist.todos.1': { $exists: true } });
+      } else if (token.value === 'done') {
+        query.push({ 'fragments.todolist.done': { $eq: true } });
+      }
+    }
+    if (token.type === 'text') {
+      let orQuery = [];
+      let regex = { $regex: `.*${token.value}.*`, $options: 'i' };
+      orQuery.push({ 'fragments.text.content': regex });
+      orQuery.push({ 'fragments.todolist.title': regex });
+      orQuery.push({ 'fragments.todolist.todos': { $elemMatch: { text: regex } } });
+      query.push({ $or: orQuery });
+    }
+  }
+  return query;
 }
