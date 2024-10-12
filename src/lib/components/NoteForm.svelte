@@ -10,7 +10,6 @@
   }>();
 
   export let note: NoteDocument | null;
-  export let db: Database
   function handleUpdate(n: NoteDocument) {
     dispatch('update', { note: n });
   }
@@ -19,7 +18,6 @@
 <form on:submit>
   <FragmentEditor
     {note}
-    {db}
     on:update={(e) => {
       handleUpdate(e.detail.note);
     }}

@@ -46,12 +46,16 @@
 </script>
 
 <main class="wrapper | flex__grow">
-  <div>
+  <div class="flex__row | flex__justify-between">
     <button
       class="layout__multi-hidden"
       on:click={() => {globals.uiState.set("currentPage", () => 'mainMenu')}}>
       Menu
     </button>
+
+    <a 
+      href="/my/notes/add"
+      class="button | layout__multi-hidden">New note</a>
   </div>
   {#each notes as note}
   {#key note._rev}
@@ -78,7 +82,6 @@
     {#key note?.id}
       <NoteForm
         {note}
-        db={data.db}
         on:update={(e) => {
           handleUpdate(e.detail.note);
         }}

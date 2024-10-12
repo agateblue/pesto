@@ -128,6 +128,9 @@ export const globals: Globals = {
 }
 
 export async function getDb() {
+  if (globals.db) {
+    return globals
+  }
   let db = await createRxDatabase<Database>({
     name: 'main',
     storage: getRxStorageDexie()

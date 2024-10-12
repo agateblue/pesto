@@ -262,6 +262,7 @@ svg {
   vertical-align: middle;
 }
 
+.button,
 button,
 input[type='submit'] {
   background: var(--button-color, var(--primary-color));
@@ -269,8 +270,10 @@ input[type='submit'] {
   border: none;
   padding: var(--space-2);
   border-radius: var(--button-radius);
+  text-decoration: none;
 }
 
+.button:hover,
 button:hover,
 input[type='submit']:hover {
   cursor: pointer;
