@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { renderMarkdown, type Database, type NoteDocument } from '$lib/db';
+  import { renderMarkdown, type Database, type NoteDocument, formatDate } from '$lib/db';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
   export let note: NoteDocument;
 </script>
 
-<article class="diary__note">
+<article class="diary__note flow">
   <a href={`/my/notes/${note.id}`}>
-    <time datetime={note.created_at}>{note.created_at}</time>
+    <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
   {#if note.fragments.text}
     <div class="flow prose">
