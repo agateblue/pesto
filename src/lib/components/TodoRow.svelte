@@ -31,7 +31,7 @@
     disabled={!text.trim()}
   />
   <textarea
-    class="flex__grow | input__discrete"
+    class="flex__grow | input__discrete autoresize"
     type="text"
     autocomplete="off"
     id={`todo-${todo.id}-text`}

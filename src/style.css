@@ -93,9 +93,12 @@ select {
   min-width: 0;
 }
 
-/* Make sure textareas without a rows attribute are not tiny */
-textarea:not([rows]) {
+/* Make sure editor is not tiny */
+.editor {
   min-height: 10em;
+}
+.autoresize {
+  field-sizing: content;
 }
 
 /* Anything that has been anchored to should have extra scroll margin */
@@ -116,7 +119,7 @@ body {
 .wrapper {
   margin-inline: auto;
   padding-inline: var(--space-3);
-  max-width: clamp(320px, 90%, 60ch);
+  max-width: 60ch;
 }
 
 /* composition */
@@ -145,6 +148,9 @@ body {
 }
 
 [data-layout='single-column'] {
+  .wrapper {
+    padding-inline: 0;
+  }
   .my__layout {
     &:has([data-fullpage='true']) > *:not([data-fullpage='true']) {
       --display: none;
@@ -162,6 +168,7 @@ body {
       width: 100%;
     }
   }
+
 }
 
 [data-layout='multi-columns'] {
@@ -334,4 +341,14 @@ textarea {
 input[type='text'].input__discrete {
   border: none;
   border-bottom: var(--layout-separator);
+}
+
+
+/* see https://piccalil.li/blog/my-favourite-3-lines-of-css/ */
+.flow > * + * {
+  margin-block-start: var(--flow-space, 1em);
+}
+
+.prose {
+  --flow-space: var(--space-3);
 }

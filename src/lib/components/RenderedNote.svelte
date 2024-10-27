@@ -10,7 +10,9 @@
     <time datetime={note.created_at}>{note.created_at}</time>
   </a>
   {#if note.fragments.text}
-    {@html renderMarkdown(note.fragments.text.content)}
+    <div class="flow prose">
+      {@html renderMarkdown(note.fragments.text.content)}
+    </div>
   {/if}
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
