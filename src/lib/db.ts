@@ -32,6 +32,17 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 
+export const LOCALE = (new Intl.NumberFormat()).resolvedOptions().locale
+
+export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
+  weekday: 'long',
+  day: '2-digit',
+  month: '2-digit',
+  year: '2-digit',
+})
+export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
+  timeStyle: 'short',
+})
 export const noteSchemaLiteral = {
   version: 5,
   primaryKey: 'id',
@@ -306,4 +317,13 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     }
   }
   return query;
+}
+export function capitalizeFirstLetter(s: string) {
+  return s[0].toUpperCase() + s.slice(1);
+}
+
+export function formatDate(d: string) {
+  let p = new Date(d)
+  let formatted = `${DATE_FORMATTER.format(p)} · ${TIME_FORMATTER.format(p)}`
+  return capitalizeFirstLetter(formatted)
 }
