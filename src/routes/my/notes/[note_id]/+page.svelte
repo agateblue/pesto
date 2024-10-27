@@ -13,7 +13,7 @@
 
 <main class="wrapper | flex__grow">
   {#key note._rev}
-    <RenderedNote {note}></RenderedNote>
+    <RenderedNote {note} class="diary__note flow"></RenderedNote>
   {/key}
 </main>
 <aside data-fullpage="true">
