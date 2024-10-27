@@ -18,9 +18,12 @@ import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
+import {
+  replicateWebRTC,
+  getConnectionHandlerSimplePeer
+} from 'rxdb/plugins/replication-webrtc';
 
 import { v7 as uuidv7 } from 'uuid';
-import type { TextFragment, Note, TodoListFragment, Todo } from '../ambient';
 
 if (dev) {
   import('rxdb/plugins/dev-mode').then(r => {
@@ -149,7 +152,8 @@ export type Globals = {
 };
 export const globals: Globals = {
   db: null,
-  uiState: null
+  uiState: null,
+  replication: null,
 };
 
 export async function getDb() {
@@ -208,6 +212,55 @@ export async function getDb() {
   });
 
   let uiState = await db.addState('ui');
+
+  window.process = {
+    nextTick: (fn, ...args) => setTimeout(() => fn(...args)),
+  };
+  const replicationPool = await replicateWebRTC(
+    {
+      collection: db.notes,
+      // The topic is like a 'room-name'. All clients with the same topic
+      // will replicate with each other. In most cases you want to use
+      // a different topic string per user.
+      topic: 'my-users-pool-agate-test-dev-pesto',
+      /**
+       * You need a collection handler to be able to create WebRTC connections.
+       * Here we use the simple peer handler which uses the 'simple-peer' npm library.
+       * To learn how to create a custom connection handler, read the source code,
+       * it is pretty simple.
+       */
+      connectionHandlerCreator: getConnectionHandlerSimplePeer({
+          // Set the signaling server url.
+          // You can use the server provided by RxDB for tryouts,
+          // but in production you should use your own server instead.
+          signalingServerUrl: 'wss://signaling.rxdb.info/',
+      }),
+      pull: {
+        
+      },
+      push: {
+      },
+    }
+  );
+  let initialAddPeer = replicationPool.addPeer.bind(replicationPool)
+  let replicationMonkeyPatched = false
+  replicationPool.addPeer = function addPeer (peer, replicationState) {
+    let initialPushHandler = replicationState?.push.handler
+    async function pushHandler(docs) {
+      console.log("HELLO before", initialPushHandler, docs)
+      docs = docs.filter(d => {
+        return (d.newDocumentState.fragments?.text.content.includes('hello'))
+      })
+      console.log("HELLO after", initialPushHandler, docs)
+      return await initialPushHandler(docs)
+    }
+    if (replicationState && !replicationMonkeyPatched) {
+      replicationState.push.handler = pushHandler
+      replicationMonkeyPatched = true
+    }
+    console.log("PEER ADDED", replicationState)
+    return initialAddPeer(peer, replicationState)
+  }
   return { db, uiState };
 }
 
