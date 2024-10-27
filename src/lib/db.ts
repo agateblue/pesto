@@ -211,6 +211,11 @@ export async function getDb() {
   return { db, uiState };
 }
 
+marked.use({
+  gfm: true,
+  breaks: true,
+});
+
 export function renderMarkdown(text: string): string {
   return DOMPurify.sanitize(marked.parse(text || ''));
 }
