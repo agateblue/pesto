@@ -3,9 +3,13 @@
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
   export let note: NoteDocument;
+  note.$.subscribe(async currentRxDocument => {
+    note = note.getLatest()
+  });
 </script>
 
 <article {...$$restProps}>
+  {note._rev}
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
