@@ -20,7 +20,9 @@
   }
 </script>
 
-<label for="{id}">Note content</label>
+<h3>
+  <label for="{id}">Note content</label>
+</h3>
 <textarea 
   id="{id}"
   class="editor autoresize" 
