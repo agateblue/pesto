@@ -39,15 +39,6 @@
     }
   }
 
-  async function askDelete(note: NoteDocument) {
-    if (confirm('Do you want to delete this note?')) {
-      await note.remove();
-      notes = notes.filter((e) => {
-        return e.id != note.id;
-      });
-    }
-  }
-
   function getSelector(q: string) {
     if (!q.trim()) {
       return {};
@@ -133,10 +124,11 @@
           handleUpdate(note);
           note = null;
         }}
+        on:delete={(e) => {
+          note = null;
+        }}
       >
-        <div class="flex__row flex__justify-end">
-          <button type="submit"> Save and add new </button>
-        </div>
+        <button type="submit"> Save and add new </button>
       </NoteForm>
     {/key}
   </section>

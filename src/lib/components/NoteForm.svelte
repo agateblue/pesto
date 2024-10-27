@@ -4,11 +4,19 @@
   import { type NoteDocument, type Database } from '$lib/db';
   const dispatch = createEventDispatcher<{
     update: { note: NoteDocument };
+    delete: { note: NoteDocument };
   }>();
 
   export let note: NoteDocument | null;
   function handleUpdate(n: NoteDocument) {
     dispatch('update', { note: n });
+  }
+
+  async function askDelete(note: NoteDocument) {
+    if (confirm('Do you want to delete this note?')) {
+      await note.remove();
+      dispatch('delete', { note })
+    }
   }
 </script>
 
@@ -19,5 +27,18 @@
       handleUpdate(e.detail.note);
     }}
   />
-  <slot></slot>
+  <div class="flex__row flex__justify-between">
+    <slot></slot>
+    {#if note}
+      <button
+        type="button"
+        class="button__link"
+        on:click={(e) => {
+          askDelete(note);
+        }}
+      > 
+        Delete
+      </button>
+    {/if}
+  </div>
 </form>

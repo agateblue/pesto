@@ -5,8 +5,6 @@
 
 <main class="wrapper | flex__grow">
   <NoteForm note={null}>
-    <div class="flex__row flex__justify-end">
-      <a href="/my" class="button"> Save </a>
-    </div>
+    <a href="/my" class="button"> Save </a>
   </NoteForm>
 </main>

@@ -2,6 +2,7 @@
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import { createOrUpdate } from '$lib/db';
+  import { goto } from '$app/navigation';
   export let data;
 
   let note = data.note;
@@ -22,6 +23,9 @@
       {note}
       on:update={(e) => {
         handleUpdate(e.detail.note);
+      }}
+      on:delete={(e) => {
+        goto('/my')
       }}
     />
   </section>
