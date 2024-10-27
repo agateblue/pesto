@@ -11,13 +11,16 @@
   let content = fragment.content;
 
   function handleChange() {
-    content = content.trim();
     if (content) {
-      dispatch('update', { fragment: { ...fragment, content } });
+      dispatch('update', { fragment: { ...fragment, content: content.trim() } });
     } else {
       dispatch('delete', {});
     }
   }
 </script>
 
-<textarea class="editor" on:keyup={(e) => handleChange()} bind:value={content} />
+<textarea 
+  class="editor autoresize" 
+  placeholder="What's on your wind?"
+  on:keyup={(e) => handleChange()} 
+  bind:value={content} />
