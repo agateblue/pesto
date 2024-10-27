@@ -1,13 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { type TextType, buildUniqueId } from '$lib/db';
+  import { type TextType } from '$lib/db';
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
     delete: {};
   }>();
 
-  let id: string = buildUniqueId()
+  export let fieldId: string;
   export let fragment: TextType;
   let content = fragment.content;
 
@@ -21,11 +21,12 @@
 </script>
 
 <h3>
-  <label for="{id}">Note content</label>
+  <label for="{fieldId}">Note content</label>
 </h3>
 <textarea 
-  id="{id}"
+  id="{fieldId}"
   class="editor autoresize" 
   placeholder="What's on your mind?"
   on:keyup={(e) => handleChange()} 
-  bind:value={content} />
+  bind:value={content}   
+/>
