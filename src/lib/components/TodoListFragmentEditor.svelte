@@ -98,6 +98,7 @@
         on:delete={(e) => {
           title = '';
           done = false;
+          todos = []
           handleChange();
           stats = getStats();
           id = buildUniqueId();
