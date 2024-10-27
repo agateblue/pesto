@@ -90,6 +90,7 @@ textarea,
 select {
   font-family: inherit;
   font-size: inherit;
+  min-width: 0;
 }
 
 /* Make sure textareas without a rows attribute are not tiny */
