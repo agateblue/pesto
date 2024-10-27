@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import debounce from 'lodash/debounce';
   import { page } from '$app/stores'
+  import { goto } from '$app/navigation';
   import {
     getByQuery,
     type NoteDocument,
@@ -22,7 +21,7 @@
 
   let noteFormKey = 0
 
-  let searchQuery: string = $page.url.searchParams.get('q') || ''; 
+  $: searchQuery = $page.url.searchParams.get('q') || ''; 
 
   async function handleUpdate(n: NoteDocument) {
     let found = false;
@@ -50,17 +49,20 @@
     return { $and: tokensToMangoQuery(tokens) };
   }
 
-  async function getNotes() {
+  async function getNotes(q: string) {
     return await getByQuery(globals.db.notes, {
       limit: 20,
       sort: [{ id: 'desc' }],
-      selector: getSelector(searchQuery)
+      selector: getSelector(q)
     });
   }
 
-  onMount(async () => {
-    notes = await getNotes();
-  });
+  async function loadNotes (q: string) {
+    notes = await getNotes(q)
+  }
+
+  $: loadNotes(searchQuery)
+  
 </script>
 
 <main class="flex__grow">
@@ -80,15 +82,16 @@
       name="search"
       id="search"
       placeholder="Search"
-      bind:value={searchQuery}
-      on:keyup={debounce(
+      value={searchQuery}
+      on:keydown={
         async (e) => {
-          notes = await getNotes();
-          updateURLParam(window, 'q', searchQuery)
-        },
-        500,
-        { leading: false, trailing: true, maxWait: 1000 }
-      )}
+          if (e.key === 'Enter') {
+            searchQuery = e.target.value.trim()
+            let params = updateURLParam($page.url, 'q', searchQuery)
+            goto(`?${params.toString()}`)
+          }
+        }
+      }
     />
     <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
