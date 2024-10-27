@@ -70,7 +70,7 @@
   });
 </script>
 
-<main class="wrapper | flex__grow">
+<main class="flex__grow">
   <div class="flex__row | flex__justify-between">
     <button
       class="layout__multi-hidden"
@@ -99,35 +99,36 @@
     />
     <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
-  {#each notes as note}
-    {#key note._rev}
-      <RenderedNote {note}>
-        <div class="flex__row flex__justify-end | m__block-2" slot="footer">
-          <button
-            class="button__link"
-            on:click={(e) => {
-              askDelete(note);
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      </RenderedNote>
-      <hr />
-    {/key}
-  {/each}
-  {#if notes.length > 0}
-    <button
-      on:click={async (e) => {
-        let newNotes = await getByQuery(globals.db.notes, {
-          limit: 20,
-          sort: [{ id: 'desc' }],
-          selector: { id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
-        });
-        notes = [...notes, ...newNotes];
-      }}>Load more</button
-    >
-  {/if}
+  <div class="wrapper | m__block-3">
+    {#each notes as note}
+      {#key note._rev}
+        <RenderedNote {note}>
+          <div class="flex__row flex__justify-end | m__block-2" slot="footer">
+            <button
+              class="button__link"
+              on:click={(e) => {
+                askDelete(note);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </RenderedNote>
+      {/key}
+    {/each}
+    {#if notes.length > 0}
+      <button
+        on:click={async (e) => {
+          let newNotes = await getByQuery(globals.db.notes, {
+            limit: 20,
+            sort: [{ id: 'desc' }],
+            selector: { id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
+          });
+          notes = [...notes, ...newNotes];
+        }}>Load more</button
+      >
+    {/if}
+  </div>
 </main>
 
 <aside>

@@ -148,9 +148,6 @@ body {
 }
 
 [data-layout='single-column'] {
-  .wrapper {
-    padding-inline: 0;
-  }
   .my__layout {
     &:has([data-fullpage='true']) > *:not([data-fullpage='true']) {
       --display: none;
