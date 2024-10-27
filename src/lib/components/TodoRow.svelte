@@ -30,7 +30,7 @@
     }}
     disabled={!text.trim()}
   />
-  <input
+  <textarea
     class="flex__grow | input__discrete"
     type="text"
     autocomplete="off"
@@ -40,6 +40,7 @@
       handleChange();
     })}
     placeholder="Add new task…"
+    rows="1"
   />
   <button
     class="button__icon"
