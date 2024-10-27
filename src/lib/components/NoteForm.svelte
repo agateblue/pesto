@@ -21,6 +21,7 @@
 </script>
 
 <form class="flow" on:submit>
+  <a href="/my" class="layout__multi-hidden">Go back</a>
   <FragmentEditor
     {note}
     on:update={(e) => {
