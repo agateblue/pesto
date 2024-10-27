@@ -12,7 +12,7 @@
   }
 </script>
 
-<form on:submit>
+<form class="flow" on:submit>
   <FragmentEditor
     {note}
     on:update={(e) => {
