@@ -20,6 +20,8 @@
 
   let note: NoteDocument | null = null;
 
+  let noteFormKey = 0
+
   let searchQuery: string = $page.url.searchParams.get('q') || ''; 
 
   async function handleUpdate(n: NoteDocument) {
@@ -114,7 +116,7 @@
 <aside>
   <section class="wrapper">
     <slot></slot>
-    {#key note?.id}
+    {#key noteFormKey}
       <NoteForm
         {note}
         on:update={(e) => {
@@ -123,9 +125,11 @@
         on:submit={(e) => {
           handleUpdate(note);
           note = null;
+          noteFormKey++
         }}
         on:delete={(e) => {
           note = null;
+          noteFormKey++
         }}
       >
         <button type="submit"> Save and add new </button>

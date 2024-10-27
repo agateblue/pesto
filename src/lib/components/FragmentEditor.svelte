@@ -4,6 +4,7 @@
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
     globals,
+    buildUniqueId,
     getNewNote,
     getNewTextFragment,
     getNewTodoListFragment,
@@ -21,6 +22,7 @@
   }>();
 
   export let note: NoteDocument | null;
+  let id: string = note ? note.id : buildUniqueId()
   let db = globals.db;
   let fragments = note?.toMutableJSON().fragments || {};
 
@@ -30,6 +32,7 @@
   ) {
     if (!note) {
       let noteData = getNewNote();
+      noteData.id = id
       note = await db.notes.insert(noteData);
     }
     let updateData = {};
@@ -45,6 +48,7 @@
 
 <TextFragmentEditor
   fragment={fragments.text || getNewTextFragment()}
+  fieldId={`note-text-${id}`}
   on:update={(event) => updateFragment('text', event.detail.fragment)}
   on:delete={(event) => updateFragment('text', undefined)}
 />
