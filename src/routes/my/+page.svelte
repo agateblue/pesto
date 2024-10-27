@@ -81,6 +81,7 @@
       Menu
     </button>
     <input
+      class="flex__grow"
       type="search"
       autocomplete="off"
       name="search"
