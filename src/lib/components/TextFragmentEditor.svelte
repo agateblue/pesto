@@ -1,12 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { type TextType } from '$lib/db';
+  import { type TextType, buildUniqueId } from '$lib/db';
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
     delete: {};
   }>();
 
+  let id: string = buildUniqueId()
   export let fragment: TextType;
   let content = fragment.content;
 
@@ -19,8 +20,10 @@
   }
 </script>
 
+<label for="{id}">Note content</label>
 <textarea 
+  id="{id}"
   class="editor autoresize" 
-  placeholder="What's on your wind?"
+  placeholder="What's on your mind?"
   on:keyup={(e) => handleChange()} 
   bind:value={content} />
