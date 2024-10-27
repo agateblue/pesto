@@ -1,3 +1,5 @@
+import { pushState } from "$app/navigation";
+
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
@@ -10,5 +12,5 @@ export function ignoreTab(handler: Function) {
 export function updateURLParam(window: Window, param: string, value: string) {
   let url = new URL(window.location.href);
   url.searchParams.set(param, value)
-  history.pushState(history.state, '', url.href)
+  pushState(url.href, history.state)
 }
