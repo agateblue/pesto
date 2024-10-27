@@ -11,6 +11,7 @@
   --font-family: Helvetica, sans-serif;
   --background-color: white;
   --layout-separator: 1px solid rgb(120, 112, 112);
+  --list-separator: 1px solid rgb(213, 213, 213);
 
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
@@ -253,6 +254,46 @@ body {
   margin-inline: var(--space-4);
 }
 
+.p__block-0 {
+  padding-block: var(--space-0);
+}
+
+.p__block-1 {
+  padding-block: var(--space-1);
+}
+
+.p__block-2 {
+  padding-block: var(--space-2);
+}
+
+.p__block-3 {
+  padding-block: var(--space-3);
+}
+
+.p__block-4 {
+  padding-block: var(--space-4);
+}
+
+.p__inline-0 {
+  padding-inline: var(--space-0);
+}
+
+.p__inline-1 {
+  padding-inline: var(--space-1);
+}
+
+.p__inline-2 {
+  padding-inline: var(--space-2);
+}
+
+.p__inline-3 {
+  padding-inline: var(--space-3);
+}
+
+.p__inline-4 {
+  padding-inline: var(--space-4);
+}
+
 /* blocks */
 input,
 button,
@@ -348,4 +389,8 @@ input[type='text'].input__discrete {
 
 .prose {
   --flow-space: var(--space-3);
+}
+
+.diary__note[role=listitem] {
+  border-bottom: var(--list-separator);
 }

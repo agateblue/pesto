@@ -5,7 +5,7 @@
   export let note: NoteDocument;
 </script>
 
-<article class="diary__note flow">
+<article {...$$restProps}>
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
