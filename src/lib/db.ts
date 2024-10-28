@@ -35,6 +35,8 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 
+export const DEFAULT_SIGNALING_SERVER = 'signaling.rxdb.info'
+
 export const LOCALE = (new Intl.NumberFormat()).resolvedOptions().locale
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
@@ -155,6 +157,15 @@ export const globals: Globals = {
   uiState: null,
   replication: null,
 };
+
+export type Replication = {
+  type: string
+}
+export type WebRTCReplication = Replication & {
+  type: 'webrtc',
+  signalingServer: string,
+  room: string,
+}
 
 export async function getDb() {
   if (globals.db) {
