@@ -1,8 +1,32 @@
 <script lang="ts">
+  import { v4 as uuidv4 } from 'uuid';
+  import ReplicationForm from '$lib/components/ReplicationForm.svelte';
+  import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { buildUniqueId, type NoteDocType, globals } from '$lib/db';
+  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type WebRTCReplication } from '$lib/db';
 
+  let replications: WebRTCReplication[] = []
+  let addReplication = false
   let files: File[];
+
+  globals.uiState.get$('replications').subscribe((newValue: WebRTCReplication[]) => {
+    replications = [...newValue || []]
+  });
+
+  async function handleSubmitReplication (replication: WebRTCReplication, index: number | null) {
+    replications = [...replications]
+    if (index === null) {
+      replications.push(replication)
+    } else {
+      // editing an existing replication
+      replications[index] = replication
+    }
+    
+    replications = [...replications]
+    await globals.uiState.set('replications', () => {
+      return replications
+    })
+  }
 
   async function handleSubmit() {
     if (confirm('Do you confirm data deletion? This action is irreversible.')) {
@@ -117,14 +141,60 @@
     let resultNotes = await globals.db.notes.bulkInsert(notes);
     console.log('Finished import', resultNotes);
   }
+
 </script>
 
 <div class="my__layout">
   <MainNavigation />
   <main class="flex__row">
-    <section class="wrapper | flex__grow">
+    <section class="wrapper | flex__grow | flow">
+      <h1>Synchronisation</h1>
+      <p>
+        Pesto data can be synchronized with other devices. With WebRTC, the data transit only between devices and stay
+        safe from third-parties.   
+      </p>
+      {#if replications.length > 0}
+        <h2>Existing synchronisations</h2>
+        <div class="flow" role="list">
+          {#each replications as replication, i (i)}
+            <ReplicationCard
+              {replication}
+              class="card"
+              role="listitem"
+              on:submit={async (e) => {
+                await handleSubmitReplication(e.detail.replication, i)
+              }}
+              on:delete={async () => {
+                replications.splice(i, 1)
+                replications = [...replications]
+                await globals.uiState.set('replications', () => {
+                  return replications
+                })
+              }}
+            />
+          {/each}
+        </div>
+      {/if}
+      {#if addReplication}
+        <ReplicationForm
+          replication={
+            {
+              type: 'webrtc',
+              signalingServer: DEFAULT_SIGNALING_SERVER,
+              room: `pesto-${uuidv4()}`
+            }
+          }
+          on:submit={async (e) => {
+            await handleSubmitReplication(e.detail.replication, null)
+            addReplication = false
+          }}
+        />
+      {:else}
+        <button on:click={(e) => {addReplication = true}}>Setup synchronisation…</button>
+      {/if}
+
       <h1>Clear data</h1>
-      <form on:submit|preventDefault={handleSubmit}>
+      <form on:submit|preventDefault={(e) => handleSubmit()}>
         <p>
           Remove all local data including entries, tasks, settings and drafts. You will be asked for
           confirmation.
@@ -135,7 +205,7 @@
       </form>
 
       <h1>Import from Tempo (Beta)</h1>
-      <form on:submit|preventDefault={handleImportTempo}>
+      <form on:submit|preventDefault={(e) => handleImportTempo()}>
         <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
         <label for="tempo-file">Tempo JSON file</label>
         <input
