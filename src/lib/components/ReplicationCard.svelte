@@ -23,6 +23,8 @@
     {#if replication.type === 'webrtc'}
       <strong>Type:</strong> WebRTC <br>
       <strong>Signaling server:</strong> {replication.signalingServer} <br>
+      <strong>Push local data:</strong> {replication.push ? 'Yes' : 'No'} <br>
+      <strong>Pull remote data:</strong> {replication.pull ? 'Yes' : 'No'} <br>
     {/if}
   {/if}
 

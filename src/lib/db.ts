@@ -24,6 +24,7 @@ import {
 } from 'rxdb/plugins/replication-webrtc';
 
 import { v7 as uuidv7 } from 'uuid';
+import { RxReplicationState } from 'rxdb/plugins/replication';
 
 if (dev) {
   import('rxdb/plugins/dev-mode').then(r => {
@@ -35,7 +36,7 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 
-export const DEFAULT_SIGNALING_SERVER = 'signaling.rxdb.info'
+export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/'
 
 export const LOCALE = (new Intl.NumberFormat()).resolvedOptions().locale
 
@@ -151,15 +152,18 @@ export type Database = RxDatabase<DatabaseCollections>;
 export type Globals = {
   db: null | Database;
   uiState: null | RxState;
+  replications: [],
 };
 export const globals: Globals = {
   db: null,
   uiState: null,
-  replication: null,
+  replications: [],
 };
 
 export type Replication = {
   type: string
+  pull: boolean
+  push: boolean
 }
 export type WebRTCReplication = Replication & {
   type: 'webrtc',
@@ -180,6 +184,17 @@ export async function getDb() {
   await db.addCollections({
     notes: {
       schema: noteSchema,
+      conflictHandler: function (i) {
+        if (i.newDocumentState.modified_at === i.realMasterState.modified_at) {
+          return Promise.resolve({
+            isEqual: true
+          })
+        }
+        return Promise.resolve({
+          isEqual: false,
+          documentData: i.realMasterState
+      });
+      },
       migrationStrategies: {
         1: function (oldDoc) {
           if (oldDoc?.fragments?.todolist) {
@@ -224,57 +239,102 @@ export async function getDb() {
 
   let uiState = await db.addState('ui');
 
+  uiState.replications$.subscribe(async (v) => {
+    v = v || []
+    let newReplications = await setupReplications(db, globals.replications, v)
+    globals.replications = newReplications
+  })
+
+
+  return { db, uiState, replications: [] };
+}
+
+async function setupReplications (db: Database, current: [], config: WebRTCReplication[]) {
+  // we stop and delete any existing replications
+  for (const replicationState of current) {
+    if (replicationState.remove) {
+      await replicationState.remove()
+    } else {
+      await replicationState.cancel()
+    }
+  }
+
+  // necessary for WebRTC replication to work
   window.process = {
     nextTick: (fn, ...args) => setTimeout(() => fn(...args)),
   };
-  const replicationPool = await replicateWebRTC(
-    {
-      collection: db.notes,
-      // The topic is like a 'room-name'. All clients with the same topic
-      // will replicate with each other. In most cases you want to use
-      // a different topic string per user.
-      topic: 'my-users-pool-agate-test-dev-pesto',
-      /**
-       * You need a collection handler to be able to create WebRTC connections.
-       * Here we use the simple peer handler which uses the 'simple-peer' npm library.
-       * To learn how to create a custom connection handler, read the source code,
-       * it is pretty simple.
-       */
-      connectionHandlerCreator: getConnectionHandlerSimplePeer({
-          // Set the signaling server url.
-          // You can use the server provided by RxDB for tryouts,
-          // but in production you should use your own server instead.
-          signalingServerUrl: 'wss://signaling.rxdb.info/',
-      }),
-      pull: {
-        
-      },
-      push: {
-      },
+
+  let replicationStates = []
+  // we create replications from given configuration
+  for (const conf of config) {
+    let state = await createReplication(db, conf)
+    if (state) {
+      replicationStates.push(state)
     }
-  );
-  let initialAddPeer = replicationPool.addPeer.bind(replicationPool)
-  let replicationMonkeyPatched = false
-  replicationPool.addPeer = function addPeer (peer, replicationState) {
-    let initialPushHandler = replicationState?.push.handler
-    async function pushHandler(docs) {
-      console.log("HELLO before", initialPushHandler, docs)
-      docs = docs.filter(d => {
-        return (d.newDocumentState.fragments?.text.content.includes('hello'))
-      })
-      console.log("HELLO after", initialPushHandler, docs)
-      return await initialPushHandler(docs)
-    }
-    if (replicationState && !replicationMonkeyPatched) {
-      replicationState.push.handler = pushHandler
-      replicationMonkeyPatched = true
-    }
-    console.log("PEER ADDED", replicationState)
-    return initialAddPeer(peer, replicationState)
   }
-  return { db, uiState };
+  return replicationStates
 }
 
+async function createReplication(db: Database, config: WebRTCReplication) {
+  let state = null
+  let pushPullConfig = {}
+  if (config.push) {
+    pushPullConfig.push = {}
+  } 
+  if (config.pull) {
+    pushPullConfig.pull = {}
+  }
+  if (config.type === 'webrtc') {
+    state = await replicateWebRTC(
+      {
+        collection: db.notes,
+        topic: config.room,
+        ...pushPullConfig,
+        connectionHandlerCreator: getConnectionHandlerSimplePeer({
+            signalingServerUrl: config.signalingServer,
+        }),
+      }
+    );
+    state.error$.subscribe(err => {
+      console.log("REPLICATION ERROR", err)
+    });
+    let initialAddPeer = state.addPeer.bind(state)
+    let replicationMonkeyPatched = false
+    // if (!config.pull) {
+    //   // we protect from rogue/misconfigured instances that might push their changes
+    //   // even if we disabled pull locally
+    //   state.masterReplicationHandler.masterWrite = async function (rows) {
+    //     console.debug('Skip writing remote rows locally because pull is disabled', rows)
+    //     return []
+    //   }
+    // }
+    // let initialSend = state.connectionHandler.send
+    // state.connectionHandler.send = async function (peer, message) {
+    //   // drop some messages based on our push/pull configuration
+    //   // to protect ourselves from rogue clients
+    //   console.log("MESSAIGE", message)
+    //   if (!config.push && (message?.result?.documents || Array.isArray(message.result))) {
+    //     console.debug('Dropping message because push is disabled…', message)
+    //     return
+    //   }
+    //   return await initialSend(peer, message)
+    // }
+    state.addPeer = function addPeer (peer, replicationState) {
+      // let initialPushHandler = replicationState?.push?.handler
+      // async function pushHandler(docs) {
+      //   return await initialPushHandler(docs)
+      // }
+      // if (initialPushHandler && replicationState && !replicationMonkeyPatched) {
+      //   replicationState.push.handler = pushHandler
+      //   replicationMonkeyPatched = true
+      // }
+      console.log("PEER ADDED", replicationState)
+      return initialAddPeer(peer, replicationState)
+    }
+    console.log('HELLO', state)
+  }
+  return state
+}
 marked.use({
   gfm: true,
   breaks: true,

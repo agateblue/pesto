@@ -181,7 +181,9 @@
             {
               type: 'webrtc',
               signalingServer: DEFAULT_SIGNALING_SERVER,
-              room: `pesto-${uuidv4()}`
+              room: `pesto-${uuidv4()}`,
+              push: true,
+              pull: true,
             }
           }
           on:submit={async (e) => {

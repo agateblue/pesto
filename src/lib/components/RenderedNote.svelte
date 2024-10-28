@@ -9,7 +9,6 @@
 </script>
 
 <article {...$$restProps}>
-  {note._rev}
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
@@ -23,12 +22,12 @@
       fragment={note.fragments.todolist}
       on:update={async (e) => {
         await note.incrementalUpdate({
-          $set: { 'fragments.todolist': e.detail.fragment }
+          $set: { 'fragments.todolist': e.detail.fragment, modified_at: new Date().toISOString() }
         });
       }}
       on:delete={async (e) => {
         await note.incrementalUpdate({
-          $set: { 'fragments.todolist': undefined }
+          $set: { 'fragments.todolist': undefined, modified_at: new Date().toISOString()  }
         });
         note = await note.getLatest();
       }}

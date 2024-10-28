@@ -394,3 +394,8 @@ input[type='text'].input__discrete {
 .diary__note[role=listitem] {
   border-bottom: var(--list-separator);
 }
+
+.card {
+  border: var(--list-separator);
+  padding: var(--space-2);
+}
