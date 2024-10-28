@@ -1,5 +1,5 @@
 <script lang="ts">
-  import cloneDeep from 'lodash/cloneDeep';
+  import debounce from 'lodash/debounce';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
@@ -37,6 +37,7 @@
     }
     let updateData = {};
     updateData[`fragments.${fragmentType}`] = fragment;
+    updateData[`modified_at`] = new Date().toISOString();
     await note.incrementalUpdate({
       $set: updateData
     });
@@ -49,11 +50,11 @@
 <TextFragmentEditor
   fragment={fragments.text || getNewTextFragment()}
   fieldId={`note-text-${id}`}
-  on:update={(event) => updateFragment('text', event.detail.fragment)}
+  on:update={debounce((event) => updateFragment('text', event.detail.fragment), 200)}
   on:delete={(event) => updateFragment('text', undefined)}
 />
 <TodoListFragmentEditor
   fragment={fragments.todolist || getNewTodoListFragment()}
-  on:update={(event) => updateFragment('todolist', event.detail.fragment)}
+  on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
   on:delete={(event) => updateFragment('todolist', undefined)}
 />
