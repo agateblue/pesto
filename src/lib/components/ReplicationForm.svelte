@@ -21,14 +21,14 @@
     <PasswordInput bind:value={replication.room} />
     <p>Anyone with this room identifier can access your data. Treat it like a password.</p>
   </div>
-  <div class="form__field">
+  <!-- <div class="form__field">
     <input id="push" name="push" type="checkbox" bind:checked={replication.push}>
     <label for="push">Push local changes</label>
   </div>
   <div class="form__field">
     <input id="pull" name="pull" type="checkbox" bind:checked={replication.pull}>
     <label for="pull">Pull remote changes</label>
-  </div>
+  </div> -->
   <div class="flex__row flex__justify-end">
     <button type="submit"> Save </button>
   </div>
