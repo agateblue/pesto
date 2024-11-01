@@ -15,7 +15,7 @@
   }
 
   let { fragment }: Props = $props();
-  let todos: TodoType[] = $state(fragment.todos);
+  let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   let title: string = $state(fragment.title || '');
   let done: boolean = $state(fragment.done);
   let id: string = $state(buildUniqueId());
