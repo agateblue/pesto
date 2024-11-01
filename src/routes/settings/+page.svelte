@@ -6,6 +6,7 @@
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type WebRTCReplication, buildUniqueId } from '$lib/db';
+  import { parseTags } from '$lib/ui';
 
   let replications: WebRTCReplication[] = $state([])
   let addReplication = $state(false)
@@ -61,7 +62,7 @@
       title: null,
       created_at: created_at,
       modified_at: created_at,
-      tags: [],
+      tags: parseTags(content || '').map(t => {return t.id}),
       fragments: {
         text: {
           content
