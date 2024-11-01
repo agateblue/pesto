@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { renderMarkdown, type Database, type NoteDocument, formatDate } from '$lib/db';
+  import { type Database, type NoteDocument, formatDate, getNoteUpdateData } from '$lib/db';
+  import { renderMarkdown } from '$lib/ui';
   import { cloneDeep } from 'lodash';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
@@ -29,12 +30,12 @@
       fragment={note.fragments.todolist}
       on:update={async (e) => {
         await note.incrementalUpdate({
-          $set: { 'fragments.todolist': cloneDeep(e.detail.fragment), modified_at: new Date().toISOString() }
+          $set: getNoteUpdateData(note, { 'fragments.todolist': e.detail.fragment})
         });
       }}
       on:delete={async (e) => {
         await note.incrementalUpdate({
-          $set: { 'fragments.todolist': undefined, modified_at: new Date().toISOString()  }
+          $set: getNoteUpdateData(note, { 'fragments.todolist': undefined})
         });
         note = await note.getLatest();
       }}

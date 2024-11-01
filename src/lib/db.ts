@@ -16,8 +16,6 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
-import DOMPurify from 'dompurify';
-import { marked } from 'marked';
 import {
   replicateWebRTC,
   getConnectionHandlerSimplePeer
@@ -25,6 +23,8 @@ import {
 
 import { v7 as uuidv7 } from 'uuid';
 import { RxReplicationState } from 'rxdb/plugins/replication';
+import cloneDeep from 'lodash/cloneDeep';
+import { parseTags } from './ui';
 
 if (dev) {
   import('rxdb/plugins/dev-mode').then(r => {
@@ -335,14 +335,6 @@ async function createReplication(db: Database, config: WebRTCReplication) {
   }
   return state
 }
-marked.use({
-  gfm: true,
-  breaks: true,
-});
-
-export function renderMarkdown(text: string): string {
-  return DOMPurify.sanitize(marked.parse(text || ''));
-}
 
 export function buildUniqueId(options = {}) {
   return uuidv7(options);
@@ -397,8 +389,19 @@ export async function getByQuery(collection: RxCollection, query: MangoQuery) {
   return results;
 }
 
+export function getNoteUpdateData(note: NoteDocType, data: object) {
+  data = cloneDeep(data)
+  data.modified_at = new Date().toISOString()
+
+  let tagsSource = data['fragments.text']?.content || note.fragments.text?.content
+  const tags = parseTags(tagsSource).map(t => {
+    return t.id
+  })
+  data.tags = [...new Set(tags)]
+  return data
+}
 export type QueryToken = {
-  type: 'is' | 'text';
+  type: 'is' | 'text' | 'tag';
   value: string;
 };
 export function getQueryTokens(q: string) {
@@ -413,6 +416,11 @@ export function getQueryTokens(q: string) {
         return {
           type: 'is',
           value: raw.slice(3)
+        } as QueryToken;
+      } else if (raw.startsWith('tag:')) {
+        return {
+          type: 'tag',
+          value: raw.slice(4)
         } as QueryToken;
       } else {
         return {
@@ -432,9 +440,12 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
         query.push({ 'fragments.todolist.todos.1': { $exists: true } });
       } else if (token.value === 'done') {
         query.push({ 'fragments.todolist.done': { $eq: true } });
-      }else if (token.value === 'text') {
+      } else if (token.value === 'text') {
         query.push({ 'fragments.text.content': { $exists: true } });
       }
+    }
+    if (token.type === 'tag') {
+      query.push({ 'tags': token.value });
     }
     if (token.type === 'text') {
       let orQuery = [];

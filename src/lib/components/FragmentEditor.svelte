@@ -1,6 +1,5 @@
 <script lang="ts">
   import debounce from 'lodash/debounce';
-  import cloneDeep from 'lodash/cloneDeep';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
@@ -9,6 +8,7 @@
     getNewNote,
     getNewTextFragment,
     getNewTodoListFragment,
+    getNoteUpdateData,
     type NoteDocument,
     type TextType,
     type TodolistType,
@@ -44,7 +44,7 @@
     updateData[`fragments.${fragmentType}`] = fragment;
     updateData[`modified_at`] = new Date().toISOString();
     await note.incrementalUpdate({
-      $set: cloneDeep(updateData)
+      $set: getNoteUpdateData(note, updateData)
     });
     note = await note.getLatest();
     fragments = note.fragments;
