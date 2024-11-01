@@ -1,13 +1,15 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { v4 as uuidv4 } from 'uuid';
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type WebRTCReplication } from '$lib/db';
+  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type WebRTCReplication, buildUniqueId } from '$lib/db';
 
-  let replications: WebRTCReplication[] = []
-  let addReplication = false
-  let files: File[];
+  let replications: WebRTCReplication[] = $state([])
+  let addReplication = $state(false)
+  let files: File[] = $state();
 
   globals.uiState.get$('replications').subscribe((newValue: WebRTCReplication[]) => {
     replications = [...newValue || []]
@@ -192,11 +194,11 @@
           }}
         />
       {:else}
-        <button on:click={(e) => {addReplication = true}}>Setup synchronisation…</button>
+        <button onclick={(e) => {addReplication = true}}>Setup synchronisation…</button>
       {/if}
 
       <h1>Clear data</h1>
-      <form on:submit|preventDefault={(e) => handleSubmit()}>
+      <form onsubmit={preventDefault((e) => handleSubmit())}>
         <p>
           Remove all local data including entries, tasks, settings and drafts. You will be asked for
           confirmation.
@@ -207,7 +209,7 @@
       </form>
 
       <h1>Import from Tempo (Beta)</h1>
-      <form on:submit|preventDefault={(e) => handleImportTempo()}>
+      <form onsubmit={preventDefault((e) => handleImportTempo())}>
         <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
         <label for="tempo-file">Tempo JSON file</label>
         <input

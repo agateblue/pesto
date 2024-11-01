@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { createEventDispatcher } from 'svelte';
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
 
@@ -10,9 +12,13 @@
     delete: {};
   }>();
 
-  export let todo: TodoType;
-  let text = todo.text;
-  let done = todo.done;
+  interface Props {
+    todo: TodoType;
+  }
+
+  let { todo }: Props = $props();
+  let text = $state(todo.text);
+  let done = $state(todo.done);
 
   function handleChange() {
     dispatch('update', { todo: { ...todo, text, done } });
@@ -24,7 +30,7 @@
     type="checkbox"
     id={`todo-${todo.id}-done`}
     checked={text.trim() && todo.done}
-    on:change={(e) => {
+    onchange={(e) => {
       done = e.target.checked
       handleChange();
     }}
@@ -36,17 +42,17 @@
     autocomplete="off"
     id={`todo-${todo.id}-text`}
     bind:value={text}
-    on:keyup={ignoreTab((e) => {
+    onkeyup={ignoreTab((e) => {
       handleChange();
     })}
     placeholder="Add new task…"
     rows="1"
-  />
+></textarea>
   <button
     class="button__icon"
-    on:click|preventDefault={(e) => {
+    onclick={preventDefault((e) => {
       dispatch('delete');
-    }}
+    })}
     aria-label="Delete"
   >
     <IconaMoonTrash />

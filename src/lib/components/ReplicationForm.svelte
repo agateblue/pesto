@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import {type WebRTCReplication} from '$lib/db'
   import { createEventDispatcher } from 'svelte';
@@ -7,11 +9,15 @@
     submit: { replication: WebRTCReplication };
   }>();
 
-  export let replication: WebRTCReplication
+  interface Props {
+    replication: WebRTCReplication;
+  }
+
+  let { replication = $bindable() }: Props = $props();
 </script>
 
 
-<form class="flow" on:submit|preventDefault={(e) => dispatch('submit', {replication})}>
+<form class="flow" onsubmit={preventDefault((e) => dispatch('submit', {replication}))}>
   <div class="form__field">
     <label for="signaling-server">Signaling server</label>
     <input type="text" bind:value={replication.signalingServer}>

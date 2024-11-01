@@ -8,11 +8,16 @@
     delete: {};
   }>();
 
-  export let replication: WebRTCReplication
-  let edit = false
+  interface Props {
+    replication: WebRTCReplication;
+    [key: string]: any
+  }
+
+  let { replication = $bindable(), ...rest }: Props = $props();
+  let edit = $state(false)
 </script>
 
-<div {...$$restProps}>
+<div {...rest}>
   {#if edit}
     <ReplicationForm replication={{...replication}} on:submit={(e) => {
       replication = {...e.detail.replication}
@@ -32,14 +37,14 @@
     <button
       type="button"
       class="button__link"
-      on:click={() => {edit = !edit}}
+      onclick={() => {edit = !edit}}
     >
       Edit
     </button>
     <button
       type="button"
       class="button__link"
-      on:click={() => {
+      onclick={() => {
         if (confirm('Delete synchronisation? Your data will be kept but not synchronised anymore.')) {
           dispatch('delete', {})
         }

@@ -7,9 +7,13 @@
     delete: {};
   }>();
 
-  export let fieldId: string;
-  export let fragment: TextType;
-  let content = fragment.content;
+  interface Props {
+    fieldId: string;
+    fragment: TextType;
+  }
+
+  let { fieldId, fragment }: Props = $props();
+  let content = $state(fragment.content);
 
   function handleChange() {
     if (content) {
@@ -27,6 +31,6 @@
   id="{fieldId}"
   class="editor autoresize" 
   placeholder="What's on your mind?"
-  on:keyup={(e) => handleChange()} 
+  onkeyup={(e) => handleChange()} 
   bind:value={content}   
-/>
+></textarea>
