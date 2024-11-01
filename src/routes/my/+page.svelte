@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import { page } from '$app/stores'
@@ -13,15 +15,18 @@
   import {
     updateURLParam
   } from '$lib/ui'
-  export let data;
+  let { data, children } = $props();
 
-  let notes: NoteDocument[] = [];
+  let notes: NoteDocument[] = $state([]);
 
-  let note: NoteDocument | null = null;
+  let note: NoteDocument | null = $state(null);
 
-  let noteFormKey = 0
+  let noteFormKey = $state(0)
 
-  $: searchQuery = $page.url.searchParams.get('q') || ''; 
+  let searchQuery;
+  run(() => {
+    searchQuery = $page.url.searchParams.get('q') || '';
+  }); 
 
   async function handleUpdate(n: NoteDocument) {
     let found = false;
@@ -61,7 +66,9 @@
     notes = await getNotes(q)
   }
 
-  $: loadNotes(searchQuery)
+  run(() => {
+    loadNotes(searchQuery)
+  });
   
 </script>
 
@@ -69,7 +76,7 @@
   <div class="flex__row | flex__justify-between">
     <button
       class="layout__multi-hidden"
-      on:click={() => {
+      onclick={() => {
         globals.uiState.set('currentPage', () => 'mainMenu');
       }}
     >
@@ -83,15 +90,13 @@
       id="search"
       placeholder="Search"
       value={searchQuery}
-      on:keydown={
-        async (e) => {
+      onkeydown={async (e) => {
           if (e.key === 'Enter') {
             searchQuery = e.target.value.trim()
             let params = updateURLParam($page.url, 'q', searchQuery)
             goto(`?${params.toString()}`)
           }
-        }
-      }
+        }}
     />
     <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
@@ -103,7 +108,7 @@
     {/each}
     {#if notes.length > 0}
       <button
-        on:click={async (e) => {
+        onclick={async (e) => {
           let newNotes = await getByQuery(globals.db.notes, {
             limit: 20,
             sort: [{ id: 'desc' }],
@@ -118,7 +123,7 @@
 
 <aside>
   <section class="wrapper">
-    <slot></slot>
+    {@render children?.()}
     {#key noteFormKey}
       <NoteForm
         {note}

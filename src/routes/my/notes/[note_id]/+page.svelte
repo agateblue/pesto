@@ -3,9 +3,9 @@
   import NoteForm from '$lib/components/NoteForm.svelte';
   import { createOrUpdate } from '$lib/db';
   import { goto } from '$app/navigation';
-  export let data;
+  let { data } = $props();
 
-  let note = data.note;
+  let note = $state(data.note);
 
   async function handleUpdate(n: NoteDocument) {
     note = n;

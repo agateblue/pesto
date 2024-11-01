@@ -10,11 +10,15 @@
     delete: {};
   }>();
 
-  export let fragment: TodolistType;
-  let todos: TodoType[] = fragment.todos;
-  let title: string = fragment.title || '';
-  let done: boolean = fragment.done;
-  let id: string = buildUniqueId();
+  interface Props {
+    fragment: TodolistType;
+  }
+
+  let { fragment }: Props = $props();
+  let todos: TodoType[] = $state(fragment.todos);
+  let title: string = $state(fragment.title || '');
+  let done: boolean = $state(fragment.done);
+  let id: string = $state(buildUniqueId());
 
   function handleChange() {
     let hasContent =
@@ -64,7 +68,7 @@
     return stats;
   }
 
-  let stats = getStats();
+  let stats = $state(getStats());
 </script>
 
 <div class="flex__row | flex__justify-between">

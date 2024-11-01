@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
   import { type NoteDocument, type Database } from '$lib/db';
@@ -7,7 +10,12 @@
     delete: { note: NoteDocument };
   }>();
 
-  export let note: NoteDocument | null;
+  interface Props {
+    note: NoteDocument | null;
+    children?: import('svelte').Snippet;
+  }
+
+  let { note, children }: Props = $props();
   function handleUpdate(n: NoteDocument) {
     dispatch('update', { note: n });
   }
@@ -20,7 +28,7 @@
   }
 </script>
 
-<form class="flow" on:submit>
+<form class="flow" onsubmit={bubble('submit')}>
   <a href="/my" class="layout__multi-hidden">Go back</a>
   <FragmentEditor
     {note}
@@ -29,12 +37,12 @@
     }}
   />
   <div class="flex__row flex__justify-between">
-    <slot></slot>
+    {@render children?.()}
     {#if note}
       <button
         type="button"
         class="button__link"
-        on:click={(e) => {
+        onclick={(e) => {
           askDelete(note);
         }}
       > 

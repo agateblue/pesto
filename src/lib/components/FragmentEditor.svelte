@@ -1,5 +1,6 @@
 <script lang="ts">
   import debounce from 'lodash/debounce';
+  import cloneDeep from 'lodash/cloneDeep';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
@@ -21,10 +22,14 @@
     update: { note: NoteDocument };
   }>();
 
-  export let note: NoteDocument | null;
+  interface Props {
+    note: NoteDocument | null;
+  }
+
+  let { note = $bindable() }: Props = $props();
   let id: string = note ? note.id : buildUniqueId()
   let db = globals.db;
-  let fragments = note?.toMutableJSON().fragments || {};
+  let fragments = $state(note?.toMutableJSON().fragments || {});
 
   async function updateFragment(
     fragmentType: string,
@@ -39,7 +44,7 @@
     updateData[`fragments.${fragmentType}`] = fragment;
     updateData[`modified_at`] = new Date().toISOString();
     await note.incrementalUpdate({
-      $set: updateData
+      $set: cloneDeep(updateData)
     });
     note = await note.getLatest();
     fragments = note.fragments;

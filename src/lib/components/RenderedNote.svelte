@@ -1,14 +1,21 @@
 <script lang="ts">
   import { renderMarkdown, type Database, type NoteDocument, formatDate } from '$lib/db';
+  import { cloneDeep } from 'lodash';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
-  export let note: NoteDocument;
+  interface Props {
+    note: NoteDocument;
+    footer?: import('svelte').Snippet;
+    [key: string]: any
+  }
+
+  let { note = $bindable(), footer, ...rest }: Props = $props();
   note.$.subscribe(async currentRxDocument => {
     note = note.getLatest()
   });
 </script>
 
-<article {...$$restProps}>
+<article {...rest}>
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
@@ -22,7 +29,7 @@
       fragment={note.fragments.todolist}
       on:update={async (e) => {
         await note.incrementalUpdate({
-          $set: { 'fragments.todolist': e.detail.fragment, modified_at: new Date().toISOString() }
+          $set: { 'fragments.todolist': cloneDeep(e.detail.fragment), modified_at: new Date().toISOString() }
         });
       }}
       on:delete={async (e) => {
@@ -33,5 +40,5 @@
       }}
     />
   {/if}
-  <slot name="footer"></slot>
+  {@render footer?.()}
 </article>

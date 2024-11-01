@@ -1,7 +1,7 @@
 <script>
   import { globals } from '$lib/db';
 
-  let sidebarFullpage = false;
+  let sidebarFullpage = $state(false);
 
   const observable = globals.uiState.get$('currentPage');
   observable.subscribe((newValue) => {
