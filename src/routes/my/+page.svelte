@@ -23,7 +23,7 @@
 
   let noteFormKey = $state(0)
 
-  let searchQuery;
+  let searchQuery = $state('');
   run(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
   }); 
