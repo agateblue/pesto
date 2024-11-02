@@ -149,7 +149,7 @@ export const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
 // and then merge all our types
 export type DocumentCollection = RxCollection<DocumentType>;
 
-export type Document = RxDocument<DocumentType>;
+export type DocumentDocument = RxDocument<DocumentType>;
 
 export type DatabaseCollections = {
   documents: DocumentCollection;
@@ -367,10 +367,6 @@ export async function getById(collection: RxCollection, id: string) {
   return results.get(id);
 }
 
-export async function getByQuery(collection: RxCollection, query: MangoQuery) {
-  let results = await collection.find(query).exec();
-  return results;
-}
 
 export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data);

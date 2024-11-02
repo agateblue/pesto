@@ -1,26 +1,21 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { getByQuery, type Document, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
+  import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
   import { updateURLParam } from '$lib/ui';
   let { data, children } = $props();
 
-  let notes: Document[] = $state([]);
+  let notes: DocumentDocument[] = $state([]);
 
-  let note: Document | null = $state(null);
+  let note: DocumentDocument | null = $state(null);
 
   let noteFormKey = $state(0);
 
   let searchQuery = $state('');
-  run(() => {
-    searchQuery = $page.url.searchParams.get('q') || '';
-  });
 
-  async function handleUpdate(n: Document) {
+  async function handleUpdate(n: DocumentDocument) {
     let found = false;
     note = n;
     for (const [index, element] of notes.entries()) {
@@ -47,19 +42,20 @@
   }
 
   async function getNotes(q: string) {
-    return await getByQuery(globals.db.documents, {
+    return await globals.db.documents.find({
       limit: 20,
       sort: [{ id: 'desc' }],
       selector: getSelector(q)
-    });
+    }).exec();
   }
 
   async function loadNotes(q: string) {
     notes = await getNotes(q);
   }
 
-  run(() => {
-    loadNotes(searchQuery);
+  $effect(async () => {
+    searchQuery = $page.url.searchParams.get('q') || '';
+    await loadNotes(searchQuery);
   });
 </script>
 
@@ -100,7 +96,7 @@
     {#if notes.length > 0}
       <button
         onclick={async (e) => {
-          let newNotes = await getByQuery(globals.db.documents, {
+          let newNotes = await globals.db.documents.find({
             limit: 20,
             sort: [{ id: 'desc' }],
             selector: {
@@ -108,7 +104,7 @@
               id: { $lt: notes.slice(-1)[0].id },
               ...getSelector(searchQuery)
             }
-          });
+          }).exec();
           notes = [...notes, ...newNotes];
         }}>Load more</button
       >

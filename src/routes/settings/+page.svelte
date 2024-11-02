@@ -6,7 +6,7 @@
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import {
-    type NoteDocType,
+    type DocumentDocument,
     globals,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
@@ -155,7 +155,7 @@
 
     console.log('Found', entries.length + tasks.length, 'entries to import…');
 
-    let notes: Document[] = [];
+    let notes: DocumentDocument[] = [];
 
     for (const entry of entries) {
       let converted: Document | null = getNoteFromTempoEntry(entry);
@@ -165,7 +165,7 @@
       }
     }
     for (const task of tasks) {
-      let converted: Document | null = getNoteFromTempoTask(task, doneList);
+      let converted: DocumentDocument | null = getNoteFromTempoTask(task, doneList);
       console.log('CONVERTED Tempo task', task, converted);
       if (converted) {
         notes.push(converted);
