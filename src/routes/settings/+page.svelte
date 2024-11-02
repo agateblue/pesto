@@ -5,18 +5,20 @@
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type WebRTCReplication, buildUniqueId } from '$lib/db';
+  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type AnyReplication, buildUniqueId } from '$lib/db';
   import { parseTags } from '$lib/ui';
+  import cloneDeep from 'lodash/cloneDeep';
 
-  let replications: WebRTCReplication[] = $state([])
-  let addReplication = $state(false)
+
+  let replications: AnyReplication[] = $state([])
+  let newReplication = $state(null)
   let files: File[] = $state();
-
-  globals.uiState.get$('replications').subscribe((newValue: WebRTCReplication[]) => {
+  let replicationType: string = $state('webrtc')
+  globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
     replications = [...newValue || []]
   });
 
-  async function handleSubmitReplication (replication: WebRTCReplication, index: number | null) {
+  async function handleSubmitReplication (replication: AnyReplication, index: number | null) {
     replications = [...replications]
     if (index === null) {
       replications.push(replication)
@@ -27,10 +29,34 @@
     
     replications = [...replications]
     await globals.uiState.set('replications', () => {
-      return replications
+      return cloneDeep(replications)
     })
   }
 
+  function getNewReplication(type: 'webrtc' | 'couchdb') {
+    if (type === 'webrtc') {
+      return {
+        type: 'webrtc',
+        signalingServer: DEFAULT_SIGNALING_SERVER,
+        room: `pesto-${uuidv4()}`,
+        push: true,
+        pull: true,
+      }
+    }
+
+    if (type === 'couchdb') {
+      return {
+        type: 'couchdb',
+        server: '',
+        database: '',
+        username: '',
+        password: '',
+        push: true,
+        pull: true,
+      }
+    }
+
+  }
   async function handleSubmit() {
     if (confirm('Do you confirm data deletion? This action is irreversible.')) {
       window.localStorage.clear();
@@ -178,24 +204,25 @@
           {/each}
         </div>
       {/if}
-      {#if addReplication}
+      {#if newReplication}
         <ReplicationForm
-          replication={
-            {
-              type: 'webrtc',
-              signalingServer: DEFAULT_SIGNALING_SERVER,
-              room: `pesto-${uuidv4()}`,
-              push: true,
-              pull: true,
-            }
-          }
+          replication={newReplication}
           on:submit={async (e) => {
             await handleSubmitReplication(e.detail.replication, null)
-            addReplication = false
+            newReplication = null
           }}
         />
       {:else}
-        <button onclick={(e) => {addReplication = true}}>Setup synchronisation…</button>
+        <form onsubmit={(e) => {newReplication = getNewReplication(replicationType)}}>
+          <div class="form__field">
+            <label for="replication-type">Type</label>
+            <select name="replication-type" id="replication-type" bind:value={replicationType}>
+              <option value="webrtc">WebRTC</option>
+              <option value="couchdb">CouchDB</option>
+            </select>
+          </div>
+          <button type="submit">Setup synchronisation…</button>
+        </form>
       {/if}
 
       <h1>Clear data</h1>

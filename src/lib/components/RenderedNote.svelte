@@ -1,7 +1,6 @@
 <script lang="ts">
   import { type Database, type NoteDocument, formatDate, getNoteUpdateData } from '$lib/db';
   import { renderMarkdown } from '$lib/ui';
-  import { cloneDeep } from 'lodash';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
   interface Props {
