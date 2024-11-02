@@ -7,7 +7,7 @@
   import { goto } from '$app/navigation';
   import {
     getByQuery,
-    type NoteDocument,
+    type Document,
     globals,
     getQueryTokens,
     tokensToMangoQuery
@@ -17,9 +17,9 @@
   } from '$lib/ui'
   let { data, children } = $props();
 
-  let notes: NoteDocument[] = $state([]);
+  let notes: Document[] = $state([]);
 
-  let note: NoteDocument | null = $state(null);
+  let note: Document | null = $state(null);
 
   let noteFormKey = $state(0)
 
@@ -28,7 +28,7 @@
     searchQuery = $page.url.searchParams.get('q') || '';
   }); 
 
-  async function handleUpdate(n: NoteDocument) {
+  async function handleUpdate(n: Document) {
     let found = false;
     note = n;
     for (const [index, element] of notes.entries()) {
@@ -55,7 +55,7 @@
   }
 
   async function getNotes(q: string) {
-    return await getByQuery(globals.db.notes, {
+    return await getByQuery(globals.db.documents, {
       limit: 20,
       sort: [{ id: 'desc' }],
       selector: getSelector(q)
@@ -109,10 +109,10 @@
     {#if notes.length > 0}
       <button
         onclick={async (e) => {
-          let newNotes = await getByQuery(globals.db.notes, {
+          let newNotes = await getByQuery(globals.db.documents, {
             limit: 20,
             sort: [{ id: 'desc' }],
-            selector: { id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
+            selector: { type: 'note', id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
           });
           notes = [...notes, ...newNotes];
         }}>Load more</button

@@ -4,23 +4,23 @@
   const bubble = createBubbler();
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { type NoteDocument, type Database } from '$lib/db';
+  import { type Document, type Database } from '$lib/db';
   const dispatch = createEventDispatcher<{
-    update: { note: NoteDocument };
-    delete: { note: NoteDocument };
+    update: { note: Document };
+    delete: { note: Document };
   }>();
 
   interface Props {
-    note: NoteDocument | null;
+    note: Document | null;
     children?: import('svelte').Snippet;
   }
 
   let { note, children }: Props = $props();
-  function handleUpdate(n: NoteDocument) {
+  function handleUpdate(n: Document) {
     dispatch('update', { note: n });
   }
 
-  async function askDelete(note: NoteDocument) {
+  async function askDelete(note: Document) {
     if (confirm('Do you want to delete this note?')) {
       await note.remove();
       dispatch('delete', { note })

@@ -4,6 +4,6 @@ export async function load({ params, parent }) {
   let data = await parent();
   return {
     ...data,
-    note: (await getById(data.db.notes, params.note_id)) as NoteDocument
+    note: (await getById(data.db.documents, params.note_id)) as Document
   };
 }

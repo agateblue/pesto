@@ -1,13 +1,12 @@
 <script lang="ts">
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
-  import { createOrUpdate } from '$lib/db';
   import { goto } from '$app/navigation';
   let { data } = $props();
 
   let note = $state(data.note);
 
-  async function handleUpdate(n: NoteDocument) {
+  async function handleUpdate(n: Document) {
     note = n;
   }
 </script>
