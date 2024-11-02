@@ -9,7 +9,7 @@
     getNewTextFragment,
     getNewTodoListFragment,
     getNoteUpdateData,
-    type Document,
+    type DocumentDocument,
     type TextType,
     type TodolistType,
     type Database
@@ -19,11 +19,11 @@
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
 
   const dispatch = createEventDispatcher<{
-    update: { note: Document };
+    update: { note: DocumentDocument };
   }>();
 
   interface Props {
-    note: Document | null;
+    note: DocumentDocument | null;
   }
 
   let { note = $bindable() }: Props = $props();

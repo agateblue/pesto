@@ -6,7 +6,7 @@
 
   let note = $state(data.note);
 
-  async function handleUpdate(n: Document) {
+  async function handleUpdate(n: DocumentDocument) {
     note = n;
   }
 </script>
