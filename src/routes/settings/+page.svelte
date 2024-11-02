@@ -114,6 +114,7 @@
     let content: string = task.text;
     let note: NoteDocType = {
       id: id,
+      type: 'note',
       title: null,
       created_at: created_at,
       modified_at: created_at,
@@ -148,17 +149,17 @@
 
     console.log('Found', entries.length + tasks.length, 'entries to import…');
 
-    let notes: NoteDocument[] = [];
+    let notes: Document[] = [];
 
     for (const entry of entries) {
-      let converted: NoteDocument | null = getNoteFromTempoEntry(entry);
+      let converted: Document | null = getNoteFromTempoEntry(entry);
       console.log('CONVERTED Tempo note', entry, converted);
       if (converted) {
         notes.push(converted);
       }
     }
     for (const task of tasks) {
-      let converted: NoteDocument | null = getNoteFromTempoTask(task, doneList);
+      let converted: Document | null = getNoteFromTempoTask(task, doneList);
       console.log('CONVERTED Tempo task', task, converted);
       if (converted) {
         notes.push(converted);
@@ -167,7 +168,7 @@
 
     console.log('Ready to import notes: ', notes.length);
     console.log();
-    let resultNotes = await globals.db.notes.bulkInsert(notes);
+    let resultNotes = await globals.db.documents.bulkInsert(notes);
     console.log('Finished import', resultNotes);
   }
 

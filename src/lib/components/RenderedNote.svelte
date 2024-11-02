@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { type Database, type NoteDocument, formatDate, getNoteUpdateData } from '$lib/db';
+  import { type Database, type Document, formatDate, getNoteUpdateData } from '$lib/db';
   import { renderMarkdown } from '$lib/ui';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
 
   interface Props {
-    note: NoteDocument;
+    note: Document;
     footer?: import('svelte').Snippet;
     [key: string]: any
   }

@@ -50,8 +50,8 @@ export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
 export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short',
 })
-export const noteSchemaLiteral = {
-  version: 6,
+export const documentSchemaLiteral = {
+  version: 0,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -130,26 +130,29 @@ export const noteSchemaLiteral = {
   }
 } as const;
 
-const noteSchemaTyped = toTypedRxJsonSchema(noteSchemaLiteral);
+const documentSchemaTyped = toTypedRxJsonSchema(documentSchemaLiteral);
 
 // aggregate the document type from the schema
-export type NoteDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof noteSchemaTyped>;
+export type DocumentType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof documentSchemaTyped>;
+export type NoteType = DocumentType & {
+  type: 'note'
+}
 
-export type TextType = NonNullable<NoteDocType['fragments']['text']>;
-export type TodolistType = NonNullable<NoteDocType['fragments']['todolist']>;
+export type TextType = NonNullable<DocumentType['fragments']['text']>;
+export type TodolistType = NonNullable<DocumentType['fragments']['todolist']>;
 export type TodosType = NonNullable<TodolistType['todos']>;
 export type TodoType = TodosType[number];
 
 // create the typed RxJsonSchema from the literal typed object.
-export const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral;
+export const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
 
 // and then merge all our types
-export type NoteCollection = RxCollection<NoteDocType>;
+export type DocumentCollection = RxCollection<DocumentType>;
 
-export type NoteDocument = RxDocument<NoteDocType>;
+export type Document = RxDocument<DocumentType>;
 
 export type DatabaseCollections = {
-  notes: NoteCollection;
+  documents: DocumentCollection;
 };
 
 export type Database = RxDatabase<DatabaseCollections>;
@@ -195,10 +198,10 @@ export async function getDb() {
     storage: getRxStorageDexie()
   });
 
-  const noteSchema: RxJsonSchema<NoteDocType> = noteSchemaLiteral;
+  const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
   await db.addCollections({
-    notes: {
-      schema: noteSchema,
+    documents: {
+      schema: documentSchema,
       conflictHandler: function (i) {
         if (i.newDocumentState.modified_at === i.realMasterState.modified_at) {
           return Promise.resolve({
@@ -211,47 +214,7 @@ export async function getDb() {
       });
       },
       migrationStrategies: {
-        1: function (oldDoc) {
-          if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.title = null;
-          }
-          return oldDoc;
-        },
-        2: function (oldDoc) {
-          if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.done = true;
-            for (const todo of oldDoc.fragments.todolist.todos) {
-              if (!todo.done) {
-                oldDoc.fragments.todolist.done = false;
-                break;
-              }
-            }
-          }
-          return oldDoc;
-        },
-        3: function (oldDoc) {
-          return oldDoc;
-        },
-        4: function (oldDoc) {
-          if (oldDoc?.fragments?.todolist) {
-            oldDoc.fragments.todolist.title = oldDoc.fragments.todolist.title || 'TODO';
-          }
-          return oldDoc;
-        },
-        5: function (oldDoc) {
-          if (oldDoc?.fragments?.todolist) {
-            for (const todo of oldDoc.fragments.todolist.todos) {
-              todo.id = buildUniqueId({
-                msecs: Date.parse(oldDoc.created_at)
-              });
-            }
-          }
-          return oldDoc;
-        },
-        6: function (oldDoc) {
-          oldDoc.type = 'note'
-          return oldDoc;
-        }
+        
       }
     }
   });
@@ -308,7 +271,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     state = replicateCouchDB(
       {
           replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
-          collection: db.notes,
+          collection: db.documents,
           url: couchdbUrl,
           live: true,
           fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
@@ -319,7 +282,7 @@ async function createReplication(db: Database, config: AnyReplication) {
   if (config.type === 'webrtc') {
     state = await replicateWebRTC(
       {
-        collection: db.notes,
+        collection: db.documents,
         topic: config.room,
         ...pushPullConfig,
         connectionHandlerCreator: getConnectionHandlerSimplePeer({
@@ -375,25 +338,27 @@ export function buildUniqueId(options = {}) {
 export function getNewNote() {
   return {
     id: buildUniqueId(),
+    type: 'note',
     created_at: new Date().toISOString(),
     modified_at: new Date().toISOString(),
     title: null,
     fragments: {},
     tags: []
-  } as Note;
+  } as DocumentType;
 }
 
 export function getNewTextFragment(content = '') {
   return {
     content
-  } as TextFragment;
+  } as TextType ;
 }
 
 export function getNewTodoListFragment() {
   return {
     title: null,
-    todos: []
-  } as TodoListFragment;
+    done: false,
+    todos: [],
+  };
 }
 
 export function getNewTodo() {
@@ -401,15 +366,10 @@ export function getNewTodo() {
     id: buildUniqueId(),
     text: '',
     done: false
-  } as Todo;
-}
-export async function createOrUpdate(collection: RxCollection, entry: DBEntry) {
-  return await collection.upsert(entry);
+  } as TodoType;
 }
 
-interface GroupedObjects {
-  [key: string]: Object[];
-}
+
 
 export async function getById(collection: RxCollection, id: string) {
   let results = await collection.findByIds([id]).exec();
@@ -421,7 +381,7 @@ export async function getByQuery(collection: RxCollection, query: MangoQuery) {
   return results;
 }
 
-export function getNoteUpdateData(note: NoteDocType, data: object) {
+export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data)
   data.modified_at = new Date().toISOString()
 

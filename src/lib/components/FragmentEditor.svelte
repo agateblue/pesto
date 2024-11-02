@@ -9,7 +9,7 @@
     getNewTextFragment,
     getNewTodoListFragment,
     getNoteUpdateData,
-    type NoteDocument,
+    type Document,
     type TextType,
     type TodolistType,
     type Database
@@ -19,11 +19,11 @@
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
 
   const dispatch = createEventDispatcher<{
-    update: { note: NoteDocument };
+    update: { note: Document };
   }>();
 
   interface Props {
-     note: NoteDocument | null;
+     note: Document | null;
   }
 
   let { note = $bindable() }: Props = $props();
@@ -38,7 +38,7 @@
     if (!note) {
       let noteData = getNewNote();
       noteData.id = id
-      note = await db.notes.insert(noteData);
+      note = await db.documents.insert(noteData);
     }
     let updateData = {};
     updateData[`fragments.${fragmentType}`] = fragment;
