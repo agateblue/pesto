@@ -16,40 +16,40 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
-import {
-  replicateWebRTC,
-  getConnectionHandlerSimplePeer
-} from 'rxdb/plugins/replication-webrtc';
+import { replicateWebRTC, getConnectionHandlerSimplePeer } from 'rxdb/plugins/replication-webrtc';
 
-import { replicateCouchDB, getFetchWithCouchDBAuthorization } from 'rxdb/plugins/replication-couchdb';
+import {
+  replicateCouchDB,
+  getFetchWithCouchDBAuthorization
+} from 'rxdb/plugins/replication-couchdb';
 
 import { v7 as uuidv7 } from 'uuid';
 import cloneDeep from 'lodash/cloneDeep';
 import { parseTags } from './ui';
 
 if (dev) {
-  import('rxdb/plugins/dev-mode').then(r => {
+  import('rxdb/plugins/dev-mode').then((r) => {
     addRxPlugin(r.RxDBDevModePlugin);
-  })
+  });
 }
 
 addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 
-export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/'
+export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/';
 
-export const LOCALE = (new Intl.NumberFormat()).resolvedOptions().locale
+export const LOCALE = new Intl.NumberFormat().resolvedOptions().locale;
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   weekday: 'long',
   day: '2-digit',
   month: '2-digit',
-  year: '2-digit',
-})
+  year: '2-digit'
+});
 export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
-  timeStyle: 'short',
-})
+  timeStyle: 'short'
+});
 export const documentSchemaLiteral = {
   version: 0,
   primaryKey: 'id',
@@ -62,7 +62,7 @@ export const documentSchemaLiteral = {
     },
     type: {
       type: 'string',
-      enum: ['note'],
+      enum: ['note']
     },
     title: {
       type: ['string', 'null']
@@ -135,8 +135,8 @@ const documentSchemaTyped = toTypedRxJsonSchema(documentSchemaLiteral);
 // aggregate the document type from the schema
 export type DocumentType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof documentSchemaTyped>;
 export type NoteType = DocumentType & {
-  type: 'note'
-}
+  type: 'note';
+};
 
 export type TextType = NonNullable<DocumentType['fragments']['text']>;
 export type TodolistType = NonNullable<DocumentType['fragments']['todolist']>;
@@ -160,34 +160,34 @@ export type Database = RxDatabase<DatabaseCollections>;
 export type Globals = {
   db: null | Database;
   uiState: null | RxState;
-  replications: [],
+  replications: [];
 };
 export const globals: Globals = {
   db: null,
   uiState: null,
-  replications: [],
+  replications: []
 };
 
 export type Replication = {
-  type: string
-  pull: boolean
-  push: boolean
-}
+  type: string;
+  pull: boolean;
+  push: boolean;
+};
 export type WebRTCReplication = Replication & {
-  type: 'webrtc',
-  signalingServer: string,
-  room: string,
-}
+  type: 'webrtc';
+  signalingServer: string;
+  room: string;
+};
 
 export type CouchDBReplication = Replication & {
-  type: 'couchdb',
-  server: string,
-  database: string,
-  username: string,
-  password: string,
-}
+  type: 'couchdb';
+  server: string;
+  database: string;
+  username: string;
+  password: string;
+};
 
-export type AnyReplication = CouchDBReplication | WebRTCReplication
+export type AnyReplication = CouchDBReplication | WebRTCReplication;
 
 export async function getDb() {
   if (globals.db) {
@@ -206,95 +206,88 @@ export async function getDb() {
         if (i.newDocumentState.modified_at === i.realMasterState.modified_at) {
           return Promise.resolve({
             isEqual: true
-          })
+          });
         }
         return Promise.resolve({
           isEqual: false,
           documentData: i.realMasterState
-      });
+        });
       },
-      migrationStrategies: {
-        
-      }
+      migrationStrategies: {}
     }
   });
 
   let uiState = await db.addState('ui');
 
   uiState.replications$.subscribe(async (v) => {
-    v = v || []
-    let newReplications = await setupReplications(db, globals.replications, v)
-    globals.replications = newReplications
-  })
-
+    v = v || [];
+    let newReplications = await setupReplications(db, globals.replications, v);
+    globals.replications = newReplications;
+  });
 
   return { db, uiState, replications: [] };
 }
 
-async function setupReplications (db: Database, current: [], config: AnyReplication[]) {
+async function setupReplications(db: Database, current: [], config: AnyReplication[]) {
   // we stop and delete any existing replications
   for (const replicationState of current) {
     if (replicationState.remove) {
-      await replicationState.remove()
+      await replicationState.remove();
     } else {
-      await replicationState.cancel()
+      await replicationState.cancel();
     }
   }
 
   // necessary for WebRTC replication to work
   window.process = {
-    nextTick: (fn, ...args) => setTimeout(() => fn(...args)),
+    nextTick: (fn, ...args) => setTimeout(() => fn(...args))
   };
 
-  let replicationStates = []
+  let replicationStates = [];
   // we create replications from given configuration
   for (const conf of config) {
-    let state = await createReplication(db, conf)
+    let state = await createReplication(db, conf);
     if (state) {
-      replicationStates.push(state)
+      replicationStates.push(state);
     }
   }
-  return replicationStates
+  return replicationStates;
 }
 
 async function createReplication(db: Database, config: AnyReplication) {
-  let state = null
-  let pushPullConfig = {}
+  let state = null;
+  let pushPullConfig = {};
   if (config.push) {
-    pushPullConfig.push = {}
-  } 
+    pushPullConfig.push = {};
+  }
   if (config.pull) {
-    pushPullConfig.pull = {}
+    pushPullConfig.pull = {};
   }
   if (config.type === 'couchdb') {
-    const couchdbUrl = `${config.server}/${config.database}/`
-    state = replicateCouchDB(
-      {
-          replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
-          collection: db.documents,
-          url: couchdbUrl,
-          live: true,
-          fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
-          ...pushPullConfig,
-      }
-    );
+    const couchdbUrl = `${config.server}/${config.database}/`;
+    state = replicateCouchDB({
+      replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
+      collection: db.documents,
+      url: couchdbUrl,
+      live: true,
+      fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
+      ...pushPullConfig
+    });
   }
   if (config.type === 'webrtc') {
-    state = await replicateWebRTC(
-      {
-        collection: db.documents,
-        topic: config.room,
-        ...pushPullConfig,
-        connectionHandlerCreator: getConnectionHandlerSimplePeer({
-            signalingServerUrl: config.signalingServer,
-        }),
-      }
-    );
-    state.error$.subscribe(err => {
-      console.log("REPLICATION ERROR", err)
+    state = await replicateWebRTC({
+      collection: db.documents,
+      topic: config.room,
+      ...pushPullConfig,
+      connectionHandlerCreator: getConnectionHandlerSimplePeer({
+        signalingServerUrl: config.signalingServer
+      })
     });
-    let initialAddPeer = state.addPeer.bind(state)
-    let replicationMonkeyPatched = false
+    state.error$.subscribe((err) => {
+      console.log('REPLICATION ERROR', err);
+    });
+    let initialAddPeer = state.addPeer.bind(state);
+    let replicationMonkeyPatched = false;
     // if (!config.pull) {
     //   // we protect from rogue/misconfigured instances that might push their changes
     //   // even if we disabled pull locally
@@ -314,7 +307,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     //   }
     //   return await initialSend(peer, message)
     // }
-    state.addPeer = function addPeer (peer, replicationState) {
+    state.addPeer = function addPeer(peer, replicationState) {
       // let initialPushHandler = replicationState?.push?.handler
       // async function pushHandler(docs) {
       //   return await initialPushHandler(docs)
@@ -323,12 +316,12 @@ async function createReplication(db: Database, config: AnyReplication) {
       //   replicationState.push.handler = pushHandler
       //   replicationMonkeyPatched = true
       // }
-      console.log("PEER ADDED", replicationState)
-      return initialAddPeer(peer, replicationState)
-    }
-    console.log('HELLO', state)
+      console.log('PEER ADDED', replicationState);
+      return initialAddPeer(peer, replicationState);
+    };
+    console.log('HELLO', state);
   }
-  return state
+  return state;
 }
 
 export function buildUniqueId(options = {}) {
@@ -350,14 +343,14 @@ export function getNewNote() {
 export function getNewTextFragment(content = '') {
   return {
     content
-  } as TextType ;
+  } as TextType;
 }
 
 export function getNewTodoListFragment() {
   return {
     title: null,
     done: false,
-    todos: [],
+    todos: []
   };
 }
 
@@ -368,8 +361,6 @@ export function getNewTodo() {
     done: false
   } as TodoType;
 }
-
-
 
 export async function getById(collection: RxCollection, id: string) {
   let results = await collection.findByIds([id]).exec();
@@ -382,15 +373,15 @@ export async function getByQuery(collection: RxCollection, query: MangoQuery) {
 }
 
 export function getNoteUpdateData(note: DocumentType, data: object) {
-  data = cloneDeep(data)
-  data.modified_at = new Date().toISOString()
+  data = cloneDeep(data);
+  data.modified_at = new Date().toISOString();
 
-  let tagsSource = data['fragments.text']?.content || note.fragments.text?.content
-  const tags = parseTags(tagsSource).map(t => {
-    return t.id
-  })
-  data.tags = [...new Set(tags)]
-  return data
+  let tagsSource = data['fragments.text']?.content || note.fragments.text?.content;
+  const tags = parseTags(tagsSource).map((t) => {
+    return t.id;
+  });
+  data.tags = [...new Set(tags)];
+  return data;
 }
 export type QueryToken = {
   type: 'is' | 'text' | 'tag';
@@ -437,7 +428,7 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
       }
     }
     if (token.type === 'tag') {
-      query.push({ 'tags': token.value });
+      query.push({ tags: token.value });
     }
     if (token.type === 'text') {
       let orQuery = [];
@@ -455,7 +446,7 @@ export function capitalizeFirstLetter(s: string) {
 }
 
 export function formatDate(d: string) {
-  let p = new Date(d)
-  let formatted = `${DATE_FORMATTER.format(p)} · ${TIME_FORMATTER.format(p)}`
-  return capitalizeFirstLetter(formatted)
+  let p = new Date(d);
+  let formatted = `${DATE_FORMATTER.format(p)} · ${TIME_FORMATTER.format(p)}`;
+  return capitalizeFirstLetter(formatted);
 }

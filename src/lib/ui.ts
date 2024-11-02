@@ -1,6 +1,6 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
-import { pushState } from "$app/navigation";
+import { pushState } from '$app/navigation';
 
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
@@ -18,8 +18,8 @@ const signToMood = {
   '?': null,
   '#': null,
   '!': null,
-  '@': null,
-}
+  '@': null
+};
 const signToType = {
   '+': 'feeling',
   '-': 'feeling',
@@ -27,61 +27,61 @@ const signToType = {
   '?': 'feeling',
   '#': 'tag',
   '!': 'tag',
-  '@': 'annotation',
-}
+  '@': 'annotation'
+};
 
-const tagRegex = /(^|\s)((#|\+{1,5}|-{1,5}|~|\?|!|@)([:A-zÀ-ÿ\d][:A-zÀ-ÿ\d-]*(=(true|false|[:A-zÀ-ÿ\d-]+|"[^"]*")?(-?\d*(\.(\d+))?)?)?))/gi
+const tagRegex =
+  /(^|\s)((#|\+{1,5}|-{1,5}|~|\?|!|@)([:A-zÀ-ÿ\d][:A-zÀ-ÿ\d-]*(=(true|false|[:A-zÀ-ÿ\d-]+|"[^"]*")?(-?\d*(\.(\d+))?)?)?))/gi;
 
-export function parseTags (text: string) {
-  const tags = []
-  const regex = new RegExp(tagRegex)
+export function parseTags(text: string) {
+  const tags = [];
+  const regex = new RegExp(tagRegex);
   let match = regex.exec(text);
   while (match != null) {
     let tag = {
       text: match[2],
       sign: match[3][0],
-      id: match[4].replace(/"/g, ""),
+      id: match[4].replace(/"/g, ''),
       type: null,
-      value: null,
-    }
-    let include = true
-    tag.type = signToType[tag.sign]
+      value: null
+    };
+    let include = true;
+    tag.type = signToType[tag.sign];
     if (tag.type === 'annotation') {
-      let parts = tag.id.replace(/"/g, "").split('=')
-      tag.id = parts[0]
-      tag.value = parts[1] || null
+      let parts = tag.id.replace(/"/g, '').split('=');
+      tag.id = parts[0];
+      tag.value = parts[1] || null;
     }
-    tag.mood = signToMood[tag.sign]
+    tag.mood = signToMood[tag.sign];
     if (tag.mood) {
-      tag.mood = tag.mood * match[3].length
+      tag.mood = tag.mood * match[3].length;
     }
     if (include) {
-      tags.push(tag)
+      tags.push(tag);
     }
-    match = regex.exec(text)
+    match = regex.exec(text);
   }
-  return tags
+  return tags;
 }
 
-export function insertTagMarkup (source) {
-  return source.replace(tagRegex, (match, m1, m2, m3, m4) => { 
-    return ` [${m2}](/my?q=tag:${encodeURIComponent(m4)})`
-  })
+export function insertTagMarkup(source) {
+  return source.replace(tagRegex, (match, m1, m2, m3, m4) => {
+    return ` [${m2}](/my?q=tag:${encodeURIComponent(m4)})`;
+  });
 }
-
 
 marked.use({
   gfm: true,
-  breaks: true,
+  breaks: true
 });
 
 export function renderMarkdown(text: string): string {
-  text = insertTagMarkup(text)
+  text = insertTagMarkup(text);
   return DOMPurify.sanitize(marked.parse(text || ''));
 }
 
 export function updateURLParam(pageUrl, param: string, value: string) {
   let query = new URLSearchParams(pageUrl.searchParams.toString());
   query.set(param, value);
-  return query
+  return query;
 }

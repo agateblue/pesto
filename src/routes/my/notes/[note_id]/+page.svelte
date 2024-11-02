@@ -24,7 +24,7 @@
         handleUpdate(e.detail.note);
       }}
       on:delete={(e) => {
-        goto('/my')
+        goto('/my');
       }}
     />
   </section>

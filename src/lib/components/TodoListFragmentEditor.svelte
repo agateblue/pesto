@@ -91,10 +91,10 @@
           done = e.detail.todo.done;
           title = e.detail.todo.text;
           if (done) {
-            todos = cloneDeep(todos)
-            todos = todos.map(t => {
-              return {...t, done: true}
-            })
+            todos = cloneDeep(todos);
+            todos = todos.map((t) => {
+              return { ...t, done: true };
+            });
           } else if (title && todos.length === 0) {
             todos = [...todos, getNewTodo()];
           }
@@ -104,7 +104,7 @@
         on:delete={(e) => {
           title = '';
           done = false;
-          todos = []
+          todos = [];
           handleChange();
           stats = getStats();
           id = buildUniqueId();

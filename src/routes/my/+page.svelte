@@ -3,30 +3,22 @@
 
   import NoteForm from '$lib/components/NoteForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import { page } from '$app/stores'
+  import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import {
-    getByQuery,
-    type Document,
-    globals,
-    getQueryTokens,
-    tokensToMangoQuery
-  } from '$lib/db';
-  import {
-    updateURLParam
-  } from '$lib/ui'
+  import { getByQuery, type Document, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
+  import { updateURLParam } from '$lib/ui';
   let { data, children } = $props();
 
   let notes: Document[] = $state([]);
 
   let note: Document | null = $state(null);
 
-  let noteFormKey = $state(0)
+  let noteFormKey = $state(0);
 
   let searchQuery = $state('');
   run(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
-  }); 
+  });
 
   async function handleUpdate(n: Document) {
     let found = false;
@@ -62,14 +54,13 @@
     });
   }
 
-  async function loadNotes (q: string) {
-    notes = await getNotes(q)
+  async function loadNotes(q: string) {
+    notes = await getNotes(q);
   }
 
   run(() => {
-    loadNotes(searchQuery)
+    loadNotes(searchQuery);
   });
-  
 </script>
 
 <main class="flex__grow">
@@ -91,12 +82,12 @@
       placeholder="Search"
       value={searchQuery}
       onkeydown={async (e) => {
-          if (e.key === 'Enter') {
-            searchQuery = e.target.value.trim()
-            let params = updateURLParam($page.url, 'q', searchQuery)
-            goto(`?${params.toString()}`)
-          }
-        }}
+        if (e.key === 'Enter') {
+          searchQuery = e.target.value.trim();
+          let params = updateURLParam($page.url, 'q', searchQuery);
+          goto(`?${params.toString()}`);
+        }
+      }}
     />
     <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
   </div>
@@ -112,7 +103,11 @@
           let newNotes = await getByQuery(globals.db.documents, {
             limit: 20,
             sort: [{ id: 'desc' }],
-            selector: { type: 'note', id: { $lt: notes.slice(-1)[0].id }, ...getSelector(searchQuery) }
+            selector: {
+              type: 'note',
+              id: { $lt: notes.slice(-1)[0].id },
+              ...getSelector(searchQuery)
+            }
           });
           notes = [...notes, ...newNotes];
         }}>Load more</button
@@ -133,11 +128,11 @@
         on:submit={(e) => {
           handleUpdate(note);
           note = null;
-          noteFormKey++
+          noteFormKey++;
         }}
         on:delete={(e) => {
           note = null;
-          noteFormKey++
+          noteFormKey++;
         }}
       >
         <button type="submit"> Save and add new </button>

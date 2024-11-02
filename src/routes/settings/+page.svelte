@@ -5,32 +5,37 @@
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { type NoteDocType, globals, DEFAULT_SIGNALING_SERVER, type AnyReplication, buildUniqueId } from '$lib/db';
+  import {
+    type NoteDocType,
+    globals,
+    DEFAULT_SIGNALING_SERVER,
+    type AnyReplication,
+    buildUniqueId
+  } from '$lib/db';
   import { parseTags } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
 
-
-  let replications: AnyReplication[] = $state([])
-  let newReplication = $state(null)
+  let replications: AnyReplication[] = $state([]);
+  let newReplication = $state(null);
   let files: File[] = $state();
-  let replicationType: string = $state('webrtc')
+  let replicationType: string = $state('webrtc');
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
-    replications = [...newValue || []]
+    replications = [...(newValue || [])];
   });
 
-  async function handleSubmitReplication (replication: AnyReplication, index: number | null) {
-    replications = [...replications]
+  async function handleSubmitReplication(replication: AnyReplication, index: number | null) {
+    replications = [...replications];
     if (index === null) {
-      replications.push(replication)
+      replications.push(replication);
     } else {
       // editing an existing replication
-      replications[index] = replication
+      replications[index] = replication;
     }
-    
-    replications = [...replications]
+
+    replications = [...replications];
     await globals.uiState.set('replications', () => {
-      return cloneDeep(replications)
-    })
+      return cloneDeep(replications);
+    });
   }
 
   function getNewReplication(type: 'webrtc' | 'couchdb') {
@@ -40,8 +45,8 @@
         signalingServer: DEFAULT_SIGNALING_SERVER,
         room: `pesto-${uuidv4()}`,
         push: true,
-        pull: true,
-      }
+        pull: true
+      };
     }
 
     if (type === 'couchdb') {
@@ -52,10 +57,9 @@
         username: '',
         password: '',
         push: true,
-        pull: true,
-      }
+        pull: true
+      };
     }
-
   }
   async function handleSubmit() {
     if (confirm('Do you confirm data deletion? This action is irreversible.')) {
@@ -88,7 +92,9 @@
       title: null,
       created_at: created_at,
       modified_at: created_at,
-      tags: parseTags(content || '').map(t => {return t.id}),
+      tags: parseTags(content || '').map((t) => {
+        return t.id;
+      }),
       fragments: {
         text: {
           content
@@ -171,7 +177,6 @@
     let resultNotes = await globals.db.documents.bulkInsert(notes);
     console.log('Finished import', resultNotes);
   }
-
 </script>
 
 <div class="my__layout">
@@ -180,8 +185,8 @@
     <section class="wrapper | flex__grow | flow">
       <h1>Synchronisation</h1>
       <p>
-        Pesto data can be synchronized with other devices. With WebRTC, the data transit only between devices and stay
-        safe from third-parties.   
+        Pesto data can be synchronized with other devices. With WebRTC, the data transit only
+        between devices and stay safe from third-parties.
       </p>
       {#if replications.length > 0}
         <h2>Existing synchronisations</h2>
@@ -192,14 +197,14 @@
               class="card"
               role="listitem"
               on:submit={async (e) => {
-                await handleSubmitReplication(e.detail.replication, i)
+                await handleSubmitReplication(e.detail.replication, i);
               }}
               on:delete={async () => {
-                replications.splice(i, 1)
-                replications = [...replications]
+                replications.splice(i, 1);
+                replications = [...replications];
                 await globals.uiState.set('replications', () => {
-                  return replications
-                })
+                  return replications;
+                });
               }}
             />
           {/each}
@@ -209,12 +214,16 @@
         <ReplicationForm
           replication={newReplication}
           on:submit={async (e) => {
-            await handleSubmitReplication(e.detail.replication, null)
-            newReplication = null
+            await handleSubmitReplication(e.detail.replication, null);
+            newReplication = null;
           }}
         />
       {:else}
-        <form onsubmit={(e) => {newReplication = getNewReplication(replicationType)}}>
+        <form
+          onsubmit={(e) => {
+            newReplication = getNewReplication(replicationType);
+          }}
+        >
           <div class="form__field">
             <label for="replication-type">Type</label>
             <select name="replication-type" id="replication-type" bind:value={replicationType}>

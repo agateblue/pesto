@@ -23,11 +23,11 @@
   }>();
 
   interface Props {
-     note: Document | null;
+    note: Document | null;
   }
 
   let { note = $bindable() }: Props = $props();
-  let id: string = note ? note.id : buildUniqueId()
+  let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
   let fragments = $state(note?.toMutableJSON().fragments || {});
 
@@ -37,7 +37,7 @@
   ) {
     if (!note) {
       let noteData = getNewNote();
-      noteData.id = id
+      noteData.id = id;
       note = await db.documents.insert(noteData);
     }
     let updateData = {};
