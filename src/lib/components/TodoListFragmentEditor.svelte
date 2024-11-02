@@ -72,15 +72,6 @@
   let stats = $state(getStats());
 </script>
 
-<div class="flex__row | flex__justify-between">
-  <h3>
-    Todo-list
-    {#if stats.total}
-      · {stats.done}/{stats.total}
-    {/if}
-  </h3>
-</div>
-
 <ol class="todolist">
   <li>
     {#key id}
