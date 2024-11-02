@@ -21,8 +21,9 @@ import {
   getConnectionHandlerSimplePeer
 } from 'rxdb/plugins/replication-webrtc';
 
+import { replicateCouchDB, getFetchWithCouchDBAuthorization } from 'rxdb/plugins/replication-couchdb';
+
 import { v7 as uuidv7 } from 'uuid';
-import { RxReplicationState } from 'rxdb/plugins/replication';
 import cloneDeep from 'lodash/cloneDeep';
 import { parseTags } from './ui';
 
@@ -50,14 +51,18 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short',
 })
 export const noteSchemaLiteral = {
-  version: 5,
+  version: 6,
   primaryKey: 'id',
   type: 'object',
-  required: ['id', 'created_at', 'modified_at', 'tags', 'fragments'],
+  required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
   properties: {
     id: {
       type: 'string',
       maxLength: 40
+    },
+    type: {
+      type: 'string',
+      enum: ['note'],
     },
     title: {
       type: ['string', 'null']
@@ -171,6 +176,16 @@ export type WebRTCReplication = Replication & {
   room: string,
 }
 
+export type CouchDBReplication = Replication & {
+  type: 'couchdb',
+  server: string,
+  database: string,
+  username: string,
+  password: string,
+}
+
+export type AnyReplication = CouchDBReplication | WebRTCReplication
+
 export async function getDb() {
   if (globals.db) {
     return globals;
@@ -232,6 +247,10 @@ export async function getDb() {
             }
           }
           return oldDoc;
+        },
+        6: function (oldDoc) {
+          oldDoc.type = 'note'
+          return oldDoc;
         }
       }
     }
@@ -249,7 +268,7 @@ export async function getDb() {
   return { db, uiState, replications: [] };
 }
 
-async function setupReplications (db: Database, current: [], config: WebRTCReplication[]) {
+async function setupReplications (db: Database, current: [], config: AnyReplication[]) {
   // we stop and delete any existing replications
   for (const replicationState of current) {
     if (replicationState.remove) {
@@ -275,7 +294,7 @@ async function setupReplications (db: Database, current: [], config: WebRTCRepli
   return replicationStates
 }
 
-async function createReplication(db: Database, config: WebRTCReplication) {
+async function createReplication(db: Database, config: AnyReplication) {
   let state = null
   let pushPullConfig = {}
   if (config.push) {
@@ -283,6 +302,19 @@ async function createReplication(db: Database, config: WebRTCReplication) {
   } 
   if (config.pull) {
     pushPullConfig.pull = {}
+  }
+  if (config.type === 'couchdb') {
+    const couchdbUrl = `${config.server}/${config.database}/`
+    state = replicateCouchDB(
+      {
+          replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
+          collection: db.notes,
+          url: couchdbUrl,
+          live: true,
+          fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
+          ...pushPullConfig,
+      }
+    );
   }
   if (config.type === 'webrtc') {
     state = await replicateWebRTC(

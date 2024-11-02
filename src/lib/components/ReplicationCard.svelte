@@ -1,15 +1,15 @@
 <script lang="ts">
   import ReplicationForm from './ReplicationForm.svelte';
-  import {type WebRTCReplication} from '$lib/db'
+  import {type AnyReplication} from '$lib/db'
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher<{
-    submit: { replication: WebRTCReplication };
+    submit: { replication: AnyReplication };
     delete: {};
   }>();
 
   interface Props {
-    replication: WebRTCReplication;
+    replication: AnyReplication;
     [key: string]: any
   }
 
@@ -19,18 +19,25 @@
 
 <div {...rest}>
   {#if edit}
-    <ReplicationForm replication={{...replication}} on:submit={(e) => {
-      replication = {...e.detail.replication}
-      dispatch('submit', {replication})
-      edit = false
-    }} />
+  <ReplicationForm replication={{...replication}} on:submit={(e) => {
+    replication = {...e.detail.replication}
+    dispatch('submit', {replication})
+    edit = false
+  }} />
   {:else}
     {#if replication.type === 'webrtc'}
       <strong>Type:</strong> WebRTC <br>
       <strong>Signaling server:</strong> {replication.signalingServer} <br>
-      <strong>Push local data:</strong> {replication.push ? 'Yes' : 'No'} <br>
-      <strong>Pull remote data:</strong> {replication.pull ? 'Yes' : 'No'} <br>
     {/if}
+    {#if replication.type === 'couchdb'}
+      <strong>Type:</strong> CouchDB <br>
+      <strong>Server URL:</strong> {replication.server} <br>
+      <strong>Database:</strong> {replication.database} <br>
+      <strong>Username:</strong> {replication.username} <br>
+      <strong>Password:</strong> [hidden] <br>
+    {/if}
+    <strong>Push local data:</strong> {replication.push ? 'Yes' : 'No'} <br>
+    <strong>Pull remote data:</strong> {replication.pull ? 'Yes' : 'No'} <br>
   {/if}
 
   <div>
