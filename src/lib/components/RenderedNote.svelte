@@ -27,12 +27,13 @@
   {/if}
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
-      fragment={note.fragments.todolist}
-      on:update={async (e) => {
-        await note.incrementalUpdate({
-          $set: getNoteUpdateData(note, { 'fragments.todolist': e.detail.fragment})
-        });
-      }}
+    fragment={note.fragments.todolist}
+    editText={false}
+    on:update={async (e) => {
+      await note.incrementalUpdate({
+        $set: getNoteUpdateData(note, { 'fragments.todolist': e.detail.fragment})
+      });
+    }}
       on:delete={async (e) => {
         await note.incrementalUpdate({
           $set: getNoteUpdateData(note, { 'fragments.todolist': undefined})

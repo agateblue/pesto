@@ -205,6 +205,9 @@ body {
 .flex__gap {
   gap: var(--space-2);
 }
+.flex__align-start {
+  align-items: start;
+}
 .flex__justify-end {
   justify-content: flex-end;
 }
@@ -365,11 +368,18 @@ textarea {
   padding-inline-start: 0;
 }
 .todolist li {
+  --flow-space: var(--space-1);
   margin-block: var(--space-1);
+
+  button, textarea, .flow {
+    margin: 0;
+    padding: var(--space-1);
+  }
 }
 .todolist input[type='checkbox'] {
   scale: 1.5;
   margin-inline-end: var(--space-2);
+  margin-block: 0;
 }
 
 .todolist > li > .todolist {
@@ -385,6 +395,9 @@ input[type='text'].input__discrete {
 /* see https://piccalil.li/blog/my-favourite-3-lines-of-css/ */
 .flow > * + * {
   margin-block-start: var(--flow-space, 1em);
+}
+.flow > *:first-child {
+  margin-block-start: 0;
 }
 
 .prose {

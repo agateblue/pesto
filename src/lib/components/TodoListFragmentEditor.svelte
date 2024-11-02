@@ -12,9 +12,10 @@
 
   interface Props {
     fragment: TodolistType;
+    editText: boolean;
   }
 
-  let { fragment }: Props = $props();
+  let { fragment, editText }: Props = $props();
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   let title: string = $state(fragment.title || '');
   let done: boolean = $state(fragment.done);
@@ -84,6 +85,7 @@
   <li>
     {#key id}
       <TodoRow
+        {editText}
         todo={{ text: title, done: done, id }}
         on:update={(e) => {
           done = e.detail.todo.done;
@@ -112,19 +114,22 @@
     {#if stats.total > 1 || title}
       <ol class="todolist">
         {#each todos as todo, i (i)}
-          <li>
-            {#key todo.id}
-              <TodoRow
-                {todo}
-                on:delete={(e) => {
-                  updateTodo(i, null);
-                }}
-                on:update={(e) => {
-                  updateTodo(i, e.detail.todo);
-                }}
-              />
-            {/key}
-          </li>
+          {#if editText || todo.text.trim()}
+            <li>
+              {#key todo.id}
+                <TodoRow
+                  {todo}
+                  {editText}
+                  on:delete={(e) => {
+                    updateTodo(i, null);
+                  }}
+                  on:update={(e) => {
+                    updateTodo(i, e.detail.todo);
+                  }}
+                />
+              {/key}
+            </li>
+          {/if}
         {/each}
       </ol>
     {/if}

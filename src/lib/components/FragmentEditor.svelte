@@ -23,7 +23,7 @@
   }>();
 
   interface Props {
-    note: NoteDocument | null;
+     note: NoteDocument | null;
   }
 
   let { note = $bindable() }: Props = $props();
@@ -59,6 +59,7 @@
   on:delete={(event) => updateFragment('text', undefined)}
 />
 <TodoListFragmentEditor
+  editText={true}
   fragment={fragments.todolist || getNewTodoListFragment()}
   on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
   on:delete={(event) => updateFragment('todolist', undefined)}
