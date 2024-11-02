@@ -23,7 +23,7 @@
   async function askDelete(note: Document) {
     if (confirm('Do you want to delete this note?')) {
       await note.remove();
-      dispatch('delete', { note })
+      dispatch('delete', { note });
     }
   }
 </script>
@@ -45,7 +45,7 @@
         onclick={(e) => {
           askDelete(note);
         }}
-      > 
+      >
         Delete
       </button>
     {/if}

@@ -14,7 +14,7 @@
 
   interface Props {
     todo: TodoType;
-    editText: boolean
+    editText: boolean;
   }
 
   let { todo, editText }: Props = $props();
@@ -33,7 +33,7 @@
       id={`todo-${todo.id}-done`}
       checked={text.trim() && todo.done}
       onchange={(e) => {
-        done = e.target.checked
+        done = e.target.checked;
         handleChange();
       }}
       disabled={!text.trim()}

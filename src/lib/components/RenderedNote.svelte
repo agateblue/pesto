@@ -6,12 +6,12 @@
   interface Props {
     note: Document;
     footer?: import('svelte').Snippet;
-    [key: string]: any
+    [key: string]: any;
   }
 
   let { note = $bindable(), footer, ...rest }: Props = $props();
-  note.$.subscribe(async currentRxDocument => {
-    note = note.getLatest()
+  note.$.subscribe(async (currentRxDocument) => {
+    note = note.getLatest();
   });
 </script>
 
@@ -26,16 +26,16 @@
   {/if}
   {#if note.fragments.todolist}
     <TodoListFragmentEditor
-    fragment={note.fragments.todolist}
-    editText={false}
-    on:update={async (e) => {
-      await note.incrementalUpdate({
-        $set: getNoteUpdateData(note, { 'fragments.todolist': e.detail.fragment})
-      });
-    }}
+      fragment={note.fragments.todolist}
+      editText={false}
+      on:update={async (e) => {
+        await note.incrementalUpdate({
+          $set: getNoteUpdateData(note, { 'fragments.todolist': e.detail.fragment })
+        });
+      }}
       on:delete={async (e) => {
         await note.incrementalUpdate({
-          $set: getNoteUpdateData(note, { 'fragments.todolist': undefined})
+          $set: getNoteUpdateData(note, { 'fragments.todolist': undefined })
         });
         note = await note.getLatest();
       }}

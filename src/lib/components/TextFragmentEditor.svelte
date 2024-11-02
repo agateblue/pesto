@@ -25,12 +25,12 @@
 </script>
 
 <h3>
-  <label for="{fieldId}">Note content</label>
+  <label for={fieldId}>Note content</label>
 </h3>
-<textarea 
-  id="{fieldId}"
-  class="editor autoresize" 
+<textarea
+  id={fieldId}
+  class="editor autoresize"
   placeholder="What's on your mind?"
-  onkeyup={(e) => handleChange()} 
-  bind:value={content}   
+  onkeyup={(e) => handleChange()}
+  bind:value={content}
 ></textarea>
