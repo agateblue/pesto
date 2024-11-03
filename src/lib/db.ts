@@ -218,7 +218,7 @@ export async function getDb() {
       },
       migrationStrategies: {
         1: function(oldDocumentData) {
-          if (oldDocumentData.fragments.todolist) {
+          if (oldDocumentData?.fragments.todolist) {
             if (oldDocumentData.fragments.todolist.done) {
               oldDocumentData.fragments.todolist.column = -1
             } else {
