@@ -32,11 +32,9 @@
 
 </script>
 
-<li class="card">
-  <TodoListFragmentEditor
-    editText={true}
-    fragment={todolist}
-    on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
-    on:delete={(event) => updateFragment(undefined)}
-  />
-</li>
+<TodoListFragmentEditor
+  editText={true}
+  fragment={todolist}
+  on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
+  on:delete={(event) => updateFragment(undefined)}
+/>

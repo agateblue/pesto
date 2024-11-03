@@ -129,15 +129,15 @@
           <h2>{column.name}</h2>
           <ol 
             class="flex__grow | board__column | p__block-0 p__inline-0 | flow" 
-            use:dndzone="{{items: column.cards, flipDurationMs: 300}}" 
+            use:dndzone="{{items: column.cards, flipDurationMs: 100}}" 
             onconsider="{async (e) => handleDndConsider(e, column)}" 
             onfinalize="{async (e) => handleDndFinalize(e, column)}"
             data-target={column.index}
           >
-            {#each column.cards as item(item.id)}
-              {#key item.id}
+            {#each column.cards as item (item.id)}
+              <li class="card" animate:flip={{duration: 100}} >
                 <TodoCard note={item.note} />
-              {/key}
+              </li>
             {/each}
           </ol>
         </section>
