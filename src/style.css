@@ -377,6 +377,11 @@ textarea {
     margin: 0;
     padding: var(--space-1);
   }
+
+  textarea {
+    border: none;
+    border-bottom: var(--layout-separator);
+  }
 }
 .todolist input[type='checkbox'] {
   scale: 1.5;
