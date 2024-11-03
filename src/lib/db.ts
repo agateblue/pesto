@@ -51,7 +51,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 1,
+  version: 3,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -62,7 +62,7 @@ export const documentSchemaLiteral = {
     },
     type: {
       type: 'string',
-      enum: ['note']
+      enum: ['note', 'setting']
     },
     title: {
       type: ['string', 'null']
@@ -80,6 +80,10 @@ export const documentSchemaLiteral = {
       items: {
         type: 'string'
       }
+    },
+    data: {
+      type: 'object',
+      additionalProperties: true,
     },
     fragments: {
       type: 'object',
@@ -225,6 +229,13 @@ export async function getDb() {
               oldDocumentData.fragments.todolist.column = 0
             }
           }
+          return oldDocumentData
+        },
+        2: function(oldDocumentData) {
+          oldDocumentData.data = {}
+          return oldDocumentData
+        },
+        3: function(oldDocumentData) {
           return oldDocumentData
         }
       }
@@ -382,7 +393,28 @@ export async function getById(collection: RxCollection, id: string) {
   return results.get(id);
 }
 
-
+export async function createOrUpdateSetting(id: string, data: object) {
+  let existing = await globals.db?.documents.findOne({selector: {id, type: 'setting'}}).exec()
+  if (existing) {
+    return await existing.incrementalUpdate({
+      $set: {
+        modified_at: new Date().toISOString(),
+        data: cloneDeep(data),
+      }
+    })
+  } else {
+    let d = new Date().toISOString()
+    return await globals.db?.documents.insert({
+      id,
+      type: 'setting',
+      created_at: d,
+      modified_at: d,
+      tags: [],
+      fragments: {},
+      data: cloneDeep(data),
+    })
+  }
+}
 export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data);
   data.modified_at = new Date().toISOString();

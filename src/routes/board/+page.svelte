@@ -93,7 +93,7 @@
           // unassign entries go to the first column
           c.selector = FIRST_COLUMN_SELECTOR
         }
-        if (i === settings.data.columns.length) {
+        if (i === settings.data.columns.length - 1) {
           // the last column automatically gets done entries
           c.selector = DONE_COLUMN_SELECTOR
           c.index = -1
