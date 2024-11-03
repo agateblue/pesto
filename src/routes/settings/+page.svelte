@@ -129,6 +129,7 @@
         todolist: {
           done: list >= doneList,
           title: task.text,
+          column: list >= doneList ? -1 : 0,
           todos: task.subtasks.map((t) => {
             return {
               id: buildUniqueId({

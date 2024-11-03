@@ -2,12 +2,38 @@
   import MainNavigation from "$lib/components/MainNavigation.svelte";
   import TodoCard from "$lib/components/TodoCard.svelte";
   import { type RxDocument } from "rxdb";
-  import { globals, type DocumentDocument } from "$lib/db";
+  import { globals, type DocumentDocument, getNoteUpdateData } from "$lib/db";
   import type { MangoQuerySelector } from "rxdb";
   
+  import {flip} from "svelte/animate";
+  import {dndzone} from "svelte-dnd-action";
+
+  const flipDurationMs = 300;
+
+  async function handleDndConsider(e, column: BoardColumn) {
+    column.cards = e.detail.items;
+  }
+  async function handleDndFinalize(e, column: BoardColumn) {
+    column.cards = e.detail.items;
+    let newColumnIndex = parseInt(e.target.dataset.target)
+    let updatedCards = e.detail.items.filter(c => {
+      return c.note.fragments.todolist.column != newColumnIndex
+    })
+    let selector = {$or: updatedCards.map(c => {
+      return {id: c.note.id}
+    })}
+    let updateData = {
+      modified_at: new Date().toISOString(),
+      'fragments.todolist.column': newColumnIndex,
+      'fragments.todolist.done': newColumnIndex === -1 ? true : false
+    }
+    await globals.db?.documents.find({selector}).update({
+      $set: updateData
+    })
+  }
   type BoardColumn = {
     name: string;
-    notes: DocumentDocument[];
+    cards: [];
     index: number;
     selector: MangoQuerySelector<DocumentDocType>;
   }
@@ -38,19 +64,19 @@
       columns = [
         {
           name: 'Todo',
-          notes: [],
+          cards: [],
           index: 0,
           selector: FIRST_COLUMN_SELECTOR,
         },
         {
           name: 'Doing',
-          notes: [],
+          cards: [],
           index: 1,
           selector: getColumnSelector(1),
         },
         {
           name: 'Done',
-          notes: [],
+          cards: [],
           index: -1,
           selector: DONE_COLUMN_SELECTOR
         }
@@ -59,7 +85,7 @@
       settings.data.columns.forEach((v, i) => {
         let c: BoardColumn = {
           name: v,
-          notes: [],
+          cards: [],
           index: i,
           selector: getColumnSelector(i),
         }
@@ -82,7 +108,12 @@
         sort: [{ modified_at: 'desc' }],
         selector: v.selector
       }).$.subscribe(notes => {
-        v.notes = notes
+        v.cards = notes.map(n => {
+          return {
+            id: n.id,
+            note: n,
+          }
+        })
       })
     })
   })
@@ -92,14 +123,20 @@
 <div class="my__layout">
   <MainNavigation />
   <main>
-    <div class="flex__row">
+    <div class="flex__row board">
       {#each columns as column}
-        <section class="flex__grow | p__inline-2">
+        <section class="flex__column | flex__grow | p__inline-2">
           <h2>{column.name}</h2>
-          <ol class="board__column | p__block-0 p__inline-0 | flow">
-            {#each column.notes as note}
-              {#key note.id}
-                <TodoCard {note} />
+          <ol 
+            class="flex__grow | board__column | p__block-0 p__inline-0 | flow" 
+            use:dndzone="{{items: column.cards, flipDurationMs: 300}}" 
+            onconsider="{async (e) => handleDndConsider(e, column)}" 
+            onfinalize="{async (e) => handleDndFinalize(e, column)}"
+            data-target={column.index}
+          >
+            {#each column.cards as item(item.id)}
+              {#key item.id}
+                <TodoCard note={item.note} />
               {/key}
             {/each}
           </ol>
