@@ -51,7 +51,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 0,
+  version: 1,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -96,13 +96,16 @@ export const documentSchemaLiteral = {
         },
         todolist: {
           type: 'object',
-          required: ['todos', 'title', 'done'],
+          required: ['todos', 'title', 'done', 'column'],
           properties: {
             title: {
               type: ['string']
             },
             done: {
               type: 'boolean'
+            },
+            column: {
+              type: 'number',
             },
             todos: {
               type: 'array',
@@ -213,7 +216,18 @@ export async function getDb() {
           documentData: i.realMasterState
         });
       },
-      migrationStrategies: {}
+      migrationStrategies: {
+        1: function(oldDocumentData) {
+          if (oldDocumentData.fragments.todolist) {
+            if (oldDocumentData.fragments.todolist.done) {
+              oldDocumentData.fragments.todolist.column = -1
+            } else {
+              oldDocumentData.fragments.todolist.column = 0
+            }
+          }
+          return oldDocumentData
+        }
+      }
     }
   });
 
@@ -350,7 +364,8 @@ export function getNewTodoListFragment() {
   return {
     title: null,
     done: false,
-    todos: []
+    todos: [],
+    column: 0,
   };
 }
 
