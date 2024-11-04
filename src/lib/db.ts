@@ -209,17 +209,6 @@ export async function getDb() {
   await db.addCollections({
     documents: {
       schema: documentSchema,
-      conflictHandler: function (i) {
-        if (i.newDocumentState.modified_at === i.realMasterState.modified_at) {
-          return Promise.resolve({
-            isEqual: true
-          });
-        }
-        return Promise.resolve({
-          isEqual: false,
-          documentData: i.realMasterState
-        });
-      },
       migrationStrategies: {
         1: function(oldDocumentData) {
           if (oldDocumentData?.fragments.todolist) {
