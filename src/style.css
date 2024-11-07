@@ -357,6 +357,14 @@ input[type='submit']:hover {
 textarea {
   width: 100%;
 }
+
+.form__field {
+  label {
+    display: block;
+    font-weight: bold;
+    margin-block-end: var(--space-1);
+  }
+}
 .app > nav {
   border-block-end: var(--layout-separator);
 }

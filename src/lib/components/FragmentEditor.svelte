@@ -24,9 +24,10 @@
 
   interface Props {
     note: DocumentDocument | null;
+    columns: string[] | null;
   }
 
-  let { note = $bindable() }: Props = $props();
+  let { note = $bindable(), columns }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
   let fragments = $state(note?.toMutableJSON().fragments || {});
@@ -59,6 +60,7 @@
   on:delete={(event) => updateFragment('text', undefined)}
 />
 <TodoListFragmentEditor
+  {columns}
   editText={true}
   fragment={fragments.todolist || getNewTodoListFragment()}
   on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}

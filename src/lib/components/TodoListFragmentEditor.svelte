@@ -13,12 +13,14 @@
   interface Props {
     fragment: TodolistType;
     editText: boolean;
+    columns: string[] | null;
   }
 
-  let { fragment, editText }: Props = $props();
+  let { fragment, editText, columns }: Props = $props();
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   let title: string = $state(fragment.title || '');
   let done: boolean = $state(fragment.done);
+  let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
 
   function handleChange() {
@@ -28,7 +30,7 @@
         return t.text.trim();
       }).length > 0;
     if (hasContent) {
-      dispatch('update', { fragment: { ...fragment, title, done, todos } });
+      dispatch('update', { fragment: { ...fragment, title, done, todos, column } });
     } else {
       dispatch('delete', {});
     }
@@ -71,6 +73,32 @@
 
   let stats = $state(getStats());
 </script>
+
+{#if title && columns}
+  <div class="form__field">
+    <label for="todolist-column">Column</label>
+    <select 
+      name="todolist-column" 
+      id="todolist-column" 
+      bind:value={column}
+      onchange={(e) => {
+        if (column === -1) {
+          done = true
+        } else {
+          done = false
+        } 
+        todos = todos.map((t) => {
+          return { ...t, done: true };
+        });
+        handleChange()
+      }}
+    >
+      {#each columns as column, i (i)}
+        <option value={i >= columns.length -1 ? -1 : i }>{column}</option>
+      {/each}
+    </select>
+  </div>
+{/if}
 
 <ol class="todolist">
   <li>
