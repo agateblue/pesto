@@ -11,6 +11,7 @@
   --text-discrete-color: rgba(125, 125, 125, 1);
   --font-family: Helvetica, sans-serif;
   --background-color: white;
+  --card-background: var(--background-color);
   --layout-separator: 1px solid rgb(120, 112, 112);
   --list-separator: 1px solid rgb(213, 213, 213);
 
@@ -438,6 +439,7 @@ input[type='text'].input__discrete {
 
 }
 .card {
+  background: var(--card-background);
   border: var(--list-separator);
   padding: var(--space-2);
   list-style: none;
