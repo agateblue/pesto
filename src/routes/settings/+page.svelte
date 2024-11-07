@@ -143,7 +143,7 @@
         todolist: {
           done: list >= doneList,
           title: task.text,
-          column: list >= doneList ? -1 : 0,
+          column: list >= doneList ? -1 : list,
           todos: task.subtasks.map((t) => {
             return {
               id: buildUniqueId({
@@ -174,14 +174,24 @@
 
     for (const entry of entries) {
       let converted: Document | null = getNoteFromTempoEntry(entry);
-      console.log('CONVERTED Tempo note', entry, converted);
+      console.debug('CONVERTED Tempo note', entry, converted);
       if (converted) {
         notes.push(converted);
       }
     }
+
+    if (boardConfig?.lists) {
+      let newBoardConfig = {columns: boardConfig.lists.map(r => r.label)}
+      // Tempo doesn't include the "done" column in the export, we add it manually
+      newBoardConfig.columns.push('Done')
+      console.log('Importing new board config…', newBoardConfig)
+      await createOrUpdateSetting('settings:board', newBoardConfig)
+
+    }
+    createOrUpdateSetting
     for (const task of tasks) {
       let converted: DocumentDocument | null = getNoteFromTempoTask(task, doneList);
-      console.log('CONVERTED Tempo task', task, converted);
+      console.debug('CONVERTED Tempo task', task, converted);
       if (converted) {
         notes.push(converted);
       }
