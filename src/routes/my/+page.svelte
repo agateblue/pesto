@@ -41,21 +41,19 @@
     return { $and: tokensToMangoQuery(tokens) };
   }
 
-  async function getNotes(q: string) {
-    return await globals.db.documents.find({
+  function loadNotes(q: string) {
+    globals.db.documents.find({
       limit: 20,
       sort: [{ id: 'desc' }],
       selector: getSelector(q)
-    }).exec();
+    }).$.subscribe(documents => {
+      notes = documents
+    });
   }
 
-  async function loadNotes(q: string) {
-    notes = await getNotes(q);
-  }
-
-  $effect(async () => {
+  $effect(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
-    await loadNotes(searchQuery);
+    loadNotes(searchQuery);
   });
 </script>
 
