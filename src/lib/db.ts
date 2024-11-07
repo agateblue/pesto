@@ -47,6 +47,12 @@ export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   month: '2-digit',
   year: '2-digit'
 });
+
+export const DATE_FORMATTER_SHORT = new Intl.DateTimeFormat(LOCALE, {
+  day: '2-digit',
+  month: '2-digit',
+  year: '2-digit'
+});
 export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
@@ -480,5 +486,11 @@ export function capitalizeFirstLetter(s: string) {
 export function formatDate(d: string) {
   let p = new Date(d);
   let formatted = `${DATE_FORMATTER.format(p)} · ${TIME_FORMATTER.format(p)}`;
+  return capitalizeFirstLetter(formatted);
+}
+
+export function formatDateShort(d: string) {
+  let p = new Date(d);
+  let formatted = `${DATE_FORMATTER_SHORT.format(p)}`;
   return capitalizeFirstLetter(formatted);
 }

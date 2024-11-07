@@ -1,7 +1,7 @@
 <script lang="ts">
   import debounce from 'lodash/debounce'
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
-  import  { type DocumentDocument, type TodolistType, getNoteUpdateData } from '$lib/db';
+  import  { type DocumentDocument, type TodolistType, getNoteUpdateData, formatDateShort } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher<{
@@ -38,3 +38,9 @@
   on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
   on:delete={(event) => updateFragment(undefined)}
 />
+
+<div class="flex__row | flex__justify-end | m__block-2">
+  <a href={`/my/notes/${note.id}`}>
+    <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
+  </a>
+</div>
