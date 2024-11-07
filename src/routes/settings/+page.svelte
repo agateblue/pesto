@@ -210,6 +210,7 @@
     <section class="wrapper | flex__grow | flow">
       <h1>Board</h1>
       <form
+        class="flow"
         onsubmit={(e) => {
         saveBoard();
         e.preventDefault()

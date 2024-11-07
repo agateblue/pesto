@@ -4,7 +4,8 @@
   const bubble = createBubbler();
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { type DocumentDocument, type Database } from '$lib/db';
+  import { type DocumentDocument, type Database, globals } from '$lib/db';
+  import { isRxDocument } from 'rxdb';
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
     delete: { note: DocumentDocument };
@@ -16,6 +17,8 @@
   }
 
   let { note, children }: Props = $props();
+  let columns: string[] = $state([])
+
   function handleUpdate(n: DocumentDocument) {
     dispatch('update', { note: n });
   }
@@ -26,12 +29,20 @@
       dispatch('delete', { note });
     }
   }
+
+  globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe(
+    (settings) => {
+      columns = settings?.data.columns || ['Todo', 'Doing', 'Done']
+    }
+  )
+
 </script>
 
 <form class="flow" onsubmit={bubble('submit')}>
   <a href="/my" class="layout__multi-hidden">Go back</a>
   <FragmentEditor
     {note}
+    {columns}
     on:update={(e) => {
       handleUpdate(e.detail.note);
     }}
