@@ -1,4 +1,4 @@
-import { type DocumentType, buildUniqueId } from "./db";
+import { type DocumentType } from "./db";
 import { parseTags } from "./ui";
 
 export type RxBaseDoc = {
@@ -50,7 +50,7 @@ export function pestoToTempoDocument(document: DocumentType, doneIndex: number) 
   if (document.type === 'note') {
     let baseData = {
       date: document.created_at,
-      _id: document.created_at,
+      _id: document.id,
       _deleted: document._deleted,
     }
     if (document.fragments?.text?.content) {
@@ -94,13 +94,7 @@ export function pestoToTempoDocument(document: DocumentType, doneIndex: number) 
 export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex: number) {
   let data: DocumentType | null = null
   if (document.type === 'entry' || document.type === 'task') {
-    let date: string = document.date;
-    let msecs = Date.parse(date);
-    let id: string = buildUniqueId({
-      msecs,
-      random: Array(16).fill(0),
-      seq: Number(0)
-    });
+    let id = document.id || document._id
     let baseData = {
       id,
       type: 'note',
@@ -111,7 +105,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       tags: [],
       title: null,
     }
-    if (document.type === 'entry') {
+    if (document.type === 'entry' && document.text?.trim()) {
       let text = document.text
       let tags = document.tags.map(t => t.id)
       data = {
@@ -123,11 +117,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
     if (document.type === 'task') {
       let text = document.text
       let todos = document.subtasks.map(t => {
-        let subtaskId: string = buildUniqueId({
-          msecs,
-          random: Array(16).fill(0),
-          seq: Number(0),
-        });
+        let subtaskId = id
         return {
           done: t.done,
           text: t.label,

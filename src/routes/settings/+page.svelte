@@ -1,7 +1,6 @@
 <script lang="ts">
   import { preventDefault } from 'svelte/legacy';
 
-  import { v4 as uuidv4 } from 'uuid';
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
@@ -10,7 +9,6 @@
     globals,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
-    buildUniqueId,
     createOrUpdateSetting,
   } from '$lib/db';
   import { parseTags } from '$lib/ui';
@@ -57,7 +55,7 @@
       return {
         type: 'webrtc',
         signalingServer: DEFAULT_SIGNALING_SERVER,
-        room: `pesto-${uuidv4()}`,
+        room: `pesto-${new Date().toISOString()}`,
         push: true,
         pull: true
       };
@@ -98,12 +96,7 @@
       return null;
     }
     let created_at: string = entry.date;
-    let msecs = Date.parse(created_at);
-    let id: string = buildUniqueId({
-      msecs,
-      random: Array(16).fill(0),
-      seq: Number(0)
-    });
+    let id: string = entry._id || entry.id
     let content: string = entry.text;
     let note: NoteDocType = {
       id: id,
@@ -129,12 +122,7 @@
     }
     let list: number = task.list;
     let created_at: string = task.date;
-    let msecs = Date.parse(created_at);
-    let id: string = buildUniqueId({
-      msecs,
-      random: Array(16).fill(0),
-      seq: Number(0)
-    });
+    let id: string = task._id || task.id;
     let content: string = task.text;
     let note: NoteDocType = {
       id: id,
@@ -150,9 +138,7 @@
           column: list >= doneList ? -1 : list,
           todos: task.subtasks.map((t) => {
             return {
-              id: buildUniqueId({
-                msecs
-              }),
+              id: id,
               done: t.done,
               text: t.label
             };

@@ -113,7 +113,7 @@ describe('query language', () => {
 
   it('replication pestoToTempoDocument note', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:26:37.871Z",
@@ -161,7 +161,7 @@ describe('query language', () => {
   });
   it('replication pestoToTempoDocument task not done', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:26:37.871Z",
@@ -207,7 +207,7 @@ describe('query language', () => {
 
   it('replication pestoToTempoDocument task done', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:26:37.871Z",
@@ -240,7 +240,7 @@ describe('query language', () => {
   });
   it('replication pestoToTempoDocument other type ignored', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "settings",
       "data": {}
     }
@@ -276,7 +276,7 @@ describe('query language', () => {
       "_deleted": false,
     }
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0966-7000-8000-000000000000",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:10:22.438Z",      
@@ -312,7 +312,7 @@ describe('query language', () => {
       
     }
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0966-7000-8000-000000000000",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:10:22.438Z",
@@ -323,8 +323,8 @@ describe('query language', () => {
           "done": false,
           "title": "Cleaning day",
           "todos": [
-            {"text": "Dishes", "done": true, "id": "01930162-0966-7000-8000-000000000000"},
-            {"text": "Laundry", "done": false, "id": "01930162-0966-7000-8000-000000000000"},
+            {"text": "Dishes", "done": true, "id": "2024-11-06T12:10:22.438Z"},
+            {"text": "Laundry", "done": false, "id": "2024-11-06T12:10:22.438Z"},
           ],
           "column": 1
         }
@@ -348,7 +348,7 @@ describe('query language', () => {
       
     }
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "01930162-0966-7000-8000-000000000000",
+      "id": "2024-11-06T12:10:22.438Z",
       "type": "note",
       "created_at": "2024-11-06T12:10:22.438Z",
       "modified_at": "2024-11-06T12:10:22.438Z",
