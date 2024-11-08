@@ -132,6 +132,14 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       }
     }
   }
+  if (!data) {
+    let id = document._id
+    if (document.type) {
+      id = `${document.type}:${id}`
+    }
+    id = `ignored:tempo:${id}`
+    data = {id, type: 'ignored'}
+  }
   console.debug("Converting document from tempo to pesto", document, data)
   return data  
 }

@@ -17,7 +17,7 @@
 
   function getSelector(q: string) {
     if (!q.trim()) {
-      return {};
+      return {type: 'note'};
     }
 
     let tokens = getQueryTokens(q);
