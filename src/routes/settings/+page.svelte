@@ -52,7 +52,7 @@
     });
   }
 
-  function getNewReplication(type: 'webrtc' | 'couchdb') {
+  function getNewReplication(type: 'webrtc' | 'couchdb' | 'couchdb-tempo') {
     if (type === 'webrtc') {
       return {
         type: 'webrtc',
@@ -63,16 +63,20 @@
       };
     }
 
+    let baseCouchDb = {
+      type: 'couchdb',
+      server: '',
+      database: '',
+      username: '',
+      password: '',
+      push: true,
+      pull: true
+    };
     if (type === 'couchdb') {
-      return {
-        type: 'couchdb',
-        server: '',
-        database: '',
-        username: '',
-        password: '',
-        push: true,
-        pull: true
-      };
+      return {...baseCouchDb, type: 'couchdb'}
+    }
+    if (type === 'couchdb-tempo') {
+      return {...baseCouchDb, type: 'couchdb-tempo'}
     }
   }
   async function handleSubmit() {
@@ -288,6 +292,7 @@
             <select name="replication-type" id="replication-type" bind:value={replicationType}>
               <option value="webrtc">WebRTC</option>
               <option value="couchdb">CouchDB</option>
+              <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
             </select>
           </div>
           <button type="submit">Setup synchronisation…</button>

@@ -33,8 +33,8 @@
       <strong>Signaling server:</strong>
       {replication.signalingServer} <br />
     {/if}
-    {#if replication.type === 'couchdb'}
-      <strong>Type:</strong> CouchDB <br />
+    {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
+      <strong>Type:</strong> {replication.type === 'couchdb' ? 'CouchDB' : 'CouchDB (With Tempo compatibility)'} <br />
       <strong>Server URL:</strong>
       {replication.server} <br />
       <strong>Database:</strong>
