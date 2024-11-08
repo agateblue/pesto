@@ -26,26 +26,46 @@
         id="webrtc-signaling-server"
         name="webrtc-signaling-server"
         bind:value={replication.signalingServer}
+        required
       />
     </div>
     <div class="form__field">
       <label for="webrtc-room-id">Room ID</label>
-      <PasswordInput name="webrtc-room-id" id="webrtc-room-id" bind:value={replication.room} />
+      <PasswordInput required name="webrtc-room-id" id="webrtc-room-id" bind:value={replication.room} />
       <p>Anyone with this room identifier can access your data. Treat it like a password.</p>
     </div>
   {/if}
-  {#if replication.type === 'couchdb'}
+  {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
+    {#if replication.type === 'couchdb-tempo'}
+      <p>
+        <strong>Warning: this synchronisation mode is designed to help you transition from Tempo to Pesto.</strong> 
+      </p>
+      <p>
+        Since Tempo does not support all Pesto features, writing data from Pesto to Tempo is disabled. This means:
+      </p>
+      <ul>
+        <li>
+          Changes done on Tempo documents will be synchronized from Tempo to Pesto
+        </li>
+        <li>
+          Changes done on Pesto documents won't be synchronized from Pesto to Tempo
+        </li>
+      </ul>
+      <p>
+        It is also less performant and should be disabled when you switch definitely to Pesto.
+      </p>
+    {/if}
     <div class="form__field">
       <label for="couchdb-server">Server URL</label>
-      <input name="couchdb-server" id="couchdb-url" type="url" bind:value={replication.server} />
+      <input name="couchdb-server" id="couchdb-url" type="url" bind:value={replication.server} required />
     </div>
     <div class="form__field">
       <label for="couchdb-database">Database name</label>
-      <input name="couchdb-database" id="couchdb-database" bind:value={replication.database} />
+      <input name="couchdb-database" id="couchdb-database" bind:value={replication.database} required />
     </div>
     <div class="form__field">
       <label for="couchdb-database">Username</label>
-      <input name="couchdb-username" id="couchdb-username" bind:value={replication.username} />
+      <input name="couchdb-username" id="couchdb-username" bind:value={replication.username} required/>
     </div>
     <div class="form__field">
       <label for="couchdb-password">Password</label>
@@ -53,6 +73,7 @@
         name="couchdb-password"
         id="couchdb-password"
         bind:value={replication.password}
+        required
       />
     </div>
   {/if}

@@ -26,6 +26,7 @@ import {
 import { v7 as uuidv7 } from 'uuid';
 import cloneDeep from 'lodash/cloneDeep';
 import { parseTags } from './ui';
+import { tempoToPestoDocument } from './replication';
 
 if (dev) {
   import('rxdb/plugins/dev-mode').then((r) => {
@@ -200,7 +201,11 @@ export type CouchDBReplication = Replication & {
   password: string;
 };
 
-export type AnyReplication = CouchDBReplication | WebRTCReplication;
+export type CouchDBReplicationTempo = CouchDBReplication & {
+  type: 'couchdb-tempo'
+}
+
+export type AnyReplication = CouchDBReplication | CouchDBReplicationTempo | WebRTCReplication;
 
 export async function getDb() {
   if (globals.db) {
@@ -287,6 +292,46 @@ async function createReplication(db: Database, config: AnyReplication) {
     const couchdbUrl = `${config.server}/${config.database}/`;
     state = replicateCouchDB({
       replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
+      collection: db.documents,
+      url: couchdbUrl,
+      live: true,
+      fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
+      ...pushPullConfig
+    });
+  }
+  if (config.type === 'couchdb-tempo') {
+    let boardSettings = await db.documents.findOne('settings:board').exec()
+    let columns: string[] = boardSettings ? boardSettings.data.columns as string[] : ['Todo', 'Doing', 'Done']
+    let doneColumn = columns.length - 1
+    const couchdbUrl = `${config.server}/${config.database}/`;
+
+    // pushing is disabled in this mode because we can't actually alter
+    // the ids to match Tempo format, which breaks replication and duplicates documents
+    delete pushPullConfig.push
+   
+    if (pushPullConfig.pull) {
+      pushPullConfig.pull.modifier = (d) => {
+        if (d._deleted && d.id.includes('T') && d.id.includes(':')) {
+          let date: string = d.id;
+          let msecs = Date.parse(date);
+          let id: string = buildUniqueId({
+            msecs,
+            random: Array(16).fill(0),
+            seq: Number(0)
+          });
+          return {
+            ...d,
+            id,
+          }
+        }
+        if (!d.type) {
+          return d
+        }
+        return tempoToPestoDocument(d, doneColumn)
+      }
+    }
+    state = replicateCouchDB({
+      replicationIdentifier: `pesto-tempo-couchdb-replication-${couchdbUrl}`,
       collection: db.documents,
       url: couchdbUrl,
       live: true,

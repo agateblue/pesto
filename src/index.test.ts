@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { tokensToMangoQuery, getQueryTokens, type QueryToken } from '$lib/db';
+import { tokensToMangoQuery, getQueryTokens, type QueryToken, type DocumentDocument } from '$lib/db';
+import { pestoToTempoDocument, tempoToPestoDocument, type TempoEntry, type RxBaseDoc, type TempoTask } from '$lib/replication';
 import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
@@ -108,5 +109,262 @@ describe('query language', () => {
     const expected =
       '<p>hello this is a <a href="/my?q=tag:hashtag">#hashtag</a> <strong>yes</strong></p>\n';
     expect(renderMarkdown(input)).toStrictEqual(expected);
+  });
+
+  it('replication pestoToTempoDocument note', () => {
+    const input: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:26:37.871Z",
+      "title": null,
+      "fragments": {
+        "text": {
+          "content": "Hello #world I'm -sad"
+        }
+      },
+      "tags": ["world", "sad"],
+      "_deleted": false,
+    }
+    const expected: TempoEntry = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "text": "Hello #world I'm -sad",
+      "tags": [
+        {
+          "text": "#world",
+          "sign": "#",
+          "id": "world",
+          "type": "tag",
+          "mood": null,
+          "value": null,
+        },
+        {
+          "text": "-sad",
+          "sign": "-",
+          "id": "sad",
+          "type": "feeling",
+          "mood": -1,
+          "value": null,
+        }
+      ],
+      "mood": -1,
+      "type": "entry",
+      "_deleted": false,
+      "thread": null,
+      "replies": [],
+      "form": null,
+      "data": null,
+      "favorite": false,
+    }
+    expect(pestoToTempoDocument(input, 0)).toStrictEqual(expected);
+  });
+  it('replication pestoToTempoDocument task not done', () => {
+    const input: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:26:37.871Z",
+      "title": null,
+      "fragments": {
+        "todolist": {
+          "done": false,
+          "title": "Cleaning day",
+          "todos": [
+            {
+              "id": "018fe787-270b-7000-8000-0862afeaa8e3",
+              "done": false,
+              "text": "Dishes"
+            },
+            {
+              "id": "018fe787-270b-7000-8000-11c1dd22dc7d",
+              "done": true,
+              "text": "Laundry"
+            },
+          ],
+          "column": 1
+        }
+      },
+      "tags": [],
+      "_deleted": false,
+    }
+    const expected: TempoTask = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "type": "task",
+      "text": "Cleaning day",
+      "category": null,
+      "index": -1,
+      "list": 1,
+      "subtasks": [
+        {"done": false, "label": "Dishes"},
+        {"done": true, "label": "Laundry"},
+      ],
+      "_deleted": false,      
+    }
+    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+  });
+
+  it('replication pestoToTempoDocument task done', () => {
+    const input: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:26:37.871Z",
+      "title": null,
+      "_deleted": false,
+      "fragments": {
+        "todolist": {
+          "done": true,
+          "title": "Cleaning day",
+          "todos": [],
+          // this means done
+          "column": -1
+        }
+      },
+      "tags": []
+    }
+    const expected: TempoTask = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "type": "task",
+      "text": "Cleaning day",
+      "category": null,
+      "index": -1,
+      "list": 3,
+      "subtasks": [],
+      "_deleted": false,
+      
+    }
+    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+  });
+  it('replication pestoToTempoDocument other type ignored', () => {
+    const input: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0108-7aa1-9849-adab33c4e237",
+      "type": "settings",
+      "data": {}
+    }
+    const expected = null
+    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+  });
+
+  it('replication tempoToPestoDocument note', () => {
+    const input: TempoEntry = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "text": "Hello #world I'm -sad",
+      "tags": [
+        {
+          "text": "#world",
+          "sign": "#",
+          "id": "world",
+          "type": "tag",
+          "mood": null,
+          "value": null,
+        },
+        {
+          "text": "-sad",
+          "sign": "-",
+          "id": "sad",
+          "type": "feeling",
+          "mood": -1,
+          "value": null,
+        }
+      ],
+      "mood": -1,
+      "type": "entry",
+      "_deleted": false,
+    }
+    const expected: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0966-7000-8000-000000000000",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:10:22.438Z",      
+      "title": null,
+      "fragments": {
+        "text": {
+          "content": "Hello #world I'm -sad"
+        }
+      },
+      "tags": [
+        "world",
+        "sad"
+      ],
+      "_deleted": false,
+    }
+    expect(tempoToPestoDocument(input, 0)).toStrictEqual(expected);
+  });
+
+  it('replication tempoToPestoDocument task not done', () => {
+    const input: TempoTask = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "type": "task",
+      "text": "Cleaning day",
+      "category": null,
+      "index": -1,
+      "list": 1,
+      "subtasks": [
+        {"label": "Dishes", "done": true},
+        {"label": "Laundry", "done": false},
+      ],
+      "_deleted": false,
+      
+    }
+    const expected: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0966-7000-8000-000000000000",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:10:22.438Z",
+      "title": null,
+      "_deleted": false,
+      "fragments": {
+        "todolist": {
+          "done": false,
+          "title": "Cleaning day",
+          "todos": [
+            {"text": "Dishes", "done": true, "id": "01930162-0966-7000-8000-000000000000"},
+            {"text": "Laundry", "done": false, "id": "01930162-0966-7000-8000-000000000000"},
+          ],
+          "column": 1
+        }
+      },
+      "tags": []
+    }
+    expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
+  });
+
+  it('replication tempoToPestoDocument task done', () => {
+    const input: TempoTask = {
+      "_id": "2024-11-06T12:10:22.438Z",
+      "date": "2024-11-06T12:10:22.438Z",
+      "type": "task",
+      "text": "Cleaning day",
+      "category": null,
+      "index": -1,
+      "list": 3,
+      "subtasks": [],
+      "_deleted": false,
+      
+    }
+    const expected: DocumentDocument & RxBaseDoc = {
+      "id": "01930162-0966-7000-8000-000000000000",
+      "type": "note",
+      "created_at": "2024-11-06T12:10:22.438Z",
+      "modified_at": "2024-11-06T12:10:22.438Z",
+      "title": null,
+      "_deleted": false,
+      "fragments": {
+        "todolist": {
+          "done": true,
+          "title": "Cleaning day",
+          "todos": [],
+          // this means done
+          "column": -1
+        }
+      },
+      "tags": []
+    }
+    expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 });
