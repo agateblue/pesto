@@ -119,7 +119,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       let todos = document.subtasks.map(t => {
         let subtaskId = id
         return {
-          done: t.done,
+          done: t.done === null ? false : t.done,
           text: t.label,
           id: subtaskId,
         }
