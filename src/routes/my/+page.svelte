@@ -15,23 +15,6 @@
 
   let searchQuery = $state('');
 
-  async function handleUpdate(n: DocumentDocument) {
-    let found = false;
-    note = n;
-    for (const [index, element] of notes.entries()) {
-      if (element.id === n.id) {
-        found = true;
-        notes[index] = n;
-        notes = notes;
-        break;
-      }
-    }
-    if (!found) {
-      // creation, we insert the note at the top
-      notes = [n, ...notes];
-    }
-  }
-
   function getSelector(q: string) {
     if (!q.trim()) {
       return {};
@@ -120,7 +103,6 @@
           note = e.detail.note;
         }}
         on:submit={(e) => {
-          handleUpdate(note);
           note = null;
           noteFormKey++;
         }}
