@@ -11,7 +11,7 @@
 
   let { note = $bindable(), footer, ...rest }: Props = $props();
   note.$.subscribe(async (currentRxDocument) => {
-    note = note.getLatest();
+    note = currentRxDocument
   });
 </script>
 
