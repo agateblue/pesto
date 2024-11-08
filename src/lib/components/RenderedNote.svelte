@@ -10,9 +10,6 @@
   }
 
   let { note = $bindable(), footer, ...rest }: Props = $props();
-  note.$.subscribe(async (currentRxDocument) => {
-    note = currentRxDocument
-  });
 </script>
 
 <article {...rest}>
