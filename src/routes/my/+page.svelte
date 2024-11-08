@@ -17,7 +17,7 @@
 
   function getSelector(q: string) {
     if (!q.trim()) {
-      return {type: 'note'};
+      return {};
     }
 
     let tokens = getQueryTokens(q);
@@ -28,7 +28,7 @@
     globals.db.documents.find({
       limit: 20,
       sort: [{ id: 'desc' }],
-      selector: getSelector(q)
+      selector: {type: 'note', ...getSelector(q)}
     }).$.subscribe(documents => {
       notes = documents
     });
