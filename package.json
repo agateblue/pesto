@@ -44,7 +44,6 @@
     "marked": "^14.1.0",
     "rxdb": "^15.32.0",
     "rxjs": "^7.8.1",
-    "unplugin-icons": "^0.19.2",
-    "uuid": "^10.0.0"
+    "unplugin-icons": "^0.19.2"
   }
 }

@@ -23,7 +23,6 @@ import {
   getFetchWithCouchDBAuthorization
 } from 'rxdb/plugins/replication-couchdb';
 
-import { v7 as uuidv7 } from 'uuid';
 import cloneDeep from 'lodash/cloneDeep';
 import { parseTags } from './ui';
 import { tempoToPestoDocument } from './replication';
@@ -312,19 +311,6 @@ async function createReplication(db: Database, config: AnyReplication) {
     if (pushPullConfig.pull) {
       pushPullConfig.pull.modifier = (d) => {
         if (d._deleted && d.id.includes('T') && d.id.includes(':')) {
-          let date: string = d.id;
-          let msecs = Date.parse(date);
-          let id: string = buildUniqueId({
-            msecs,
-            random: Array(16).fill(0),
-            seq: Number(0)
-          });
-          return {
-            ...d,
-            id,
-          }
-        }
-        if (!d.type) {
           return d
         }
         return tempoToPestoDocument(d, doneColumn)
@@ -389,16 +375,17 @@ async function createReplication(db: Database, config: AnyReplication) {
   return state;
 }
 
-export function buildUniqueId(options = {}) {
-  return uuidv7(options);
+export function buildUniqueId(date: Date | null = null) {
+  return (date || new Date()).toISOString()
 }
 
 export function getNewNote() {
+  let date = new Date()
   return {
-    id: buildUniqueId(),
+    id: buildUniqueId(date),
     type: 'note',
-    created_at: new Date().toISOString(),
-    modified_at: new Date().toISOString(),
+    created_at: date.toISOString(),
+    modified_at: date.toISOString(),
     title: null,
     fragments: {},
     tags: []
