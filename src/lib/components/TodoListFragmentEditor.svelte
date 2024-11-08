@@ -84,12 +84,12 @@
       onchange={(e) => {
         if (column === -1) {
           done = true
+          todos = todos.map((t) => {
+            return { ...t, done: true };
+          });
         } else {
           done = false
         } 
-        todos = todos.map((t) => {
-          return { ...t, done: true };
-        });
         handleChange()
       }}
     >
