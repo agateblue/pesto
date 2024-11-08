@@ -367,4 +367,15 @@ describe('query language', () => {
     }
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
+  it('replication tempoToPestoDocument other document ignored', () => {
+    const input = {
+      "_id": "something",
+      "type": "settings"
+    }
+    const expected: DocumentDocument & RxBaseDoc = {
+      "id": "ignored:tempo:settings:something",
+      "type": "ignored",
+    }
+    expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
+  });
 });
