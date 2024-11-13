@@ -2,7 +2,7 @@
   import MainNavigation from "$lib/components/MainNavigation.svelte";
   import TodoCard from "$lib/components/TodoCard.svelte";
   import { type RxDocument } from "rxdb";
-  import { globals, type DocumentDocument, getNoteUpdateData } from "$lib/db";
+  import { globals, type DocumentDocument, getNoteUpdateData, getNewNote, getNewTodoListFragment } from "$lib/db";
   import type { MangoQuerySelector } from "rxdb";
   
   import {flip} from "svelte/animate";
@@ -56,6 +56,7 @@
   }
 
   let columns: BoardColumn[] = $state([])
+  let autofocusKey: string = $state('noop')
 
   globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe(
     (settings: RxDocument<SettingsBoard> | null) => {
@@ -127,6 +128,13 @@
       {#each columns as column}
         <section class="flex__column | flex__grow | p__inline-2">
           <h2>{column.name}</h2>
+          <button class="m__block-1" type="button" onclick={async (e) => {
+            let note = getNewNote()
+            note.fragments.todolist = getNewTodoListFragment()
+            note.fragments.todolist.column = column.index
+            autofocusKey = note.id
+            await globals.db?.documents.insert(note)
+          }}>Add task</button>
           <ol 
             class="flex__grow | board__column | p__block-0 p__inline-0 | flow" 
             use:dndzone="{{items: column.cards, flipDurationMs: 100}}" 
@@ -136,12 +144,12 @@
           >
             {#each column.cards as item (item.id)}
               <li class="card" animate:flip={{duration: 100}} >
-                <TodoCard note={item.note} />
+                <TodoCard autofocus={autofocusKey === item.id} note={item.note} />
               </li>
             {/each}
           </ol>
         </section>
-      {/each}
+      {/each}*
     </div>
   </main>
 </div>
