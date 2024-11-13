@@ -1,12 +1,13 @@
 <script lang="ts">
   import debounce from 'lodash/debounce'
+  import isEmpty from 'lodash/isEmpty'
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
-  import  { type DocumentDocument, type TodolistType, getNoteUpdateData, formatDateShort } from '$lib/db';
+  import  { type DocumentDocument, type TodolistType, getNoteUpdateData, formatDateShort, globals } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
-    delete: {};
+    delete: { note: DocumentDocument };
   }>();
 
   interface Props {
@@ -22,13 +23,26 @@
     fragment: TodolistType
   ) {
     
-    let updateData = {};
-    updateData[`fragments.todolist`] = fragment;
-    await note.incrementalUpdate({
-      $set: getNoteUpdateData(note, updateData)
+    let updateData = {
+      fragments: {...note.fragments || {}}
+    };
+    if (fragment) {
+      updateData.fragments.todolist = fragment;
+    } else {
+      delete updateData.fragments.todolist
+    }
+
+    note.incrementalUpdate({
+      $set: getNoteUpdateData(note, updateData),
     });
-    note = await note.getLatest();
-    dispatch('update', { note });
+    
+    note.get$('fragments').subscribe(fragments => {
+      if (isEmpty(fragments)) {
+        dispatch('delete', { note });
+      } else {
+        dispatch('update', { note });
+      }
+    });
   }
 
 </script>

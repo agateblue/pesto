@@ -144,7 +144,13 @@
           >
             {#each column.cards as item (item.id)}
               <li class="card" animate:flip={{duration: 100}} >
-                <TodoCard autofocus={autofocusKey === item.id} note={item.note} />
+                <TodoCard
+                  autofocus={autofocusKey === item.id}
+                  note={item.note}
+                  on:delete={(e) => {
+                    e.detail.note.incrementalRemove()
+                  }}
+                />
               </li>
             {/each}
           </ol>
