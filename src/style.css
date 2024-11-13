@@ -17,6 +17,7 @@
 
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
+  --dialog-backdrop: rgba(55, 55, 55, 0.7);
 }
 
 /* RESET */
@@ -444,4 +445,12 @@ input[type='text'].input__discrete {
   border: var(--list-separator);
   padding: var(--space-2);
   list-style: none;
+}
+
+
+dialog {
+  border: none;
+  &::backdrop {
+    background: var(--dialog-backdrop);
+  }
 }

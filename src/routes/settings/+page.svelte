@@ -1,6 +1,7 @@
 <script lang="ts">
   import { preventDefault } from 'svelte/legacy';
 
+  import DialogForm from '$lib/components/DialogForm.svelte';
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
@@ -78,17 +79,15 @@
     }
   }
   async function handleSubmit() {
-    if (confirm('Do you confirm data deletion? This action is irreversible.')) {
-      window.localStorage.clear();
-      try {
-        await globals.db.remove();
-        window.indexedDB.databases().then((r) => {
-          for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
-        });
-        location.reload();
-      } catch (err) {
-        console.log(err);
-      }
+    window.localStorage.clear();
+    try {
+      await globals.db.remove();
+      window.indexedDB.databases().then((r) => {
+        for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
+      });
+      location.reload();
+    } catch (err) {
+      console.log(err);
     }
   }
   function getNoteFromTempoEntry(entry: object) {
@@ -286,15 +285,21 @@
       {/if}
 
       <h1>Clear data</h1>
-      <form onsubmit={preventDefault((e) => handleSubmit())}>
+
+      <p>You can remove all your Pesto data if needed. You will be asked for confirmationK</p>
+      <DialogForm 
+        anchorClass="button"
+        anchorText="Remove all data…"
+        title="Remove all Pesto data?"
+        onsubmit={(e: SubmitEvent) => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+      >
         <p>
-          Remove all local data including entries, tasks, settings and drafts. You will be asked for
-          confirmation.
+          Remove all local data including entries, tasks, settings and drafts. This action is irreversible.
         </p>
-        <div class="flex__row flex__justify-end">
-          <button type="submit"> Remove all data… </button>
-        </div>
-      </form>
+      </DialogForm>
 
       <h1>Import from Tempo (Beta)</h1>
       <form onsubmit={preventDefault((e) => handleImportTempo())}>
