@@ -35,6 +35,7 @@
     name: string;
     cards: [];
     index: number;
+    limit: number;
     selector: MangoQuerySelector<DocumentDocType>;
   }
 
@@ -67,18 +68,21 @@
           name: 'Todo',
           cards: [],
           index: 0,
+          limit: 9999,
           selector: FIRST_COLUMN_SELECTOR,
         },
         {
           name: 'Doing',
           cards: [],
           index: 1,
+          limit: 9999,
           selector: getColumnSelector(1),
         },
         {
           name: 'Done',
           cards: [],
           index: -1,
+          limit: 30,
           selector: DONE_COLUMN_SELECTOR
         }
       ]
@@ -98,6 +102,7 @@
           // the last column automatically gets done entries
           c.selector = DONE_COLUMN_SELECTOR
           c.index = -1
+          c.limit = 30
         }
         columns = [...columns, c]
       })
@@ -105,7 +110,7 @@
 
     columns.forEach((v, i) => {
       globals.db.documents.find({
-        limit: 9999,
+        limit: v.limit,
         sort: [{ modified_at: 'desc' }],
         selector: v.selector
       }).$.subscribe(notes => {
@@ -154,6 +159,21 @@
               </li>
             {/each}
           </ol>
+          {#if column.index === -1 && column.cards.length > 0}
+            <button
+              onclick={async (e) => {
+                let newCards = await globals.db.documents.find({
+                  limit: column.limit,
+                  sort: [{ modified_at: 'desc' }],
+                  selector: {
+                    id: { $lt: column.cards.slice(-1)[0].id },
+                    ...column.selector
+                  }
+                }).exec();
+                column.cards = [...column.cards, ...newCards.map(n => {return {id: n.id, note: n}})];
+              }}>Load more</button
+            >
+          {/if}
         </section>
       {/each}*
     </div>
