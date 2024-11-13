@@ -132,7 +132,7 @@
   <main>
     <div class="flex__row board">
       {#each columns as column}
-        <section class="flex__column | flex__grow | p__inline-2">
+        <section class="flex__column | board__column | flex__grow | p__inline-2">
           <h2>{column.name}</h2>
           <button class="m__block-1" type="button" onclick={async (e) => {
             let note = getNewNote()
@@ -142,7 +142,7 @@
             await globals.db?.documents.insert(note)
           }}>Add task</button>
           <ol 
-            class="flex__grow | board__column | p__block-0 p__inline-0 | flow" 
+            class="flex__grow | p__block-0 p__inline-0 | flow" 
             use:dndzone="{{items: column.cards, flipDurationMs: 100}}" 
             onconsider="{async (e) => handleDndConsider(e, column)}" 
             onfinalize="{async (e) => handleDndFinalize(e, column)}"
@@ -151,13 +151,13 @@
             {#each column.cards as item (item.id)}
               <li class="card" animate:flip={{duration: 100}} >
                 <Lazy height={200} keep={true}>
-                <TodoCard
+                  <TodoCard
                   autofocus={autofocusKey === item.id}
                   note={item.note}
                   on:delete={(e) => {
                     e.detail.note.incrementalRemove()
-                  }}
-                />
+                    }}
+                  />
                 </Lazy>
               </li>
             {/each}
