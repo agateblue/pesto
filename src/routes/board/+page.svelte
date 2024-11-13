@@ -2,6 +2,7 @@
   import MainNavigation from "$lib/components/MainNavigation.svelte";
   import TodoCard from "$lib/components/TodoCard.svelte";
   import { type RxDocument } from "rxdb";
+  import Lazy from 'svelte-lazy';
   import { globals, type DocumentDocument, getNoteUpdateData, getNewNote, getNewTodoListFragment } from "$lib/db";
   import type { MangoQuerySelector } from "rxdb";
   
@@ -149,6 +150,7 @@
           >
             {#each column.cards as item (item.id)}
               <li class="card" animate:flip={{duration: 100}} >
+                <Lazy height={200} keep={true}>
                 <TodoCard
                   autofocus={autofocusKey === item.id}
                   note={item.note}
@@ -156,6 +158,7 @@
                     e.detail.note.incrementalRemove()
                   }}
                 />
+                </Lazy>
               </li>
             {/each}
           </ol>
