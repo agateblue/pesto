@@ -11,9 +11,10 @@
 
   interface Props {
     note: DocumentDocument;
+    autofocus: boolean;
   }
 
-  let { note }: Props = $props();
+  let { note, autofocus = false }: Props = $props();
 
   let todolist = $state(note.fragments.todolist)
 
@@ -35,6 +36,7 @@
 <TodoListFragmentEditor
   editText={true}
   fragment={todolist}
+  {autofocus}
   on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
   on:delete={(event) => updateFragment(undefined)}
 />

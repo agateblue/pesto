@@ -14,9 +14,10 @@
     fragment: TodolistType;
     editText: boolean;
     columns: string[] | null;
+    autofocus: boolean;
   }
 
-  let { fragment, editText, columns }: Props = $props();
+  let { fragment, editText, columns, autofocus = false }: Props = $props();
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   let title: string = $state(fragment.title || '');
   let done: boolean = $state(fragment.done);
@@ -105,6 +106,7 @@
     {#key id}
       <TodoRow
         {editText}
+        autofocus={autofocus}
         todo={{ text: title, done: done, id }}
         on:update={(e) => {
           done = e.detail.todo.done;

@@ -400,7 +400,7 @@ export function getNewTextFragment(content = '') {
 
 export function getNewTodoListFragment() {
   return {
-    title: null,
+    title: '',
     done: false,
     todos: [],
     column: 0,
