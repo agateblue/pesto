@@ -43,6 +43,7 @@
         handleChange();
       }}
       disabled={!text.trim()}
+      aria-label={`Mark ${text} as done`}
       />
     </div>
     {#if editText}
