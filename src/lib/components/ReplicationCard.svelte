@@ -1,5 +1,6 @@
 <script lang="ts">
   import ReplicationForm from './ReplicationForm.svelte';
+  import DialogForm from './DialogForm.svelte';
   import { type AnyReplication } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
 
@@ -59,18 +60,17 @@
     >
       Edit
     </button>
-    <button
-      type="button"
-      class="button__link"
-      onclick={() => {
-        if (
-          confirm('Delete synchronisation? Your data will be kept but not synchronised anymore.')
-        ) {
-          dispatch('delete', {});
-        }
+
+    <DialogForm 
+      anchorClass="button__link"
+      anchorText="Delete..."
+      title="Delete this synchronisation?"
+      onsubmit={(e: SubmitEvent) => {
+        e.preventDefault()
+        dispatch('delete', {});
       }}
     >
-      Delete…
-    </button>
+      <p>Data synchronization with other devices will stop. Data currently stored on your device won't be deleted.</p>
+    </DialogForm>
   </div>
 </div>

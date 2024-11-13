@@ -6,6 +6,7 @@
   import { createEventDispatcher } from 'svelte';
   import { type DocumentDocument, type Database, globals } from '$lib/db';
   import { isRxDocument } from 'rxdb';
+  import DialogForm from './DialogForm.svelte';
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
     delete: { note: DocumentDocument };
@@ -21,13 +22,6 @@
 
   function handleUpdate(n: DocumentDocument) {
     dispatch('update', { note: n });
-  }
-
-  async function askDelete(note: DocumentDocument) {
-    if (confirm('Do you want to delete this note?')) {
-      await note.remove();
-      dispatch('delete', { note });
-    }
   }
 
   globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe(
@@ -50,15 +44,19 @@
   <div class="flex__row flex__justify-between">
     {@render children?.()}
     {#if note}
-      <button
-        type="button"
-        class="button__link"
-        onclick={(e) => {
-          askDelete(note);
+      <DialogForm 
+        anchorClass="button__link"
+        anchorText="Delete..."
+        title="Delete this note?"
+        onsubmit={(e: SubmitEvent) => {
+          e.preventDefault()
+          note.remove()
+          dispatch('delete', { note });
         }}
       >
-        Delete
-      </button>
+        <p>This will remove the note from your diary. This action is irreversible.</p>
+      </DialogForm>
+      
     {/if}
   </div>
 </form>
