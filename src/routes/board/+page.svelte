@@ -7,7 +7,7 @@
   import type { MangoQuerySelector } from "rxdb";
   
   import {flip} from "svelte/animate";
-  import {dndzone} from "svelte-dnd-action";
+  import {dragHandle, dragHandleZone} from "svelte-dnd-action";
 
   const flipDurationMs = 300;
 
@@ -143,7 +143,7 @@
           }}>Add task</button>
           <ol 
             class="flex__grow | p__block-0 p__inline-0 | flow" 
-            use:dndzone="{{items: column.cards, flipDurationMs: 100}}" 
+            use:dragHandleZone="{{items: column.cards, flipDurationMs: 100}}" 
             onconsider="{async (e) => handleDndConsider(e, column)}" 
             onfinalize="{async (e) => handleDndFinalize(e, column)}"
             data-target={column.index}
@@ -152,11 +152,12 @@
               <li class="card" animate:flip={{duration: 100}} >
                 <Lazy height={200} keep={true}>
                   <TodoCard
+                  {dragHandle}
                   autofocus={autofocusKey === item.id}
                   note={item.note}
                   on:delete={(e) => {
                     e.detail.note.incrementalRemove()
-                    }}
+                  }}
                   />
                 </Lazy>
               </li>
@@ -178,7 +179,7 @@
             >
           {/if}
         </section>
-      {/each}*
+      {/each}
     </div>
   </main>
 </div>

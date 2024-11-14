@@ -4,18 +4,19 @@
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import  { type DocumentDocument, type TodolistType, getNoteUpdateData, formatDateShort, globals } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
+  import IconaMoonMoveThin from 'virtual:icons/iconamoon/move-thin';
 
   const dispatch = createEventDispatcher<{
-    update: { note: DocumentDocument };
     delete: { note: DocumentDocument };
   }>();
 
   interface Props {
     note: DocumentDocument;
     autofocus: boolean;
+    dragHandle?: Function;
   }
 
-  let { note, autofocus = false }: Props = $props();
+  let { note, autofocus = false, dragHandle }: Props = $props();
 
   let todolist = $state(note.fragments.todolist)
 
@@ -43,9 +44,17 @@
         dispatch('update', { note });
       }
     });
-  }
-
 </script>
+
+<div class="flex__row | flex__justify-between">
+  <span use:dragHandle aria-label={`drag-handle for ${todolist?.title}`} >
+    <IconaMoonMoveThin  />
+  </span>
+  <a href={`/my/notes/${note.id}`}>
+    <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
+  </a>
+</div>
+
 
 <TodoListFragmentEditor
   editText={true}
@@ -54,9 +63,3 @@
   on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
   on:delete={(event) => updateFragment(undefined)}
 />
-
-<div class="flex__row | flex__justify-end | m__block-2">
-  <a href={`/my/notes/${note.id}`}>
-    <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
-  </a>
-</div>
