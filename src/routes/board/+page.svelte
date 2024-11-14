@@ -132,7 +132,7 @@
   <main>
     <div class="flex__row board">
       {#each columns as column}
-        <section class="flex__column | board__column | flex__grow | p__inline-2">
+        <section class="flex__column | board__column | p__inline-2">
           <h2>{column.name}</h2>
           <button class="m__block-1" type="button" onclick={async (e) => {
             let note = getNewNote()
