@@ -20,6 +20,8 @@
 
   let todolist = $state(note.fragments.todolist)
 
+  let deleted = $state(false)
+
   async function updateFragment(
     fragment: TodolistType
   ) {
@@ -36,14 +38,13 @@
     note.incrementalUpdate({
       $set: getNoteUpdateData(note, updateData),
     });
-    
-    note.get$('fragments').subscribe(fragments => {
-      if (isEmpty(fragments)) {
-        dispatch('delete', { note });
-      } else {
-        dispatch('update', { note });
-      }
-    });
+  }
+  note.$.subscribe(async (newNote: DocumentDocument) => {
+    if (isEmpty(newNote.fragments) && !deleted) {
+      deleted = true
+      await newNote.incrementalRemove()
+    }
+  });
 </script>
 
 <div class="flex__row | flex__justify-between">
