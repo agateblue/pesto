@@ -134,7 +134,7 @@
       {#each columns as column}
         <section class="flex__column | board__column | p__inline-2">
           <h2>{column.name}</h2>
-          <button class="m__block-1" type="button" onclick={async (e) => {
+          <button class="m__block-1" type="button" style={column.index === -1 ? 'visibility: hidden' : ''} onclick={async (e) => {
             let note = getNewNote()
             note.fragments.todolist = getNewTodoListFragment()
             note.fragments.todolist.column = column.index
