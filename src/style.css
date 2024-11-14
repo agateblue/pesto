@@ -431,20 +431,24 @@ input[type='text'].input__discrete {
 }
 
 .board {
-  width: 100vw;
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
   overflow-x: scroll;
 }
 .board__column {
   --flow-space: var(--space-1);
   margin-inline: 0;
   margin-inline-end: var(--space-3);
+  flex: 1 1 0;
+  min-width: clamp(10rem, 20rem, 80vw);
 }
 .card {
   background: var(--card-background);
   border: var(--list-separator);
   padding: var(--space-2);
   list-style: none;
-  width: clamp(15em, 20em, 80vw); 
+  width: 100%;
 }
 
 
