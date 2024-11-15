@@ -379,6 +379,10 @@ textarea {
     --flow-space: var(--space-1);
   }
   li {
+    hr {
+      margin: 0;
+      border: var(--list-separator);
+    }
     a {
       padding: var(--space-2);
       display: block;
