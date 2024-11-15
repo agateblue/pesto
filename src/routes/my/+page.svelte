@@ -9,7 +9,6 @@
 
   let notes: DocumentDocument[] = $state([]);
 
-  let note: DocumentDocument | null = $state(null);
 
   let noteFormKey = $state(0);
 
@@ -98,16 +97,11 @@
     {@render children?.()}
     {#key noteFormKey}
       <NoteForm
-        {note}
-        on:update={(e) => {
-          note = e.detail.note;
-        }}
+        note={null}
         on:submit={(e) => {
-          note = null;
           noteFormKey++;
         }}
         on:delete={(e) => {
-          note = null;
           noteFormKey++;
         }}
       >
