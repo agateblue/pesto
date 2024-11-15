@@ -58,7 +58,7 @@
       total: title.trim() ? 1 : 0,
       complete: false
     };
-    for (const todo of todos) {
+    for (const todo of todos || []) {
       if (todo.text.trim()) {
         stats.total += 1;
         if (todo.done) {
