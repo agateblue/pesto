@@ -49,7 +49,7 @@
 
 <div class="flex__row | flex__justify-between">
   <span use:dragHandle aria-label={`drag-handle for ${todolist?.title}`} >
-    <IconaMoonMoveThin  />
+    <IconaMoonMoveThin role="presentation" alt="" />
   </span>
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>

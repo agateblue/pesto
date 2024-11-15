@@ -72,6 +72,6 @@
     })}
     aria-label="Delete"
   >
-    <IconaMoonTrash />
+    <IconaMoonTrash role="presentation" alt="" />
   </button>
 </div>

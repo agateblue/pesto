@@ -16,10 +16,10 @@
 <aside data-fullpage={sidebarFullpage}>
   <nav class="nav__main" aria-label="Main menu">
     <ul class="flow">
-      <li><a href="/my"><IconaMoonPen /> All notes</a></li>
-      <li><a href="/my?o=modified_at:desc"><IconaMoonClock /> Recently modified</a></li>
-      <li><a href="/board"><IconaMoonApps /> Board</a></li>
-      <li><a href="/settings"><IconaMoonSettings /> Settings</a></li>
+      <li><a href="/my"><IconaMoonPen role="presentation" alt="" /> All notes</a></li>
+      <li><a href="/my?o=modified_at:desc"><IconaMoonClock role="presentation" alt="" /> Recently modified</a></li>
+      <li><a href="/board"><IconaMoonApps role="presentation" alt="" /> Board</a></li>
+      <li><a href="/settings"><IconaMoonSettings role="presentation" alt="" /> Settings</a></li>
     </ul>
   </nav>
 </aside>
