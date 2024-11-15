@@ -48,19 +48,21 @@
 </script>
 
 <div class="flex__row | flex__justify-between">
-  <span use:dragHandle aria-label={`drag-handle for ${todolist?.title}`} >
-    <IconaMoonMoveThin role="presentation" alt="" />
-  </span>
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
   </a>
+  <span use:dragHandle aria-label={`drag-handle for ${todolist?.title}`} >
+    <IconaMoonMoveThin role="presentation" alt="" />
+  </span>
 </div>
 
 
-<TodoListFragmentEditor
-  editText={true}
-  fragment={todolist}
-  {autofocus}
-  on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
-  on:delete={(event) => updateFragment(undefined)}
-/>
+<div class="p__block-3">
+  <TodoListFragmentEditor
+    editText={true}
+    fragment={todolist}
+    {autofocus}
+    on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
+    on:delete={(event) => updateFragment(undefined)}
+  />
+</div>

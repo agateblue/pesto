@@ -150,7 +150,7 @@
           >
             {#each column.cards as item (item.id)}
               <li class="card" animate:flip={{duration: 100}} >
-                <Lazy height={200} keep={true}>
+                <Lazy height={100} keep={true}>
                   <TodoCard
                   {dragHandle}
                   autofocus={autofocusKey === item.id}
