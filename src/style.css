@@ -13,6 +13,7 @@
   --background-color: white;
   --card-background: var(--background-color);
   --layout-separator: 1px solid rgb(120, 112, 112);
+  --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
 
   --sidebar-background: rgb(240, 240, 240);
@@ -416,7 +417,10 @@ textarea {
 
   textarea {
     border: none;
-    border-bottom: var(--layout-separator);
+    border-bottom: var(--list-separator);
+  }
+  textarea:focus {
+    border: 0;
   }
 }
 .todolist input[type='checkbox'] {
@@ -455,11 +459,11 @@ input[type='text'].input__discrete {
   min-height: 100vh;
   display: flex;
   overflow-x: scroll;
+  padding: var(--space-2);
 }
 .board__column {
-  --flow-space: var(--space-1);
-  margin-inline: 0;
-  margin-inline-end: var(--space-3);
+  --flow-space: var(--space-3);
+  padding: var(--space-2);
   flex: 1 1 0;
   min-width: clamp(20ch, 35ch, 90vw);
 }
