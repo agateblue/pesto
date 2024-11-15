@@ -12,6 +12,9 @@
     type AnyReplication,
     createOrUpdateSetting,
   } from '$lib/db';
+  import {
+    getRandomId
+  } from '$lib/ui'
   import { parseTags } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
 
@@ -138,7 +141,7 @@
           column: list >= doneList ? -1 : list,
           todos: task.subtasks.map((t) => {
             return {
-              id: id,
+              id: `${id}-${getRandomId()}`,
               done: t.done,
               text: t.label
             };
