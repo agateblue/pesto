@@ -112,7 +112,7 @@
     columns.forEach((v, i) => {
       globals.db.documents.find({
         limit: v.limit,
-        sort: [{ modified_at: 'desc' }],
+        sort: [v.index === -1 ? {modified_at: 'desc'} : { created_at: 'desc' }],
         selector: v.selector
       }).$.subscribe(notes => {
         v.cards = notes.map(n => {
