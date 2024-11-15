@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();
   import FragmentEditor from './FragmentEditor.svelte';
   import { createEventDispatcher } from 'svelte';
   import { type DocumentDocument, type Database, globals } from '$lib/db';
@@ -15,9 +12,10 @@
   interface Props {
     note: DocumentDocument | null;
     children?: import('svelte').Snippet;
+    onSubmitHandler?: Function;
   }
 
-  let { note, children }: Props = $props();
+  let { note, children, onSubmitHandler }: Props = $props();
   let columns: string[] = $state([])
 
   function handleUpdate(n: DocumentDocument) {
@@ -32,7 +30,7 @@
 
 </script>
 
-<form class="flow" onsubmit={bubble('submit')}>
+<form class="flow" onsubmit={(e) => onSubmitHandler?.(e)}>
   <a href="/my" class="layout__multi-hidden">Go back</a>
   <FragmentEditor
     {note}
