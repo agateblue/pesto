@@ -4,6 +4,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
 
+  import { globals } from '$lib/db';
   import { updateURLParam } from '$lib/ui';
 
   let { data, children } = $props();
