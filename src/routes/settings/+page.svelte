@@ -99,6 +99,7 @@
     let content: string = entry.text;
     let note: NoteDocType = {
       id: id,
+      type: 'note',
       title: null,
       created_at: created_at,
       modified_at: created_at,
