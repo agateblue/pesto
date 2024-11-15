@@ -138,6 +138,7 @@ body {
     overflow-y: scroll;
   }
   aside:first-child {
+    min-width: 30ch;
     background: var(--sidebar-background);
     border-inline-end: var(--layout-separator);
   }
@@ -460,7 +461,7 @@ input[type='text'].input__discrete {
   margin-inline: 0;
   margin-inline-end: var(--space-3);
   flex: 1 1 0;
-  min-width: clamp(10rem, 20rem, 80vw);
+  min-width: clamp(20ch, 35ch, 90vw);
 }
 .card {
   background: var(--card-background);
