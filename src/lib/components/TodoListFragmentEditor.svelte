@@ -106,11 +106,13 @@
     {#key id}
       <TodoRow
         {editText}
+        trashIcon={true}
         autofocus={autofocus}
         todo={{ text: title, done: done, id }}
         on:update={(e) => {
           done = e.detail.todo.done;
           title = e.detail.todo.text;
+          column = done ? -1 : 0
           if (done) {
             todos = cloneDeep(todos);
             todos = todos.map((t) => {

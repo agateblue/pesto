@@ -3,6 +3,7 @@
 
   import { createEventDispatcher, onMount } from 'svelte';
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
+  import IconaMoonSIgnMinusCircle from 'virtual:icons/iconamoon/sign-minus-circle';
 
   import { type TodoType } from '$lib/db';
   import { ignoreTab, renderMarkdown, getRandomId } from '$lib/ui';
@@ -16,9 +17,10 @@
     todo: TodoType;
     editText: boolean;
     autofocus: boolean;
+    trashIcon: boolean;
   }
 
-  let { todo, editText, autofocus = false }: Props = $props();
+  let { todo, editText, autofocus = false, trashIcon = false }: Props = $props();
   let text = $state(todo.text);
   let done = $state(todo.done);
   let id = $state(getRandomId())
@@ -76,6 +78,10 @@
     })}
     aria-label="Delete"
   >
-    <IconaMoonTrash role="presentation" alt="" />
+    {#if trashIcon}
+      <IconaMoonTrash role="presentation" alt="" />
+    {:else}
+      <IconaMoonSIgnMinusCircle role="presentation" alt="" />
+    {/if}
   </button>
 </div>
