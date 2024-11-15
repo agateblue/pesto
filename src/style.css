@@ -473,3 +473,15 @@ dialog {
     background: var(--dialog-backdrop);
   }
 }
+/* when the content is shorter than the treshold, we simply hide the button */
+[data-expanded]:has(> :last-child:nth-child(1), > :last-child:nth-child(2),  > :last-child:nth-child(3)) {
+  ~ button[aria-expanded] {
+    display: none;
+  }
+}
+/* manage expand/collaspe on elements with more than three children */
+[data-expanded=false]:has(*:nth-child(-n + 3)) {
+  :not(*:nth-child(-n + 3)) {
+    display: none;
+  }
+}
