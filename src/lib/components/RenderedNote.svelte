@@ -3,15 +3,17 @@
   import { renderMarkdown } from '$lib/ui';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import CollapsableContent from './CollapsableContent.svelte';
+  import isEmpty from 'lodash/isEmpty';
 
   interface Props {
     note: DocumentDocument;
     footer?: import('svelte').Snippet;
     limitSize: boolean;
+    onDelete?: Function;
     [key: string]: any;
   }
 
-  let { note = $bindable(), footer, limitSize = true, ...rest }: Props = $props();
+  let { note = $bindable(), footer, limitSize = true, onDelete, ...rest }: Props = $props();
 </script>
 
 <article {...rest}>
@@ -36,7 +38,13 @@
         await note.incrementalUpdate({
           $set: getNoteUpdateData(note, { 'fragments.todolist': undefined })
         });
-        note = await note.getLatest();
+        note = await note.getLatest();note.toJSON().fragments
+        let fragments = note.toMutableJSON().fragments
+        delete fragments.todolist
+        if (isEmpty(fragments)) {
+          await note.incrementalRemove()
+          onDelete?.()
+        }
       }}
     />
   {/if}
