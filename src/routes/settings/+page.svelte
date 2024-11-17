@@ -5,6 +5,7 @@
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
+  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import {
     type DocumentDocument,
     globals,
@@ -199,127 +200,136 @@
 
 <div class="my__layout">
   <MainNavigation />
-  <main class="flex__row">
-    <section class="wrapper | flex__grow | flow">
-      <h1>Board</h1>
-      <form
-        class="flow"
-        onsubmit={(e) => {
-        saveBoard();
-        e.preventDefault()
-      }}
-      >
-        {#each boardColumns as column, i (i)}
-        <div class="form__field">
-          <label for={`column-${i}`}>Column #{i + 1}</label>
-          <input type="text" id={`column-${i}`} name={`column-${i}`} bind:value={boardColumns[i]} />
-          {#if i < boardColumns.length - 1 && i > 0}
+  <main>
+    <div class="scroll__wrapper">
+      <header class="p__inline-3">
+        <MainNavigationToggle class="layout__multi-hidden" />
+        <h2>Settings</h2>
+      </header>
+      <section class="flow | scroll">
+        <div class="wrapper">
+
+          <h1>Board</h1>
+          <form
+            class="flow"
+            onsubmit={(e) => {
+            saveBoard();
+            e.preventDefault()
+          }}
+          >
+            {#each boardColumns as column, i (i)}
+            <div class="form__field">
+              <label for={`column-${i}`}>Column #{i + 1}</label>
+              <input type="text" id={`column-${i}`} name={`column-${i}`} bind:value={boardColumns[i]} />
+              {#if i < boardColumns.length - 1 && i > 0}
+                <button 
+                  type="button" 
+                  onclick={()=> {
+                    boardColumns.splice(i, 1)
+                    boardColumns = [...boardColumns]
+                  }}>Delete</button>
+              {/if}
+            </div>
+            {/each}
             <button 
               type="button" 
-              onclick={()=> {
-                boardColumns.splice(i, 1)
-                boardColumns = [...boardColumns]
-              }}>Delete</button>
+              onclick={ () => {
+                boardColumns = [
+                  ...boardColumns.slice(0, boardColumns.length - 1),
+                  'New column',
+                  ...boardColumns.slice(-1)
+                ]
+              }
+            }>Add column</button>
+            <button type="submit">Update board</button>
+          </form>
+          <h1>Synchronisation</h1>
+          <p>
+            Pesto data can be synchronized with other devices. With WebRTC, the data transit only
+            between devices and stay safe from third-parties.
+          </p>
+          {#if replications.length > 0}
+            <h2>Existing synchronisations</h2>
+            <div class="flow" role="list">
+              {#each replications as replication, i (i)}
+                <ReplicationCard
+                  {replication}
+                  class="card"
+                  role="listitem"
+                  on:submit={async (e) => {
+                    await handleSubmitReplication(e.detail.replication, i);
+                  }}
+                  on:delete={async () => {
+                    replications.splice(i, 1);
+                    replications = [...replications];
+                    await globals.uiState.set('replications', () => {
+                      return replications;
+                    });
+                  }}
+                />
+              {/each}
+            </div>
           {/if}
-        </div>
-        {/each}
-        <button 
-          type="button" 
-          onclick={ () => {
-            boardColumns = [
-              ...boardColumns.slice(0, boardColumns.length - 1),
-              'New column',
-              ...boardColumns.slice(-1)
-            ]
-          }
-        }>Add column</button>
-        <button type="submit">Update board</button>
-      </form>
-      <h1>Synchronisation</h1>
-      <p>
-        Pesto data can be synchronized with other devices. With WebRTC, the data transit only
-        between devices and stay safe from third-parties.
-      </p>
-      {#if replications.length > 0}
-        <h2>Existing synchronisations</h2>
-        <div class="flow" role="list">
-          {#each replications as replication, i (i)}
-            <ReplicationCard
-              {replication}
-              class="card"
-              role="listitem"
+          {#if newReplication}
+            <ReplicationForm
+              replication={newReplication}
               on:submit={async (e) => {
-                await handleSubmitReplication(e.detail.replication, i);
-              }}
-              on:delete={async () => {
-                replications.splice(i, 1);
-                replications = [...replications];
-                await globals.uiState.set('replications', () => {
-                  return replications;
-                });
+                await handleSubmitReplication(e.detail.replication, null);
+                newReplication = null;
               }}
             />
-          {/each}
+          {:else}
+            <form
+              onsubmit={(e) => {
+                newReplication = getNewReplication(replicationType);
+              }}
+            >
+              <div class="form__field">
+                <label for="replication-type">Type</label>
+                <select name="replication-type" id="replication-type" bind:value={replicationType}>
+                  <option value="webrtc">WebRTC</option>
+                  <option value="couchdb">CouchDB</option>
+                  <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
+                </select>
+              </div>
+              <button type="submit">Setup synchronisation…</button>
+            </form>
+          {/if}
+  
+          <h1>Clear data</h1>
+  
+          <p>You can remove all your Pesto data if needed. You will be asked for confirmationK</p>
+          <DialogForm 
+            anchorClass="button"
+            anchorText="Remove all data…"
+            title="Remove all Pesto data?"
+            onsubmit={(e: SubmitEvent) => {
+              e.preventDefault()
+              handleSubmit()
+            }}
+          >
+            <p>
+              Remove all local data including entries, tasks, settings and drafts. This action is irreversible.
+            </p>
+          </DialogForm>
+  
+          <h1>Import from Tempo (Beta)</h1>
+          <form onsubmit={preventDefault((e) => handleImportTempo())}>
+            <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
+            <label for="tempo-file">Tempo JSON file</label>
+            <input
+              accept=".json,application/json"
+              id="tempo-file"
+              name="tempo-file"
+              type="file"
+              bind:files
+            />
+            <div class="flex__row flex__justify-end">
+              <button type="submit"> Import </button>
+            </div>
+          </form>
         </div>
-      {/if}
-      {#if newReplication}
-        <ReplicationForm
-          replication={newReplication}
-          on:submit={async (e) => {
-            await handleSubmitReplication(e.detail.replication, null);
-            newReplication = null;
-          }}
-        />
-      {:else}
-        <form
-          onsubmit={(e) => {
-            newReplication = getNewReplication(replicationType);
-          }}
-        >
-          <div class="form__field">
-            <label for="replication-type">Type</label>
-            <select name="replication-type" id="replication-type" bind:value={replicationType}>
-              <option value="webrtc">WebRTC</option>
-              <option value="couchdb">CouchDB</option>
-              <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
-            </select>
-          </div>
-          <button type="submit">Setup synchronisation…</button>
-        </form>
-      {/if}
-
-      <h1>Clear data</h1>
-
-      <p>You can remove all your Pesto data if needed. You will be asked for confirmationK</p>
-      <DialogForm 
-        anchorClass="button"
-        anchorText="Remove all data…"
-        title="Remove all Pesto data?"
-        onsubmit={(e: SubmitEvent) => {
-          e.preventDefault()
-          handleSubmit()
-        }}
-      >
-        <p>
-          Remove all local data including entries, tasks, settings and drafts. This action is irreversible.
-        </p>
-      </DialogForm>
-
-      <h1>Import from Tempo (Beta)</h1>
-      <form onsubmit={preventDefault((e) => handleImportTempo())}>
-        <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
-        <label for="tempo-file">Tempo JSON file</label>
-        <input
-          accept=".json,application/json"
-          id="tempo-file"
-          name="tempo-file"
-          type="file"
-          bind:files
-        />
-        <div class="flex__row flex__justify-end">
-          <button type="submit"> Import </button>
-        </div>
-      </form>
-    </section>
+      </section>
+    </div>
   </main>
 </div>

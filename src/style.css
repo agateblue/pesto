@@ -12,6 +12,7 @@
   --font-family: Helvetica, sans-serif;
   --background-color: white;
   --card-background: var(--background-color);
+  --header-background: var(--background-color);
   --layout-separator: 1px solid rgb(120, 112, 112);
   --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
@@ -127,6 +128,37 @@ body {
   max-width: 60ch;
 }
 
+.scroll__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  > header {
+    position: sticky;
+    top: 0;
+    background-color: var(--header-background);
+    padding: var(--space-2);
+    margin-block-end: var(--space-2);
+    z-index: 4;
+    border-bottom: var(--layout-separator);
+    display: flex;
+    flex-direction: row;
+    vertical-align: center;
+    > * {
+      margin-block: 0;
+      padding: var(--space-1);
+    }
+  }
+  > .scroll {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: var(--space-1);
+    width: 100%;
+  }
+}
+
 /* composition */
 
 .my__layout {
@@ -135,9 +167,6 @@ body {
   align-items: stretch;
   min-height: 100vh;
 
-  & > * {
-    overflow-y: scroll;
-  }
   aside:first-child {
     min-width: 30ch;
     background: var(--sidebar-background);
@@ -150,6 +179,7 @@ body {
   aside,
   main {
     display: var(--display, block);
+    overflow: scroll;
   }
 }
 
@@ -162,6 +192,7 @@ body {
     &:not(:has([data-fullpage='true'])) main {
       --display: block;
       width: 100%;
+      overflow: unset;
     }
     &:not(:has([data-fullpage='true'])) > *:not(main) {
       --display: none;
@@ -329,6 +360,7 @@ input[type='submit'] {
   padding: var(--space-2);
   border-radius: var(--button-radius);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .button:hover,
@@ -349,6 +381,10 @@ input[type='submit']:hover {
   background: none;
   color: hsl(from var(--text-color) h s l / 0.7);
   padding-block: var(--space-2);
+}
+.button__transparent {
+  background: none;
+  border: none;
 }
 .button__outlined {
   background: none;

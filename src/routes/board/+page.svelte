@@ -1,6 +1,7 @@
 <script lang="ts">
   import MainNavigation from "$lib/components/MainNavigation.svelte";
   import TodoCard from "$lib/components/TodoCard.svelte";
+  import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
   import { type RxDocument } from "rxdb";
   import Lazy from 'svelte-lazy';
   import { globals, type DocumentDocument, getNoteUpdateData, getNewNote, getNewTodoListFragment } from "$lib/db";
@@ -130,56 +131,64 @@
 <div class="my__layout">
   <MainNavigation />
   <main>
-    <div class="flex__row board">
-      {#each columns as column}
-        <section class="flex__column | board__column">
-          <h2>{column.name}</h2>
-          <button class="m__block-1" type="button" style={column.index === -1 ? 'visibility: hidden' : ''} onclick={async (e) => {
-            let note = getNewNote()
-            note.fragments.todolist = getNewTodoListFragment()
-            note.fragments.todolist.column = column.index
-            autofocusKey = note.id
-            await globals.db?.documents.insert(note)
-          }}>Add task</button>
-          <ol 
-            class="flex__grow | p__block-0 p__inline-0 | flow" 
-            use:dragHandleZone="{{items: column.cards, flipDurationMs: 100}}" 
-            onconsider="{async (e) => handleDndConsider(e, column)}" 
-            onfinalize="{async (e) => handleDndFinalize(e, column)}"
-            data-target={column.index}
-          >
-            {#each column.cards as item (item.id)}
-              <li class="card" animate:flip={{duration: 100}} >
-                <Lazy height={100} keep={true}>
-                  <TodoCard
-                  {dragHandle}
-                  autofocus={autofocusKey === item.id}
-                  note={item.note}
-                  on:delete={(e) => {
-                    e.detail.note.incrementalRemove()
-                  }}
-                  />
-                </Lazy>
-              </li>
-            {/each}
-          </ol>
-          {#if column.index === -1 && column.cards.length > 0}
-            <button
-              onclick={async (e) => {
-                let newCards = await globals.db.documents.find({
-                  limit: column.limit,
-                  sort: [{ modified_at: 'desc' }],
-                  selector: {
-                    id: { $lt: column.cards.slice(-1)[0].id },
-                    ...column.selector
-                  }
-                }).exec();
-                column.cards = [...column.cards, ...newCards.map(n => {return {id: n.id, note: n}})];
-              }}>Load more</button
-            >
-          {/if}
-        </section>
-      {/each}
+    <div class="scroll__wrapper">
+      <header class="p__inline-3">
+        <MainNavigationToggle class="layout__multi-hidden" />
+        <h2>Board</h2>
+      </header>
+      <div class="scroll">
+        <div class="flex__row | board">
+          {#each columns as column}
+            <section class="flex__column | board__column">
+              <h3>{column.name}</h3>
+              <button class="m__block-1" type="button" style={column.index === -1 ? 'visibility: hidden' : ''} onclick={async (e) => {
+                let note = getNewNote()
+                note.fragments.todolist = getNewTodoListFragment()
+                note.fragments.todolist.column = column.index
+                autofocusKey = note.id
+                await globals.db?.documents.insert(note)
+              }}>Add task</button>
+              <ol 
+                class="flex__grow | p__block-0 p__inline-0 | flow" 
+                use:dragHandleZone="{{items: column.cards, flipDurationMs: 100}}" 
+                onconsider="{async (e) => handleDndConsider(e, column)}" 
+                onfinalize="{async (e) => handleDndFinalize(e, column)}"
+                data-target={column.index}
+              >
+                {#each column.cards as item (item.id)}
+                  <li class="card" animate:flip={{duration: 100}} >
+                    <Lazy height={100} keep={true}>
+                      <TodoCard
+                      {dragHandle}
+                      autofocus={autofocusKey === item.id}
+                      note={item.note}
+                      on:delete={(e) => {
+                        e.detail.note.incrementalRemove()
+                      }}
+                      />
+                    </Lazy>
+                  </li>
+                {/each}
+              </ol>
+              {#if column.index === -1 && column.cards.length > 0}
+                <button
+                  onclick={async (e) => {
+                    let newCards = await globals.db.documents.find({
+                      limit: column.limit,
+                      sort: [{ modified_at: 'desc' }],
+                      selector: {
+                        id: { $lt: column.cards.slice(-1)[0].id },
+                        ...column.selector
+                      }
+                    }).exec();
+                    column.cards = [...column.cards, ...newCards.map(n => {return {id: n.id, note: n}})];
+                  }}>Load more</button
+                >
+              {/if}
+            </section>
+          {/each}
+        </div>
+      </div>
     </div>
   </main>
 </div>
