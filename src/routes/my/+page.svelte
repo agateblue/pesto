@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import NoteList from '$lib/components/NoteList.svelte';
   import { page } from '$app/stores';
@@ -22,36 +23,32 @@
 </script>
 
 <main class="flex__grow">
+  <div class="scroll__wrapper">
+    <header class="p__inline-3">
+      <MainNavigationToggle class="layout__multi-hidden" />
+      <input
+        class="flex__grow"
+        type="search"
+        autocomplete="off"
+        name="search"
+        id="search"
+        placeholder="Search"
+        value={searchQuery}
+        onkeydown={async (e) => {
+          if (e.key === 'Enter') {
+            searchQuery = e.target.value.trim();
+            let params = updateURLParam($page.url, 'q', searchQuery);
+            goto(`?${params.toString()}`);
+          }
+        }}
+      />
+      <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
+    </header>
 
-<div class="flex__row | flex__justify-between">
-  <button
-    class="layout__multi-hidden"
-    onclick={() => {
-      globals.uiState.set('currentPage', () => 'mainMenu');
-    }}
-  >
-    Menu
-  </button>
-  <input
-    class="flex__grow"
-    type="search"
-    autocomplete="off"
-    name="search"
-    id="search"
-    placeholder="Search"
-    value={searchQuery}
-    onkeydown={async (e) => {
-      if (e.key === 'Enter') {
-        searchQuery = e.target.value.trim();
-        let params = updateURLParam($page.url, 'q', searchQuery);
-        goto(`?${params.toString()}`);
-      }
-    }}
-  />
-  <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
-</div>
-
-  <NoteList {searchQuery} {orderQuery} />
+    <div class="scroll">
+      <NoteList {searchQuery} {orderQuery} />
+    </div>
+  </div>
 </main>
 
 <aside>
