@@ -2,15 +2,14 @@
   import MainNavigation from "$lib/components/MainNavigation.svelte";
   import TodoCard from "$lib/components/TodoCard.svelte";
   import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
+  import DialogForm from '$lib/components/DialogForm.svelte';
   import { type RxDocument } from "rxdb";
   import Lazy from 'svelte-lazy';
-  import { globals, type DocumentDocument, getNoteUpdateData, getNewNote, getNewTodoListFragment } from "$lib/db";
+  import { globals, type DocumentDocument, getNoteUpdateData, getNewNote, getNewTodoListFragment, createOrUpdateSetting } from "$lib/db";
   import type { MangoQuerySelector } from "rxdb";
   
   import {flip} from "svelte/animate";
   import {dragHandle, dragHandleZone} from "svelte-dnd-action";
-
-  const flipDurationMs = 300;
 
   async function handleDndConsider(e, column: BoardColumn) {
     column.cards = e.detail.items;
@@ -59,6 +58,8 @@
   }
 
   let columns: BoardColumn[] = $state([])
+  let boardColumnsConfig: string[] = $state([])
+
   let autofocusKey: string = $state('noop')
 
   globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe(
@@ -109,6 +110,7 @@
         columns = [...columns, c]
       })
     }
+    boardColumnsConfig = columns.map(c => c.name)
 
     columns.forEach((v, i) => {
       globals.db.documents.find({
@@ -126,6 +128,11 @@
     })
   })
 
+
+  async function saveBoard () {
+    return await createOrUpdateSetting('settings:board', {columns: boardColumnsConfig})
+  }
+
 </script> 
 
 <div class="my__layout">
@@ -134,7 +141,43 @@
     <div class="scroll__wrapper">
       <header class="p__inline-3">
         <MainNavigationToggle class="layout__multi-hidden" />
-        <h2>Board</h2>
+        <h2 class="flex__grow">Board</h2>
+        
+        <DialogForm 
+          anchorClass="button__link"
+          anchorText="Settings"
+          title="Update board settings"
+          onsubmit={async (e: SubmitEvent) => {
+            saveBoard();
+            e.preventDefault();
+            location.reload();
+          }}
+        >
+          {#each boardColumnsConfig as column, i (i)}
+            <div class="form__field">
+              <label for={`column-${i}`}>Column #{i + 1}</label>
+              <input type="text" id={`column-${i}`} name={`column-${i}`} bind:value={boardColumnsConfig[i]} />
+              {#if i < boardColumnsConfig.length - 1 && i > 0}
+                <button 
+                  type="button" 
+                  onclick={()=> {
+                    boardColumnsConfig.splice(i, 1)
+                    boardColumnsConfig = [...boardColumnsConfig]
+                  }}>Delete</button>
+              {/if}
+            </div>
+            {/each}
+            <button 
+              type="button" 
+              onclick={ () => {
+                boardColumnsConfig = [
+                  ...boardColumnsConfig.slice(0, boardColumnsConfig.length - 1),
+                  'New column',
+                  ...boardColumnsConfig.slice(-1)
+                ]
+              }
+            }>Add column</button>
+        </DialogForm>
       </header>
       <div class="scroll">
         <div class="flex__row | board">

@@ -11,7 +11,6 @@
     globals,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
-    createOrUpdateSetting,
   } from '$lib/db';
   import {
     getRandomId
@@ -19,19 +18,6 @@
   import { parseTags } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
 
-
-
-
-  let boardColumns = $state([])
-  let settingsBoard: null | DocumentDocument = $state(null)
-  globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe((n: DocumentDocument) => {
-    settingsBoard = n
-    boardColumns = [...settingsBoard?.data?.columns || ['Todo', 'Doing', 'Done']]
-  })
-
-  async function saveBoard () {
-    let s = await createOrUpdateSetting('settings:board', {columns: boardColumns})
-  }
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
   let files: File[] = $state();
@@ -208,41 +194,6 @@
       </header>
       <section class="flow | scroll">
         <div class="wrapper">
-
-          <h1>Board</h1>
-          <form
-            class="flow"
-            onsubmit={(e) => {
-            saveBoard();
-            e.preventDefault()
-          }}
-          >
-            {#each boardColumns as column, i (i)}
-            <div class="form__field">
-              <label for={`column-${i}`}>Column #{i + 1}</label>
-              <input type="text" id={`column-${i}`} name={`column-${i}`} bind:value={boardColumns[i]} />
-              {#if i < boardColumns.length - 1 && i > 0}
-                <button 
-                  type="button" 
-                  onclick={()=> {
-                    boardColumns.splice(i, 1)
-                    boardColumns = [...boardColumns]
-                  }}>Delete</button>
-              {/if}
-            </div>
-            {/each}
-            <button 
-              type="button" 
-              onclick={ () => {
-                boardColumns = [
-                  ...boardColumns.slice(0, boardColumns.length - 1),
-                  'New column',
-                  ...boardColumns.slice(-1)
-                ]
-              }
-            }>Add column</button>
-            <button type="submit">Update board</button>
-          </form>
           <h1>Synchronisation</h1>
           <p>
             Pesto data can be synchronized with other devices. With WebRTC, the data transit only
