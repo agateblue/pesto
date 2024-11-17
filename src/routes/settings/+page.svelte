@@ -246,6 +246,22 @@
               <button type="submit">Setup synchronisation…</button>
             </form>
           {/if}
+          
+          <h1>Import from Tempo (Beta)</h1>
+          <form onsubmit={preventDefault((e) => handleImportTempo())}>
+            <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
+            <label for="tempo-file">Tempo JSON file</label>
+            <input
+              accept=".json,application/json"
+              id="tempo-file"
+              name="tempo-file"
+              type="file"
+              bind:files
+            />
+            <div class="flex__row flex__justify-end">
+              <button type="submit"> Import </button>
+            </div>
+          </form>
   
           <h1>Clear data</h1>
   
@@ -264,21 +280,6 @@
             </p>
           </DialogForm>
   
-          <h1>Import from Tempo (Beta)</h1>
-          <form onsubmit={preventDefault((e) => handleImportTempo())}>
-            <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
-            <label for="tempo-file">Tempo JSON file</label>
-            <input
-              accept=".json,application/json"
-              id="tempo-file"
-              name="tempo-file"
-              type="file"
-              bind:files
-            />
-            <div class="flex__row flex__justify-end">
-              <button type="submit"> Import </button>
-            </div>
-          </form>
         </div>
       </section>
     </div>
