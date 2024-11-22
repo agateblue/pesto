@@ -15,52 +15,46 @@
   }
 
   let { replication = $bindable(), ...rest }: Props = $props();
-  let edit = $state(false);
+  replication = {...replication}
 </script>
 
 <div {...rest}>
-  {#if edit}
-    <ReplicationForm
-      replication={{ ...replication }}
-      on:submit={(e) => {
-        replication = { ...e.detail.replication };
-        dispatch('submit', { replication });
-        edit = false;
-      }}
-    />
-  {:else}
-    {#if replication.type === 'webrtc'}
-      <strong>Type:</strong> WebRTC <br />
-      <strong>Signaling server:</strong>
-      {replication.signalingServer} <br />
-    {/if}
-    {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
-      <strong>Type:</strong> {replication.type === 'couchdb' ? 'CouchDB' : 'CouchDB (With Tempo compatibility)'} <br />
-      <strong>Server URL:</strong>
-      {replication.server} <br />
-      <strong>Database:</strong>
-      {replication.database} <br />
-      <strong>Username:</strong>
-      {replication.username} <br />
-      <strong>Password:</strong> [hidden] <br />
-    {/if}
-    <strong>Push local data:</strong>
-    {replication.push ? 'Yes' : 'No'} <br />
-    <strong>Pull remote data:</strong>
-    {replication.pull ? 'Yes' : 'No'} <br />
+  
+  {#if replication.type === 'webrtc'}
+    <strong>Type:</strong> WebRTC <br />
+    <strong>Signaling server:</strong>
+    {replication.signalingServer} <br />
   {/if}
+  {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
+    <strong>Type:</strong> {replication.type === 'couchdb' ? 'CouchDB' : 'CouchDB (With Tempo compatibility)'} <br />
+    <strong>Server URL:</strong>
+    {replication.server} <br />
+    <strong>Database:</strong>
+    {replication.database} <br />
+    <strong>Username:</strong>
+    {replication.username} <br />
+    <strong>Password:</strong> [hidden] <br />
+  {/if}
+  <strong>Push local data:</strong>
+  {replication.push ? 'Yes' : 'No'} <br />
+  <strong>Pull remote data:</strong>
+  {replication.pull ? 'Yes' : 'No'} <br />
 
   <div>
-    <button
-      type="button"
-      class="button__link"
-      onclick={() => {
-        edit = !edit;
+    <DialogForm 
+      anchorClass="button__link"
+      anchorText="Edit"
+      title="Edit synchronisation"
+      onsubmit={async (e: SubmitEvent) => {
+        e.preventDefault()
+        replication = {...replication}
+        dispatch('submit', { replication: {...replication} });
       }}
     >
-      Edit
-    </button>
-
+    <ReplicationForm
+      bind:replication={replication}
+    />
+    </DialogForm> 
     <DialogForm 
       anchorClass="button__link"
       anchorText="Delete..."

@@ -21,9 +21,9 @@
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
   let files: File[] = $state();
-  let replicationType: string = $state('webrtc');
+  let replicationType: string = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
-    replications = [...(newValue || [])];
+    replications = [...(newValue || [])].map(t => cloneDeep(t));
   });
 
   async function handleSubmitReplication(replication: AnyReplication, index: number | null) {
@@ -37,7 +37,7 @@
 
     replications = [...replications];
     await globals.uiState.set('replications', () => {
-      return cloneDeep(replications);
+      return replications.map(t => cloneDeep(t))
     });
   }
 
@@ -204,7 +204,7 @@
             <div class="flow" role="list">
               {#each replications as replication, i (i)}
                 <ReplicationCard
-                  {replication}
+                  bind:replication={replications[i]}
                   class="card"
                   role="listitem"
                   on:submit={async (e) => {
@@ -214,38 +214,46 @@
                     replications.splice(i, 1);
                     replications = [...replications];
                     await globals.uiState.set('replications', () => {
-                      return replications;
+                      return replications.map(t => cloneDeep(t))
                     });
                   }}
                 />
               {/each}
             </div>
           {/if}
-          {#if newReplication}
-            <ReplicationForm
-              replication={newReplication}
-              on:submit={async (e) => {
-                await handleSubmitReplication(e.detail.replication, null);
-                newReplication = null;
-              }}
-            />
-          {:else}
-            <form
-              onsubmit={(e) => {
-                newReplication = getNewReplication(replicationType);
-              }}
-            >
-              <div class="form__field">
-                <label for="replication-type">Type</label>
-                <select name="replication-type" id="replication-type" bind:value={replicationType}>
-                  <option value="webrtc">WebRTC</option>
-                  <option value="couchdb">CouchDB</option>
-                  <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
-                </select>
-              </div>
-              <button type="submit">Setup synchronisation…</button>
-            </form>
-          {/if}
+          <DialogForm 
+            anchorClass="button"
+            anchorText="Setup synchronisation…"
+            title="Setup a new synchronisation"
+            onsubmit={async (e: SubmitEvent) => {
+              e.preventDefault()
+              await handleSubmitReplication(newReplication, null);
+              newReplication = null;
+              replicationType = null
+            }}
+          >
+            
+            <div class="form__field">
+              <label for="replication-type">Type</label>
+              <select 
+                name="replication-type" 
+                id="replication-type" 
+                bind:value={replicationType}
+                onchange={() => {newReplication = getNewReplication(replicationType)}}
+              >
+                <option value={null}>---</option>
+                <option value="webrtc">WebRTC</option>
+                <option value="couchdb">CouchDB</option>
+                <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
+              </select>
+            </div>
+            {#if newReplication}
+              <ReplicationForm
+                bind:replication={newReplication}
+              />
+            {/if}
+            
+          </DialogForm>
           
           <h1>Import from Tempo (Beta)</h1>
           <form onsubmit={preventDefault((e) => handleImportTempo())}>
