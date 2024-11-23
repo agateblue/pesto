@@ -24,13 +24,12 @@
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
 
-  let subscriptions = []
-  $effect(() => {
-    subscriptions.push(syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;}))
-    subscriptions.push(syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;}))
-    subscriptions.push(syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;}))
-    subscriptions.push(syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;}))
-  })
+  let subscriptions = [
+    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;}),
+    syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;}),
+    syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;}),
+    syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;}),
+  ]
 
   onDestroy(() => {
     subscriptions.forEach(s => {s?.unsubscribe()})
