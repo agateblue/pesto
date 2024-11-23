@@ -299,9 +299,8 @@ async function createReplication(db: Database, config: AnyReplication) {
     });
   }
   if (config.type === 'couchdb-tempo') {
-    let boardSettings = await db.documents.findOne('settings:board').exec()
-    let columns: string[] = boardSettings ? boardSettings.data.columns as string[] : ['Todo', 'Doing', 'Done']
-    let doneColumn = columns.length - 1
+    let boardSettings = await getSettingData('board:settings', {columns: ['Todo', 'Doing', 'Done']})
+    let doneColumn = boardSettings.columns.length - 1
     const couchdbUrl = `${config.server}/${config.database}/`;
 
     // pushing is disabled in this mode because we can't actually alter
@@ -313,7 +312,11 @@ async function createReplication(db: Database, config: AnyReplication) {
         if (d._deleted && d.id.includes('T') && d.id.includes(':')) {
           return d
         }
-        return tempoToPestoDocument(d, doneColumn)
+        let c = tempoToPestoDocument(d, doneColumn)
+        if (c.id === 'settings:board') {
+          doneColumn = c.data.columns.length - 1
+        }
+        return c
       }
     }
     state = replicateCouchDB({

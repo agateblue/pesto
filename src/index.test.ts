@@ -367,6 +367,30 @@ describe('query language', () => {
     }
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
+
+  it('replication tempoToPestoDocument boardconfig', () => {
+    const input = {
+      "_id": "boardConfig",
+      "type": "settings",
+      "date": new Date().toISOString(),
+      "value": {
+        "lists": [{"label": 'Today'}, {"label": 'Tomorrow'}],
+        "categories": ['a', 'b', 'c'],
+      },
+    }
+    const expected: DocumentDocument & RxBaseDoc = {
+      "id": "settings:board",
+      "type": "setting",
+      "modified_at": input.date,
+      "created_at": input.date,
+      "data": {"columns": ["Today", "Tomorrow", "Done"]},
+      "fragments": {},
+      "tags": [],
+      "title": null,
+    }
+    expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
+  });
+
   it('replication tempoToPestoDocument other document ignored', () => {
     const input = {
       "_id": "something",
