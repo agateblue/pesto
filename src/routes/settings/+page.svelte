@@ -2,6 +2,7 @@
   import { preventDefault } from 'svelte/legacy';
 
   import DialogForm from '$lib/components/DialogForm.svelte';
+  import FormResult from '$lib/components/FormResult.svelte';
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
@@ -10,18 +11,18 @@
     type DocumentDocument,
     globals,
     createOrUpdateSetting,
+    getSettingData,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
+    type DocumentType,
   } from '$lib/db';
-  import {
-    getRandomId
-  } from '$lib/ui'
-  import { parseTags } from '$lib/ui';
+  import { tempoToPestoDocument } from '$lib/replication';
+  import { type LogMessage } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
-  let files: File[] = $state();
+  let files: FileList = $state();
   let replicationType: string = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
     replications = [...(newValue || [])].map(t => cloneDeep(t));
@@ -81,107 +82,76 @@
       console.log(err);
     }
   }
-  function getNoteFromTempoEntry(entry: object) {
-    if (!entry.text) {
-      return null;
-    }
-    let created_at: string = entry.date;
-    let id: string = entry._id || entry.id
-    let content: string = entry.text;
-    let note: NoteDocType = {
-      id: id,
-      type: 'note',
-      title: null,
-      created_at: created_at,
-      modified_at: created_at,
-      tags: parseTags(content || '').map((t) => {
-        return t.id;
-      }),
-      fragments: {
-        text: {
-          content
-        }
-      }
-    };
-    return note;
-  }
+  
+  let tempoImportMessages: LogMessage[] = $state([])
 
-  function getNoteFromTempoTask(task: object, doneList: number) {
-    // {"subtasks":[{"label":"Et rachat par Audrey","done":false},{"label":"Rachat de soulte","done":false},{"label":"Désolidarisation prêt","done":false}],"date":"2023-04-11T08:21:21.851Z","text":"Demander notaire pour succession maison","list":0,"category":null,"_id":"2023-04-11T08:21:21.851Z","_rev":"5-bd6f820ede5ef5fd8cff29c434d27962"}
-    if (!task.text) {
-      return null;
+  async function handleImportTempo(messages: LogMessage[]) {
+    let tempoFile
+    try {
+      tempoFile = files[0];
+    } catch {
+      return messages.push({type: 'error', text: 'No file was provided'})
     }
-    let list: number = task.list;
-    let created_at: string = task.date;
-    let id: string = task._id || task.id;
-    let content: string = task.text;
-    let note: NoteDocType = {
-      id: id,
-      type: 'note',
-      title: null,
-      created_at: created_at,
-      modified_at: created_at,
-      tags: [],
-      fragments: {
-        todolist: {
-          done: list >= doneList,
-          title: task.text,
-          column: list >= doneList ? -1 : list,
-          todos: task.subtasks.map((t) => {
-            return {
-              id: `${id}-${getRandomId()}`,
-              done: t.done,
-              text: t.label
-            };
-          })
-        }
-      }
-    };
-    return note;
-  }
 
-  async function handleImportTempo() {
-    let tempoFile = files[0];
+    messages.push({type: 'info', text: 'Opening file…'})
     let content = await tempoFile.text();
+    messages.push({type: 'info', text: 'File read!'})
+    
+    messages.push({type: 'info', text: 'Parsing file…'})
     let data: object = JSON.parse(content);
+    messages.push({type: 'info', text: 'File parsed!'})
+
+
     let entries: [] = data.entries || [];
+    messages.push({type: 'info', text: `${entries.length} tempo entries found`})
     let tasks: [] = data?.board?.tasks || [];
-    let boardConfig: object = data?.board?.settings || { lists: [] };
-    let doneList = boardConfig.lists.length;
-
-    console.log('Found', entries.length + tasks.length, 'entries to import…');
-
-    let notes: DocumentDocument[] = [];
-
-    for (const entry of entries) {
-      let converted: Document | null = getNoteFromTempoEntry(entry);
-      console.debug('CONVERTED Tempo note', entry, converted);
-      if (converted) {
-        notes.push(converted);
-      }
-    }
-
-    if (boardConfig?.lists) {
-      let newBoardConfig = {columns: boardConfig.lists.map(r => r.label)}
+    messages.push({type: 'info', text: `${tasks.length} tempo tasks found`})
+    let boardConfig: object = data?.board?.settings
+    messages.push({type: 'info', text: boardConfig ? `Tempo board config found: ${JSON.stringify(boardConfig.lists)}` : `No board config found`})
+    
+    let pestoNotes: DocumentDocument[] = [];
+    let pestoTasks: DocumentDocument[] = [];
+    
+    messages.push({type: 'info', text: `Loading current board config…`})
+    let newBoardConfig = await getSettingData('settings:board', {columns: ['Todo', 'Doing', 'Done']})
+    if (boardConfig?.lists ) {
+      messages.push({type: 'info', text: `Importing Tempo board config…`})
       // Tempo doesn't include the "done" column in the export, we add it manually
-      newBoardConfig.columns.push('Done')
-      console.log('Importing new board config…', newBoardConfig)
+      newBoardConfig.columns = [...boardConfig.lists.map(r => r.label), 'Done']
+      messages.push({type: 'info', text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`})
       await createOrUpdateSetting('settings:board', newBoardConfig)
-
     }
-    createOrUpdateSetting
-    for (const task of tasks) {
-      let converted: DocumentDocument | null = getNoteFromTempoTask(task, doneList);
-      console.debug('CONVERTED Tempo task', task, converted);
-      if (converted) {
-        notes.push(converted);
+  
+    messages.push({type: 'info', text: `Importing ${entries.length} entries…`})
+    for (const entry of entries) {
+      let converted: DocumentType | null = tempoToPestoDocument(entry, newBoardConfig.columns.length - 1)
+      // console.debug('CONVERTED Tempo note', entry, converted);
+      if (converted && converted.type != 'ignored') {
+        pestoNotes.push(converted);
+      } else {
+        console.debug('Ignored tempo entry', entry, converted)
       }
     }
 
-    console.log('Ready to import notes: ', notes.length);
-    console.log();
-    let resultNotes = await globals.db.documents.bulkInsert(notes);
-    console.log('Finished import', resultNotes);
+    for (const task of tasks) {
+      let converted: DocumentType | null = tempoToPestoDocument(task, newBoardConfig.columns.length - 1)
+      // console.debug('CONVERTED Tempo task', task, converted);
+      if (converted && converted.type != 'ignored') {
+        pestoTasks.push(converted);
+      }
+    }
+
+    messages.push({type: 'info', text: `Saving ${pestoNotes.length} converted Tempo notes…`})
+    let resultPestoNotes = await globals.db.documents.bulkInsert(pestoNotes);
+
+    console.debug('Saving notes result:', resultPestoNotes)
+    messages.push({type: 'warning', text: `Ignored ${resultPestoNotes.error.length} unsupported notes or duplicates`})
+    messages.push({type: 'info', text: `Saving ${pestoTasks.length} converted Tempo tasks…`})
+
+    let resultPestoTasks = await globals.db.documents.bulkInsert(pestoTasks);
+    console.debug('Saving tasks result:', resultPestoTasks)
+    messages.push({type: 'warning', text: `Ignored ${resultPestoTasks.error.length} tasks duplicates`})
+    messages.push({type: 'success', text: `Import complete!`})
   }
 </script>
 
@@ -257,24 +227,32 @@
           </DialogForm>
           
           <h1>Import from Tempo (Beta)</h1>
-          <form onsubmit={preventDefault((e) => handleImportTempo())}>
-            <p>Import text entries from Tempo. Other data types are currently unsupported.</p>
-            <label for="tempo-file">Tempo JSON file</label>
-            <input
-              accept=".json,application/json"
-              id="tempo-file"
-              name="tempo-file"
-              type="file"
-              bind:files
-            />
+          <form id="tempo-import" class="flow" onsubmit={(e) => {
+            e.preventDefault()
+            tempoImportMessages = []
+            handleImportTempo(tempoImportMessages)
+          }}>
+            <p>Import text entries, tasks and board configuration from Tempo. Other data types are currently unsupported.</p>
+            <div class="form__field">
+              <label for="tempo-file">Tempo JSON file</label>
+              <input
+                accept=".json,application/json"
+                id="tempo-file"
+                name="tempo-file"
+                type="file"
+                bind:files
+              />
+            </div>
+            <FormResult messages={tempoImportMessages} forEl="tempo-file"/>
             <div class="flex__row flex__justify-end">
               <button type="submit"> Import </button>
             </div>
+
           </form>
   
           <h1>Clear data</h1>
   
-          <p>You can remove all your Pesto data if needed. You will be asked for confirmationK</p>
+          <p>You can remove all your Pesto data if needed. You will be asked for confirmation</p>
           <DialogForm 
             anchorClass="button"
             anchorText="Remove all data…"

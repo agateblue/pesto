@@ -399,6 +399,12 @@ textarea {
   padding: var(--space-1);
 }
 
+.message {
+  text-transform: capitalize;
+}
+.message__success, .message__error, .message__capitalize {
+  font-weight: bold;
+}
 .form__field {
   label {
     display: block;

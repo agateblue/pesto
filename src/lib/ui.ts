@@ -3,6 +3,12 @@ import { marked } from 'marked';
 import { pushState } from '$app/navigation';
 import debounce from 'lodash/debounce';
 
+
+export type LogMessage = {
+  text: string;
+  type: 'debug' | 'info' | 'warning' | 'error' | 'critical' | 'success'
+}
+
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
