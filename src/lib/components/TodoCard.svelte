@@ -18,14 +18,11 @@
 
   let { note, autofocus = false, dragHandle }: Props = $props();
 
-  let todolist = $state(note.fragments.todolist)
-
   let deleted = $state(false)
 
   async function updateFragment(
     fragment: TodolistType
   ) {
-    
     let updateData = {
       fragments: {...note.fragments || {}}
     };
@@ -51,7 +48,7 @@
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
   </a>
-  <span use:dragHandle aria-label={`drag-handle for ${todolist?.title}`} >
+  <span use:dragHandle aria-label={`drag-handle for ${note.fragments.todolist?.title}`} >
     <IconaMoonMoveThin role="presentation" alt="" />
   </span>
 </div>
@@ -60,7 +57,7 @@
 <div class="p__block-3">
   <TodoListFragmentEditor
     editText={true}
-    fragment={todolist}
+    fragment={note.fragments.todolist}
     {autofocus}
     on:update={debounce((event) => updateFragment(event.detail.fragment), 200)}
     on:delete={(event) => updateFragment(undefined)}

@@ -3,6 +3,7 @@
   import TodoRow from './TodoRow.svelte';
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
+  import { syncPropertiesWithExternalChanges } from '$lib/ui';
   import FragmentEditor from './FragmentEditor.svelte';
 
   const dispatch = createEventDispatcher<{
@@ -23,6 +24,13 @@
   let done: boolean = $state(fragment.done);
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
+
+  $effect(() => {
+    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;})
+    syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;})
+    syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;})
+    syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;})
+  })
 
   function handleChange() {
     let hasContent =
@@ -141,7 +149,7 @@
             <li>
               {#key todo.id}
                 <TodoRow
-                  {todo}
+                  todo={todos[i]}
                   {editText}
                   on:delete={(e) => {
                     updateTodo(i, null);

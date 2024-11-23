@@ -21,12 +21,10 @@
   }
 
   let { todo, editText, autofocus = false, trashIcon = false }: Props = $props();
-  let text = $state(todo.text);
-  let done = $state(todo.done);
   let id = $state(getRandomId())
   let textarea: HTMLTextAreaElement
-  function handleChange() {
-    dispatch('update', { todo: { ...todo, text, done } });
+  function handleChange(args = {}) {
+    dispatch('update', { todo: { ...todo, ...args } });
   }
   onMount(() => {
     if (autofocus) {
@@ -36,19 +34,20 @@
 </script>
 
 <div class="flex__row flex__align-start">
-  {#if text.trim()}
+  {#if todo.text.trim()}
     <div>
-      <input
-        type="checkbox"
-        id={`todo-${id}-done`}
-        checked={text.trim() && todo.done}
-        onchange={(e) => {
-          done = e.target.checked;
-          handleChange();
-        }}
-        disabled={!text.trim()}
-        aria-labelledby={editText ? `todo-${id}-text` : undefined}
-      />
+      {#key todo.text.trim() + todo.done}
+        <input
+          type="checkbox"
+          id={`todo-${id}-done`}
+          checked={todo.text.trim() && todo.done}
+          onchange={(e) => {
+            handleChange({done: e.target.checked});
+          }}
+          disabled={!todo.text.trim()}
+          aria-labelledby={editText ? `todo-${id}-text` : undefined}
+        />
+      {/key}
     </div>
   {/if}
   {#if editText}
@@ -58,9 +57,9 @@
       autocomplete="off"
       id={`todo-${id}-text`}
       bind:this={textarea}
-      bind:value={text}
+      value={todo.text}
       onkeyup={ignoreTab((e) => {
-        handleChange();
+        handleChange({text: e.target.value.trim()});
       })}
       placeholder="Add new task…"
       rows="1"
@@ -68,7 +67,7 @@
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>
-      {@html renderMarkdown(text)}
+      {@html renderMarkdown(todo.text)}
     </label>
   {/if}
   <button

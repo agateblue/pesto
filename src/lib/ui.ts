@@ -97,3 +97,10 @@ export function getRandomId(length = 8) {
   }
   return result;
 }
+
+export function syncPropertiesWithExternalChanges(observable, callback) {
+  if (!observable?.subscribe) {
+    return
+  }
+  observable.subscribe(callback)
+}
