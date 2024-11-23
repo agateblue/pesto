@@ -30,7 +30,7 @@
   let { note = $bindable(), columns }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
-  let fragments = $state(note?.toMutableJSON().fragments || {});
+  let fragments = $state(note?.fragments || {});
 
   async function updateFragment(
     fragmentType: string,
@@ -62,7 +62,8 @@
 <TodoListFragmentEditor
   {columns}
   editText={true}
-  fragment={fragments.todolist || getNewTodoListFragment()}
+  fragment={note?.fragments?.todolist || getNewTodoListFragment()}
+  autofocus={false}
   on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
   on:delete={(event) => updateFragment('todolist', undefined)}
 />

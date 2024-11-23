@@ -370,7 +370,7 @@ async function createReplication(db: Database, config: AnyReplication) {
       console.log('PEER ADDED', replicationState);
       return initialAddPeer(peer, replicationState);
     };
-    console.log('HELLO', state);
+    console.log('REPLICATION STATE', state);
   }
   return state;
 }
