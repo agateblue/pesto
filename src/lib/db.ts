@@ -442,6 +442,13 @@ export async function createOrUpdateSetting(id: string, data: object) {
     })
   }
 }
+
+
+export async function getSettingData(id: string, defaultValue: object = {}) {
+  let existing = await globals.db?.documents.findOne({selector: {id, type: 'setting'}}).exec()
+  return existing ? existing.toMutableJSON().data : defaultValue
+}
+
 export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data);
   data.modified_at = new Date().toISOString();
