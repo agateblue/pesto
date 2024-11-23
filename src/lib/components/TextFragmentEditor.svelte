@@ -17,10 +17,9 @@
   let { fieldId, fragment }: Props = $props();
   let content = $state(fragment.content);
 
-  let subscriptions = []
-  $effect(() => {
-    subscriptions.push(syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v}))
-  })
+  let subscriptions = [
+    syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v})
+  ]
 
   onDestroy(() => {
     subscriptions.forEach(s => {s?.unsubscribe()})
