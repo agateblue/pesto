@@ -9,6 +9,7 @@
   import {
     type DocumentDocument,
     globals,
+    createOrUpdateSetting,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
   } from '$lib/db';
