@@ -105,3 +105,9 @@ export function syncPropertiesWithExternalChanges(observable, callback: Function
   }
   return observable.subscribe(debounce(callback, debounceInterval))
 }
+
+export function clearSubscriptions(subscriptions: []) {
+  return () => {
+    subscriptions.forEach(s => {s?.unsubscribe()})
+  }
+}
