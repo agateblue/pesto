@@ -1,6 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
 import { pushState } from '$app/navigation';
+import debounce from 'lodash/debounce';
 
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
@@ -98,9 +99,9 @@ export function getRandomId(length = 8) {
   return result;
 }
 
-export function syncPropertiesWithExternalChanges(observable, callback) {
+export function syncPropertiesWithExternalChanges(observable, callback: Function, debounceInterval = 200) {
   if (!observable?.subscribe) {
     return
   }
-  observable.subscribe(callback)
+  return observable.subscribe(debounce(callback, debounceInterval))
 }

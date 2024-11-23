@@ -4,8 +4,7 @@
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
   import { syncPropertiesWithExternalChanges } from '$lib/ui';
-  import FragmentEditor from './FragmentEditor.svelte';
-
+  import { onDestroy } from 'svelte';
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
     delete: {};
@@ -25,13 +24,17 @@
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
 
+  let subscriptions = []
   $effect(() => {
-    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;})
-    syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;})
-    syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;})
-    syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;})
+    subscriptions.push(syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;}))
+    subscriptions.push(syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;}))
+    subscriptions.push(syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;}))
+    subscriptions.push(syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;}))
   })
 
+  onDestroy(() => {
+    subscriptions.forEach(s => {s?.unsubscribe()})
+  })
   function handleChange() {
     let hasContent =
       !!title ||
