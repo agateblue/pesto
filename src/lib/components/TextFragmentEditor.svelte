@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { onDestroy } from 'svelte';
   import { type TextType } from '$lib/db';
-  import { syncPropertiesWithExternalChanges } from '$lib/ui';
+  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
 
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
@@ -21,9 +21,7 @@
     syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v})
   ]
 
-  onDestroy(() => {
-    subscriptions.forEach(s => {s?.unsubscribe()})
-  })
+  onDestroy(clearSubscriptions(subscriptions))
   function handleChange(args = {}) {
     if (content) {
       dispatch('update', { fragment: { ...fragment, ...args } });

@@ -3,7 +3,7 @@
   import TodoRow from './TodoRow.svelte';
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
-  import { syncPropertiesWithExternalChanges } from '$lib/ui';
+  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
   import { onDestroy } from 'svelte';
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
@@ -31,9 +31,7 @@
     syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;}),
   ]
 
-  onDestroy(() => {
-    subscriptions.forEach(s => {s?.unsubscribe()})
-  })
+  onDestroy(clearSubscriptions(subscriptions))
   function handleChange() {
     let hasContent =
       !!title ||
