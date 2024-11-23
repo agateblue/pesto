@@ -63,7 +63,7 @@
     <input name="couchdb-database" id="couchdb-database" bind:value={replication.database} required />
   </div>
   <div class="form__field">
-    <label for="couchdb-database">Username</label>
+    <label for="couchdb-username">Username</label>
     <input name="couchdb-username" id="couchdb-username" bind:value={replication.username} required/>
   </div>
   <div class="form__field">
