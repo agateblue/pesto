@@ -30,7 +30,6 @@
   let { note = $bindable(), columns }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
-  let fragments = $state(note?.fragments || {});
 
   async function updateFragment(
     fragmentType: string,
@@ -48,13 +47,12 @@
       $set: getNoteUpdateData(note, updateData)
     });
     note = await note.getLatest();
-    fragments = note.fragments;
     dispatch('update', { note });
   }
 </script>
 
 <TextFragmentEditor
-  fragment={fragments.text || getNewTextFragment()}
+  fragment={note?.fragments?.text || getNewTextFragment()}
   fieldId={`note-text-${id}`}
   on:update={debounce((event) => updateFragment('text', event.detail.fragment), 200)}
   on:delete={(event) => updateFragment('text', undefined)}
