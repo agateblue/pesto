@@ -93,8 +93,24 @@ export function pestoToTempoDocument(document: DocumentType, doneIndex: number) 
 
 export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex: number) {
   let data: DocumentType | null = null
+  let id = document.id || document._id
+  if (document.type === 'settings' && id === 'boardConfig') {
+    if (document.value?.lists) {
+      let date = document.date || new Date().toISOString()
+      data = {
+        id: 'settings:board',
+        type: 'setting',
+        created_at: date,
+        modified_at: date,
+        fragments: {},
+        tags: [],
+        title: null,
+        data: {columns: [...document.value.lists.map(l => l.label), 'Done']}
+  
+      }
+    }
+  }
   if (document.type === 'entry' || document.type === 'task') {
-    let id = document.id || document._id
     let baseData = {
       id,
       type: 'note',
@@ -133,13 +149,14 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
     }
   }
   if (!data) {
-    let id = document._id
     if (document.type) {
       id = `${document.type}:${id}`
     }
     id = `ignored:tempo:${id}`
     data = {id, type: 'ignored'}
   }
-  console.debug("Converting document from tempo to pesto", document, data)
+  if (data.type === 'setting' || data.type === 'ignored') {
+    console.debug("Converting document from tempo to pesto", document, data)
+  }
   return data  
 }
