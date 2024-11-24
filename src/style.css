@@ -536,3 +536,26 @@ dialog {
     display: none;
   }
 }
+
+table {
+  border-collapse: collapse;
+  caption {
+    padding: var(--space-1);
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
+.table__simpledata {
+  width: 100%;
+  tr {
+    border-top: var(--list-separator);
+  }
+  tr:hover td {
+    background: var(--primary-color);
+  }
+  td {
+    padding: var(--space-1);
+    text-align: left;
+  }
+}

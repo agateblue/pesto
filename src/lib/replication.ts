@@ -1,5 +1,6 @@
 import { type DocumentType } from "./db";
 import { parseTags } from "./ui";
+import isEmpty from 'lodash/isEmpty'
 
 export type RxBaseDoc = {
   _deleted: boolean;
@@ -21,11 +22,11 @@ export type TempoEntry = RxBaseDoc & {
   type: 'entry';
   mood: number;
   tags: TempoTag[];
-  form: null;
+  form: string | null; 
   thread: null;
   replies: [];
   favorite: false;
-  data: null;
+  data: null | object;
 }
 
 export type TempoSubtask = {
@@ -121,13 +122,24 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       tags: [],
       title: null,
     }
-    if (document.type === 'entry' && document.text?.trim()) {
-      let text = document.text
+    if (document.type === 'entry') {
+      let text = document.text?.trim() || ''
       let tags = document.tags.map(t => t.id)
       data = {
         ...baseData,
         tags,
-        fragments: {text: {content: text}}
+        fragments: {}
+      }
+      if (text) {
+        data.fragments.text = {content: text}
+      }
+
+      if (!isEmpty(document.data || {})) {
+        let formFragment = {
+          id: document.form || null,
+          data: document.data || {}
+        }
+        data.fragments.form = formFragment
       }
     }
     if (document.type === 'task') {

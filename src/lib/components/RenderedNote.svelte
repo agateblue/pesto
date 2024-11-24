@@ -1,6 +1,7 @@
 <script lang="ts">
   import { type Database, type DocumentDocument, formatDate, getNoteUpdateData } from '$lib/db';
   import { renderMarkdown } from '$lib/ui';
+  import FormDataFragment from './FormDataFragment.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import CollapsableContent from './CollapsableContent.svelte';
   import isEmpty from 'lodash/isEmpty';
@@ -20,6 +21,9 @@
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
   </a>
+  {#if note.fragments.form}
+    <FormDataFragment fragment={note.fragments.form} />
+  {/if}
   {#if note.fragments.text}
     <CollapsableContent class="flow prose" {limitSize}>
       {@html renderMarkdown(note.fragments.text.content)}

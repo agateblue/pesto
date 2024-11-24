@@ -274,6 +274,11 @@ describe('query language', () => {
       "mood": -1,
       "type": "entry",
       "_deleted": false,
+      "form": 'test:form',
+      "data": {
+        "form:field1": 0.14,
+        "form:field2": true,
+      }
     }
     const expected: DocumentDocument & RxBaseDoc = {
       "id": "2024-11-06T12:10:22.438Z",
@@ -284,6 +289,13 @@ describe('query language', () => {
       "fragments": {
         "text": {
           "content": "Hello #world I'm -sad"
+        },
+        "form": {
+          "id": "test:form",
+          "data": {
+            "form:field1": 0.14,
+            "form:field2": true,
+          }
         }
       },
       "tags": [
