@@ -22,9 +22,9 @@
   ]
 
   onDestroy(clearSubscriptions(subscriptions))
-  function handleChange(args = {}) {
+  function handleChange(content) {
     if (content) {
-      dispatch('update', { fragment: { ...fragment, ...args } });
+      dispatch('update', { fragment: { ...fragment, content } });
     } else {
       dispatch('delete', {});
     }
@@ -38,6 +38,6 @@
   id={fieldId}
   class="editor autoresize"
   placeholder="What's on your mind?"
-  onkeyup={(e) => handleChange({content: e.target.value.trim()})}
+  onkeyup={(e) => handleChange(e.target.value.trim())}
   value={content}
 ></textarea>
