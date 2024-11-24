@@ -57,7 +57,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 3,
+  version: 4,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -101,6 +101,19 @@ export const documentSchemaLiteral = {
           properties: {
             content: {
               type: 'string'
+            }
+          }
+        },
+        form: {
+          type: 'object',
+          required: ['id', 'data'],
+          properties: {
+            id: {
+              type: ['string', 'null'],
+            },
+            data: {
+              type: 'object',
+              additionalProperties: true,
             }
           }
         },
@@ -153,6 +166,7 @@ export type NoteType = DocumentType & {
 
 export type TextType = NonNullable<DocumentType['fragments']['text']>;
 export type TodolistType = NonNullable<DocumentType['fragments']['todolist']>;
+export type FormFragmentType = NonNullable<DocumentType['fragments']['form']>;
 export type TodosType = NonNullable<TodolistType['todos']>;
 export type TodoType = TodosType[number];
 
@@ -236,6 +250,9 @@ export async function getDb() {
           return oldDocumentData
         },
         3: function(oldDocumentData) {
+          return oldDocumentData
+        },
+        4: function(oldDocumentData) {
           return oldDocumentData
         }
       }
