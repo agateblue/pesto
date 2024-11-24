@@ -219,6 +219,7 @@ export async function getDb() {
   await db.addCollections({
     documents: {
       schema: documentSchema,
+      autoMigrate: false,
       migrationStrategies: {
         1: function(oldDocumentData) {
           if (oldDocumentData?.fragments.todolist) {
