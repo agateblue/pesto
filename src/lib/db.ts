@@ -57,7 +57,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 4,
+  version: 5,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -254,6 +254,9 @@ export async function getDb() {
         },
         4: function(oldDocumentData) {
           return oldDocumentData
+        },
+        5: function(oldDocumentData) {
+          return oldDocumentData
         }
       }
     }
@@ -261,13 +264,16 @@ export async function getDb() {
 
   let uiState = await db.addState('ui');
 
-  uiState.replications$.subscribe(async (v) => {
+  return { db, uiState, replications: [] };
+}
+
+export function launchReplications(uiState, db) {
+  console.debug('Launching replications…')
+  return uiState.replications$.subscribe(async (v) => {
     v = v || [];
     let newReplications = await setupReplications(db, globals.replications, v);
     globals.replications = newReplications;
   });
-
-  return { db, uiState, replications: [] };
 }
 
 async function setupReplications(db: Database, current: [], config: AnyReplication[]) {
