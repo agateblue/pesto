@@ -42,12 +42,13 @@
         await note.incrementalUpdate({
           $set: getNoteUpdateData(note, { 'fragments.todolist': undefined })
         });
-        note = await note.getLatest();note.toJSON().fragments
-        let fragments = note.toMutableJSON().fragments
-        delete fragments.todolist
+        note = await note.getLatest();
+        note.toJSON().fragments;
+        let fragments = note.toMutableJSON().fragments;
+        delete fragments.todolist;
         if (isEmpty(fragments)) {
-          await note.incrementalRemove()
-          onDelete?.()
+          await note.incrementalRemove();
+          onDelete?.();
         }
       }}
     />

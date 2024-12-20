@@ -24,7 +24,7 @@ import {
 } from 'rxdb/plugins/replication-couchdb';
 
 import cloneDeep from 'lodash/cloneDeep';
-import { parseTags } from './ui';
+import { delay, parseTags } from './ui';
 import { tempoToPestoDocument } from './replication';
 
 if (dev) {
@@ -68,7 +68,7 @@ export const documentSchemaLiteral = {
     },
     type: {
       type: 'string',
-      enum: ['note', 'setting']
+      enum: ['note', 'setting', 'form']
     },
     title: {
       type: ['string', 'null']
@@ -89,7 +89,7 @@ export const documentSchemaLiteral = {
     },
     data: {
       type: 'object',
-      additionalProperties: true,
+      additionalProperties: true
     },
     fragments: {
       type: 'object',
@@ -109,11 +109,11 @@ export const documentSchemaLiteral = {
           required: ['id', 'data'],
           properties: {
             id: {
-              type: ['string', 'null'],
+              type: ['string', 'null']
             },
             data: {
               type: 'object',
-              additionalProperties: true,
+              additionalProperties: true
             }
           }
         },
@@ -128,7 +128,7 @@ export const documentSchemaLiteral = {
               type: 'boolean'
             },
             column: {
-              type: 'number',
+              type: 'number'
             },
             todos: {
               type: 'array',
@@ -195,6 +195,27 @@ export const globals: Globals = {
   replications: []
 };
 
+export type FormFieldConfiguration = {
+  id: string;
+  label: string;
+  type: 'number' | 'text' | 'boolean';
+  required: boolean;
+  default?: number | boolean | string | null;
+  suggestions?: string[] | number[];
+  autosuggest?: boolean;
+  help?: string;
+  unit?: string;
+  min?: number;
+  max?: number;
+  step?: string;
+};
+
+export type FormConfiguration = {
+  id: string;
+  name: string;
+  fields: FormFieldConfiguration[];
+};
+
 export type Replication = {
   type: string;
   pull: boolean;
@@ -215,8 +236,8 @@ export type CouchDBReplication = Replication & {
 };
 
 export type CouchDBReplicationTempo = CouchDBReplication & {
-  type: 'couchdb-tempo'
-}
+  type: 'couchdb-tempo';
+};
 
 export type AnyReplication = CouchDBReplication | CouchDBReplicationTempo | WebRTCReplication;
 
@@ -235,28 +256,28 @@ export async function getDb() {
       schema: documentSchema,
       autoMigrate: false,
       migrationStrategies: {
-        1: function(oldDocumentData) {
+        1: function (oldDocumentData) {
           if (oldDocumentData?.fragments.todolist) {
             if (oldDocumentData.fragments.todolist.done) {
-              oldDocumentData.fragments.todolist.column = -1
+              oldDocumentData.fragments.todolist.column = -1;
             } else {
-              oldDocumentData.fragments.todolist.column = 0
+              oldDocumentData.fragments.todolist.column = 0;
             }
           }
-          return oldDocumentData
+          return oldDocumentData;
         },
-        2: function(oldDocumentData) {
-          oldDocumentData.data = {}
-          return oldDocumentData
+        2: function (oldDocumentData) {
+          oldDocumentData.data = {};
+          return oldDocumentData;
         },
-        3: function(oldDocumentData) {
-          return oldDocumentData
+        3: function (oldDocumentData) {
+          return oldDocumentData;
         },
-        4: function(oldDocumentData) {
-          return oldDocumentData
+        4: function (oldDocumentData) {
+          return oldDocumentData;
         },
-        5: function(oldDocumentData) {
-          return oldDocumentData
+        5: function (oldDocumentData) {
+          return oldDocumentData;
         }
       }
     }
@@ -268,7 +289,7 @@ export async function getDb() {
 }
 
 export function launchReplications(uiState, db) {
-  console.debug('Launching replications…')
+  console.debug('Launching replications…');
   return uiState.replications$.subscribe(async (v) => {
     v = v || [];
     let newReplications = await setupReplications(db, globals.replications, v);
@@ -323,25 +344,27 @@ async function createReplication(db: Database, config: AnyReplication) {
     });
   }
   if (config.type === 'couchdb-tempo') {
-    let boardSettings = await getSettingData('board:settings', {columns: ['Todo', 'Doing', 'Done']})
-    let doneColumn = boardSettings.columns.length - 1
+    let boardSettings = await getSettingData('board:settings', {
+      columns: ['Todo', 'Doing', 'Done']
+    });
+    let doneColumn = boardSettings.columns.length - 1;
     const couchdbUrl = `${config.server}/${config.database}/`;
 
     // pushing is disabled in this mode because we can't actually alter
     // the ids to match Tempo format, which breaks replication and duplicates documents
-    delete pushPullConfig.push
-   
+    delete pushPullConfig.push;
+
     if (pushPullConfig.pull) {
       pushPullConfig.pull.modifier = (d) => {
         if (d._deleted && d.id.includes('T') && d.id.includes(':')) {
-          return d
+          return d;
         }
-        let c = tempoToPestoDocument(d, doneColumn)
+        let c = tempoToPestoDocument(d, doneColumn);
         if (c.id === 'settings:board') {
-          doneColumn = c.data.columns.length - 1
+          doneColumn = c.data.columns.length - 1;
         }
-        return c
-      }
+        return c;
+      };
     }
     state = replicateCouchDB({
       replicationIdentifier: `pesto-tempo-couchdb-replication-${couchdbUrl}`,
@@ -403,11 +426,11 @@ async function createReplication(db: Database, config: AnyReplication) {
 }
 
 export function buildUniqueId(date: Date | null = null) {
-  return (date || new Date()).toISOString()
+  return (date || new Date()).toISOString();
 }
 
 export function getNewNote() {
-  let date = new Date()
+  let date = new Date();
   return {
     id: buildUniqueId(date),
     type: 'note',
@@ -417,6 +440,12 @@ export function getNewNote() {
     fragments: {},
     tags: []
   } as DocumentType;
+}
+
+export function getNewForm() {
+  let data = getNewNote();
+  data.type = 'form';
+  return data;
 }
 
 export function getNewTextFragment(content = '') {
@@ -430,7 +459,7 @@ export function getNewTodoListFragment() {
     title: '',
     done: false,
     todos: [],
-    column: 0,
+    column: 0
   };
 }
 
@@ -448,16 +477,16 @@ export async function getById(collection: RxCollection, id: string) {
 }
 
 export async function createOrUpdateSetting(id: string, data: object) {
-  let existing = await globals.db?.documents.findOne({selector: {id, type: 'setting'}}).exec()
+  let existing = await globals.db?.documents.findOne({ selector: { id, type: 'setting' } }).exec();
   if (existing) {
     return await existing.incrementalUpdate({
       $set: {
         modified_at: new Date().toISOString(),
-        data: cloneDeep(data),
+        data: cloneDeep(data)
       }
-    })
+    });
   } else {
-    let d = new Date().toISOString()
+    let d = new Date().toISOString();
     return await globals.db?.documents.insert({
       id,
       type: 'setting',
@@ -465,15 +494,14 @@ export async function createOrUpdateSetting(id: string, data: object) {
       modified_at: d,
       tags: [],
       fragments: {},
-      data: cloneDeep(data),
-    })
+      data: cloneDeep(data)
+    });
   }
 }
 
-
 export async function getSettingData(id: string, defaultValue: object = {}) {
-  let existing = await globals.db?.documents.findOne({selector: {id, type: 'setting'}}).exec()
-  return existing ? existing.toMutableJSON().data : defaultValue
+  let existing = await globals.db?.documents.findOne({ selector: { id, type: 'setting' } }).exec();
+  return existing ? existing.toMutableJSON().data : defaultValue;
 }
 
 export function getNoteUpdateData(note: DocumentType, data: object) {
@@ -491,6 +519,29 @@ export type QueryToken = {
   type: 'is' | 'text' | 'tag';
   value: string;
 };
+
+export function getTimeId() {
+  return new Date().toISOString();
+}
+
+export async function createOrUpdateForm(id: null | string, config: FormConfiguration) {
+  let data;
+  let note: DocumentDocument;
+  config = cloneDeep(config);
+  if (id) {
+    note = await getById(globals.db?.documents, id);
+    await note.incrementalUpdate({
+      $set: getNoteUpdateData(note, { data: config })
+    });
+    note = note.getLatest();
+  } else {
+    data = getNewForm();
+    data.data = config;
+    note = await globals.db.documents.insert(data);
+  }
+  return note;
+}
+
 export function getQueryTokens(q: string) {
   return q
     .split(' ')

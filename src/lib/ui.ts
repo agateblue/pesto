@@ -3,11 +3,10 @@ import { marked } from 'marked';
 import { pushState } from '$app/navigation';
 import debounce from 'lodash/debounce';
 
-
 export type LogMessage = {
   text: string;
-  type: 'debug' | 'info' | 'warning' | 'error' | 'critical' | 'success'
-}
+  type: 'debug' | 'info' | 'warning' | 'error' | 'critical' | 'success';
+};
 
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
@@ -87,6 +86,8 @@ export function renderMarkdown(text: string): string {
   return DOMPurify.sanitize(marked.parse(text || ''));
 }
 
+export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export function updateURLParam(pageUrl, param: string, value: string) {
   let query = new URLSearchParams(pageUrl.searchParams.toString());
   query.set(param, value);
@@ -105,15 +106,21 @@ export function getRandomId(length = 8) {
   return result;
 }
 
-export function syncPropertiesWithExternalChanges(observable, callback: Function, debounceInterval = 200) {
+export function syncPropertiesWithExternalChanges(
+  observable,
+  callback: Function,
+  debounceInterval = 200
+) {
   if (!observable?.subscribe) {
-    return
+    return;
   }
-  return observable.subscribe(debounce(callback, debounceInterval))
+  return observable.subscribe(debounce(callback, debounceInterval));
 }
 
 export function clearSubscriptions(subscriptions: []) {
   return () => {
-    subscriptions.forEach(s => {s?.unsubscribe()})
-  }
+    subscriptions.forEach((s) => {
+      s?.unsubscribe();
+    });
+  };
 }

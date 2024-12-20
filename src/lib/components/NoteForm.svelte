@@ -16,18 +16,15 @@
   }
 
   let { note, children, onSubmitHandler }: Props = $props();
-  let columns: string[] = $state([])
+  let columns: string[] = $state([]);
 
   function handleUpdate(n: DocumentDocument) {
     dispatch('update', { note: n });
   }
 
-  globals.db?.documents.findOne({selector: {id: 'settings:board'}}).$.subscribe(
-    (settings) => {
-      columns = settings?.data.columns || ['Todo', 'Doing', 'Done']
-    }
-  )
-
+  globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
+    columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
+  });
 </script>
 
 <form class="flow" onsubmit={(e) => onSubmitHandler?.(e)}>
@@ -42,19 +39,18 @@
   <div class="flex__row flex__justify-between">
     {@render children?.()}
     {#if note}
-      <DialogForm 
+      <DialogForm
         anchorClass="button__link"
         anchorText="Delete..."
         title="Delete this note?"
         onsubmit={(e: SubmitEvent) => {
-          e.preventDefault()
-          note.remove()
+          e.preventDefault();
+          note.remove();
           dispatch('delete', { note });
         }}
       >
         <p>This will remove the note from your diary. This action is irreversible.</p>
       </DialogForm>
-      
     {/if}
   </div>
 </form>

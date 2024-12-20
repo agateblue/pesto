@@ -1,6 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { tokensToMangoQuery, getQueryTokens, type QueryToken, type DocumentDocument } from '$lib/db';
-import { pestoToTempoDocument, tempoToPestoDocument, type TempoEntry, type RxBaseDoc, type TempoTask } from '$lib/replication';
+import {
+  tokensToMangoQuery,
+  getQueryTokens,
+  type QueryToken,
+  type DocumentDocument,
+  type FormConfiguration
+} from '$lib/db';
+import {
+  pestoToTempoDocument,
+  tempoToPestoDocument,
+  tempoBlueprintsToPestoForm,
+  type TempoEntry,
+  type RxBaseDoc,
+  type TempoTask
+} from '$lib/replication';
 import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
@@ -113,305 +126,396 @@ describe('query language', () => {
 
   it('replication pestoToTempoDocument note', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:26:37.871Z",
-      "title": null,
-      "fragments": {
-        "text": {
-          "content": "Hello #world I'm -sad"
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      fragments: {
+        text: {
+          content: "Hello #world I'm -sad"
         }
       },
-      "tags": ["world", "sad"],
-      "_deleted": false,
-    }
+      tags: ['world', 'sad'],
+      _deleted: false
+    };
     const expected: TempoEntry = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "text": "Hello #world I'm -sad",
-      "tags": [
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      text: "Hello #world I'm -sad",
+      tags: [
         {
-          "text": "#world",
-          "sign": "#",
-          "id": "world",
-          "type": "tag",
-          "mood": null,
-          "value": null,
+          text: '#world',
+          sign: '#',
+          id: 'world',
+          type: 'tag',
+          mood: null,
+          value: null
         },
         {
-          "text": "-sad",
-          "sign": "-",
-          "id": "sad",
-          "type": "feeling",
-          "mood": -1,
-          "value": null,
+          text: '-sad',
+          sign: '-',
+          id: 'sad',
+          type: 'feeling',
+          mood: -1,
+          value: null
         }
       ],
-      "mood": -1,
-      "type": "entry",
-      "_deleted": false,
-      "thread": null,
-      "replies": [],
-      "form": null,
-      "data": null,
-      "favorite": false,
-    }
+      mood: -1,
+      type: 'entry',
+      _deleted: false,
+      thread: null,
+      replies: [],
+      form: null,
+      data: null,
+      favorite: false
+    };
     expect(pestoToTempoDocument(input, 0)).toStrictEqual(expected);
   });
   it('replication pestoToTempoDocument task not done', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:26:37.871Z",
-      "title": null,
-      "fragments": {
-        "todolist": {
-          "done": false,
-          "title": "Cleaning day",
-          "todos": [
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      fragments: {
+        todolist: {
+          done: false,
+          title: 'Cleaning day',
+          todos: [
             {
-              "id": "018fe787-270b-7000-8000-0862afeaa8e3",
-              "done": false,
-              "text": "Dishes"
+              id: '018fe787-270b-7000-8000-0862afeaa8e3',
+              done: false,
+              text: 'Dishes'
             },
             {
-              "id": "018fe787-270b-7000-8000-11c1dd22dc7d",
-              "done": true,
-              "text": "Laundry"
-            },
+              id: '018fe787-270b-7000-8000-11c1dd22dc7d',
+              done: true,
+              text: 'Laundry'
+            }
           ],
-          "column": 1
+          column: 1
         }
       },
-      "tags": [],
-      "_deleted": false,
-    }
+      tags: [],
+      _deleted: false
+    };
     const expected: TempoTask = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "type": "task",
-      "text": "Cleaning day",
-      "category": null,
-      "index": -1,
-      "list": 1,
-      "subtasks": [
-        {"done": false, "label": "Dishes"},
-        {"done": true, "label": "Laundry"},
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      type: 'task',
+      text: 'Cleaning day',
+      category: null,
+      index: -1,
+      list: 1,
+      subtasks: [
+        { done: false, label: 'Dishes' },
+        { done: true, label: 'Laundry' }
       ],
-      "_deleted": false,      
-    }
+      _deleted: false
+    };
     expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
   });
 
   it('replication pestoToTempoDocument task done', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:26:37.871Z",
-      "title": null,
-      "_deleted": false,
-      "fragments": {
-        "todolist": {
-          "done": true,
-          "title": "Cleaning day",
-          "todos": [],
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      _deleted: false,
+      fragments: {
+        todolist: {
+          done: true,
+          title: 'Cleaning day',
+          todos: [],
           // this means done
-          "column": -1
+          column: -1
         }
       },
-      "tags": []
-    }
+      tags: []
+    };
     const expected: TempoTask = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "type": "task",
-      "text": "Cleaning day",
-      "category": null,
-      "index": -1,
-      "list": 3,
-      "subtasks": [],
-      "_deleted": false,
-      
-    }
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      type: 'task',
+      text: 'Cleaning day',
+      category: null,
+      index: -1,
+      list: 3,
+      subtasks: [],
+      _deleted: false
+    };
     expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
   });
   it('replication pestoToTempoDocument other type ignored', () => {
     const input: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "settings",
-      "data": {}
-    }
-    const expected = null
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'settings',
+      data: {}
+    };
+    const expected = null;
     expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
   });
 
   it('replication tempoToPestoDocument note', () => {
     const input: TempoEntry = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "text": "Hello #world I'm -sad",
-      "tags": [
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      text: "Hello #world I'm -sad",
+      tags: [
         {
-          "text": "#world",
-          "sign": "#",
-          "id": "world",
-          "type": "tag",
-          "mood": null,
-          "value": null,
+          text: '#world',
+          sign: '#',
+          id: 'world',
+          type: 'tag',
+          mood: null,
+          value: null
         },
         {
-          "text": "-sad",
-          "sign": "-",
-          "id": "sad",
-          "type": "feeling",
-          "mood": -1,
-          "value": null,
+          text: '-sad',
+          sign: '-',
+          id: 'sad',
+          type: 'feeling',
+          mood: -1,
+          value: null
         }
       ],
-      "mood": -1,
-      "type": "entry",
-      "_deleted": false,
-      "form": 'test:form',
-      "data": {
-        "form:field1": 0.14,
-        "form:field2": true,
+      mood: -1,
+      type: 'entry',
+      _deleted: false,
+      form: 'test:form',
+      data: {
+        'form:field1': 0.14,
+        'form:field2': true
       }
-    }
+    };
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:10:22.438Z",      
-      "title": null,
-      "fragments": {
-        "text": {
-          "content": "Hello #world I'm -sad"
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:10:22.438Z',
+      title: null,
+      fragments: {
+        text: {
+          content: "Hello #world I'm -sad"
         },
-        "form": {
-          "id": "test:form",
-          "data": {
-            "form:field1": 0.14,
-            "form:field2": true,
+        form: {
+          id: 'test:form',
+          data: {
+            'form:field1': 0.14,
+            'form:field2': true
           }
         }
       },
-      "tags": [
-        "world",
-        "sad"
-      ],
-      "_deleted": false,
-    }
+      tags: ['world', 'sad'],
+      _deleted: false
+    };
     expect(tempoToPestoDocument(input, 0)).toStrictEqual(expected);
   });
 
   it('replication tempoToPestoDocument task not done', () => {
     const input: TempoTask = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "type": "task",
-      "text": "Cleaning day",
-      "category": null,
-      "index": -1,
-      "list": 1,
-      "subtasks": [
-        {"label": "Dishes", "done": true},
-        {"label": "Laundry", "done": false},
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      type: 'task',
+      text: 'Cleaning day',
+      category: null,
+      index: -1,
+      list: 1,
+      subtasks: [
+        { label: 'Dishes', done: true },
+        { label: 'Laundry', done: false }
       ],
-      "_deleted": false,
-      
-    }
+      _deleted: false
+    };
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:10:22.438Z",
-      "title": null,
-      "_deleted": false,
-      "fragments": {
-        "todolist": {
-          "done": false,
-          "title": "Cleaning day",
-          "todos": [
-            {"text": "Dishes", "done": true, "id": "2024-11-06T12:10:22.438Z"},
-            {"text": "Laundry", "done": false, "id": "2024-11-06T12:10:22.438Z"},
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:10:22.438Z',
+      title: null,
+      _deleted: false,
+      fragments: {
+        todolist: {
+          done: false,
+          title: 'Cleaning day',
+          todos: [
+            { text: 'Dishes', done: true, id: '2024-11-06T12:10:22.438Z' },
+            { text: 'Laundry', done: false, id: '2024-11-06T12:10:22.438Z' }
           ],
-          "column": 1
+          column: 1
         }
       },
-      "tags": []
-    }
+      tags: []
+    };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
   it('replication tempoToPestoDocument task done', () => {
     const input: TempoTask = {
-      "_id": "2024-11-06T12:10:22.438Z",
-      "date": "2024-11-06T12:10:22.438Z",
-      "type": "task",
-      "text": "Cleaning day",
-      "category": null,
-      "index": -1,
-      "list": 3,
-      "subtasks": [],
-      "_deleted": false,
-      
-    }
+      _id: '2024-11-06T12:10:22.438Z',
+      date: '2024-11-06T12:10:22.438Z',
+      type: 'task',
+      text: 'Cleaning day',
+      category: null,
+      index: -1,
+      list: 3,
+      subtasks: [],
+      _deleted: false
+    };
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "2024-11-06T12:10:22.438Z",
-      "type": "note",
-      "created_at": "2024-11-06T12:10:22.438Z",
-      "modified_at": "2024-11-06T12:10:22.438Z",
-      "title": null,
-      "_deleted": false,
-      "fragments": {
-        "todolist": {
-          "done": true,
-          "title": "Cleaning day",
-          "todos": [],
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:10:22.438Z',
+      title: null,
+      _deleted: false,
+      fragments: {
+        todolist: {
+          done: true,
+          title: 'Cleaning day',
+          todos: [],
           // this means done
-          "column": -1
+          column: -1
         }
       },
-      "tags": []
-    }
+      tags: []
+    };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
   it('replication tempoToPestoDocument boardconfig', () => {
     const input = {
-      "_id": "boardConfig",
-      "type": "settings",
-      "date": new Date().toISOString(),
-      "value": {
-        "lists": [{"label": 'Today'}, {"label": 'Tomorrow'}],
-        "categories": ['a', 'b', 'c'],
-      },
-    }
+      _id: 'boardConfig',
+      type: 'settings',
+      date: new Date().toISOString(),
+      value: {
+        lists: [{ label: 'Today' }, { label: 'Tomorrow' }],
+        categories: ['a', 'b', 'c']
+      }
+    };
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "settings:board",
-      "type": "setting",
-      "modified_at": input.date,
-      "created_at": input.date,
-      "data": {"columns": ["Today", "Tomorrow", "Done"]},
-      "fragments": {},
-      "tags": [],
-      "title": null,
-    }
+      id: 'settings:board',
+      type: 'setting',
+      modified_at: input.date,
+      created_at: input.date,
+      data: { columns: ['Today', 'Tomorrow', 'Done'] },
+      fragments: {},
+      tags: [],
+      title: null
+    };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
   it('replication tempoToPestoDocument other document ignored', () => {
     const input = {
-      "_id": "something",
-      "type": "settings"
-    }
+      _id: 'something',
+      type: 'settings'
+    };
     const expected: DocumentDocument & RxBaseDoc = {
-      "id": "ignored:tempo:settings:something",
-      "type": "ignored",
-    }
+      id: 'ignored:tempo:settings:something',
+      type: 'ignored'
+    };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
+  });
+
+  it('convert tempo blueprint to pesto forms', () => {
+    const input = [
+      {
+        type: 'blueprint',
+        definition: {
+          id: 'common',
+          label: 'Common',
+          title: 'Commen stuff',
+          version: '1',
+          fields: [
+            {
+              id: 'agate:common:duration',
+              label: 'Duration',
+              type: 'number',
+              unit: 'Minutes',
+              step: 1,
+              min: 0
+            }
+          ]
+        }
+      },
+      {
+        type: 'blueprint',
+        definition: {
+          id: 'work',
+          label: 'Work',
+          title: 'Work and tasks',
+          version: '1',
+          fields: [
+            {
+              id: 'work:client',
+              label: 'Client',
+              type: 'text',
+              autosuggest: 'form'
+            },
+            {
+              id: 'work:project',
+              label: 'Project',
+              type: 'text',
+              autosuggest: 'form'
+            }
+          ],
+          forms: [
+            {
+              id: 'work:tracking',
+              label: 'Work time tracking',
+              fields: [
+                {
+                  id: 'work:client'
+                },
+                {
+                  id: 'work:project',
+                  required: false
+                },
+                {
+                  id: 'agate:common:duration',
+                  default: 60
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ];
+    const expected: FormConfiguration[] = [
+      {
+        id: 'work:tracking',
+        name: 'Work time tracking',
+        fields: [
+          {
+            id: 'work:client',
+            label: 'Client',
+            type: 'text',
+            required: true,
+            autosuggest: true
+          },
+          {
+            id: 'work:project',
+            label: 'Project',
+            type: 'text',
+            required: false,
+            autosuggest: true
+          },
+          {
+            id: 'agate:common:duration',
+            label: 'Duration',
+            type: 'number',
+            required: true,
+            autosuggest: true,
+            default: 60
+          }
+        ]
+      }
+    ];
+    expect(tempoBlueprintsToPestoForm(input)).toStrictEqual(expected);
   });
 });

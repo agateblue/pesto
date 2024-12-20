@@ -1,18 +1,18 @@
-import { type DocumentType } from "./db";
-import { parseTags } from "./ui";
-import isEmpty from 'lodash/isEmpty'
+import { type DocumentType, type FormConfiguration, type FormFieldConfiguration } from './db';
+import { parseTags } from './ui';
+import isEmpty from 'lodash/isEmpty';
 
 export type RxBaseDoc = {
   _deleted: boolean;
-}
+};
 export type TempoTag = {
-  id: string,
-  text: string,
+  id: string;
+  text: string;
   sign: '-' | '+' | '#' | '@' | '!' | '~' | '?';
   type: 'feeling' | 'annotation';
   mood: number;
   value?: number | string | null | undefined;
-}
+};
 export type TempoEntry = RxBaseDoc & {
   // yes, with and without underscore because PouchDB and RxDB uses both
   id: string;
@@ -22,17 +22,17 @@ export type TempoEntry = RxBaseDoc & {
   type: 'entry';
   mood: number;
   tags: TempoTag[];
-  form: string | null; 
+  form: string | null;
   thread: null;
   replies: [];
   favorite: false;
   data: null | object;
-}
+};
 
 export type TempoSubtask = {
   label: string;
   done: boolean;
-}
+};
 
 export type TempoTask = RxBaseDoc & {
   id: string;
@@ -44,38 +44,38 @@ export type TempoTask = RxBaseDoc & {
   list: number;
   category: null;
   subtasks: TempoSubtask[];
-}
+};
 
 export function pestoToTempoDocument(document: DocumentType, doneIndex: number) {
-  let data: TempoEntry | TempoTask | null = null
+  let data: TempoEntry | TempoTask | null = null;
   if (document.type === 'note') {
     let baseData = {
       date: document.created_at,
       _id: document.id,
-      _deleted: document._deleted,
-    }
+      _deleted: document._deleted
+    };
     if (document.fragments?.text?.content) {
-      let text = document.fragments?.text?.content
-      let tags: TempoTag[] = parseTags(text)
+      let text = document.fragments?.text?.content;
+      let tags: TempoTag[] = parseTags(text);
       data = {
         ...baseData,
         type: 'entry',
         text,
         tags,
-        mood: tags.map(t => t.mood).reduce((a, b) => a + b, 0),
+        mood: tags.map((t) => t.mood).reduce((a, b) => a + b, 0),
         thread: null,
         replies: [],
         form: null,
         data: null,
-        favorite: false,
-      }
+        favorite: false
+      };
     }
     if (document.fragments?.todolist?.title) {
-      let text = document.fragments?.todolist?.title
-      let column = document.fragments.todolist.column
-      let subtasks: TempoSubtask[] = (document.fragments.todolist.todos || []).map(t => {
-        return {label: t.text, done: t.done}
-      })
+      let text = document.fragments?.todolist?.title;
+      let column = document.fragments.todolist.column;
+      let subtasks: TempoSubtask[] = (document.fragments.todolist.todos || []).map((t) => {
+        return { label: t.text, done: t.done };
+      });
       data = {
         ...baseData,
         type: 'task',
@@ -84,20 +84,19 @@ export function pestoToTempoDocument(document: DocumentType, doneIndex: number) 
         category: null,
         index: -1,
         list: column === -1 ? doneIndex : column
-      }
+      };
     }
   }
-  console.debug("Converting document from pesto to tempo", document, data)
-  return data  
+  console.debug('Converting document from pesto to tempo', document, data);
+  return data;
 }
 
-
 export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex: number) {
-  let data: DocumentType | null = null
-  let id = document.id || document._id
+  let data: DocumentType | null = null;
+  let id = document.id || document._id;
   if (document.type === 'settings' && id === 'boardConfig') {
     if (document.value?.lists) {
-      let date = document.date || new Date().toISOString()
+      let date = document.date || new Date().toISOString();
       data = {
         id: 'settings:board',
         type: 'setting',
@@ -106,9 +105,8 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
         fragments: {},
         tags: [],
         title: null,
-        data: {columns: [...document.value.lists.map(l => l.label), 'Done']}
-  
-      }
+        data: { columns: [...document.value.lists.map((l) => l.label), 'Done'] }
+      };
     }
   }
   if (document.type === 'entry' || document.type === 'task') {
@@ -120,55 +118,90 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       _deleted: document._deleted,
       fragments: {},
       tags: [],
-      title: null,
-    }
+      title: null
+    };
     if (document.type === 'entry') {
-      let text = document.text?.trim() || ''
-      let tags = document.tags.map(t => t.id)
+      let text = document.text?.trim() || '';
+      let tags = document.tags.map((t) => t.id);
       data = {
         ...baseData,
         tags,
         fragments: {}
-      }
+      };
       if (text) {
-        data.fragments.text = {content: text}
+        data.fragments.text = { content: text };
       }
 
       if (!isEmpty(document.data || {})) {
         let formFragment = {
           id: document.form || null,
           data: document.data || {}
-        }
-        data.fragments.form = formFragment
+        };
+        data.fragments.form = formFragment;
       }
     }
     if (document.type === 'task') {
-      let text = document.text
-      let todos = document.subtasks.map(t => {
-        let subtaskId = id
+      let text = document.text;
+      let todos = document.subtasks.map((t) => {
+        let subtaskId = id;
         return {
           done: t.done === null ? false : t.done,
           text: t.label,
-          id: subtaskId,
-        }
-      })
-      let done = document.list >= doneIndex
-      let column = document.list >= doneIndex ? -1 : document.list
+          id: subtaskId
+        };
+      });
+      let done = document.list >= doneIndex;
+      let column = document.list >= doneIndex ? -1 : document.list;
       data = {
         ...baseData,
-        fragments: {todolist: {title: text, column, done, todos}}
-      }
+        fragments: { todolist: { title: text, column, done, todos } }
+      };
     }
   }
   if (!data) {
     if (document.type) {
-      id = `${document.type}:${id}`
+      id = `${document.type}:${id}`;
     }
-    id = `ignored:tempo:${id}`
-    data = {id, type: 'ignored'}
+    id = `ignored:tempo:${id}`;
+    data = { id, type: 'ignored' };
   }
   if (data.type === 'setting' || data.type === 'ignored') {
-    console.debug("Converting document from tempo to pesto", document, data)
+    console.debug('Converting document from tempo to pesto', document, data);
   }
-  return data  
+  return data;
+}
+
+export function tempoBlueprintsToPestoForm(blueprints: object[]) {
+  let fields = {};
+  let forms = [];
+
+  blueprints.forEach((b) => {
+    b.definition?.fields?.forEach((f) => {
+      fields[f.id] = f;
+    });
+    b.definition?.forms?.forEach((f) => {
+      forms.push(f);
+    });
+  });
+  let finalForms: FormConfiguration[] = [];
+
+  forms.forEach((f) => {
+    let finalFields: FormFieldConfiguration[] = f.fields.map((field) => {
+      let final = fields[field.id];
+      final = Object.assign(final, field);
+      final.autosuggest = final.autosuggest === null ? false : true;
+      final.required = final.required === undefined ? true : final.required;
+      delete final.min;
+      delete final.step;
+      delete final.unit;
+      return final;
+    });
+    let form: FormConfiguration = {
+      id: f.id,
+      name: f.label,
+      fields: finalFields
+    };
+    finalForms.push(form);
+  });
+  return finalForms;
 }

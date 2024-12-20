@@ -145,7 +145,7 @@ body {
     display: flex;
     flex-direction: row;
     vertical-align: center;
-    > * {
+    > *:not(dialog) {
       margin-block: 0;
       padding: var(--space-1);
     }
@@ -229,6 +229,10 @@ body {
   display: none;
 }
 
+.flex__stacking-container {
+  container-type: inline-size;
+}
+
 .flex__column {
   display: flex;
   flex-direction: column;
@@ -237,16 +241,27 @@ body {
 .flex__row {
   display: flex;
   flex-direction: row;
+  @container (max-width: 500px) {
+    display: block;
+  }
 }
 .flex__grow {
   flex-grow: 1;
 }
-
+.flex__equal-size > * {
+  flex: 1 1 0;
+}
 .flex__gap {
   gap: var(--space-2);
 }
 .flex__align-start {
   align-items: start;
+}
+.flex__align-center {
+  align-items: center;
+}
+.flex__align-end {
+  align-items: end;
 }
 .flex__justify-end {
   justify-content: flex-end;
@@ -402,7 +417,9 @@ textarea {
 .message {
   text-transform: capitalize;
 }
-.message__success, .message__error, .message__capitalize {
+.message__success,
+.message__error,
+.message__capitalize {
   font-weight: bold;
 }
 .form__field {
@@ -411,6 +428,18 @@ textarea {
     font-weight: bold;
     margin-block-end: var(--space-1);
   }
+  [type='checkbox'] + label {
+    display: inline-block;
+    font-weight: normal;
+  }
+  .form__help {
+    font-size: 80%;
+    font-style: italic;
+  }
+}
+
+.builder__field {
+  --flow-space: var(--space-2);
 }
 .app > nav {
   border-block-end: var(--layout-separator);
@@ -465,6 +494,11 @@ textarea {
     border: 0;
   }
 }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--text-discrete-color);
+}
 .todolist input[type='checkbox'] {
   scale: 1.5;
   margin-inline-end: var(--space-2);
@@ -517,21 +551,36 @@ input[type='text'].input__discrete {
   width: 100%;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-item-width, 30ch), 1fr));
+}
+
+.grid__gap {
+  gap: var(--space-2);
+}
 
 dialog {
   border: none;
+  width: 80ch;
+  max-width: 100%;
+  padding: var(--space-2);
   &::backdrop {
     background: var(--dialog-backdrop);
   }
 }
 /* when the content is shorter than the treshold, we simply hide the button */
-[data-expanded]:has(> :last-child:nth-child(1), > :last-child:nth-child(2),  > :last-child:nth-child(3)) {
+[data-expanded]:has(
+    > :last-child:nth-child(1),
+    > :last-child:nth-child(2),
+    > :last-child:nth-child(3)
+  ) {
   ~ button[aria-expanded] {
     display: none;
   }
 }
 /* manage expand/collaspe on elements with more than three children */
-[data-expanded=false]:has(*:nth-child(-n + 3)) {
+[data-expanded='false']:has(*:nth-child(-n + 3)) {
   :not(*:nth-child(-n + 3)) {
     display: none;
   }

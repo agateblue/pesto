@@ -15,9 +15,11 @@
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
     type DocumentType,
+    type FormConfiguration,
+    createOrUpdateForm
   } from '$lib/db';
-  import { tempoToPestoDocument } from '$lib/replication';
-  import { type LogMessage } from '$lib/ui';
+  import { tempoToPestoDocument, tempoBlueprintsToPestoForm } from '$lib/replication';
+  import { delay, type LogMessage } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
 
   let replications: AnyReplication[] = $state([]);
@@ -25,7 +27,7 @@
   let files: FileList = $state();
   let replicationType: string = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
-    replications = [...(newValue || [])].map(t => cloneDeep(t));
+    replications = [...(newValue || [])].map((t) => cloneDeep(t));
   });
 
   async function handleSubmitReplication(replication: AnyReplication, index: number | null) {
@@ -39,7 +41,7 @@
 
     replications = [...replications];
     await globals.uiState.set('replications', () => {
-      return replications.map(t => cloneDeep(t))
+      return replications.map((t) => cloneDeep(t));
     });
   }
 
@@ -64,10 +66,10 @@
       pull: true
     };
     if (type === 'couchdb') {
-      return {...baseCouchDb, type: 'couchdb'}
+      return { ...baseCouchDb, type: 'couchdb' };
     }
     if (type === 'couchdb-tempo') {
-      return {...baseCouchDb, type: 'couchdb-tempo'}
+      return { ...baseCouchDb, type: 'couchdb-tempo' };
     }
   }
   async function handleSubmit() {
@@ -82,76 +84,120 @@
       console.log(err);
     }
   }
-  
-  let tempoImportMessages: LogMessage[] = $state([])
+
+  let tempoImportMessages: LogMessage[] = $state([]);
 
   async function handleImportTempo(messages: LogMessage[]) {
-    let tempoFile
+    let tempoFile;
     try {
       tempoFile = files[0];
     } catch {
-      return messages.push({type: 'error', text: 'No file was provided'})
+      return messages.push({ type: 'error', text: 'No file was provided' });
     }
 
-    messages.push({type: 'info', text: 'Opening file…'})
+    messages.push({ type: 'info', text: 'Opening file…' });
     let content = await tempoFile.text();
-    messages.push({type: 'info', text: 'File read!'})
-    
-    messages.push({type: 'info', text: 'Parsing file…'})
+    messages.push({ type: 'info', text: 'File read!' });
+
+    messages.push({ type: 'info', text: 'Parsing file…' });
     let data: object = JSON.parse(content);
-    messages.push({type: 'info', text: 'File parsed!'})
+    messages.push({ type: 'info', text: 'File parsed!' });
 
+    messages.push({ type: 'info', text: 'File parsed!' });
 
+    let blueprints: object[] = data.blueprints || [];
+    messages.push({ type: 'info', text: `${blueprints.length} tempo blueprints to import found` });
+
+    const forms: FormConfiguration[] = tempoBlueprintsToPestoForm(blueprints);
+    messages.push({ type: 'info', text: `${blueprints.length} tempo forms to import` });
+
+    for (const form of forms) {
+      // skip form with existing watching ids
+      let existing = await globals.db?.documents
+        .findOne({
+          selector: { type: 'form', 'data.id': form.id }
+        })
+        .exec();
+      if (existing) {
+        messages.push({ type: 'info', text: `Skipping ${form.id} at it already exists` });
+      } else {
+        // to avoid clashing ids we wait a few milliseconds
+        await createOrUpdateForm(null, form);
+        messages.push({ type: 'info', text: `Inserted ${form.id}!` });
+      }
+    }
     let entries: [] = data.entries || [];
-    messages.push({type: 'info', text: `${entries.length} tempo entries found`})
+    messages.push({ type: 'info', text: `${entries.length} tempo entries found` });
     let tasks: [] = data?.board?.tasks || [];
-    messages.push({type: 'info', text: `${tasks.length} tempo tasks found`})
-    let boardConfig: object = data?.board?.settings
-    messages.push({type: 'info', text: boardConfig ? `Tempo board config found: ${JSON.stringify(boardConfig.lists)}` : `No board config found`})
-    
+    messages.push({ type: 'info', text: `${tasks.length} tempo tasks found` });
+    let boardConfig: object = data?.board?.settings;
+    messages.push({
+      type: 'info',
+      text: boardConfig
+        ? `Tempo board config found: ${JSON.stringify(boardConfig.lists)}`
+        : `No board config found`
+    });
+
     let pestoNotes: DocumentDocument[] = [];
     let pestoTasks: DocumentDocument[] = [];
-    
-    messages.push({type: 'info', text: `Loading current board config…`})
-    let newBoardConfig = await getSettingData('settings:board', {columns: ['Todo', 'Doing', 'Done']})
-    if (boardConfig?.lists ) {
-      messages.push({type: 'info', text: `Importing Tempo board config…`})
+
+    messages.push({ type: 'info', text: `Loading current board config…` });
+    let newBoardConfig = await getSettingData('settings:board', {
+      columns: ['Todo', 'Doing', 'Done']
+    });
+    if (boardConfig?.lists) {
+      messages.push({ type: 'info', text: `Importing Tempo board config…` });
       // Tempo doesn't include the "done" column in the export, we add it manually
-      newBoardConfig.columns = [...boardConfig.lists.map(r => r.label), 'Done']
-      messages.push({type: 'info', text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`})
-      await createOrUpdateSetting('settings:board', newBoardConfig)
+      newBoardConfig.columns = [...boardConfig.lists.map((r) => r.label), 'Done'];
+      messages.push({
+        type: 'info',
+        text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`
+      });
+      await createOrUpdateSetting('settings:board', newBoardConfig);
     }
-  
-    messages.push({type: 'info', text: `Importing ${entries.length} entries…`})
+
+    messages.push({ type: 'info', text: `Importing ${entries.length} entries…` });
     for (const entry of entries) {
-      let converted: DocumentType | null = tempoToPestoDocument(entry, newBoardConfig.columns.length - 1)
+      let converted: DocumentType | null = tempoToPestoDocument(
+        entry,
+        newBoardConfig.columns.length - 1
+      );
       // console.debug('CONVERTED Tempo note', entry, converted);
       if (converted && converted.type != 'ignored') {
         pestoNotes.push(converted);
       } else {
-        console.debug('Ignored tempo entry', entry, converted)
+        console.debug('Ignored tempo entry', entry, converted);
       }
     }
 
     for (const task of tasks) {
-      let converted: DocumentType | null = tempoToPestoDocument(task, newBoardConfig.columns.length - 1)
+      let converted: DocumentType | null = tempoToPestoDocument(
+        task,
+        newBoardConfig.columns.length - 1
+      );
       // console.debug('CONVERTED Tempo task', task, converted);
       if (converted && converted.type != 'ignored') {
         pestoTasks.push(converted);
       }
     }
 
-    messages.push({type: 'info', text: `Saving ${pestoNotes.length} converted Tempo notes…`})
+    messages.push({ type: 'info', text: `Saving ${pestoNotes.length} converted Tempo notes…` });
     let resultPestoNotes = await globals.db.documents.bulkInsert(pestoNotes);
 
-    console.debug('Saving notes result:', resultPestoNotes)
-    messages.push({type: 'warning', text: `Ignored ${resultPestoNotes.error.length} unsupported notes or duplicates`})
-    messages.push({type: 'info', text: `Saving ${pestoTasks.length} converted Tempo tasks…`})
+    console.debug('Saving notes result:', resultPestoNotes);
+    messages.push({
+      type: 'warning',
+      text: `Ignored ${resultPestoNotes.error.length} unsupported notes or duplicates`
+    });
+    messages.push({ type: 'info', text: `Saving ${pestoTasks.length} converted Tempo tasks…` });
 
     let resultPestoTasks = await globals.db.documents.bulkInsert(pestoTasks);
-    console.debug('Saving tasks result:', resultPestoTasks)
-    messages.push({type: 'warning', text: `Ignored ${resultPestoTasks.error.length} tasks duplicates`})
-    messages.push({type: 'success', text: `Import complete!`})
+    console.debug('Saving tasks result:', resultPestoTasks);
+    messages.push({
+      type: 'warning',
+      text: `Ignored ${resultPestoTasks.error.length} tasks duplicates`
+    });
+    messages.push({ type: 'success', text: `Import complete!` });
   }
 </script>
 
@@ -185,32 +231,33 @@
                     replications.splice(i, 1);
                     replications = [...replications];
                     await globals.uiState.set('replications', () => {
-                      return replications.map(t => cloneDeep(t))
+                      return replications.map((t) => cloneDeep(t));
                     });
                   }}
                 />
               {/each}
             </div>
           {/if}
-          <DialogForm 
+          <DialogForm
             anchorClass="button"
             anchorText="Setup synchronisation…"
             title="Setup a new synchronisation"
             onsubmit={async (e: SubmitEvent) => {
-              e.preventDefault()
+              e.preventDefault();
               await handleSubmitReplication(newReplication, null);
               newReplication = null;
-              replicationType = null
+              replicationType = null;
             }}
           >
-            
             <div class="form__field">
               <label for="replication-type">Type</label>
-              <select 
-                name="replication-type" 
-                id="replication-type" 
+              <select
+                name="replication-type"
+                id="replication-type"
                 bind:value={replicationType}
-                onchange={() => {newReplication = getNewReplication(replicationType)}}
+                onchange={() => {
+                  newReplication = getNewReplication(replicationType);
+                }}
               >
                 <option value={null}>---</option>
                 <option value="webrtc">WebRTC</option>
@@ -219,20 +266,24 @@
               </select>
             </div>
             {#if newReplication}
-              <ReplicationForm
-                bind:replication={newReplication}
-              />
+              <ReplicationForm bind:replication={newReplication} />
             {/if}
-            
           </DialogForm>
-          
+
           <h1>Import from Tempo (Beta)</h1>
-          <form id="tempo-import" class="flow" onsubmit={(e) => {
-            e.preventDefault()
-            tempoImportMessages = []
-            handleImportTempo(tempoImportMessages)
-          }}>
-            <p>Import text entries, tasks and board configuration from Tempo. Other data types are currently unsupported.</p>
+          <form
+            id="tempo-import"
+            class="flow"
+            onsubmit={(e) => {
+              e.preventDefault();
+              tempoImportMessages = [];
+              handleImportTempo(tempoImportMessages);
+            }}
+          >
+            <p>
+              Import text entries, tasks and board configuration from Tempo. Other data types are
+              currently unsupported.
+            </p>
             <div class="form__field">
               <label for="tempo-file">Tempo JSON file</label>
               <input
@@ -243,30 +294,29 @@
                 bind:files
               />
             </div>
-            <FormResult messages={tempoImportMessages} forEl="tempo-file"/>
+            <FormResult messages={tempoImportMessages} forEl="tempo-file" />
             <div class="flex__row flex__justify-end">
               <button type="submit"> Import </button>
             </div>
-
           </form>
-  
+
           <h1>Clear data</h1>
-  
+
           <p>You can remove all your Pesto data if needed. You will be asked for confirmation</p>
-          <DialogForm 
+          <DialogForm
             anchorClass="button"
             anchorText="Remove all data…"
             title="Remove all Pesto data?"
             onsubmit={(e: SubmitEvent) => {
-              e.preventDefault()
-              handleSubmit()
+              e.preventDefault();
+              handleSubmit();
             }}
           >
             <p>
-              Remove all local data including entries, tasks, settings and drafts. This action is irreversible.
+              Remove all local data including entries, tasks, settings and drafts. This action is
+              irreversible.
             </p>
           </DialogForm>
-  
         </div>
       </section>
     </div>
