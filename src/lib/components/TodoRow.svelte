@@ -21,16 +21,16 @@
   }
 
   let { todo, editText, autofocus = false, trashIcon = false }: Props = $props();
-  let id = $state(getRandomId())
-  let textarea: HTMLTextAreaElement
+  let id = $state(getRandomId());
+  let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {
     dispatch('update', { todo: { ...todo, ...args } });
   }
   onMount(() => {
     if (autofocus) {
-      textarea.focus()
+      textarea.focus();
     }
-  })
+  });
 </script>
 
 <div class="flex__row flex__align-start">
@@ -42,7 +42,7 @@
           id={`todo-${id}-done`}
           checked={todo.text.trim() && todo.done}
           onchange={(e) => {
-            handleChange({done: e.target.checked});
+            handleChange({ done: e.target.checked });
           }}
           disabled={!todo.text.trim()}
           aria-labelledby={editText ? `todo-${id}-text` : undefined}
@@ -59,7 +59,7 @@
       bind:this={textarea}
       value={todo.text}
       onkeyup={ignoreTab((e) => {
-        handleChange({text: e.target.value.trim()});
+        handleChange({ text: e.target.value.trim() });
       })}
       placeholder="Add new task…"
       rows="1"

@@ -8,20 +8,22 @@
     update: { fragment: TextType };
     delete: {};
   }>();
-  
+
   interface Props {
     fieldId: string;
     fragment: TextType;
   }
-  
+
   let { fieldId, fragment }: Props = $props();
   let content = $state(fragment.content);
 
   let subscriptions = [
-    syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v})
-  ]
+    syncPropertiesWithExternalChanges(fragment.content$, (v) => {
+      content = v;
+    })
+  ];
 
-  onDestroy(clearSubscriptions(subscriptions))
+  onDestroy(clearSubscriptions(subscriptions));
   function handleChange(content) {
     if (content) {
       dispatch('update', { fragment: { ...fragment, content } });

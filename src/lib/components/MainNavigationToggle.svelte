@@ -5,7 +5,7 @@
   import IconaMoonMenuBurgerHorizontal from 'virtual:icons/iconamoon/menu-burger-horizontal';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
   interface Props extends HTMLBaseAttributes {}
-  let {...restProps} = $props()
+  let { ...restProps } = $props();
   let sidebarFullpage = $state(false);
 
   const observable = globals.uiState.get$('currentPage');
@@ -14,10 +14,10 @@
   });
 </script>
 
-<button 
-  type="button" 
-  class={'button__transparent button__icon ' + restProps.class || ''} 
-  aria-label={sidebarFullpage ? "Close main navigation" : "Open main navigation"}
+<button
+  type="button"
+  class={'button__transparent button__icon ' + restProps.class || ''}
+  aria-label={sidebarFullpage ? 'Close main navigation' : 'Open main navigation'}
   onclick={() => {
     if (sidebarFullpage) {
       globals.uiState.set('currentPage', () => null);

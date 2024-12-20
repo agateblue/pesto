@@ -10,16 +10,14 @@
 
   let { data, children } = $props();
 
-  let searchQuery = $state('')
-  let orderQuery = $state('id:desc')
+  let searchQuery = $state('');
+  let orderQuery = $state('id:desc');
 
   let noteFormKey = $state(0);
   $effect(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
     orderQuery = $page.url.searchParams.get('o') || 'id:desc';
-  })
-
-
+  });
 </script>
 
 <main class="flex__grow">
@@ -59,7 +57,7 @@
         note={null}
         onSubmitHandler={(e) => {
           noteFormKey++;
-          e.preventDefault()
+          e.preventDefault();
         }}
         on:delete={(e) => {
           noteFormKey++;

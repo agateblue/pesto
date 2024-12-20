@@ -1,8 +1,6 @@
 <script lang="ts">
-
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
-
 
   interface Props {
     searchQuery: string;
@@ -14,11 +12,11 @@
   let notes: DocumentDocument[] = $state([]);
 
   function getSortFromOrderQuery(o: string) {
-    let field, direction
-    [field, direction] = o.split(':')
-    let sort = {}
-    sort[field] = direction
-    return sort
+    let field, direction;
+    [field, direction] = o.split(':');
+    let sort = {};
+    sort[field] = direction;
+    return sort;
   }
 
   function getSelector(q: string) {
@@ -31,16 +29,18 @@
   }
 
   function loadNotes(q: string, o: string) {
-    return globals.db.documents.find({
-      limit: 20,
-      sort: [getSortFromOrderQuery(o)],
-      selector: {type: 'note', ...getSelector(q)}
-    }).$.subscribe(documents => {
-      notes = documents
-    });
+    return globals.db.documents
+      .find({
+        limit: 20,
+        sort: [getSortFromOrderQuery(o)],
+        selector: { type: 'note', ...getSelector(q) }
+      })
+      .$.subscribe((documents) => {
+        notes = documents;
+      });
   }
 
-  let subscription = null
+  let subscription = null;
   $effect(() => {
     subscription?.unsubscribe();
     subscription = loadNotes(searchQuery, orderQuery);
@@ -56,15 +56,17 @@
   {#if notes.length > 0}
     <button
       onclick={async (e) => {
-        let newNotes = await globals.db.documents.find({
-          limit: 20,
-          sort: [getSortFromOrderQuery(orderQuery)],
-          selector: {
-            type: 'note',
-            id: { $lt: notes.slice(-1)[0].id },
-            ...getSelector(searchQuery)
-          }
-        }).exec();
+        let newNotes = await globals.db.documents
+          .find({
+            limit: 20,
+            sort: [getSortFromOrderQuery(orderQuery)],
+            selector: {
+              type: 'note',
+              id: { $lt: notes.slice(-1)[0].id },
+              ...getSelector(searchQuery)
+            }
+          })
+          .exec();
         notes = [...notes, ...newNotes];
       }}>Load more</button
     >

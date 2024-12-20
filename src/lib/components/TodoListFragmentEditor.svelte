@@ -25,13 +25,21 @@
   let id: string = $state(buildUniqueId());
 
   let subscriptions = [
-    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {todos = v;}),
-    syncPropertiesWithExternalChanges(fragment.column$, (v) => {column = v;}),
-    syncPropertiesWithExternalChanges(fragment.done$, (v) => {done = v;}),
-    syncPropertiesWithExternalChanges(fragment.title$, (v) => {title = v;}),
-  ]
+    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
+      todos = v;
+    }),
+    syncPropertiesWithExternalChanges(fragment.column$, (v) => {
+      column = v;
+    }),
+    syncPropertiesWithExternalChanges(fragment.done$, (v) => {
+      done = v;
+    }),
+    syncPropertiesWithExternalChanges(fragment.title$, (v) => {
+      title = v;
+    })
+  ];
 
-  onDestroy(clearSubscriptions(subscriptions))
+  onDestroy(clearSubscriptions(subscriptions));
   function handleChange() {
     let hasContent =
       !!title ||
@@ -86,24 +94,24 @@
 {#if title && columns}
   <div class="form__field">
     <label for="todolist-column">Column</label>
-    <select 
-      name="todolist-column" 
-      id="todolist-column" 
+    <select
+      name="todolist-column"
+      id="todolist-column"
       bind:value={column}
       onchange={(e) => {
         if (column === -1) {
-          done = true
+          done = true;
           todos = todos.map((t) => {
             return { ...t, done: true };
           });
         } else {
-          done = false
-        } 
-        handleChange()
+          done = false;
+        }
+        handleChange();
       }}
     >
       {#each columns as column, i (i)}
-        <option value={i >= columns.length -1 ? -1 : i }>{column}</option>
+        <option value={i >= columns.length - 1 ? -1 : i}>{column}</option>
       {/each}
     </select>
   </div>
@@ -115,12 +123,12 @@
       <TodoRow
         {editText}
         trashIcon={true}
-        autofocus={autofocus}
+        {autofocus}
         todo={{ text: title, done: done, id }}
         on:update={(e) => {
           done = e.detail.todo.done;
           title = e.detail.todo.text;
-          column = done ? -1 : 0
+          column = done ? -1 : 0;
           if (done) {
             todos = cloneDeep(todos);
             todos = todos.map((t) => {
