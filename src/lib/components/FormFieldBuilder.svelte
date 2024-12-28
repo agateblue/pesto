@@ -16,7 +16,7 @@
         return s.length > 0;
       });
   }
-  let suggestions = field.suggestions?.join(', ') || '';
+  let suggestions = field.suggestions?.join('\n') || '';
 </script>
 
 <div class="builder__field flex__row flex__gap flex__equal-size">

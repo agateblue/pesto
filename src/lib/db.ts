@@ -188,11 +188,13 @@ export type Globals = {
   db: null | Database;
   uiState: null | RxState;
   replications: [];
+  forms: object;
 };
 export const globals: Globals = {
   db: null,
   uiState: null,
-  replications: []
+  replications: [],
+  forms: {},
 };
 
 export type FormFieldConfiguration = {
@@ -286,6 +288,20 @@ export async function getDb() {
   let uiState = await db.addState('ui');
 
   return { db, uiState, replications: [] };
+}
+
+export function loadForms () {
+  let forms: DocumentType[] = []
+  return globals.db.documents
+  .find({
+    limit: 20000,
+    selector: { type: 'form' }
+  })
+  .$.subscribe((documents) => {
+    for (const document of documents) {
+      globals.forms[document.data.id] = document.data
+    }
+  });
 }
 
 export function launchReplications(uiState, db) {
