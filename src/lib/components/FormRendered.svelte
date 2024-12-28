@@ -29,15 +29,16 @@
   </DialogForm>
 {/snippet}
 
-<form class="card card__narrow | flow" action="">
+<form class="card card__narrow | flow" onsubmit={(e) => {e.preventDefault()}}>
   <div class="flex__row flex__align-center flex__justify-between">
-    <h3 class="m__block-0">{form.name} ({form.id})</h3>
+    <h3 class="m__block-0">{form.name}</h3>
     <DialogForm
       anchorClass="button button__link"
       anchorText="Edit"
       title={`Edit form ${form.name}`}
       {dialogHeaderContent}
       onsubmit={async (e: SubmitEvent) => {
+        console.log("SUBMIT PARENT")
         await createOrUpdateForm(id, form);
         return e.preventDefault();
       }}

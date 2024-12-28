@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { type FormFragmentType } from '$lib/db';
+  import { type FormFragmentType, globals } from '$lib/db';
   import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
 
   interface Props {
@@ -11,6 +11,11 @@
 
   let fields: string[] = $state(Object.keys(fragment.data));
 
+  let form = globals.forms[fragment.id]
+  let fieldsById = {}
+  form?.fields.forEach(f => {
+    fieldsById[f.id] = f
+  })
   // let subscriptions = [
   //   syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v})
   // ]
@@ -18,11 +23,11 @@
 </script>
 
 <table class="table__simpledata">
-  <caption>{fragment.id}</caption>
+  <caption>{globals.forms[fragment.id]?.name || fragment.id}</caption>
   <tbody>
     {#each fields as field}
       <tr>
-        <td>{field}</td>
+        <td>{fieldsById[field]?.label || field}</td>
         <td>{fragment.data[field]}</td>
       </tr>
     {/each}
