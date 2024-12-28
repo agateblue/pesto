@@ -51,15 +51,15 @@
 </script>
 
 {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
-<FormRendered
-  elClass="flow"
-  form={globals.forms[note.fragments.form.id]}
-  id={note.fragments.form.id}
-  onsubmit={async (values: object) => {
-    updateFragment('form', {id: note.fragments.form.id, data: values})
-  }}
-  values={note?.fragments?.form?.data}
-  showActions={false}
+  <FormRendered
+    elClass="flow"
+    form={globals.forms[note.fragments.form.id]}
+    id={note.fragments.form.id}
+    onsubmit={async (values: object) => {
+      updateFragment('form', { id: note.fragments.form.id, data: values });
+    }}
+    values={note?.fragments?.form?.data}
+    showActions={false}
   ></FormRendered>
 {/if}
 <TextFragmentEditor

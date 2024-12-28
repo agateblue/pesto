@@ -11,11 +11,11 @@
 
   let fields: string[] = $state(Object.keys(fragment.data));
 
-  let form = globals.forms[fragment.id]
-  let fieldsById = {}
-  form?.fields.forEach(f => {
-    fieldsById[f.id] = f
-  })
+  let form = globals.forms[fragment.id];
+  let fieldsById = {};
+  form?.fields.forEach((f) => {
+    fieldsById[f.id] = f;
+  });
   // let subscriptions = [
   //   syncPropertiesWithExternalChanges(fragment.content$, (v) => {content = v})
   // ]

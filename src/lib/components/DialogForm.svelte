@@ -8,8 +8,7 @@
     onopen?: Function;
   }
 
-  let { anchorClass, anchorText, children, onsubmit, title, onopen }: Props =
-    $props();
+  let { anchorClass, anchorText, children, onsubmit, title, onopen }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
 
