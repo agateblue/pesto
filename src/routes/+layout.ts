@@ -1,5 +1,5 @@
 import { goto } from '$app/navigation';
-import { getDb, globals, loadForms } from '$lib/db';
+import { getDb, globals, loadFormsQuery, observeLoadForms } from '$lib/db';
 import { page } from '$app/stores';
 
 export const ssr = false;
@@ -13,6 +13,13 @@ export async function load() {
 
   globals.db = db;
   globals.uiState = uiState;
+
+  // ensure forms are loaded immediately so that they can be displayed properly
+  (await loadFormsQuery().exec()).forEach((document) => {
+    globals.forms[document.data.id] = document.data;
+  });
+  observeLoadForms();
+
   return {
     db: globals.db
   };

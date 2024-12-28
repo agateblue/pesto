@@ -7,7 +7,13 @@
   import { goto } from '$app/navigation';
 
   import { getRandomId, clearSubscriptions } from '$lib/ui';
-  import { type FormConfiguration, type DocumentType, createOrUpdateForm, globals, getNewNote } from '$lib/db';
+  import {
+    type FormConfiguration,
+    type DocumentType,
+    createOrUpdateForm,
+    globals,
+    getNewNote
+  } from '$lib/db';
   import { onDestroy } from 'svelte';
 
   let editedForm: FormConfiguration | null = $state(null);
@@ -74,10 +80,10 @@
               onsubmit={async (values: object) => {
                 let noteData = getNewNote();
                 noteData.fragments = {
-                  form: {id: form.data.id, data: values}
-                }
+                  form: { id: form.data.id, data: values }
+                };
                 let note = await globals.db.documents.insert(noteData);
-                await goto(`/my/notes/${note.id}`)
+                await goto(`/my/notes/${note.id}`);
               }}
             ></FormRendered>
           {/each}

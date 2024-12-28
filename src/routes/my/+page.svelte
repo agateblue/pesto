@@ -5,7 +5,6 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
 
-  import { loadForms, globals } from '$lib/db';
   import { updateURLParam } from '$lib/ui';
 
   let { data, children } = $props();
@@ -14,7 +13,7 @@
   let orderQuery = $state('id:desc');
 
   let noteFormKey = $state(0);
-  loadForms()
+
   $effect(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
     orderQuery = $page.url.searchParams.get('o') || 'id:desc';

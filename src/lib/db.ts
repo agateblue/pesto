@@ -194,7 +194,7 @@ export const globals: Globals = {
   db: null,
   uiState: null,
   replications: [],
-  forms: {},
+  forms: {}
 };
 
 export type FormFieldConfiguration = {
@@ -290,16 +290,16 @@ export async function getDb() {
   return { db, uiState, replications: [] };
 }
 
-export function loadForms () {
-  let forms: DocumentType[] = []
-  return globals.db.documents
-  .find({
+export function loadFormsQuery() {
+  return globals.db.documents.find({
     limit: 20000,
     selector: { type: 'form' }
-  })
-  .$.subscribe((documents) => {
+  });
+}
+export function observeLoadForms() {
+  loadFormsQuery().$.subscribe((documents) => {
     for (const document of documents) {
-      globals.forms[document.data.id] = document.data
+      globals.forms[document.data.id] = document.data;
     }
   });
 }
