@@ -4,12 +4,11 @@
     anchorClass: string;
     title: string;
     children: import('svelte').Snippet;
-    dialogHeaderContent?: import('svelte').Snippet;
     onsubmit: Function;
     onopen?: Function;
   }
 
-  let { anchorClass, anchorText, dialogHeaderContent, children, onsubmit, title, onopen }: Props =
+  let { anchorClass, anchorText, children, onsubmit, title, onopen }: Props =
     $props();
   let dialog: HTMLDialogElement;
 </script>
@@ -31,10 +30,7 @@
 
 <dialog bind:this={dialog} aria-labelledby="dialog-title" aria-describedby="dialog-description">
   <form class="flow" {onsubmit}>
-    <div class="flex__row flex__justify-between">
-      <h2 id="dialog-title" class="m__block-0">{title}</h2>
-      {@render dialogHeaderContent?.()}
-    </div>
+    <h2 id="dialog-title" class="m__block-0">{title}</h2>
     <div class="flow" id="dialog-description">
       {@render children?.()}
     </div>

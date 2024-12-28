@@ -436,6 +436,9 @@ textarea {
     font-size: 80%;
     font-style: italic;
   }
+  input:not([type=checkbox]), textarea {
+    width: 100%;
+  }
 }
 
 .builder__field {

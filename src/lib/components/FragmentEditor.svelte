@@ -1,6 +1,7 @@
 <script lang="ts">
   import debounce from 'lodash/debounce';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
+  import FormRendered from './FormRendered.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
     globals,
@@ -15,8 +16,6 @@
     type Database
   } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
-  import IconaMoonCheckSquare from 'virtual:icons/iconamoon/check-square';
-  import IconaMoonPen from 'virtual:icons/iconamoon/pen';
 
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
@@ -33,7 +32,7 @@
 
   async function updateFragment(
     fragmentType: string,
-    fragment: TodolistType | TextType | undefined
+    fragment: TodolistType | TextType | FormType | undefined
   ) {
     if (!note) {
       let noteData = getNewNote();
@@ -51,6 +50,18 @@
   }
 </script>
 
+{#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
+<FormRendered
+  elClass="flow"
+  form={globals.forms[note.fragments.form.id]}
+  id={note.fragments.form.id}
+  onsubmit={async (values: object) => {
+    updateFragment('form', {id: note.fragments.form.id, data: values})
+  }}
+  values={note?.fragments?.form?.data}
+  showActions={false}
+  ></FormRendered>
+{/if}
 <TextFragmentEditor
   fragment={note?.fragments?.text || getNewTextFragment()}
   fieldId={`note-text-${id}`}

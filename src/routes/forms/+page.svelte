@@ -4,9 +4,10 @@
   import DialogForm from '$lib/components/DialogForm.svelte';
   import FormBuilder from '$lib/components/FormBuilder.svelte';
   import FormRendered from '$lib/components/FormRendered.svelte';
+  import { goto } from '$app/navigation';
 
   import { getRandomId, clearSubscriptions } from '$lib/ui';
-  import { type FormConfiguration, type DocumentType, createOrUpdateForm, globals } from '$lib/db';
+  import { type FormConfiguration, type DocumentType, createOrUpdateForm, globals, getNewNote } from '$lib/db';
   import { onDestroy } from 'svelte';
 
   let editedForm: FormConfiguration | null = $state(null);
@@ -66,7 +67,19 @@
       <div class="scroll">
         <div class="grid grid__gap">
           {#each forms as form}
-            <FormRendered form={form.data} id={form.id}></FormRendered>
+            <FormRendered
+              elClass="card card__narrow | flow"
+              form={form.data}
+              id={form.id}
+              onsubmit={async (values: object) => {
+                let noteData = getNewNote();
+                noteData.fragments = {
+                  form: {id: form.data.id, data: values}
+                }
+                let note = await globals.db.documents.insert(noteData);
+                await goto(`/my/notes/${note.id}`)
+              }}
+            ></FormRendered>
           {/each}
         </div>
       </div>
