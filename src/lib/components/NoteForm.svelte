@@ -43,6 +43,7 @@
         anchorClass="button__link"
         anchorText="Delete..."
         title="Delete this note?"
+        accesskey="r"
         onsubmit={(e: SubmitEvent) => {
           e.preventDefault();
           note.remove();
