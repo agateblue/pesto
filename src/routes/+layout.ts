@@ -1,5 +1,5 @@
 import { goto } from '$app/navigation';
-import { getDb, globals, loadFormsQuery, observeLoadForms } from '$lib/db';
+import { getDb, globals, loadFormsQuery, observeLoadForms, launchReplications } from '$lib/db';
 import { page } from '$app/stores';
 
 export const ssr = false;
@@ -19,7 +19,9 @@ export async function load() {
     globals.forms[document.data.id] = document.data;
   });
   observeLoadForms();
-
+  
+  launchReplications(globals.uiState, globals.db);
+  
   return {
     db: globals.db
   };
