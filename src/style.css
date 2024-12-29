@@ -496,6 +496,9 @@ textarea {
   svg {
     margin-inline-end: var(--space-2);
   }
+  [data-current-page=true] {
+    background-color: var(--primary-color);
+  }
 }
 
 .todolist {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { globals } from '$lib/db';
+  import MainNavigationLink from './MainNavigationLink.svelte'
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
@@ -7,6 +8,7 @@
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
+  import IconaMoonCategory from 'virtual:icons/iconamoon/category';
 
   import { onDestroy } from 'svelte';
   import { clearSubscriptions } from '$lib/ui';
@@ -42,26 +44,31 @@
         <MainNavigationToggle class="layout__multi-hidden" />
       </li>
       <li>
-        <a href="/my"><IconaMoonPen role="presentation" alt="" /> All notes · {totalNotes}</a>
+        <MainNavigationLink 
+          href="/my/notes/add" 
+          accesskey="a"><IconaMoonPen role="presentation" alt="" /> New note</MainNavigationLink>
       </li>
       <li>
-        <a href="/my?q=starred:true"
-          ><IconaMoonStarFill role="presentation" alt="" /> Starred · {totalStarred}</a
-        >
+        <MainNavigationLink 
+          href="/my" 
+          accesskey="n"><IconaMoonCategory role="presentation" alt="" /> All notes · {totalNotes}</MainNavigationLink>
       </li>
       <li>
-        <a href="/my?o=modified_at:desc"
-          ><IconaMoonClock role="presentation" alt="" /> Recently modified</a
-        >
+        <MainNavigationLink href="/my?q=starred:true" accesskey="s"
+          ><IconaMoonStarFill role="presentation" alt="" /> Starred · {totalStarred}</MainNavigationLink>
+      </li>
+      <li>
+        <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
+          ><IconaMoonClock role="presentation" alt="" /> Recently modified</MainNavigationLink>
       </li>
       <li><hr /></li>
       <li>
-        <a href="/board"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</a>
+        <MainNavigationLink href="/board" accesskey="b"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</MainNavigationLink>
       </li>
       <li><hr /></li>
-      <li><a href="/forms"><IconaMoonFileDocument role="presentation" alt="" /> Forms</a></li>
+      <li><MainNavigationLink href="/forms" accesskey="f"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
       <li><hr /></li>
-      <li><a href="/settings"><IconaMoonSettings role="presentation" alt="" /> Settings</a></li>
+      <li><MainNavigationLink href="/settings" accesskey="s"><IconaMoonSettings role="presentation" alt="" /> Settings</MainNavigationLink></li>
     </ul>
   </nav>
 </aside>
