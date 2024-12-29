@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import TodoRow from './TodoRow.svelte';
+  import { writable } from 'svelte/store';
   import cloneDeep from 'lodash/cloneDeep';
   import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
   import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
@@ -23,13 +24,24 @@
   let done: boolean = $state(fragment.done);
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
-
+  let todosFocused = $state(false)
+  let titleFocused = $state(false)
   let subscriptions = [
+    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
+      if (!todosFocused) {
+        todos = v
+      }
+    }),
     syncPropertiesWithExternalChanges(fragment.column$, (v) => {
       column = v;
     }),
     syncPropertiesWithExternalChanges(fragment.done$, (v) => {
       done = v;
+    }),
+    syncPropertiesWithExternalChanges(fragment.title$, (v) => {
+      if (!titleFocused) {
+        title = v;
+      }
     }),
   ];
 
@@ -84,7 +96,7 @@
 
   let stats = $state(getStats());
 </script>
-
+{titleFocused} {todosFocused}
 {#if title && columns}
   <div class="form__field">
     <label for="todolist-column">Column</label>
@@ -119,6 +131,8 @@
         trashIcon={true}
         {autofocus}
         todo={{ text: title, done: done, id }}
+        onblur={() => titleFocused = false}
+        onfocus={() => titleFocused = true}
         on:update={(e) => {
           done = e.detail.todo.done;
           title = e.detail.todo.text;
@@ -154,6 +168,8 @@
                   todo={todos[i]}
                   autofocus={false}
                   trashIcon={false}
+                  onblur={() => todosFocused = false}
+                  onfocus={() => todosFocused = true}
                   {editText}
                   on:delete={(e) => {
                     updateTodo(i, null);

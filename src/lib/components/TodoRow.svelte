@@ -18,9 +18,11 @@
     editText: boolean;
     autofocus: boolean;
     trashIcon: boolean;
+    onfocus: Function;
+    onblur: Function;
   }
 
-  let { todo, editText, autofocus = false, trashIcon = false }: Props = $props();
+  let { todo, editText, autofocus = false, trashIcon = false, onblur, onfocus }: Props = $props();
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {
@@ -64,6 +66,8 @@
       placeholder="Add new task…"
       rows="1"
       aria-label="Add a new task"
+      {onblur}
+      {onfocus}
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>
