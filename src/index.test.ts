@@ -18,7 +18,7 @@ import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
-    const input = 'is:task is:subtask is:done plop plip ploup tag:hello';
+    const input = 'is:task is:subtask is:done plop plip ploup tag:hello form:toto';
     const expected = [
       { type: 'is', value: 'task' },
       { type: 'is', value: 'subtask' },
@@ -26,7 +26,8 @@ describe('query language', () => {
       { type: 'text', value: 'plop' },
       { type: 'text', value: 'plip' },
       { type: 'text', value: 'ploup' },
-      { type: 'tag', value: 'hello' }
+      { type: 'tag', value: 'hello' },
+      { type: 'form', value: 'toto' },
     ];
     expect(getQueryTokens(input)).toStrictEqual(expected);
   });
@@ -53,6 +54,11 @@ describe('query language', () => {
   it('tag:hello', () => {
     const input: QueryToken[] = [{ type: 'tag', value: 'hello' }];
     const expected = [{ tags: 'hello' }];
+    expect(tokensToMangoQuery(input)).toStrictEqual(expected);
+  });
+  it('form:toto', () => {
+    const input: QueryToken[] = [{ type: 'form', value: 'toto' }];
+    const expected = [{ 'fragments.form.id': 'toto' }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
   it('basic text', () => {
