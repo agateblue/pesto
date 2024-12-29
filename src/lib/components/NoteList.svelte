@@ -1,7 +1,9 @@
 <script lang="ts">
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
-
+  import { clearSubscriptions } from '$lib/ui';
+  import { onDestroy } from 'svelte';
+  
   interface Props {
     searchQuery: string;
     orderQuery: string;
@@ -45,6 +47,11 @@
     subscription?.unsubscribe();
     subscription = loadNotes(searchQuery, orderQuery);
   });
+
+  onDestroy(() => {
+    clearSubscriptions([subscription])
+  })
+
 </script>
 
 <div class="wrapper | m__block-3" role="list">
