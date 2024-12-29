@@ -133,6 +133,7 @@
         todo={{ text: title, done: done, id }}
         onblur={() => titleFocused = false}
         onfocus={() => titleFocused = true}
+        accesskey="t"
         on:update={(e) => {
           done = e.detail.todo.done;
           title = e.detail.todo.text;

@@ -20,9 +20,10 @@
     trashIcon: boolean;
     onfocus: Function;
     onblur: Function;
+    accesskey?: string;
   }
 
-  let { todo, editText, autofocus = false, trashIcon = false, onblur, onfocus }: Props = $props();
+  let { todo, editText, autofocus = false, trashIcon = false, onblur, onfocus, accesskey }: Props = $props();
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {
@@ -68,6 +69,7 @@
       aria-label="Add a new task"
       {onblur}
       {onfocus}
+      {accesskey}
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>
