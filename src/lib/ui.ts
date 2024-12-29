@@ -90,7 +90,12 @@ export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export function updateURLParam(pageUrl, param: string, value: string) {
   let query = new URLSearchParams(pageUrl.searchParams.toString());
-  query.set(param, value);
+  if (!value) {
+    query.delete(param)
+  } else {
+    query.set(param, value);
+  }
+
   return query;
 }
 
