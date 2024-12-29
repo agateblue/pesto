@@ -11,6 +11,8 @@
   } from '$lib/db';
   import { createEventDispatcher } from 'svelte';
   import IconaMoonMoveThin from 'virtual:icons/iconamoon/move-thin';
+  import { onDestroy } from 'svelte';
+  import { clearSubscriptions } from '$lib/ui';
 
   const dispatch = createEventDispatcher<{
     delete: { note: DocumentDocument };
@@ -40,12 +42,19 @@
       $set: getNoteUpdateData(note, updateData)
     });
   }
-  note.$.subscribe(async (newNote: DocumentDocument) => {
-    if (isEmpty(newNote.fragments) && !deleted) {
-      deleted = true;
-      await newNote.incrementalRemove();
-    }
-  });
+
+  let subscriptions = [
+    note.$.subscribe(async (newNote: DocumentDocument) => {
+      if (isEmpty(newNote.fragments) && !deleted) {
+        deleted = true;
+        await newNote.incrementalRemove();
+      }
+    })
+  ]
+  onDestroy(() => {
+    clearSubscriptions(subscriptions)
+  })
+  
 </script>
 
 <div class="flex__row | flex__justify-between">
