@@ -15,6 +15,7 @@
     getNewNote
   } from '$lib/db';
   import { onDestroy } from 'svelte';
+  import sortBy from 'lodash/sortBy';
 
   let editedForm: FormConfiguration | null = $state(null);
 
@@ -26,9 +27,10 @@
         selector: { type: 'form' }
       })
       .$.subscribe((documents) => {
-        forms = documents.map((d) => {
+        
+        forms = sortBy(documents.map((d) => {
           return d.toMutableJSON();
-        });
+        }), ['data.name']);
       });
   }
 
