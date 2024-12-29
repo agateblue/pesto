@@ -2,8 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { onDestroy } from 'svelte';
   import { type TextType } from '$lib/db';
-  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
-
+  import { delay } from '$lib/ui';
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
     delete: {};
@@ -17,13 +16,6 @@
   let { fieldId, fragment }: Props = $props();
   let content = $state(fragment.content);
 
-  let subscriptions = [
-    syncPropertiesWithExternalChanges(fragment.content$, (v) => {
-      content = v;
-    })
-  ];
-
-  onDestroy(clearSubscriptions(subscriptions));
   function handleChange(content) {
     if (content) {
       dispatch('update', { fragment: { ...fragment, content } });
@@ -40,6 +32,6 @@
   id={fieldId}
   class="editor autoresize"
   placeholder="What's on your mind?"
-  onkeyup={(e) => handleChange(e.target.value.trim())}
+  onkeyup={(e) => handleChange(e.target.value)}
   value={content}
 ></textarea>
