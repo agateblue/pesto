@@ -331,6 +331,9 @@
             <li>
               <kbd>t</kbd> : On note edition page, focus the task field
             </li>
+            <li>
+              <kbd>r</kbd> : On note edition page, open the deletion modal
+            </li>
           </ul>
           <h1>Clear data</h1>
 
