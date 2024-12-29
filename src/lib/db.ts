@@ -249,7 +249,8 @@ export async function getDb() {
   }
   let db = await createRxDatabase<Database>({
     name: 'main',
-    storage: getRxStorageDexie()
+    storage: getRxStorageDexie(),
+    allowSlowCount: true,
   });
 
   const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
