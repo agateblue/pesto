@@ -23,7 +23,11 @@
 </script>
 
 <table class="table__simpledata">
-  <caption>{globals.forms[fragment.id]?.name || fragment.id}</caption>
+  <caption>
+    <a href={`/my?q=form:${fragment.id}`}>
+      {globals.forms[fragment.id]?.name || fragment.id}
+    </a>
+  </caption>
   <tbody>
     {#each fields as field}
       <tr>

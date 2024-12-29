@@ -536,7 +536,7 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   return data;
 }
 export type QueryToken = {
-  type: 'is' | 'text' | 'tag';
+  type: 'is' | 'text' | 'tag' | 'form';
   value: string;
 };
 
@@ -580,6 +580,11 @@ export function getQueryTokens(q: string) {
           type: 'tag',
           value: raw.slice(4)
         } as QueryToken;
+      } else if (raw.startsWith('form:')) {
+        return {
+          type: 'form',
+          value: raw.slice(5)
+        } as QueryToken;
       } else {
         return {
           type: 'text',
@@ -604,6 +609,9 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     }
     if (token.type === 'tag') {
       query.push({ tags: token.value });
+    }
+    if (token.type === 'form') {
+      query.push({ 'fragments.form.id': token.value });
     }
     if (token.type === 'text') {
       let orQuery = [];

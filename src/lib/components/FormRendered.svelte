@@ -30,7 +30,11 @@
 
 <div class={elClass}>
   <div class="flex__row flex__align-top flex__justify-between">
-    <h3 class="m__block-0">{form.name}</h3>
+    <h3 class="m__block-0">
+      <a href={`/my?q=form:${form.id}`}>
+        {form.name}
+      </a>
+    </h3>
     {#if showActions}
       <div>
         <DialogForm
