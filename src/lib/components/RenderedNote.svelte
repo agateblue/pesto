@@ -5,6 +5,8 @@
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import CollapsableContent from './CollapsableContent.svelte';
   import isEmpty from 'lodash/isEmpty';
+  import IconaMoonStar from 'virtual:icons/iconamoon/star';
+  import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
 
   interface Props {
     note: DocumentDocument;
@@ -18,9 +20,28 @@
 </script>
 
 <article {...rest}>
-  <a href={`/my/notes/${note.id}`}>
-    <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
-  </a>
+  <div class="flex__row flex__justify-between">
+    <a href={`/my/notes/${note.id}`}>
+      <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
+    </a>
+
+    <button
+      class="button__icon"
+      type="button"
+      onclick={(e) => {
+        note.incrementalUpdate({
+          $set: getNoteUpdateData(note, { starred: !note.starred })
+        });
+      }}
+      aria-label={note.starred ? 'Unstar' : 'Star'}
+    >
+      {#if note.starred}
+        <IconaMoonStarFill role="presentation" alt="" />
+      {:else}
+        <IconaMoonStar role="presentation" alt="" />
+      {/if}
+    </button>
+  </div>
   {#if note.fragments.form}
     <FormDataFragment fragment={note.fragments.form} />
   {/if}

@@ -57,7 +57,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 6,
+  version: 7,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -72,6 +72,9 @@ export const documentSchemaLiteral = {
     },
     title: {
       type: ['string', 'null']
+    },
+    starred: {
+      type: 'boolean'
     },
     created_at: {
       type: 'string',
@@ -250,7 +253,7 @@ export async function getDb() {
   let db = await createRxDatabase<Database>({
     name: 'main',
     storage: getRxStorageDexie(),
-    allowSlowCount: true,
+    allowSlowCount: true
   });
 
   const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
@@ -283,6 +286,10 @@ export async function getDb() {
           return oldDocumentData;
         },
         6: function (oldDocumentData) {
+          return oldDocumentData;
+        },
+        7: function (oldDocumentData) {
+          oldDocumentData.starred = false;
           return oldDocumentData;
         }
       }
@@ -536,7 +543,7 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   return data;
 }
 export type QueryToken = {
-  type: 'is' | 'text' | 'tag' | 'form';
+  type: 'is' | 'text' | 'tag' | 'form' | 'starred';
   value: string;
 };
 
@@ -585,6 +592,11 @@ export function getQueryTokens(q: string) {
           type: 'form',
           value: raw.slice(5)
         } as QueryToken;
+      } else if (raw.startsWith('starred:')) {
+        return {
+          type: 'starred',
+          value: raw.slice(8)
+        } as QueryToken;
       } else {
         return {
           type: 'text',
@@ -612,6 +624,9 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     }
     if (token.type === 'form') {
       query.push({ 'fragments.form.id': token.value });
+    }
+    if (token.type === 'starred') {
+      query.push({ starred: token.value === 'true' ? true : false });
     }
     if (token.type === 'text') {
       let orQuery = [];

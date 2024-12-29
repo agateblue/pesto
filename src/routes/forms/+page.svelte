@@ -27,10 +27,12 @@
         selector: { type: 'form' }
       })
       .$.subscribe((documents) => {
-        
-        forms = sortBy(documents.map((d) => {
-          return d.toMutableJSON();
-        }), ['data.name']);
+        forms = sortBy(
+          documents.map((d) => {
+            return d.toMutableJSON();
+          }),
+          ['data.name']
+        );
       });
   }
 

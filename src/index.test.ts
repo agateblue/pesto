@@ -18,7 +18,7 @@ import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
-    const input = 'is:task is:subtask is:done plop plip ploup tag:hello form:toto';
+    const input = 'is:task is:subtask is:done plop plip ploup tag:hello form:toto starred:true';
     const expected = [
       { type: 'is', value: 'task' },
       { type: 'is', value: 'subtask' },
@@ -28,6 +28,7 @@ describe('query language', () => {
       { type: 'text', value: 'ploup' },
       { type: 'tag', value: 'hello' },
       { type: 'form', value: 'toto' },
+      { type: 'starred', value: 'true' }
     ];
     expect(getQueryTokens(input)).toStrictEqual(expected);
   });
@@ -59,6 +60,11 @@ describe('query language', () => {
   it('form:toto', () => {
     const input: QueryToken[] = [{ type: 'form', value: 'toto' }];
     const expected = [{ 'fragments.form.id': 'toto' }];
+    expect(tokensToMangoQuery(input)).toStrictEqual(expected);
+  });
+  it('starred:true', () => {
+    const input: QueryToken[] = [{ type: 'starred', value: 'true' }];
+    const expected = [{ starred: true }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
   it('basic text', () => {
@@ -296,7 +302,8 @@ describe('query language', () => {
       data: {
         'form:field1': 0.14,
         'form:field2': true
-      }
+      },
+      favorite: true
     };
     const expected: DocumentDocument & RxBaseDoc = {
       id: '2024-11-06T12:10:22.438Z',
@@ -304,6 +311,7 @@ describe('query language', () => {
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
+      starred: true,
       fragments: {
         text: {
           content: "Hello #world I'm -sad"
@@ -335,7 +343,8 @@ describe('query language', () => {
         { label: 'Dishes', done: true },
         { label: 'Laundry', done: false }
       ],
-      _deleted: false
+      _deleted: false,
+      favorite: false
     };
     const expected: DocumentDocument & RxBaseDoc = {
       id: '2024-11-06T12:10:22.438Z',
@@ -344,6 +353,7 @@ describe('query language', () => {
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
       _deleted: false,
+      starred: false,
       fragments: {
         todolist: {
           done: false,
@@ -370,7 +380,8 @@ describe('query language', () => {
       index: -1,
       list: 3,
       subtasks: [],
-      _deleted: false
+      _deleted: false,
+      favorite: true
     };
     const expected: DocumentDocument & RxBaseDoc = {
       id: '2024-11-06T12:10:22.438Z',
@@ -378,6 +389,7 @@ describe('query language', () => {
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
+      starred: true,
       _deleted: false,
       fragments: {
         todolist: {
