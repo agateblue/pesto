@@ -7,12 +7,24 @@
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
 
+  import { onDestroy } from 'svelte';
+  import { clearSubscriptions } from '$lib/ui';
+
   let sidebarFullpage = $state(false);
 
   const observable = globals.uiState.get$('currentPage');
   observable.subscribe((newValue) => {
     sidebarFullpage = newValue === 'mainMenu';
   });
+
+  let totalNotes: number | null = $state(null)
+  let totalTodos: number | null = $state(null)
+  const subscriptions = [
+    globals.db?.documents.count({selector: {type: 'note'}}).$.subscribe(v => totalNotes = v),
+    globals.db?.documents.count({selector: {'fragments.todolist.done': false}}).$.subscribe(v => totalTodos = v),
+  ]
+  onDestroy(clearSubscriptions(subscriptions));
+
 </script>
 
 <aside data-fullpage={sidebarFullpage}>
@@ -21,14 +33,14 @@
       <li>
         <MainNavigationToggle class="layout__multi-hidden" />
       </li>
-      <li><a href="/my"><IconaMoonPen role="presentation" alt="" /> All notes</a></li>
+      <li><a href="/my"><IconaMoonPen role="presentation" alt="" /> All notes · {totalNotes}</a></li>
       <li>
         <a href="/my?o=modified_at:desc"
           ><IconaMoonClock role="presentation" alt="" /> Recently modified</a
         >
       </li>
       <li><hr /></li>
-      <li><a href="/board"><IconaMoonApps role="presentation" alt="" /> Board</a></li>
+      <li><a href="/board"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</a></li>
       <li><hr /></li>
       <li><a href="/forms"><IconaMoonFileDocument role="presentation" alt="" /> Forms</a></li>
       <li><hr /></li>
