@@ -8,9 +8,10 @@
   interface Props {
     searchQuery: string;
     orderQuery: string;
+    onclear: Function;
   }
 
-  let { searchQuery = $bindable(), orderQuery = $bindable() }: Props = $props();
+  let { searchQuery = $bindable(), orderQuery = $bindable(), onclear }: Props = $props();
 
   let notes: DocumentDocument[] = $state([]);
   let isLoading = $state(false)
@@ -61,6 +62,14 @@
 
 <div class="wrapper | m__block-3" role="list" aria-live="polite" aria-busy={isLoading}>
   <LoadingState {isLoading}>Loading data…</LoadingState>
+  {#if !isLoading && notes.length === 0}
+    <p>No note found.</p>
+  {/if}
+  {#if !isLoading && searchQuery.trim()}
+    <div class="flex__column flex__align-end">
+      <button type="button" class="button__outlined button__discrete" onclick={onclear}>Clear search/filters</button>
+    </div>
+  {/if}
   {#each notes as note}
     {#key note._rev}
       <RenderedNote {note} class="diary__note flow | p__block-3" role="listitem"></RenderedNote>
