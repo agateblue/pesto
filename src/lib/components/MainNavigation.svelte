@@ -54,7 +54,7 @@
           accesskey="n"><IconaMoonCategory role="presentation" alt="" /> All notes · {totalNotes}</MainNavigationLink>
       </li>
       <li>
-        <MainNavigationLink href="/my?q=starred:true" accesskey="s"
+        <MainNavigationLink href="/my?q=starred:true" accesskey="f"
           ><IconaMoonStarFill role="presentation" alt="" /> Starred · {totalStarred}</MainNavigationLink>
       </li>
       <li>
@@ -66,7 +66,7 @@
         <MainNavigationLink href="/board" accesskey="b"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</MainNavigationLink>
       </li>
       <li><hr /></li>
-      <li><MainNavigationLink href="/forms" accesskey="f"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
+      <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
       <li><hr /></li>
       <li><MainNavigationLink href="/settings" accesskey="s"><IconaMoonSettings role="presentation" alt="" /> Settings</MainNavigationLink></li>
     </ul>

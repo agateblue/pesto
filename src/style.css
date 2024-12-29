@@ -526,6 +526,14 @@ textarea {
   }
 }
 
+li:has(kbd) {
+  margin-bottom: var(--space-1);
+  kbd {
+    padding-inline: var(--space-1);
+    border-radius: 2px;
+    border: var(--layout-separator);
+  }
+}
 hr {
   border: none;
   border-top: 1px solid var(--text-discrete-color);
