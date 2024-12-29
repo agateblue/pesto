@@ -96,7 +96,7 @@
 
   let stats = $state(getStats());
 </script>
-{titleFocused} {todosFocused}
+
 {#if title && columns}
   <div class="form__field">
     <label for="todolist-column">Column</label>
