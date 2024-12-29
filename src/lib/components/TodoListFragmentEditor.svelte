@@ -25,18 +25,12 @@
   let id: string = $state(buildUniqueId());
 
   let subscriptions = [
-    syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
-      todos = v;
-    }),
     syncPropertiesWithExternalChanges(fragment.column$, (v) => {
       column = v;
     }),
     syncPropertiesWithExternalChanges(fragment.done$, (v) => {
       done = v;
     }),
-    syncPropertiesWithExternalChanges(fragment.title$, (v) => {
-      title = v;
-    })
   ];
 
   onDestroy(clearSubscriptions(subscriptions));
@@ -153,11 +147,13 @@
     {#if stats.total > 1 || title}
       <ol class="todolist">
         {#each todos as todo, i (i)}
-          {#if editText || todo.text.trim()}
+          {#if editText || todo.text}
             <li>
               {#key todo.id}
                 <TodoRow
                   todo={todos[i]}
+                  autofocus={false}
+                  trashIcon={false}
                   {editText}
                   on:delete={(e) => {
                     updateTodo(i, null);
