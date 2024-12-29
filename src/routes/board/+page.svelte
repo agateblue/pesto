@@ -2,6 +2,7 @@
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import TodoCard from '$lib/components/TodoCard.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
+  import LoadingState from '$lib/components/LoadingState.svelte';
   import DialogForm from '$lib/components/DialogForm.svelte';
   import { type RxDocument } from 'rxdb';
   import Lazy from 'svelte-lazy';
@@ -47,6 +48,7 @@
     index: number;
     limit: number;
     selector: MangoQuerySelector<DocumentDocType>;
+    isLoading: boolean;
   };
 
   type SettingsBoard = DocumentType & {
@@ -85,21 +87,27 @@
             cards: [],
             index: 0,
             limit: 9999,
-            selector: FIRST_COLUMN_SELECTOR
+            selector: FIRST_COLUMN_SELECTOR,
+            isLoading: true,
+            
           },
           {
             name: 'Doing',
             cards: [],
             index: 1,
             limit: 9999,
-            selector: getColumnSelector(1)
+            selector: getColumnSelector(1),
+            isLoading: true,
+            
           },
           {
             name: 'Done',
             cards: [],
             index: -1,
             limit: 30,
-            selector: DONE_COLUMN_SELECTOR
+            selector: DONE_COLUMN_SELECTOR,
+            isLoading: true,
+            
           }
         ];
       } else {
@@ -108,7 +116,8 @@
             name: v,
             cards: [],
             index: i,
-            selector: getColumnSelector(i)
+            selector: getColumnSelector(i),
+            isLoading: true,
           };
           if (i === 0) {
             // unassign entries go to the first column
@@ -119,6 +128,7 @@
             c.selector = DONE_COLUMN_SELECTOR;
             c.index = -1;
             c.limit = 30;
+            c.isLoading = true
           }
           columns = [...columns, c];
         });
@@ -133,6 +143,7 @@
             selector: v.selector
           })
           .$.subscribe((notes) => {
+            v.isLoading = false
             v.cards = notes.map((n) => {
               return {
                 id: n.id,
@@ -201,13 +212,13 @@
       <div class="scroll">
         <div class="flex__row | board">
           {#each columns as column}
-            <section class="flex__column | board__column">
+            <section class="flex__column | board__column" aria-busy={column.isloading} aria-live="polite">
               <h3>{column.name}</h3>
               <button
-                class="m__block-1"
-                type="button"
-                style={column.index === -1 ? 'visibility: hidden' : ''}
-                onclick={async (e) => {
+              class="m__block-1"
+              type="button"
+              style={column.index === -1 ? 'visibility: hidden' : ''}
+              onclick={async (e) => {
                   let note = getNewNote();
                   note.fragments.todolist = getNewTodoListFragment();
                   note.fragments.todolist.column = column.index;
@@ -215,6 +226,7 @@
                   await globals.db?.documents.insert(note);
                 }}>Add task</button
               >
+              <LoadingState isLoading={column.isLoading}>Loading data…</LoadingState>
               <ol
                 class="flex__grow | p__block-0 p__inline-0 | flow"
                 use:dragHandleZone={{ items: column.cards, flipDurationMs: 100 }}

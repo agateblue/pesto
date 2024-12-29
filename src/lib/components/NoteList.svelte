@@ -1,9 +1,10 @@
 <script lang="ts">
   import RenderedNote from '$lib/components/RenderedNote.svelte';
+  import LoadingState from '$lib/components/LoadingState.svelte';
   import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
   import { clearSubscriptions } from '$lib/ui';
   import { onDestroy } from 'svelte';
-  
+
   interface Props {
     searchQuery: string;
     orderQuery: string;
@@ -12,6 +13,7 @@
   let { searchQuery = $bindable(), orderQuery = $bindable() }: Props = $props();
 
   let notes: DocumentDocument[] = $state([]);
+  let isLoading = $state(false)
 
   function getSortFromOrderQuery(o: string) {
     let field, direction;
@@ -31,13 +33,16 @@
   }
 
   function loadNotes(q: string, o: string) {
+    isLoading = true
+    notes = []
     return globals.db.documents
-      .find({
-        limit: 20,
-        sort: [getSortFromOrderQuery(o)],
-        selector: { type: 'note', ...getSelector(q) }
-      })
-      .$.subscribe((documents) => {
+    .find({
+      limit: 20,
+      sort: [getSortFromOrderQuery(o)],
+      selector: { type: 'note', ...getSelector(q) }
+    })
+    .$.subscribe((documents) => {
+        isLoading = false
         notes = documents;
       });
   }
@@ -54,7 +59,8 @@
 
 </script>
 
-<div class="wrapper | m__block-3" role="list">
+<div class="wrapper | m__block-3" role="list" aria-live="polite" aria-busy={isLoading}>
+  <LoadingState {isLoading}>Loading data…</LoadingState>
   {#each notes as note}
     {#key note._rev}
       <RenderedNote {note} class="diary__note flow | p__block-3" role="listitem"></RenderedNote>
