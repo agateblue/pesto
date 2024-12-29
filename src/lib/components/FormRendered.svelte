@@ -80,15 +80,21 @@
 
     <div class="flex__row flex__justify-between">
       <button type="submit">Save</button>
-      <button type="button" class="button__link" onclick={async () => {
-        let last = await globals.db.documents.findOne({
-          selector: {'fragments.form.id': form.id},
-          sort: [{id: 'desc'}]
-        }).exec()
-        if (last) {
-          v = cloneDeep(last.fragments.form.data)
-        }
-      }}>Use last values</button>
+      <button
+        type="button"
+        class="button__link"
+        onclick={async () => {
+          let last = await globals.db.documents
+            .findOne({
+              selector: { 'fragments.form.id': form.id },
+              sort: [{ id: 'desc' }]
+            })
+            .exec();
+          if (last) {
+            v = cloneDeep(last.fragments.form.data);
+          }
+        }}>Use last values</button
+      >
     </div>
     {@render children?.()}
   </form>

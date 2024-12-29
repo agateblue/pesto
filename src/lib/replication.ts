@@ -118,6 +118,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       _deleted: document._deleted,
       fragments: {},
       tags: [],
+      starred: document.favorite,
       title: null
     };
     if (document.type === 'entry') {
