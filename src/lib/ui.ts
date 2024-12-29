@@ -106,6 +106,17 @@ export function getRandomId(length = 8) {
   return result;
 }
 
+export function syncPropertiesWithExternalChanges(
+  observable,
+  callback: Function,
+  debounceInterval = 200
+) {
+  if (!observable?.subscribe) {
+    return;
+  }
+  return observable.subscribe(debounce(callback, debounceInterval));
+}
+
 export function clearSubscriptions(subscriptions: []) {
   return () => {
     subscriptions.forEach((s) => {
