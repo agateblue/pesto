@@ -473,7 +473,13 @@ textarea {
   border-block-end: var(--layout-separator);
 }
 .nav__main {
+  h2 {
+    font-size: 1.1rem;
+    padding-inline: var(--space-2);
+    margin-block-end: var(--space-2);
+  }
   ul {
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     list-style-type: none;

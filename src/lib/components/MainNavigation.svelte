@@ -39,7 +39,8 @@
 
 <aside data-fullpage={sidebarFullpage}>
   <nav class="nav__main" aria-label="Main menu">
-    <ul>
+    <ul class="flex__column">
+      <li><h2>Diary</h2></li>
       <li>
         <MainNavigationToggle class="layout__multi-hidden" />
       </li>
@@ -61,12 +62,13 @@
         <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
           ><IconaMoonClock role="presentation" alt="" /> Recently modified</MainNavigationLink>
       </li>
-      <li><hr /></li>
+      <li><h2>To-dos</h2></li>
       <li>
         <MainNavigationLink href="/board" accesskey="b"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</MainNavigationLink>
       </li>
-      <li><hr /></li>
+      <li><h2>Data</h2></li>
       <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
+      <li class="flex__grow"></li>
       <li><hr /></li>
       <li><MainNavigationLink href="/settings" accesskey="s"><IconaMoonSettings role="presentation" alt="" /> Settings</MainNavigationLink></li>
     </ul>
