@@ -29,8 +29,9 @@
       return {};
     }
 
-    let tokens = getQueryTokens(q);
-    return { $and: tokensToMangoQuery(tokens) };
+    let tokens = q.split(',').map(v => getQueryTokens(v));
+    let selector = { $or: tokens.map(t => {return {$and: tokensToMangoQuery(t)}})};
+    return selector
   }
 
   function loadNotes(q: string, o: string) {
