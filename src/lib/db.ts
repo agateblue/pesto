@@ -542,8 +542,8 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   return data;
 }
 export type QueryToken = {
-  type: 'is' | 'text' | 'tag' | 'form' | 'starred';
-  value: string;
+  type: 'is' | 'text' | 'tag' | 'form' | 'starred' | 'column';
+  value: string | number;
 };
 
 export function getTimeId() {
@@ -596,6 +596,11 @@ export function getQueryTokens(q: string) {
           type: 'starred',
           value: raw.slice(8)
         } as QueryToken;
+      } else if (raw.startsWith('column:')) {
+        return {
+          type: 'column',
+          value: parseInt(raw.slice(7))
+        } as QueryToken;
       } else {
         return {
           type: 'text',
@@ -608,7 +613,7 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
   let query = [];
   for (const token of tokens) {
     if (token.type === 'is') {
-      if (token.value === 'task') {
+      if (token.value === 'todo') {
         query.push({ 'fragments.todolist': { $exists: true } });
       } else if (token.value === 'subtask') {
         query.push({ 'fragments.todolist.todos.1': { $exists: true } });
@@ -626,6 +631,9 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     }
     if (token.type === 'starred') {
       query.push({ starred: token.value === 'true' ? true : false });
+    }
+    if (token.type === 'column') {
+      query.push({ 'fragments.todolist.column': token.value });
     }
     if (token.type === 'text') {
       let orQuery = [];

@@ -9,6 +9,7 @@
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
   import IconaMoonCategory from 'virtual:icons/iconamoon/category';
+  import IconaMoonMenuKebabVerticalSquare from 'virtual:icons/iconamoon/menu-kebab-vertical-square';
 
   import { onDestroy } from 'svelte';
   import { clearSubscriptions } from '$lib/ui';
@@ -23,6 +24,8 @@
   let totalNotes: number | null = $state(null);
   let totalTodos: number | null = $state(null);
   let totalStarred: number | null = $state(null);
+  let boardColumns = $state([])
+
   const subscriptions = [
     globals.db?.documents
       .count({ selector: { type: 'note' } })
@@ -32,7 +35,15 @@
       .$.subscribe((v) => (totalTodos = v)),
     globals.db?.documents
       .count({ selector: { starred: true } })
-      .$.subscribe((v) => (totalStarred = v))
+      .$.subscribe((v) => (totalStarred = v)),
+    globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
+      let columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
+      boardColumns = columns.map(c => {return {name: c, total: 0}})
+      boardColumns.pop()
+      // for (var i=0; i < columns.length; i++) {
+        
+      // }
+    }),
   ];
   onDestroy(clearSubscriptions(subscriptions));
 </script>
@@ -66,6 +77,12 @@
       <li>
         <MainNavigationLink href="/board" accesskey="b"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</MainNavigationLink>
       </li>
+      {#each boardColumns as column, i (i)}
+      <li>
+        <MainNavigationLink href={`/my?q=is:todo column:${i}`}>
+          <IconaMoonMenuKebabVerticalSquare role="presentation" alt="" />{column.name}</MainNavigationLink>
+      </li>
+      {/each}
       <li><h2>Data</h2></li>
       <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
       <li class="flex__grow"></li>
