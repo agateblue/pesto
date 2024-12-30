@@ -507,6 +507,16 @@ textarea {
   }
 }
 
+.badge {
+  background: var(--primary-color);
+  border-radius: 2px;
+  padding: 0 var(--space-1);
+}
+
+.float__end {
+  float: inline-end;
+}
+
 .todolist {
   list-style: none;
   margin-inline-start: 0;
