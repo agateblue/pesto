@@ -16,12 +16,6 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
-import { replicateWebRTC, getConnectionHandlerSimplePeer } from 'rxdb/plugins/replication-webrtc';
-
-import {
-  replicateCouchDB,
-  getFetchWithCouchDBAuthorization
-} from 'rxdb/plugins/replication-couchdb';
 
 import cloneDeep from 'lodash/cloneDeep';
 import { delay, parseTags } from './ui';
@@ -360,17 +354,20 @@ async function createReplication(db: Database, config: AnyReplication) {
     pushPullConfig.pull = {};
   }
   if (config.type === 'couchdb') {
+    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb')
     const couchdbUrl = `${config.server}/${config.database}/`;
-    state = replicateCouchDB({
+    state = CouchDBPlugin.replicateCouchDB({
       replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
       collection: db.documents,
       url: couchdbUrl,
       live: true,
-      fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
+      fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
       ...pushPullConfig
     });
   }
   if (config.type === 'couchdb-tempo') {
+    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb')
+
     let boardSettings = await getSettingData('board:settings', {
       columns: ['Todo', 'Doing', 'Done']
     });
@@ -393,21 +390,23 @@ async function createReplication(db: Database, config: AnyReplication) {
         return c;
       };
     }
-    state = replicateCouchDB({
+    state = CouchDBPlugin.replicateCouchDB({
       replicationIdentifier: `pesto-tempo-couchdb-replication-${couchdbUrl}`,
       collection: db.documents,
       url: couchdbUrl,
       live: true,
-      fetch: getFetchWithCouchDBAuthorization(config.username, config.password),
+      fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
       ...pushPullConfig
     });
   }
   if (config.type === 'webrtc') {
-    state = await replicateWebRTC({
+
+    let WebRTCPlugin = await import('rxdb/plugins/replication-webrtc')
+    state = await WebRTCPlugin.replicateWebRTC({
       collection: db.documents,
       topic: config.room,
       ...pushPullConfig,
-      connectionHandlerCreator: getConnectionHandlerSimplePeer({
+      connectionHandlerCreator: WebRTCPlugin.getConnectionHandlerSimplePeer({
         signalingServerUrl: config.signalingServer
       })
     });
