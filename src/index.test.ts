@@ -18,9 +18,9 @@ import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
-    const input = 'is:task is:subtask is:done plop plip ploup tag:hello form:toto starred:true';
+    const input = 'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
     const expected = [
-      { type: 'is', value: 'task' },
+      { type: 'is', value: 'todo' },
       { type: 'is', value: 'subtask' },
       { type: 'is', value: 'done' },
       { type: 'text', value: 'plop' },
@@ -28,12 +28,13 @@ describe('query language', () => {
       { type: 'text', value: 'ploup' },
       { type: 'tag', value: 'hello' },
       { type: 'form', value: 'toto' },
-      { type: 'starred', value: 'true' }
+      { type: 'starred', value: 'true' },
+      { type: 'column', value: 2 },
     ];
     expect(getQueryTokens(input)).toStrictEqual(expected);
   });
-  it('is:task', () => {
-    const input: QueryToken[] = [{ type: 'is', value: 'task' }];
+  it('is:todo', () => {
+    const input: QueryToken[] = [{ type: 'is', value: 'todo' }];
     const expected = [{ 'fragments.todolist': { $exists: true } }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
@@ -65,6 +66,11 @@ describe('query language', () => {
   it('starred:true', () => {
     const input: QueryToken[] = [{ type: 'starred', value: 'true' }];
     const expected = [{ starred: true }];
+    expect(tokensToMangoQuery(input)).toStrictEqual(expected);
+  });
+  it('column:2', () => {
+    const input: QueryToken[] = [{ type: 'column', value: 2 }];
+    const expected = [{ 'fragments.todolist.column': 2 }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
   it('basic text', () => {

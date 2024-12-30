@@ -9,7 +9,7 @@
   let { children, href, ...restProps } = $props();
 
   function isCurrentPage () {
-    return $page.url.pathname +  $page.url.search === href
+    return $page.url.pathname +  $page.url.search === href.replace(' ', '%20')
   }
 </script>
 
