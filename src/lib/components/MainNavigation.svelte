@@ -63,11 +63,18 @@
       <li>
         <MainNavigationLink 
           href="/my" 
-          accesskey="n"><IconaMoonCategory role="presentation" alt="" /> All notes · {totalNotes}</MainNavigationLink>
+          accesskey="n">
+            <IconaMoonCategory role="presentation" alt="" /> 
+              All notes <span class="badge float__end">{totalNotes}</span>
+        </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true" accesskey="f"
-          ><IconaMoonStarFill role="presentation" alt="" /> Starred · {totalStarred}</MainNavigationLink>
+          >
+          <IconaMoonStarFill role="presentation" alt="" />
+          Starred 
+          <span class="badge float__end">{totalStarred}</span>
+        </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
@@ -75,7 +82,11 @@
       </li>
       <li><h2>To-dos</h2></li>
       <li>
-        <MainNavigationLink href="/board" accesskey="b"><IconaMoonApps role="presentation" alt="" /> Board · {totalTodos}</MainNavigationLink>
+        <MainNavigationLink href="/board" accesskey="b">
+          <IconaMoonApps role="presentation" alt="" />
+            Board
+            <span class="badge float__end">{totalTodos}</span>
+        </MainNavigationLink>
       </li>
       {#each boardColumns as column, i (i)}
       <li>
