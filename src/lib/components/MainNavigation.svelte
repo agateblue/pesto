@@ -51,10 +51,10 @@
 <aside data-fullpage={sidebarFullpage}>
   <nav class="nav__main" aria-label="Main menu">
     <ul class="flex__column">
-      <li><h2>Diary</h2></li>
       <li>
         <MainNavigationToggle class="layout__multi-hidden" />
       </li>
+      <li><h2>Diary</h2></li>
       <li>
         <MainNavigationLink 
           href="/my/notes/add" 
