@@ -1,5 +1,14 @@
-import { type DocumentType, type FormConfiguration, type FormFieldConfiguration } from './db';
-import { parseTags } from './ui';
+import {
+  type DocumentType,
+  type FormConfiguration,
+  type FormFieldConfiguration,
+  type DocumentDocument,
+  createOrUpdateSetting,
+  getSettingData,
+  createOrUpdateForm,
+  globals,
+} from './db';
+import { parseTags, type LogMessage } from './ui';
 import isEmpty from 'lodash/isEmpty';
 
 export type RxBaseDoc = {
@@ -206,4 +215,163 @@ export function tempoBlueprintsToPestoForm(blueprints: object[]) {
     finalForms.push(form);
   });
   return finalForms;
+}
+
+export async function handleImportTempo(
+  files: FileList,
+  messages: LogMessage[],
+  flags = {
+    entries: true,
+    tasks: true,
+    forms: true,
+    aliases: true,
+  }) {
+  let tempoFile;
+  try {
+    tempoFile = files[0];
+  } catch {
+    return messages.push({ type: 'error', text: 'No file was provided' });
+  }
+
+  // init
+  messages.push({ type: 'info', text: 'Opening file…' });
+  let content = await tempoFile.text();
+  messages.push({ type: 'info', text: 'File read!' });
+
+  messages.push({ type: 'info', text: 'Parsing file…' });
+  let data: object = JSON.parse(content);
+  messages.push({ type: 'info', text: 'File parsed!' });
+
+  messages.push({ type: 'info', text: 'File parsed!' });
+
+  let settingsById = {}
+  for (const setting of (data.settings || [])) {
+    settingsById[setting._id] = setting 
+  }
+  // starting importing various types:
+
+  // import: forms
+  if (flags.forms) {
+    let blueprints: object[] = data.blueprints || [];
+    messages.push({ type: 'info', text: `${blueprints.length} tempo blueprints to import found` });
+    const forms: FormConfiguration[] = tempoBlueprintsToPestoForm(blueprints);
+    messages.push({ type: 'info', text: `${blueprints.length} tempo forms to import` });
+    for (const form of forms) {
+      // skip form with existing matching ids
+      let existing = await globals.db?.documents
+        .findOne({
+          selector: { type: 'form', 'data.id': form.id }
+        })
+        .exec();
+      if (existing) {
+        messages.push({ type: 'info', text: `Skipping ${form.id} at it already exists` });
+      } else {
+        // to avoid clashing ids we wait a few milliseconds
+        await createOrUpdateForm(null, form, 'Tempo');
+        messages.push({ type: 'info', text: `Inserted ${form.id}!` });
+      }
+    }
+  } else {
+    messages.push({ type: 'info', text: `Skip forms import.` });
+  }
+
+  // import: entries
+  if (flags.entries) {
+    let pestoNotes: DocumentDocument[] = [];
+    let entries: [] = data.entries || [];
+
+    messages.push({ type: 'info', text: `Importing ${entries.length} entries…` });
+    for (const entry of entries) {
+      let converted: DocumentType | null = tempoToPestoDocument(
+        entry,
+        -1
+      );
+      if (converted && converted.type != 'ignored') {
+        pestoNotes.push(converted);
+      } else {
+        console.debug('Ignored tempo entry', entry, converted);
+      }
+    }
+
+    messages.push({ type: 'info', text: `Saving ${pestoNotes.length} converted Tempo notes…` });
+    let resultPestoNotes = await globals.db.documents.bulkInsert(pestoNotes);
+
+    console.debug('Saving notes result:', resultPestoNotes);
+    messages.push({
+      type: 'warning',
+      text: `Ignored ${resultPestoNotes.error.length} unsupported notes or duplicates`
+    });
+  } else {
+    messages.push({ type: 'info', text: `Skip entries import.` });
+  }
+
+  // import: tasks/board
+  if (flags.tasks) {
+    let boardConfig: object = data?.board?.settings;
+    let tasks: [] = data?.board?.tasks || [];
+    let pestoTasks: DocumentDocument[] = [];
+
+    messages.push({ type: 'info', text: `${tasks.length} tempo tasks found` });
+    
+    messages.push({
+      type: 'info',
+      text: boardConfig
+        ? `Tempo board config found: ${JSON.stringify(boardConfig.lists)}`
+        : `No board config found`
+    });
+    messages.push({ type: 'info', text: `Loading current board config…` });
+    let newBoardConfig = await getSettingData('settings:board', {
+      columns: ['Todo', 'Doing', 'Done']
+    });
+    if (boardConfig?.lists) {
+      messages.push({ type: 'info', text: `Importing Tempo board config…` });
+      // Tempo doesn't include the "done" column in the export, we add it manually
+      newBoardConfig.columns = [...boardConfig.lists.map((r) => r.label), 'Done'];
+      messages.push({
+        type: 'info',
+        text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`
+      });
+      await createOrUpdateSetting('settings:board', newBoardConfig, 'Tempo');
+    }
+
+    for (const task of tasks) {
+      let converted: DocumentType | null = tempoToPestoDocument(
+        task,
+        newBoardConfig.columns.length - 1
+      );
+      // console.debug('CONVERTED Tempo task', task, converted);
+      if (converted && converted.type != 'ignored') {
+        pestoTasks.push(converted);
+      }
+    }
+    messages.push({ type: 'info', text: `Saving ${pestoTasks.length} converted Tempo tasks…` });
+
+    let resultPestoTasks = await globals.db.documents.bulkInsert(pestoTasks);
+    console.debug('Saving tasks result:', resultPestoTasks);
+    messages.push({
+      type: 'warning',
+      text: `Ignored ${resultPestoTasks.error.length} tasks duplicates`
+    });
+  } else {
+    messages.push({ type: 'info', text: `Skip tasks and board import.` });
+  }
+  
+  // import: aliases
+  if (flags.aliases) {
+    if (settingsById.aliases) {
+      messages.push({ type: 'info', text: `Importing ${settingsById.aliases.length} Tempo aliases…` });
+      let collections = settingsById.aliases.value.map(a => {
+        return {
+          id: a._id,
+          name: a.name,
+          query: a.query,
+        }
+      })
+      await createOrUpdateSetting('settings:collections', {collections}, 'Tempo');
+    } 
+  } else {
+    messages.push({ type: 'info', text: `Skip aliases import.` });
+  }
+  
+  messages.push({ type: 'success', text: `Import complete!` });
 }
