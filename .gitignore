@@ -25,3 +25,5 @@ main
 
 # this one is okay to have commited because is should only contain public data
 !.env
+
+android
