@@ -17,6 +17,7 @@ import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
 import { RxDBCleanupPlugin } from 'rxdb/plugins/cleanup';
+import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
 import cloneDeep from 'lodash/cloneDeep';
 import { delay, parseTags } from './ui';
 import { tempoToPestoDocument } from './replication';
@@ -31,6 +32,7 @@ addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBCleanupPlugin);
+addRxPlugin(RxDBLeaderElectionPlugin);
 
 export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/';
 
