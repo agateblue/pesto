@@ -57,7 +57,7 @@
       </li>
       <div class="flex__row flex__justify-between flex__align-center">
         <h2>Pesto</h2>
-        <a href="/settings" class="p__block-2 p__inline-3"  aria-label="Settings" accesskey="s">
+        <a href="/settings" class="icon__link"  aria-label="Settings" accesskey="s">
           <IconaMoonSettings role="presentation" class=" icon__size-2" height=none width=none alt="" />
         </a>
 
@@ -65,33 +65,31 @@
       <li>
         <MainNavigationLink 
           href="/my/notes/add" 
-          accesskey="a"><IconaMoonPen role="presentation" alt="" /> New note</MainNavigationLink>
+          accesskey="a"><IconaMoonPen role="presentation" alt="" />New note</MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink 
           href="/my" 
           accesskey="n">
-            <IconaMoonCategory role="presentation" alt="" /> 
-              All notes <span class="badge float__end">{totalNotes}</span>
+            <IconaMoonCategory role="presentation" alt="" />All notes 
+            <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true" accesskey="f"
           >
-          <IconaMoonStarFill role="presentation" alt="" />
-          Starred 
+          <IconaMoonStarFill role="presentation" alt="" />Starred 
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
-          ><IconaMoonClock role="presentation" alt="" /> Recently modified</MainNavigationLink>
+          ><IconaMoonClock role="presentation" alt="" />Recently modified</MainNavigationLink>
       </li>
       <li><h2>To-dos</h2></li>
       <li>
         <MainNavigationLink href="/board" accesskey="b">
-          <IconaMoonApps role="presentation" alt="" />
-            Board
+          <IconaMoonApps role="presentation" alt="" />Board
             <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
       </li>
@@ -116,7 +114,7 @@
         {/each}
       {/if}
       <li><h2>Data</h2></li>
-      <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
+      <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" />Forms</MainNavigationLink></li>
       <li class="p__block-2"></li>
     </ul>
   </nav>

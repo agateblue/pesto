@@ -366,6 +366,12 @@ svg {
   vertical-align: middle;
 }
 
+.icon__link {
+  padding: var(--space-2);
+  svg {
+    margin: 0 !important;
+  }
+}
 .icon__size-1 {
   width: 1rem;
 }
@@ -503,7 +509,7 @@ a:visited svg:only-child {
       background: var(--primary-color);
     }
   }
-  svg:first-child:not(:only-child) {
+  svg {
     margin-inline-end: var(--space-2);
   }
   [data-current-page=true] {
