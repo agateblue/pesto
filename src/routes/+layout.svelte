@@ -15,7 +15,7 @@
   let { children } = $props();
   afterNavigate(() => {
     globals.uiState.set('currentPage', () => null);
-    trackRouteChange($page)
+    trackRouteChange($page);
   });
 
   // to avoid firefox crashing locally because service worker can't register
@@ -26,12 +26,11 @@
       if ('serviceWorker' in navigator) {
         console.info('Registering service worker…');
         navigator.serviceWorker.register('/service-worker.js', {
-          type: dev ? 'module' : 'classic',
+          type: dev ? 'module' : 'classic'
         });
       }
     }
   });
 </script>
-
 
 {@render children?.()}

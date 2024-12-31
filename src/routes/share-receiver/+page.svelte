@@ -6,36 +6,36 @@
   import { page } from '$app/stores';
   import { globals } from '$lib/db';
   import { delay } from '$lib/ui';
-  
-  let isLoading = $state(true)
+
+  let isLoading = $state(true);
   onMount(async () => {
-    let title = $page.url.searchParams.get("title")
-    let text = $page.url.searchParams.get("text")
-    let url = $page.url.searchParams.get("url")
-  
+    let title = $page.url.searchParams.get('title');
+    let text = $page.url.searchParams.get('text');
+    let url = $page.url.searchParams.get('url');
+
     if (!title && !text && !url) {
-      console.warn("Empty share")
-      await goto('/')
+      console.warn('Empty share');
+      await goto('/');
     }
-    let noteParts = []
+    let noteParts = [];
     if (title) {
-      noteParts.push(`# ${title}`)
+      noteParts.push(`# ${title}`);
     }
-  
+
     if (url) {
-      noteParts.push(url)
+      noteParts.push(url);
     }
-  
+
     if (text) {
-      noteParts.push(text)
+      noteParts.push(text);
     }
-  
-    let body = noteParts.join("\n\n")
-    
+
+    let body = noteParts.join('\n\n');
+
     await globals.uiState.set('sharedNote', () => body);
-    await delay(500)
-    await goto('/my/notes/add?from=share')
-  })
+    await delay(500);
+    await goto('/my/notes/add?from=share');
+  });
 </script>
 
 <div class="my__layout">

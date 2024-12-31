@@ -9,22 +9,18 @@
   import ReplicationCard from '$lib/components/ReplicationCard.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  import {
-    globals,
-    DEFAULT_SIGNALING_SERVER,
-    type AnyReplication,
-  } from '$lib/db';
+  import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
   import { type LogMessage, renderMarkdown } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
-  import {handleImportTempo} from '$lib/replication'
+  import { handleImportTempo } from '$lib/replication';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
   let importFiles: FileList | null = $state(null);
   let importMessages: LogMessage[] = $state([]);
-  let importType: 'tempo' | null = $state(null)
+  let importType: 'tempo' | null = $state(null);
   let importTypes = $state({
-    'tempo': {
+    tempo: {
       name: 'Tempo',
       help: `
 Import from a Tempo JSON file. Visualizations are not supported yet.
@@ -33,27 +29,27 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
         {
           id: 'entries',
           label: 'Import entries',
-          value: true,
+          value: true
         },
         {
           id: 'tasks',
           label: 'Import tasks and board',
-          value: true,
+          value: true
         },
         {
           id: 'forms',
           label: 'Import forms',
-          value: true,
+          value: true
         },
         {
           id: 'aliases',
           label: 'Import aliases (as collections)',
-          value: true,
-        },
+          value: true
+        }
       ],
-      handler: handleImportTempo,
+      handler: handleImportTempo
     }
-  })
+  });
   let replicationType: string | null = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
     replications = [...(newValue || [])].map((t) => cloneDeep(t));
@@ -113,8 +109,6 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
       console.log(err);
     }
   }
-
-  
 </script>
 
 <div class="my__layout">
@@ -187,21 +181,22 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
           </DialogForm>
 
           <form
-          id="import"
-          class="flow m__block-3"
-          onsubmit={(e) => {
-            e.preventDefault();
-            importMessages = [];  
-            let flags = {}
-            for (const flag of importTypes[importType].flags) {
-              flags[flag.id] = flag.value
-            }
-            importTypes[importType].handler(importFiles, importMessages, flags);
-          }}
-          >       
+            id="import"
+            class="flow m__block-3"
+            onsubmit={(e) => {
+              e.preventDefault();
+              importMessages = [];
+              let flags = {};
+              for (const flag of importTypes[importType].flags) {
+                flags[flag.id] = flag.value;
+              }
+              importTypes[importType].handler(importFiles, importMessages, flags);
+            }}
+          >
             <h1>Import</h1>
             <p>
-              Import data into Pesto from another source. Duplicates are discarded and your local Pesto data will always be preserved in case of a conflict.
+              Import data into Pesto from another source. Duplicates are discarded and your local
+              Pesto data will always be preserved in case of a conflict.
             </p>
             <div class="form__field">
               <label for="import-source">Import source</label>
@@ -212,17 +207,17 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
             </div>
 
             {#if importType}
-            {@html renderMarkdown(importTypes[importType].help)}
-            <div class="form__field">
-              <label for="import-file">Select the import file</label>
-              <input
+              {@html renderMarkdown(importTypes[importType].help)}
+              <div class="form__field">
+                <label for="import-file">Select the import file</label>
+                <input
                   accept=".json,application/json"
                   id="import-file"
                   name="import-file"
                   type="file"
                   bind:files={importFiles}
-                  />
-            </div>
+                />
+              </div>
               {#if importTypes[importType].flags.length > 0}
                 {#each importTypes[importType].flags as flag, i (i)}
                   <div class="form__field">
@@ -231,7 +226,7 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
                       name={`import-flag-${flag.id}`}
                       id={`import-flag-${flag.id}`}
                       bind:checked={importTypes[importType].flags[i].value}
-                    >
+                    />
                     <label for={`import-flag-${flag.id}`}>{flag.label}</label>
                   </div>
                 {/each}
@@ -245,7 +240,12 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
 
           <h1>Keyboard shortcuts</h1>
 
-          <p>Some keyboard shortcuts are available through <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey">access keys</a>:</p>
+          <p>
+            Some keyboard shortcuts are available through <a
+              href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey"
+              >access keys</a
+            >:
+          </p>
           <ul>
             <li>
               <kbd>a</kbd> : Add a new note

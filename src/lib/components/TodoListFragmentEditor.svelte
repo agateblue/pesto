@@ -24,12 +24,12 @@
   let done: boolean = $state(fragment.done);
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let id: string = $state(buildUniqueId());
-  let todosFocused = $state(false)
-  let titleFocused = $state(false)
+  let todosFocused = $state(false);
+  let titleFocused = $state(false);
   let subscriptions = [
     syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
       if (!todosFocused) {
-        todos = v
+        todos = v;
       }
     }),
     syncPropertiesWithExternalChanges(fragment.column$, (v) => {
@@ -42,7 +42,7 @@
       if (!titleFocused) {
         title = v;
       }
-    }),
+    })
   ];
 
   onDestroy(clearSubscriptions(subscriptions));
@@ -131,8 +131,8 @@
         trashIcon={true}
         {autofocus}
         todo={{ text: title, done: done, id }}
-        onblur={() => titleFocused = false}
-        onfocus={() => titleFocused = true}
+        onblur={() => (titleFocused = false)}
+        onfocus={() => (titleFocused = true)}
         accesskey="t"
         on:update={(e) => {
           done = e.detail.todo.done;
@@ -169,8 +169,8 @@
                   todo={todos[i]}
                   autofocus={false}
                   trashIcon={false}
-                  onblur={() => todosFocused = false}
-                  onfocus={() => todosFocused = true}
+                  onblur={() => (todosFocused = false)}
+                  onfocus={() => (todosFocused = true)}
                   {editText}
                   on:delete={(e) => {
                     updateTodo(i, null);

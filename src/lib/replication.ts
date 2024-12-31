@@ -6,7 +6,7 @@ import {
   createOrUpdateSetting,
   getSettingData,
   createOrUpdateForm,
-  globals,
+  globals
 } from './db';
 import { parseTags, type LogMessage } from './ui';
 import isEmpty from 'lodash/isEmpty';
@@ -178,7 +178,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
   if (data.type === 'setting' || data.type === 'ignored') {
     console.debug('Converting document from tempo to pesto', document, data);
   }
-  data.source = 'Tempo'
+  data.source = 'Tempo';
   return data;
 }
 
@@ -224,8 +224,9 @@ export async function handleImportTempo(
     entries: true,
     tasks: true,
     forms: true,
-    aliases: true,
-  }) {
+    aliases: true
+  }
+) {
   let tempoFile;
   try {
     tempoFile = files[0];
@@ -244,9 +245,9 @@ export async function handleImportTempo(
 
   messages.push({ type: 'info', text: 'File parsed!' });
 
-  let settingsById = {}
-  for (const setting of (data.settings || [])) {
-    settingsById[setting._id] = setting 
+  let settingsById = {};
+  for (const setting of data.settings || []) {
+    settingsById[setting._id] = setting;
   }
   // starting importing various types:
 
@@ -282,10 +283,7 @@ export async function handleImportTempo(
 
     messages.push({ type: 'info', text: `Importing ${entries.length} entries…` });
     for (const entry of entries) {
-      let converted: DocumentType | null = tempoToPestoDocument(
-        entry,
-        -1
-      );
+      let converted: DocumentType | null = tempoToPestoDocument(entry, -1);
       if (converted && converted.type != 'ignored') {
         pestoNotes.push(converted);
       } else {
@@ -312,7 +310,7 @@ export async function handleImportTempo(
     let pestoTasks: DocumentDocument[] = [];
 
     messages.push({ type: 'info', text: `${tasks.length} tempo tasks found` });
-    
+
     messages.push({
       type: 'info',
       text: boardConfig
@@ -355,23 +353,26 @@ export async function handleImportTempo(
   } else {
     messages.push({ type: 'info', text: `Skip tasks and board import.` });
   }
-  
+
   // import: aliases
   if (flags.aliases) {
     if (settingsById.aliases) {
-      messages.push({ type: 'info', text: `Importing ${settingsById.aliases.length} Tempo aliases…` });
-      let collections = settingsById.aliases.value.map(a => {
+      messages.push({
+        type: 'info',
+        text: `Importing ${settingsById.aliases.length} Tempo aliases…`
+      });
+      let collections = settingsById.aliases.value.map((a) => {
         return {
           id: a._id,
           name: a.name,
-          query: a.query,
-        }
-      })
-      await createOrUpdateSetting('settings:collections', {collections}, 'Tempo');
-    } 
+          query: a.query
+        };
+      });
+      await createOrUpdateSetting('settings:collections', { collections }, 'Tempo');
+    }
   } else {
     messages.push({ type: 'info', text: `Skip aliases import.` });
   }
-  
+
   messages.push({ type: 'success', text: `Import complete!` });
 }

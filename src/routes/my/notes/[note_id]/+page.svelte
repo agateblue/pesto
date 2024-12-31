@@ -12,7 +12,7 @@
 </script>
 
 {#if note}
-<main class="wrapper | flex__grow">
+  <main class="wrapper | flex__grow">
     {#key note._rev}
       <RenderedNote {note} limitSize={false} class="diary__note flow" onDelete={() => goto('/my')}
       ></RenderedNote>
@@ -21,18 +21,18 @@
   <aside data-fullpage="true">
     <section class="wrapper">
       <NoteForm
-      {note}
-      on:update={(e) => {
-        handleUpdate(e.detail.note);
-      }}
-      on:delete={(e) => {
-        goto('/my');
-      }}
-    />
-  </section>
-</aside>
+        {note}
+        on:update={(e) => {
+          handleUpdate(e.detail.note);
+        }}
+        on:delete={(e) => {
+          goto('/my');
+        }}
+      />
+    </section>
+  </aside>
 {:else}
-<main class="wrapper | flex__grow">
-  <p>This note doesn't exist.</p>
-</main>
+  <main class="wrapper | flex__grow">
+    <p>This note doesn't exist.</p>
+  </main>
 {/if}

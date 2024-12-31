@@ -8,10 +8,9 @@
   }
   let { children, href, ...restProps } = $props();
 
-  function isCurrentPage () {
-    return $page.url.pathname +  $page.url.search === href.replace(' ', '%20')
+  function isCurrentPage() {
+    return $page.url.pathname + $page.url.search === href.replace(' ', '%20');
   }
 </script>
-
 
 <a {href} data-current-page={isCurrentPage()} {...restProps}>{@render children?.()}</a>

@@ -16,7 +16,7 @@
 
   let { fieldId, fragment }: Props = $props();
   let content = $state(fragment.content);
-  let focused = $state(false)
+  let focused = $state(false);
   let subscriptions = [
     syncPropertiesWithExternalChanges(fragment.content$, (v) => {
       if (!focused) {
@@ -40,8 +40,8 @@
 </h3>
 <textarea
   id={fieldId}
-  onfocus={() => focused = true}
-  onblur={() => focused = false}
+  onfocus={() => (focused = true)}
+  onblur={() => (focused = false)}
   class="editor autoresize"
   placeholder="What's on your mind?"
   onkeyup={(e) => handleChange(e.target.value)}

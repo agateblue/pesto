@@ -3,14 +3,7 @@
   "short_name": "Pesto",
   "name": "Pesto - Grow your own garden",
   "description": "A lightweight, offline-first, private diary and todo list",
-  "categories": [
-    "health",
-    "lifestyle",
-    "medical",
-    "personalization",
-    "productivity",
-    "utilities"
-  ],
+  "categories": ["health", "lifestyle", "medical", "personalization", "productivity", "utilities"],
   "start_url": "/",
   "scope": "/",
   "icons": [

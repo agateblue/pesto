@@ -18,9 +18,9 @@ export async function load() {
     globals.forms[document.data.id] = document.data;
   });
   observeLoadForms();
-  
+
   launchReplications(globals.uiState, globals.db);
-  
+
   return {
     db: globals.db
   };

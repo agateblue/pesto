@@ -376,7 +376,7 @@ svg {
   width: 1rem;
 }
 .icon__size-2 {
-  width: 1.25rem
+  width: 1.25rem;
 }
 .icon__size-3 {
   width: 1.5rem;
@@ -482,7 +482,8 @@ a:visited svg:only-child {
   color: initial;
 }
 .nav__main {
-  h1, h2 {
+  h1,
+  h2 {
     font-size: 1.1rem;
     padding-inline: var(--space-2);
     margin-block-end: var(--space-2);
@@ -512,7 +513,7 @@ a:visited svg:only-child {
   svg {
     margin-inline-end: var(--space-2);
   }
-  [data-current-page=true] {
+  [data-current-page='true'] {
     background-color: var(--primary-color);
   }
 }
