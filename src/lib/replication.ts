@@ -6,7 +6,10 @@ import {
   createOrUpdateSetting,
   getSettingData,
   createOrUpdateForm,
-  globals
+  globals,
+  CURRENT_DOCUMENT_VERSION,
+  migrationStrategies,
+  documentSchemaLiteral,
 } from './db';
 import { parseTags, type LogMessage } from './ui';
 import isEmpty from 'lodash/isEmpty';
@@ -217,6 +220,106 @@ export function tempoBlueprintsToPestoForm(blueprints: object[]) {
   return finalForms;
 }
 
+export function migrateDocumentToLatest(document: DocumentType, version: number) {
+  while (version < CURRENT_DOCUMENT_VERSION) {
+    version += 1
+    let migration = migrationStrategies[version]
+    document = migration(document)
+  }
+  return document
+}
+
+type ValidateFunction = {
+  (document: DocumentType): boolean;
+};
+
+export async function getPestoDocumentValidator() {
+  let Ajv = await import('ajv');
+  let addFormats = await import('ajv-formats');
+  let ajv = new Ajv()
+  addFormats(ajv)
+  let schema = {...documentSchemaLiteral}
+  delete schema.version
+  delete schema.indexes
+  delete schema.primaryKey
+  return ajv.compile(schema) as ValidateFunction
+}
+
+
+export async function handleImportPesto(
+  files: FileList,
+  messages: LogMessage[],
+  flags = {
+    notes: true,
+    forms: true,
+    settings: true
+  }
+) {
+  let pestoFile;
+  try {
+    pestoFile = files[0];
+  } catch {
+    return messages.push({ type: 'error', text: 'No file was provided' });
+  }
+
+  // init
+  messages.push({ type: 'info', text: 'Opening file…' });
+  let content = await pestoFile.text();
+  messages.push({ type: 'info', text: 'File read!' });
+
+  messages.push({ type: 'info', text: 'Parsing file…' });
+  let data: object = JSON.parse(content);
+  messages.push({ type: 'info', text: 'File parsed!' });
+
+  let version: number = data.version
+  let documents: DocumentType[] = data.documents
+  let validate = await getPestoDocumentValidator()
+
+  // starting importing various types:
+
+  // import: settings
+
+  let steps = [
+    {
+      flag: 'settings',
+      type: 'setting',
+      label: 'settings'
+    },
+    {
+      flag: 'forms',
+      type: 'form',
+      label: 'forms'
+    },
+    {
+      flag: 'notes',
+      type: 'note',
+      label: 'notes'
+    },
+  ]
+
+  for (const step of steps) {
+    if (flags[step.flag]) {
+      let docs = documents.filter(d => d.type === step.type)
+      messages.push({ type: 'info', text: `Preparing ${docs.length} ${step.label}` });
+      docs = docs.map(s => migrateDocumentToLatest(s, version))
+      messages.push({ type: 'info', text: `Checking ${docs.length} ${step.label} for correctness…` });
+      docs = docs.filter(s => validate(s))
+      messages.push({ type: 'info', text: `Inserting ${docs.length} ${step.label} in DB…` });
+      let result = await globals.db?.documents.bulkInsert(docs)
+      console.debug('Saving ${step.label} result:', result);
+      messages.push({
+        type: 'warning',
+        text: `Ignored ${result.error.length} ${step.label} duplicates`
+      });
+    } else {
+      messages.push({ type: 'info', text: `Skip ${step.label} import.` });
+    }
+    
+  }
+  messages.push({ type: 'success', text: `Import complete!` });
+}
+
+
 export async function handleImportTempo(
   files: FileList,
   messages: LogMessage[],
@@ -241,8 +344,6 @@ export async function handleImportTempo(
 
   messages.push({ type: 'info', text: 'Parsing file…' });
   let data: object = JSON.parse(content);
-  messages.push({ type: 'info', text: 'File parsed!' });
-
   messages.push({ type: 'info', text: 'File parsed!' });
 
   let settingsById = {};
