@@ -163,6 +163,47 @@ export const documentSchemaLiteral = {
   }
 } as const;
 
+export const migrationStrategies = {
+  1: function (oldDocumentData) {
+    if (oldDocumentData?.fragments.todolist) {
+      if (oldDocumentData.fragments.todolist.done) {
+        oldDocumentData.fragments.todolist.column = -1;
+      } else {
+        oldDocumentData.fragments.todolist.column = 0;
+      }
+    }
+    return oldDocumentData;
+  },
+  2: function (oldDocumentData) {
+    oldDocumentData.data = {};
+    return oldDocumentData;
+  },
+  3: function (oldDocumentData) {
+    return oldDocumentData;
+  },
+  4: function (oldDocumentData) {
+    return oldDocumentData;
+  },
+  5: function (oldDocumentData) {
+    return oldDocumentData;
+  },
+  6: function (oldDocumentData) {
+    return oldDocumentData;
+  },
+  7: function (oldDocumentData) {
+    oldDocumentData.starred = false; 
+    return oldDocumentData;
+  },
+  8: function (oldDocumentData) {  
+    return oldDocumentData;
+  },
+  9: function (oldDocumentData) {     
+    return oldDocumentData;
+  }
+} 
+
+export const CURRENT_DOCUMENT_VERSION = Math.max(...Object.keys(migrationStrategies).map(m => parseInt(m)))
+
 const documentSchemaTyped = toTypedRxJsonSchema(documentSchemaLiteral);
 
 // aggregate the document type from the schema
@@ -272,44 +313,7 @@ export async function getDb() {
     documents: {
       schema: documentSchema,
       autoMigrate: false,
-      migrationStrategies: {
-        1: function (oldDocumentData) {
-          if (oldDocumentData?.fragments.todolist) {
-            if (oldDocumentData.fragments.todolist.done) {
-              oldDocumentData.fragments.todolist.column = -1;
-            } else {
-              oldDocumentData.fragments.todolist.column = 0;
-            }
-          }
-          return oldDocumentData;
-        },
-        2: function (oldDocumentData) {
-          oldDocumentData.data = {};
-          return oldDocumentData;
-        },
-        3: function (oldDocumentData) {
-          return oldDocumentData;
-        },
-        4: function (oldDocumentData) {
-          return oldDocumentData;
-        },
-        5: function (oldDocumentData) {
-          return oldDocumentData;
-        },
-        6: function (oldDocumentData) {
-          return oldDocumentData;
-        },
-        7: function (oldDocumentData) {
-          oldDocumentData.starred = false;
-          return oldDocumentData;
-        },
-        8: function (oldDocumentData) {
-          return oldDocumentData;
-        },
-        9: function (oldDocumentData) {
-          return oldDocumentData;
-        }
-      }
+      migrationStrategies,
     }
   });
 
