@@ -129,3 +129,22 @@ export function clearSubscriptions(subscriptions: []) {
     });
   };
 }
+export function makeFile (text: string, mimetype: string) {
+  let data = new Blob([text], {type: mimetype})
+  let textFile = window.URL.createObjectURL(data)
+  return textFile
+}
+
+export function downloadFile (text: string, mimetype: string, name: string) {
+  let f = makeFile(text, mimetype)
+  var link = document.createElement('a')
+  link.setAttribute('download', name)
+  link.href = f
+  document.body.appendChild(link)
+
+  window.requestAnimationFrame(function () {
+    var event = new MouseEvent('click')
+    link.dispatchEvent(event)
+    document.body.removeChild(link)
+  })
+}

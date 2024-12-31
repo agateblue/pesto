@@ -275,10 +275,7 @@ export async function handleImportPesto(
   let documents: DocumentType[] = data.documents
   let validate = await getPestoDocumentValidator()
 
-  // starting importing various types:
-
-  // import: settings
-
+  
   let steps = [
     {
       flag: 'settings',
@@ -296,7 +293,8 @@ export async function handleImportPesto(
       label: 'notes'
     },
   ]
-
+  
+  // starting importing various types:
   for (const step of steps) {
     if (flags[step.flag]) {
       let docs = documents.filter(d => d.type === step.type)
@@ -476,4 +474,57 @@ export async function handleImportTempo(
   }
 
   messages.push({ type: 'success', text: `Import complete!` });
+}
+
+
+
+export async function handleExportPesto(
+  messages: LogMessage[],
+  flags = {
+    notes: true,
+    forms: true,
+    settings: true
+  }
+) {
+
+  // init
+  let data = {
+    version: CURRENT_DOCUMENT_VERSION,
+    documents: []
+  }
+
+  let steps = [
+    {
+      flag: 'settings',
+      type: 'setting',
+      label: 'settings'
+    },
+    {
+      flag: 'forms',
+      type: 'form',
+      label: 'forms'
+    },
+    {
+      flag: 'notes',
+      type: 'note',
+      label: 'notes'
+    },
+  ]
+
+  for (const step of steps) {
+    if (flags[step.flag]) {
+      let documents: DocumentDocument[] = await globals.db?.documents.find({
+        limit: 99999999999,
+        sort: [{'created_at': 'asc'}],
+        selector: {type: step.type},
+      }).exec()
+      messages.push({ type: 'info', text: `Found ${documents.length} ${step.label} to export` });
+      documents.forEach(d => {
+        data.documents.push(d.toJSON())
+      })
+      messages.push({ type: 'info', text: `Prepared and added ${documents.length} ${step.label} to export file` });
+    }
+  }
+  messages.push({ type: 'success', text: `Export complete!` });
+  return data
 }

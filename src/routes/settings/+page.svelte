@@ -10,15 +10,16 @@
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
-  import { type LogMessage, renderMarkdown } from '$lib/ui';
+  import { type LogMessage, renderMarkdown, downloadFile } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
-  import { handleImportTempo, handleImportPesto } from '$lib/replication';
+  import { handleImportTempo, handleImportPesto, handleExportPesto} from '$lib/replication';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
+
   let importFiles: FileList | null = $state(null);
   let importMessages: LogMessage[] = $state([]);
-  let importType: 'tempo' | null = $state(null);
+  let importType: 'tempo' | 'pesto' = $state('pesto');
   let importTypes = $state({
     tempo: {
       name: 'Tempo',
@@ -74,6 +75,36 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
       handler: handleImportPesto
     }
   });
+
+  let exportMessages: LogMessage[] = $state([]);
+  let exportType: 'pesto' = $state('pesto');
+  let exportTypes = $state({
+    pesto: {
+      name: 'Pesto',
+      help: `
+Export to a Pesto JSON file, creating a full or partial backup depending on your needs. 
+      `,
+      flags: [
+        {
+          id: 'notes',
+          label: 'Export entries',
+          value: true
+        },
+        {
+          id: 'forms',
+          label: 'Export forms',
+          value: true
+        },
+        {
+          id: 'settings',
+          label: 'Export settings',
+          value: true
+        }
+      ],
+      handler: handleExportPesto
+    }
+  });
+
   let replicationType: string | null = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
     replications = [...(newValue || [])].map((t) => cloneDeep(t));
@@ -204,6 +235,61 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
             {/if}
           </DialogForm>
 
+
+          <form
+            id="export"
+            class="flow m__block-3"
+            onsubmit={async (e) => {
+              e.preventDefault();
+              exportMessages = [];
+              let flags = {};
+              for (const flag of exportTypes[exportType].flags) {
+                flags[flag.id] = flag.value;
+              }
+              let data = await exportTypes[exportType].handler(exportMessages, flags);
+              let d = (new Date()).toISOString().slice(0, 16)
+              let filename = `pesto_to_${exportType}_${d}.json`
+              downloadFile(
+                JSON.stringify(data, null, 2),
+                'application/json',
+                filename,
+              )
+            }}
+          >
+            <h1>Export data</h1>
+            <p>
+              Export data from Pesto. This can be used to create a backup or convert Pesto data to other applications.
+            </p>
+            <div class="form__field">
+              <label for="export-format">Export format</label>
+              <select name="export-format" id="export-format" bind:value={exportType}>
+                <option value="pesto">Pesto</option>
+              </select>
+            </div>
+
+            {#if exportType}
+              {@html renderMarkdown(exportTypes[exportType].help)}
+              
+              {#if exportTypes[exportType].flags.length > 0}
+                {#each exportTypes[exportType].flags as flag, i (i)}
+                  <div class="form__field">
+                    <input
+                      type="checkbox"
+                      name={`export-flag-${flag.id}`}
+                      id={`export-flag-${flag.id}`}
+                      bind:checked={exportTypes[exportType].flags[i].value}
+                    />
+                    <label for={`export-flag-${flag.id}`}>{flag.label}</label>
+                  </div>
+                {/each}
+              {/if}
+              <FormResult messages={exportMessages} forEl="export-format" />
+              <div class="flex__row flex__justify-end">
+                <button type="submit"> Export </button>
+              </div>
+            {/if}
+          </form>
+
           <form
             id="import"
             class="flow m__block-3"
@@ -217,7 +303,7 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
               importTypes[importType].handler(importFiles, importMessages, flags);
             }}
           >
-            <h1>Import</h1>
+            <h1>Import data</h1>
             <p>
               Import data into Pesto from another source. Duplicates are discarded and your local
               Pesto data will always be preserved in case of a conflict.
@@ -225,7 +311,6 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
             <div class="form__field">
               <label for="import-source">Import source</label>
               <select name="import-source" id="import-source" bind:value={importType}>
-                <option value={null}>---</option>
                 <option value="pesto">Pesto</option>
                 <option value="tempo">Tempo</option>
               </select>
