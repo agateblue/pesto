@@ -304,7 +304,7 @@ export async function handleImportPesto(
       docs = docs.filter(s => validate(s))
       messages.push({ type: 'info', text: `Inserting ${docs.length} ${step.label} in DB…` });
       let result = await globals.db?.documents.bulkInsert(docs)
-      console.debug('Saving ${step.label} result:', result);
+      console.debug(`Saving ${step.label} result:`, result);
       messages.push({
         type: 'warning',
         text: `Ignored ${result.error.length} ${step.label} duplicates`
