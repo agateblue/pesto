@@ -48,6 +48,7 @@ jobs:
           echo "PUBLIC_BUILD_ID=`date '+%Y-%m-%d'`+`git rev-parse --short HEAD`" > .env &&
           echo "PUBLIC_PLAUSIBLE_HOST=https://stats.pesto.garden" >> .env && 
           echo "PUBLIC_PLAUSIBLE_DOMAIN=app.pesto.garden" >> .env &&
+          echo "PUBLIC_SENTRY_DSN=https://d2611ff9ef1f61f8ba31e03e8c120280@o4508561188061184.ingest.de.sentry.io/4508561193107536" >> .env &&
           cat .env
 
       - name: Run tests
