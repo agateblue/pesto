@@ -16,6 +16,7 @@
   "icons": [
     {
       "src": "icon-512.png",
+      "type": "image/png",
       "sizes": "512x512"
     },
     {
@@ -38,5 +39,40 @@
       "text": "text",
       "url": "url"
     }
-  }
+  },
+  "shortcuts": [
+    {
+      "name": "Add a note",
+      "url": "/my/notes/add",
+      "icons": [
+        {
+          "src": "icon-96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "View board",
+      "url": "/board",
+      "icons": [
+        {
+          "src": "icon-96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Fill-in a form",
+      "url": "/forms",
+      "icons": [
+        {
+          "src": "icon-96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 }
