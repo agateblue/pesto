@@ -527,13 +527,14 @@ export async function getById(collection: RxCollection, id: string) {
   return results.get(id);
 }
 
-export async function createOrUpdateSetting(id: string, data: object) {
+export async function createOrUpdateSetting(id: string, data: object, source: null | string = null) {
   let existing = await globals.db?.documents.findOne({ selector: { id, type: 'setting' } }).exec();
   if (existing) {
     return await existing.incrementalUpdate({
       $set: {
         modified_at: new Date().toISOString(),
-        data: cloneDeep(data)
+        data: cloneDeep(data),
+        source,
       }
     });
   } else {
@@ -545,7 +546,8 @@ export async function createOrUpdateSetting(id: string, data: object) {
       modified_at: d,
       tags: [],
       fragments: {},
-      data: cloneDeep(data)
+      data: cloneDeep(data),
+      source,
     });
   }
 }
@@ -575,19 +577,20 @@ export function getTimeId() {
   return new Date().toISOString();
 }
 
-export async function createOrUpdateForm(id: null | string, config: FormConfiguration) {
+export async function createOrUpdateForm(id: null | string, config: FormConfiguration, source: string | null = null) {
   let data;
   let note: DocumentDocument;
   config = cloneDeep(config);
   if (id) {
     note = await getById(globals.db?.documents, id);
     await note.incrementalUpdate({
-      $set: getNoteUpdateData(note, { data: config })
+      $set: getNoteUpdateData(note, { data: config, source })
     });
     note = note.getLatest();
   } else {
     data = getNewForm();
     data.data = config;
+    data.source = source
     note = await globals.db.documents.insert(data);
   }
   return note;

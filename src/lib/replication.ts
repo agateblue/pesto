@@ -169,6 +169,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
   if (data.type === 'setting' || data.type === 'ignored') {
     console.debug('Converting document from tempo to pesto', document, data);
   }
+  data.source = 'Tempo'
   return data;
 }
 
