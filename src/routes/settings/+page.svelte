@@ -10,24 +10,51 @@
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import {
-    type DocumentDocument,
     globals,
-    createOrUpdateSetting,
-    getSettingData,
     DEFAULT_SIGNALING_SERVER,
     type AnyReplication,
-    type DocumentType,
-    type FormConfiguration,
-    createOrUpdateForm
   } from '$lib/db';
-  import { tempoToPestoDocument, tempoBlueprintsToPestoForm } from '$lib/replication';
-  import { delay, type LogMessage } from '$lib/ui';
+  import { type LogMessage, renderMarkdown } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
+  import {handleImportTempo} from '$lib/replication'
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
-  let files: FileList = $state();
-  let replicationType: string = $state(null);
+  let importFiles: FileList | null = $state(null);
+  let importMessages: LogMessage[] = $state([]);
+  let importType: 'tempo' | null = $state(null)
+  let importTypes = $state({
+    'tempo': {
+      name: 'Tempo',
+      help: `
+Import from a Tempo JSON file. Visualizations are not supported yet.
+      `,
+      flags: [
+        {
+          id: 'entries',
+          label: 'Import entries',
+          value: true,
+        },
+        {
+          id: 'tasks',
+          label: 'Import tasks and board',
+          value: true,
+        },
+        {
+          id: 'forms',
+          label: 'Import forms',
+          value: true,
+        },
+        {
+          id: 'aliases',
+          label: 'Import aliases (as collections)',
+          value: true,
+        },
+      ],
+      handler: handleImportTempo,
+    }
+  })
+  let replicationType: string | null = $state(null);
   globals.uiState.get$('replications').subscribe((newValue: AnyReplication[]) => {
     replications = [...(newValue || [])].map((t) => cloneDeep(t));
   });
@@ -87,135 +114,7 @@
     }
   }
 
-  let tempoImportMessages: LogMessage[] = $state([]);
-
-  async function handleImportTempo(messages: LogMessage[]) {
-    let tempoFile;
-    try {
-      tempoFile = files[0];
-    } catch {
-      return messages.push({ type: 'error', text: 'No file was provided' });
-    }
-
-    messages.push({ type: 'info', text: 'Opening file…' });
-    let content = await tempoFile.text();
-    messages.push({ type: 'info', text: 'File read!' });
-
-    messages.push({ type: 'info', text: 'Parsing file…' });
-    let data: object = JSON.parse(content);
-    messages.push({ type: 'info', text: 'File parsed!' });
-
-    messages.push({ type: 'info', text: 'File parsed!' });
-
-    let blueprints: object[] = data.blueprints || [];
-    messages.push({ type: 'info', text: `${blueprints.length} tempo blueprints to import found` });
-
-    const forms: FormConfiguration[] = tempoBlueprintsToPestoForm(blueprints);
-    messages.push({ type: 'info', text: `${blueprints.length} tempo forms to import` });
-
-    for (const form of forms) {
-      // skip form with existing watching ids
-      let existing = await globals.db?.documents
-        .findOne({
-          selector: { type: 'form', 'data.id': form.id }
-        })
-        .exec();
-      if (existing) {
-        messages.push({ type: 'info', text: `Skipping ${form.id} at it already exists` });
-      } else {
-        // to avoid clashing ids we wait a few milliseconds
-        await createOrUpdateForm(null, form, 'Tempo');
-        messages.push({ type: 'info', text: `Inserted ${form.id}!` });
-      }
-    }
-    let entries: [] = data.entries || [];
-    messages.push({ type: 'info', text: `${entries.length} tempo entries found` });
-    let tasks: [] = data?.board?.tasks || [];
-    messages.push({ type: 'info', text: `${tasks.length} tempo tasks found` });
-    let boardConfig: object = data?.board?.settings;
-    let settingsById = {}
-    for (const setting of (data.settings || [])) {
-      settingsById[setting._id] = setting 
-    }
-    messages.push({
-      type: 'info',
-      text: boardConfig
-        ? `Tempo board config found: ${JSON.stringify(boardConfig.lists)}`
-        : `No board config found`
-    });
-
-    let pestoNotes: DocumentDocument[] = [];
-    let pestoTasks: DocumentDocument[] = [];
-
-    messages.push({ type: 'info', text: `Loading current board config…` });
-    let newBoardConfig = await getSettingData('settings:board', {
-      columns: ['Todo', 'Doing', 'Done']
-    });
-    if (settingsById.aliases) {
-      messages.push({ type: 'info', text: `Importing ${settingsById.aliases.length} Tempo aliases…` });
-      let collections = settingsById.aliases.value.map(a => {
-        return {
-          id: a._id,
-          name: a.name,
-          query: a.query,
-        }
-      })
-      await createOrUpdateSetting('settings:collections', {collections}, 'Tempo');
-    }
-    if (boardConfig?.lists) {
-      messages.push({ type: 'info', text: `Importing Tempo board config…` });
-      // Tempo doesn't include the "done" column in the export, we add it manually
-      newBoardConfig.columns = [...boardConfig.lists.map((r) => r.label), 'Done'];
-      messages.push({
-        type: 'info',
-        text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`
-      });
-      await createOrUpdateSetting('settings:board', newBoardConfig, 'Tempo');
-    }
-
-    messages.push({ type: 'info', text: `Importing ${entries.length} entries…` });
-    for (const entry of entries) {
-      let converted: DocumentType | null = tempoToPestoDocument(
-        entry,
-        newBoardConfig.columns.length - 1
-      );
-      // console.debug('CONVERTED Tempo note', entry, converted);
-      if (converted && converted.type != 'ignored') {
-        pestoNotes.push(converted);
-      } else {
-        console.debug('Ignored tempo entry', entry, converted);
-      }
-    }
-
-    for (const task of tasks) {
-      let converted: DocumentType | null = tempoToPestoDocument(
-        task,
-        newBoardConfig.columns.length - 1
-      );
-      // console.debug('CONVERTED Tempo task', task, converted);
-      if (converted && converted.type != 'ignored') {
-        pestoTasks.push(converted);
-      }
-    }
-
-    messages.push({ type: 'info', text: `Saving ${pestoNotes.length} converted Tempo notes…` });
-    let resultPestoNotes = await globals.db.documents.bulkInsert(pestoNotes);
-
-    console.debug('Saving notes result:', resultPestoNotes);
-    messages.push({
-      type: 'warning',
-      text: `Ignored ${resultPestoNotes.error.length} unsupported notes or duplicates`
-    });
-    messages.push({ type: 'info', text: `Saving ${pestoTasks.length} converted Tempo tasks…` });
-
-    let resultPestoTasks = await globals.db.documents.bulkInsert(pestoTasks);
-    console.debug('Saving tasks result:', resultPestoTasks);
-    messages.push({
-      type: 'warning',
-      text: `Ignored ${resultPestoTasks.error.length} tasks duplicates`
-    });
-    messages.push({ type: 'success', text: `Import complete!` });
-  }
+  
 </script>
 
 <div class="my__layout">
@@ -287,34 +186,61 @@
             {/if}
           </DialogForm>
 
-          <h1>Import from Tempo (Beta)</h1>
           <form
-            id="tempo-import"
-            class="flow"
-            onsubmit={(e) => {
-              e.preventDefault();
-              tempoImportMessages = [];
-              handleImportTempo(tempoImportMessages);
-            }}
-          >
+          id="import"
+          class="flow m__block-3"
+          onsubmit={(e) => {
+            e.preventDefault();
+            importMessages = [];  
+            let flags = {}
+            for (const flag of importTypes[importType].flags) {
+              flags[flag.id] = flag.value
+            }
+            importTypes[importType].handler(importFiles, importMessages, flags);
+          }}
+          >       
+            <h1>Import</h1>
             <p>
-              Import text entries, tasks and board configuration from Tempo. Other data types are
-              currently unsupported.
+              Import data into Pesto from another source. Duplicates are discarded and your local Pesto data will always be preserved in case of a conflict.
             </p>
             <div class="form__field">
-              <label for="tempo-file">Tempo JSON file</label>
+              <label for="import-source">Import source</label>
+              <select name="import-source" id="import-source" bind:value={importType}>
+                <option value={null}>---</option>
+                <option value="tempo">Tempo</option>
+              </select>
+            </div>
+
+            {#if importType}
+            {@html renderMarkdown(importTypes[importType].help)}
+            <div class="form__field">
+              <label for="import-file">Select the import file</label>
               <input
-                accept=".json,application/json"
-                id="tempo-file"
-                name="tempo-file"
-                type="file"
-                bind:files
-              />
+                  accept=".json,application/json"
+                  id="import-file"
+                  name="import-file"
+                  type="file"
+                  bind:files={importFiles}
+                  />
             </div>
-            <FormResult messages={tempoImportMessages} forEl="tempo-file" />
-            <div class="flex__row flex__justify-end">
-              <button type="submit"> Import </button>
-            </div>
+              {#if importTypes[importType].flags.length > 0}
+                {#each importTypes[importType].flags as flag, i (i)}
+                  <div class="form__field">
+                    <input
+                      type="checkbox"
+                      name={`import-flag-${flag.id}`}
+                      id={`import-flag-${flag.id}`}
+                      bind:checked={importTypes[importType].flags[i].value}
+                    >
+                    <label for={`import-flag-${flag.id}`}>{flag.label}</label>
+                  </div>
+                {/each}
+              {/if}
+              <FormResult messages={importMessages} forEl="import-file" />
+              <div class="flex__row flex__justify-end">
+                <button type="submit"> Import </button>
+              </div>
+            {/if}
           </form>
 
           <h1>Keyboard shortcuts</h1>
