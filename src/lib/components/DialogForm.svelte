@@ -1,33 +1,33 @@
 <script lang="ts">
   interface Props {
-    anchorText: string;
     anchorClass: string;
+    anchorText?: string;
     title: string;
+    anchor: import('svelte').Snippet;
     children: import('svelte').Snippet;
     onsubmit: Function;
     onopen?: Function;
     accesskey?: string;
   }
 
-  let { anchorClass, anchorText, children, onsubmit, title, onopen, accesskey }: Props = $props();
+  let { anchorClass, anchorText, children, anchor, onsubmit, title, onopen, accesskey }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
 
-{#snippet anchor(anchorText: string, anchorClass: string)}
-  <button
-    type="button"
-    class={anchorClass}
-    onclick={() => {
-      onopen ? onopen() : null;
-      dialog.showModal();
-    }}
-    {accesskey}
-  >
-    {anchorText}
-  </button>
-{/snippet}
 
-{@render anchor?.(anchorText, anchorClass)}
+
+<button
+  type="button"
+  class={anchorClass}
+  onclick={() => {
+    onopen ? onopen() : null;
+    dialog.showModal();
+  }}
+  {accesskey}
+>
+  {@render anchor?.()}
+  {anchorText}
+</button>
 
 <dialog bind:this={dialog} aria-labelledby="dialog-title" aria-describedby="dialog-description">
   <form class="flow" {onsubmit}>

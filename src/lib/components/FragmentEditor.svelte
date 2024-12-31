@@ -10,13 +10,14 @@
     getNewTextFragment,
     getNewTodoListFragment,
     getNoteUpdateData,
+    getSetting,
     type DocumentDocument,
     type TextType,
     type TodolistType,
     type Database
   } from '$lib/db';
-  import { createEventDispatcher } from 'svelte';
-
+  import { clearSubscriptions } from '$lib/ui';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
   }>();
@@ -29,6 +30,13 @@
   let { note = $bindable(), columns }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
+
+  let webhookUrl = $state('')
+  let subscriptions = [
+    getSetting('settings:form-webhook-url')?.$.subscribe(s => {
+      webhookUrl = s?.data?.url || ''
+    })
+  ]
 
   async function updateFragment(
     fragmentType: string,
@@ -48,6 +56,9 @@
     note = await note.getLatest();
     dispatch('update', { note });
   }
+  onDestroy(() => {
+    clearSubscriptions(subscriptions)
+  })
 </script>
 
 {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
@@ -55,6 +66,7 @@
     elClass="flow"
     form={globals.forms[note.fragments.form.id]}
     id={note.fragments.form.id}
+    {webhookUrl}
     onsubmit={async (values: object) => {
       updateFragment('form', { id: note.fragments.form.id, data: values });
     }}

@@ -13,9 +13,10 @@
     showActions: boolean;
     values?: object;
     elClass?: string;
+    webhookUrl?: string;
   }
 
-  let { form, children, id, onsubmit, showActions = true, values, elClass } = $props();
+  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl} = $props();
 
   let v = $state(values || {});
   function setDefaultValues() {
@@ -72,6 +73,15 @@
     onsubmit={(e) => {
       e.preventDefault();
       onsubmit(cloneDeep(v));
+      if (webhookUrl) {
+        fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        })
+      }
     }}
   >
     {#each form.fields as field, i (i)}

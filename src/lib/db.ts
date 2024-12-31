@@ -557,8 +557,11 @@ export async function createOrUpdateSetting(
   }
 }
 
+export function getSetting(id: string) {
+  return globals.db?.documents.findOne({ selector: { id, type: 'setting' } })
+}
 export async function getSettingData(id: string, defaultValue: object = {}) {
-  let existing = await globals.db?.documents.findOne({ selector: { id, type: 'setting' } }).exec();
+  let existing = await getSetting(id).exec();
   return existing ? existing.toMutableJSON().data : defaultValue;
 }
 
