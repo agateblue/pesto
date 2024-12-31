@@ -51,10 +51,13 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 7,
+  version: 8,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
+  indexes: [
+    ['type', 'created_at'],
+  ],
   properties: {
     id: {
       type: 'string',
@@ -62,7 +65,8 @@ export const documentSchemaLiteral = {
     },
     type: {
       type: 'string',
-      enum: ['note', 'setting', 'form']
+      enum: ['note', 'setting', 'form'],
+      maxLength: 40,
     },
     title: {
       type: ['string', 'null']
@@ -72,11 +76,13 @@ export const documentSchemaLiteral = {
     },
     created_at: {
       type: 'string',
-      format: 'date-time'
+      format: 'date-time',
+      maxLength: 30,
     },
     modified_at: {
       type: 'string',
-      format: 'date-time'
+      format: 'date-time',
+      maxLength: 30,
     },
     tags: {
       type: 'array',
@@ -291,7 +297,10 @@ export async function getDb() {
         7: function (oldDocumentData) {
           oldDocumentData.starred = false;
           return oldDocumentData;
-        }
+        },
+        8: function (oldDocumentData) {
+          return oldDocumentData;
+        },
       }
     }
   });
