@@ -54,7 +54,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 8,
+  version: 9,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -73,6 +73,9 @@ export const documentSchemaLiteral = {
     },
     title: {
       type: ['string', 'null']
+    },
+    source: {
+      type: ['string', 'null'],
     },
     starred: {
       type: 'boolean'
@@ -303,6 +306,9 @@ export async function getDb() {
           return oldDocumentData;
         },
         8: function (oldDocumentData) {
+          return oldDocumentData;
+        },
+        9: function (oldDocumentData) {
           return oldDocumentData;
         },
       }
