@@ -12,7 +12,7 @@
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
   import { type LogMessage, renderMarkdown, downloadFile } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
-  import { handleImportTempo, handleImportPesto, handleExportPesto} from '$lib/replication';
+  import { handleImportTempo, handleImportPesto, handleExportPesto, handleExportTempo} from '$lib/replication';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
@@ -102,6 +102,25 @@ Export to a Pesto JSON file, creating a full or partial backup depending on your
         }
       ],
       handler: handleExportPesto
+    },
+    tempo: {
+      name: 'Tempo',
+      help: `
+Export to a Tempo JSON file. 
+      `,
+      flags: [
+        {
+          id: 'entries',
+          label: 'Export entries',
+          value: true
+        },
+        {
+          id: 'tasks',
+          label: 'Export tasks and board',
+          value: true
+        },
+      ],
+      handler: handleExportTempo
     }
   });
 
@@ -264,6 +283,7 @@ Export to a Pesto JSON file, creating a full or partial backup depending on your
               <label for="export-format">Export format</label>
               <select name="export-format" id="export-format" bind:value={exportType}>
                 <option value="pesto">Pesto</option>
+                <option value="tempo">Tempo</option>
               </select>
             </div>
 
