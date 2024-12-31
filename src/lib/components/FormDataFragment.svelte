@@ -10,6 +10,7 @@
   let { fragment }: Props = $props();
 
   let fields: string[] = $state(Object.keys(fragment.data));
+  let annotations: string[] = $state(Object.keys(fragment.annotations));
 
   let form = globals.forms[fragment.id];
   let fieldsById = {};
@@ -33,6 +34,12 @@
       <tr>
         <td>{fieldsById[field]?.label || field}</td>
         <td>{fragment.data[field]}</td>
+      </tr>
+    {/each}
+    {#each annotations as annotation}
+      <tr>
+        <td>{annotation}</td>
+        <td>{fragment.annotations[annotation]}</td>
       </tr>
     {/each}
   </tbody>

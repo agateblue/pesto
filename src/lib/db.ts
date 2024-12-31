@@ -54,7 +54,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 9,
+  version: 10,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -119,6 +119,10 @@ export const documentSchemaLiteral = {
               type: ['string', 'null']
             },
             data: {
+              type: 'object',
+              additionalProperties: true
+            },
+            annotations: {
               type: 'object',
               additionalProperties: true
             }
@@ -198,6 +202,12 @@ export const migrationStrategies = {
     return oldDocumentData;
   },
   9: function (oldDocumentData) {     
+    return oldDocumentData;
+  },
+  10: function (oldDocumentData) {     
+    if (oldDocumentData?.fragments?.form) {
+      oldDocumentData.fragments.form.annotations = {}
+    }
     return oldDocumentData;
   }
 } 
@@ -515,6 +525,14 @@ export function getNewTodoListFragment() {
   };
 }
 
+export function getNewFormFragment(id = null, data = {}, annotations = {}) {
+  return {
+    id,
+    data,
+    annotations,
+  };
+}
+
 export function getNewTodo() {
   return {
     id: buildUniqueId(),
@@ -570,9 +588,36 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   data.modified_at = new Date().toISOString();
 
   let tagsSource = data['fragments.text']?.content || note.fragments.text?.content;
-  const tags = parseTags(tagsSource).map((t) => {
+  let parsedTags = parseTags(tagsSource)
+  const tags = parsedTags.map((t) => {
     return t.id;
   });
+  const dataTags = {}
+  parsedTags.filter(t => {
+    return t.type === 'annotation'
+  }).forEach(t => {
+    try {
+      dataTags[t.id] = JSON.parse(t.value)
+    } catch {
+      dataTags[t.id] = t.value
+    }
+  })
+
+  data['fragments.form.annotations'] = dataTags
+  
+  // remove data that is present in both form fields and annotations from form field
+  if (note.fragments?.form) {
+    let formData = cloneDeep(note.fragments.form.data)
+    for (const key in dataTags) {
+      if (Object.prototype.hasOwnProperty.call(dataTags, key)) {
+        if (formData[key] != undefined) {
+          delete formData[key]
+        }
+        
+      }
+    }
+    data['fragments.form.data'] = formData
+  }
   data.tags = [...new Set(tags)];
   return data;
 }

@@ -509,7 +509,8 @@ describe('query language', () => {
           data: {
             'form:field1': 0.14,
             'form:field2': true
-          }
+          },
+          annotations: {}
         }
       },
       tags: ['world', 'sad'],
