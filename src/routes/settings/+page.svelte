@@ -12,7 +12,7 @@
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
   import { type LogMessage, renderMarkdown } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
-  import { handleImportTempo } from '$lib/replication';
+  import { handleImportTempo, handleImportPesto } from '$lib/replication';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
@@ -48,6 +48,30 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
         }
       ],
       handler: handleImportTempo
+    },
+    pesto: {
+      name: 'Pesto',
+      help: `
+Import from a Pesto JSON file. This is a way to restore a full backup made from another Pesto session. 
+      `,
+      flags: [
+        {
+          id: 'notes',
+          label: 'Import entries',
+          value: true
+        },
+        {
+          id: 'forms',
+          label: 'Import forms',
+          value: true
+        },
+        {
+          id: 'settings',
+          label: 'Import settings',
+          value: true
+        }
+      ],
+      handler: handleImportPesto
     }
   });
   let replicationType: string | null = $state(null);
@@ -202,6 +226,7 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
               <label for="import-source">Import source</label>
               <select name="import-source" id="import-source" bind:value={importType}>
                 <option value={null}>---</option>
+                <option value="pesto">Pesto</option>
                 <option value="tempo">Tempo</option>
               </select>
             </div>
