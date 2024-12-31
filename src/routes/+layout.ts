@@ -10,7 +10,6 @@ export async function load() {
   if ((await db?.collections.documents.migrationNeeded()) && window.location.pathname != '/') {
     await goto('/');
   }
-
   globals.db = db;
   globals.uiState = uiState;
 

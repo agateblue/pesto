@@ -37,6 +37,7 @@
   "type": "module",
   "dependencies": {
     "@iconify-json/iconamoon": "^1.1.5",
+    "@sentry/sveltekit": "^8",
     "dompurify": "^3.1.6",
     "events": "^3.3.0",
     "isomorphic-dompurify": "^2.16.0",
