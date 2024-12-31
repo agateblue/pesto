@@ -62,7 +62,7 @@
       bind:this={textarea}
       value={todo.text}
       onkeyup={ignoreTab((e) => {
-        handleChange({ text: e.target.value.trim() });
+        handleChange({ text: e.target.value });
       })}
       placeholder="Add new task…"
       rows="1"
