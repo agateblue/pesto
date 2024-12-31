@@ -54,7 +54,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 10,
+  version: 11,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -209,7 +209,15 @@ export const migrationStrategies = {
       oldDocumentData.fragments.form.annotations = {}
     }
     return oldDocumentData;
-  }
+  },
+  11: function (oldDocumentData) {     
+    if (oldDocumentData?.fragments?.form) {
+      if (!oldDocumentData.fragments.form.annotations) {
+        oldDocumentData.fragments.form.annotations = {}
+      }
+    }
+    return oldDocumentData;
+  },
 } 
 
 export const CURRENT_DOCUMENT_VERSION = Math.max(...Object.keys(migrationStrategies).map(m => parseInt(m)))
