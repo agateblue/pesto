@@ -215,6 +215,12 @@ export type FormConfiguration = {
   fields: FormFieldConfiguration[];
 };
 
+export type CollectionConfiguration = {
+  id: string;
+  name: string;
+  query: string;
+}
+
 export type Replication = {
   type: string;
   pull: boolean;
