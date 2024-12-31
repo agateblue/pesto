@@ -88,8 +88,7 @@
             index: 0,
             limit: 9999,
             selector: FIRST_COLUMN_SELECTOR,
-            isLoading: true,
-            
+            isLoading: true
           },
           {
             name: 'Doing',
@@ -97,8 +96,7 @@
             index: 1,
             limit: 9999,
             selector: getColumnSelector(1),
-            isLoading: true,
-            
+            isLoading: true
           },
           {
             name: 'Done',
@@ -106,8 +104,7 @@
             index: -1,
             limit: 30,
             selector: DONE_COLUMN_SELECTOR,
-            isLoading: true,
-            
+            isLoading: true
           }
         ];
       } else {
@@ -117,7 +114,7 @@
             cards: [],
             index: i,
             selector: getColumnSelector(i),
-            isLoading: true,
+            isLoading: true
           };
           if (i === 0) {
             // unassign entries go to the first column
@@ -128,7 +125,7 @@
             c.selector = DONE_COLUMN_SELECTOR;
             c.index = -1;
             c.limit = 30;
-            c.isLoading = true
+            c.isLoading = true;
           }
           columns = [...columns, c];
         });
@@ -137,13 +134,13 @@
 
       columns.forEach((v, i) => {
         globals.db.documents
-        .find({
-          limit: v.limit,
-          sort: [v.index === -1 ? { modified_at: 'desc' } : { created_at: 'desc' }],
-          selector: v.selector,
-        })
-        .$.subscribe((notes) => {
-            v.isLoading = false
+          .find({
+            limit: v.limit,
+            sort: [v.index === -1 ? { modified_at: 'desc' } : { created_at: 'desc' }],
+            selector: v.selector
+          })
+          .$.subscribe((notes) => {
+            v.isLoading = false;
             v.cards = notes.map((n) => {
               return {
                 id: n.id,
@@ -212,13 +209,17 @@
       <div class="scroll">
         <div class="flex__row | board">
           {#each columns as column}
-            <section class="flex__column | board__column" aria-busy={column.isloading} aria-live="polite">
+            <section
+              class="flex__column | board__column"
+              aria-busy={column.isloading}
+              aria-live="polite"
+            >
               <h3>{column.name}</h3>
               <button
-              class="m__block-1"
-              type="button"
-              style={column.index === -1 ? 'visibility: hidden' : ''}
-              onclick={async (e) => {
+                class="m__block-1"
+                type="button"
+                style={column.index === -1 ? 'visibility: hidden' : ''}
+                onclick={async (e) => {
                   let note = getNewNote();
                   note.fragments.todolist = getNewTodoListFragment();
                   note.fragments.todolist.column = column.index;

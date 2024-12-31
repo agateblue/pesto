@@ -58,9 +58,7 @@ export const documentSchemaLiteral = {
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
-  indexes: [
-    ['type', 'created_at'],
-  ],
+  indexes: [['type', 'created_at']],
   properties: {
     id: {
       type: 'string',
@@ -69,13 +67,13 @@ export const documentSchemaLiteral = {
     type: {
       type: 'string',
       enum: ['note', 'setting', 'form'],
-      maxLength: 40,
+      maxLength: 40
     },
     title: {
       type: ['string', 'null']
     },
     source: {
-      type: ['string', 'null'],
+      type: ['string', 'null']
     },
     starred: {
       type: 'boolean'
@@ -83,12 +81,12 @@ export const documentSchemaLiteral = {
     created_at: {
       type: 'string',
       format: 'date-time',
-      maxLength: 30,
+      maxLength: 30
     },
     modified_at: {
       type: 'string',
       format: 'date-time',
-      maxLength: 30,
+      maxLength: 30
     },
     tags: {
       type: 'array',
@@ -231,7 +229,7 @@ export type CollectionConfiguration = {
   id: string;
   name: string;
   query: string;
-}
+};
 
 export type Replication = {
   type: string;
@@ -266,7 +264,7 @@ export async function getDb() {
     name: 'main',
     storage: getRxStorageDexie(),
     allowSlowCount: true,
-    eventReduce: true,
+    eventReduce: true
   });
 
   const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
@@ -310,7 +308,7 @@ export async function getDb() {
         },
         9: function (oldDocumentData) {
           return oldDocumentData;
-        },
+        }
       }
     }
   });
@@ -379,7 +377,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     pushPullConfig.pull = {};
   }
   if (config.type === 'couchdb') {
-    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb')
+    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb');
     const couchdbUrl = `${config.server}/${config.database}/`;
     state = CouchDBPlugin.replicateCouchDB({
       replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
@@ -391,7 +389,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     });
   }
   if (config.type === 'couchdb-tempo') {
-    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb')
+    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb');
 
     let boardSettings = await getSettingData('board:settings', {
       columns: ['Todo', 'Doing', 'Done']
@@ -425,8 +423,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     });
   }
   if (config.type === 'webrtc') {
-
-    let WebRTCPlugin = await import('rxdb/plugins/replication-webrtc')
+    let WebRTCPlugin = await import('rxdb/plugins/replication-webrtc');
     state = await WebRTCPlugin.replicateWebRTC({
       collection: db.documents,
       topic: config.room,
@@ -527,14 +524,18 @@ export async function getById(collection: RxCollection, id: string) {
   return results.get(id);
 }
 
-export async function createOrUpdateSetting(id: string, data: object, source: null | string = null) {
+export async function createOrUpdateSetting(
+  id: string,
+  data: object,
+  source: null | string = null
+) {
   let existing = await globals.db?.documents.findOne({ selector: { id, type: 'setting' } }).exec();
   if (existing) {
     return await existing.incrementalUpdate({
       $set: {
         modified_at: new Date().toISOString(),
         data: cloneDeep(data),
-        source,
+        source
       }
     });
   } else {
@@ -547,7 +548,7 @@ export async function createOrUpdateSetting(id: string, data: object, source: nu
       tags: [],
       fragments: {},
       data: cloneDeep(data),
-      source,
+      source
     });
   }
 }
@@ -577,7 +578,11 @@ export function getTimeId() {
   return new Date().toISOString();
 }
 
-export async function createOrUpdateForm(id: null | string, config: FormConfiguration, source: string | null = null) {
+export async function createOrUpdateForm(
+  id: null | string,
+  config: FormConfiguration,
+  source: string | null = null
+) {
   let data;
   let note: DocumentDocument;
   config = cloneDeep(config);
@@ -590,7 +595,7 @@ export async function createOrUpdateForm(id: null | string, config: FormConfigur
   } else {
     data = getNewForm();
     data.data = config;
-    data.source = source
+    data.source = source;
     note = await globals.db.documents.insert(data);
   }
   return note;

@@ -50,11 +50,10 @@
         await newNote.incrementalRemove();
       }
     })
-  ]
+  ];
   onDestroy(() => {
-    clearSubscriptions(subscriptions)
-  })
-  
+    clearSubscriptions(subscriptions);
+  });
 </script>
 
 <div class="flex__row | flex__justify-between">

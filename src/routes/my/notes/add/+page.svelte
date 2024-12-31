@@ -1,8 +1,7 @@
 <script lang="ts">
   import NoteForm from '$lib/components/NoteForm.svelte';
-  
-  let { data } = $props();
 
+  let { data } = $props();
 </script>
 
 <main class="wrapper | flex__grow">

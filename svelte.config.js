@@ -9,7 +9,7 @@ const config = {
 
   kit: {
     serviceWorker: {
-      register: false,
+      register: false
     },
     adapter: adapter({
       // default options are shown. On some platforms

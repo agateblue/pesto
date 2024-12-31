@@ -7,12 +7,17 @@
   }
 
   let { children, isLoading = $bindable() } = $props();
-
 </script>
 
 <div class="flex__column flex__align-center">
   {#if isLoading}
-    <IconaMoonSettings role="presentation" alt="" height=none width=none class="rotating icon__size-4" />
+    <IconaMoonSettings
+      role="presentation"
+      alt=""
+      height="none"
+      width="none"
+      class="rotating icon__size-4"
+    />
     <em>{@render children?.()}</em>
   {/if}
 </div>

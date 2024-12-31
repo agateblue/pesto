@@ -14,7 +14,7 @@
   let { searchQuery = $bindable(), orderQuery = $bindable(), onclear }: Props = $props();
 
   let notes: DocumentDocument[] = $state([]);
-  let isLoading = $state(false)
+  let isLoading = $state(false);
 
   function getSortFromOrderQuery(o: string) {
     let field, direction;
@@ -29,22 +29,26 @@
       return {};
     }
 
-    let tokens = q.split(',').map(v => getQueryTokens(v));
-    let selector = { $or: tokens.map(t => {return {$and: tokensToMangoQuery(t)}})};
-    return selector
+    let tokens = q.split(',').map((v) => getQueryTokens(v));
+    let selector = {
+      $or: tokens.map((t) => {
+        return { $and: tokensToMangoQuery(t) };
+      })
+    };
+    return selector;
   }
 
   function loadNotes(q: string, o: string) {
-    isLoading = true
-    notes = []
+    isLoading = true;
+    notes = [];
     return globals.db.documents
-    .find({
-      limit: 20,
-      sort: [getSortFromOrderQuery(o)],
-      selector: { type: 'note', ...getSelector(q) }
-    })
-    .$.subscribe((documents) => {
-        isLoading = false
+      .find({
+        limit: 20,
+        sort: [getSortFromOrderQuery(o)],
+        selector: { type: 'note', ...getSelector(q) }
+      })
+      .$.subscribe((documents) => {
+        isLoading = false;
         notes = documents;
       });
   }
@@ -56,9 +60,8 @@
   });
 
   onDestroy(() => {
-    clearSubscriptions([subscription])
-  })
-
+    clearSubscriptions([subscription]);
+  });
 </script>
 
 <div class="wrapper | m__block-3" role="list" aria-live="polite" aria-busy={isLoading}>
@@ -68,7 +71,9 @@
   {/if}
   {#if !isLoading && searchQuery.trim()}
     <div class="flex__column flex__align-end">
-      <button type="button" class="button__outlined button__discrete" onclick={onclear}>Clear search/filters</button>
+      <button type="button" class="button__outlined button__discrete" onclick={onclear}
+        >Clear search/filters</button
+      >
     </div>
   {/if}
   {#each notes as note}

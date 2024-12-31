@@ -1,8 +1,12 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "garden.pesto.app.twa",
-        "sha256_cert_fingerprints": ["3C:5B:1E:B0:94:8E:BE:84:5F:28:4C:84:06:AD:BB:CD:20:78:AD:68:F3:12:6E:8B:1C:B6:2C:DF:18:CE:79:86"]
-      }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "garden.pesto.app.twa",
+      "sha256_cert_fingerprints": [
+        "3C:5B:1E:B0:94:8E:BE:84:5F:28:4C:84:06:AD:BB:CD:20:78:AD:68:F3:12:6E:8B:1C:B6:2C:DF:18:CE:79:86"
+      ]
+    }
+  }
+]

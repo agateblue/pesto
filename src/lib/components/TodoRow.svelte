@@ -23,7 +23,15 @@
     accesskey?: string;
   }
 
-  let { todo, editText, autofocus = false, trashIcon = false, onblur, onfocus, accesskey }: Props = $props();
+  let {
+    todo,
+    editText,
+    autofocus = false,
+    trashIcon = false,
+    onblur,
+    onfocus,
+    accesskey
+  }: Props = $props();
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {

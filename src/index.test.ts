@@ -18,7 +18,8 @@ import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
-    const input = 'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
+    const input =
+      'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
     const expected = [
       { type: 'is', value: 'todo' },
       { type: 'is', value: 'subtask' },
@@ -29,7 +30,7 @@ describe('query language', () => {
       { type: 'tag', value: 'hello' },
       { type: 'form', value: 'toto' },
       { type: 'starred', value: 'true' },
-      { type: 'column', value: 2 },
+      { type: 'column', value: 2 }
     ];
     expect(getQueryTokens(input)).toStrictEqual(expected);
   });
@@ -332,7 +333,7 @@ describe('query language', () => {
       },
       tags: ['world', 'sad'],
       _deleted: false,
-      source: 'Tempo',
+      source: 'Tempo'
     };
     expect(tempoToPestoDocument(input, 0)).toStrictEqual(expected);
   });
@@ -373,7 +374,7 @@ describe('query language', () => {
         }
       },
       tags: [],
-      source: 'Tempo',
+      source: 'Tempo'
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -409,7 +410,7 @@ describe('query language', () => {
         }
       },
       tags: [],
-      source: 'Tempo',
+      source: 'Tempo'
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -433,7 +434,7 @@ describe('query language', () => {
       fragments: {},
       tags: [],
       title: null,
-      source: 'Tempo',
+      source: 'Tempo'
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -446,7 +447,7 @@ describe('query language', () => {
     const expected: DocumentDocument & RxBaseDoc = {
       id: 'ignored:tempo:settings:something',
       type: 'ignored',
-      source: 'Tempo',
+      source: 'Tempo'
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });

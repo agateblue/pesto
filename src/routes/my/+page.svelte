@@ -14,7 +14,7 @@
 
   let noteFormKey = $state(0);
 
-  function triggerSearch () {
+  function triggerSearch() {
     let params = updateURLParam($page.url, 'q', searchQuery);
     goto(`?${params.toString()}`);
   }
@@ -39,7 +39,7 @@
         onkeydown={async (e) => {
           if (e.key === 'Enter') {
             searchQuery = e.target.value.trim();
-            triggerSearch()
+            triggerSearch();
           }
         }}
       />
@@ -47,7 +47,14 @@
     </header>
 
     <div class="scroll">
-      <NoteList {searchQuery} {orderQuery} onclear={() => {searchQuery = ''; triggerSearch()}} />
+      <NoteList
+        {searchQuery}
+        {orderQuery}
+        onclear={() => {
+          searchQuery = '';
+          triggerSearch();
+        }}
+      />
     </div>
   </div>
 </main>
