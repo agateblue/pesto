@@ -29,7 +29,7 @@
     for (const result of results) {
       let v = result.toJSON().fragments.form.data[field.id];
       if (v) {
-        suggestions = [...suggestions, v.trim()];
+        suggestions = [...suggestions, String(v).trim()];
       }
       suggestions = [...new Set(suggestions)];
       suggestions = sortBy(suggestions);
@@ -46,8 +46,9 @@
       }}
       id={`field-${field.id}`}
       name={`field-${field.id}`}
-      type="text"
+      type={field.type}
       list={`field-autocomplete-${field.id}`}
+      step="any"
       bind:value
     />
     <datalist id={`field-autocomplete-${field.id}`}>
