@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PUBLIC_BUILD_ID } from '$env/static/public';
+
   import { preventDefault } from 'svelte/legacy';
 
   import DialogForm from '$lib/components/DialogForm.svelte';
@@ -367,6 +369,9 @@
               irreversible.
             </p>
           </DialogForm>
+
+          <h1>Application information</h1>
+          <p>Build ID: {PUBLIC_BUILD_ID}</p>
         </div>
       </section>
     </div>
