@@ -16,7 +16,7 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 import { dev } from '$app/environment';
-
+import { RxDBCleanupPlugin } from 'rxdb/plugins/cleanup';
 import cloneDeep from 'lodash/cloneDeep';
 import { delay, parseTags } from './ui';
 import { tempoToPestoDocument } from './replication';
@@ -30,6 +30,7 @@ if (dev) {
 addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBStatePlugin);
 addRxPlugin(RxDBUpdatePlugin);
+addRxPlugin(RxDBCleanupPlugin);
 
 export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/';
 
