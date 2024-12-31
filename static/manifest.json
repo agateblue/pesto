@@ -29,5 +29,14 @@
   "theme_color": "#4cb248",
   "dir": "auto",
   "lang": "en",
-  "orientation": "any"
+  "orientation": "any",
+  "share_target": {
+    "method": "GET",
+    "action": "/share-receiver",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
