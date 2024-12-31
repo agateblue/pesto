@@ -1,11 +1,23 @@
 {
+  "id": "pesto",
   "short_name": "Pesto",
   "name": "Pesto - Grow your own garden",
   "description": "A lightweight, offline-first, private diary and todo list",
-  "categories": ["notes", "note", "diary", "log", "health", "mood tracker"],
+  "categories": [
+    "health",
+    "lifestyle",
+    "medical",
+    "personalization",
+    "productivity",
+    "utilities"
+  ],
   "start_url": "/",
   "scope": "/",
   "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512"
+    },
     {
       "src": "favicon.svg",
       "type": "image/svg",
@@ -15,5 +27,7 @@
   "background_color": "#4cb248",
   "display": "standalone",
   "theme_color": "#4cb248",
-  "shortcuts": []
+  "dir": "auto",
+  "lang": "en",
+  "orientation": "any"
 }
