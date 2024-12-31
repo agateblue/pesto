@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Add git commit to .env file
+        run: echo "PUBLIC_BUILD_ID=`date '+%Y-%m-%d'`+`git rev-parse --short HEAD`" > .env
+
       - name: Run tests
         run: yarn test
 
