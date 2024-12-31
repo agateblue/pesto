@@ -636,7 +636,7 @@ dialog {
 }
 /* manage expand/collaspe on elements with more than three children */
 [data-expanded='false']:has(*:nth-child(-n + 3)) {
-  :not(*:nth-child(-n + 3)) {
+  :not(*:nth-child(-n + 3)):not(br) {
     display: none;
   }
 }
