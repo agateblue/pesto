@@ -367,16 +367,16 @@ svg {
 }
 
 .icon__size-1 {
-  width: var(--space-1)
+  width: 1rem;
 }
 .icon__size-2 {
-  width: var(--space-2)
+  width: 1.25rem
 }
 .icon__size-3 {
-  width: var(--space-3)
+  width: 1.5rem;
 }
 .icon__size-4 {
-  width: var(--space-4)
+  width: 2rem;
 }
 @keyframes rotating {
   from {
@@ -472,11 +472,15 @@ textarea {
 .app > nav {
   border-block-end: var(--layout-separator);
 }
+a:visited svg:only-child {
+  color: initial;
+}
 .nav__main {
-  h2 {
+  h1, h2 {
     font-size: 1.1rem;
     padding-inline: var(--space-2);
     margin-block-end: var(--space-2);
+    font-weight: bold;
   }
   ul {
     min-height: 100vh;
@@ -499,7 +503,7 @@ textarea {
       background: var(--primary-color);
     }
   }
-  svg {
+  svg:first-child:not(:only-child) {
     margin-inline-end: var(--space-2);
   }
   [data-current-page=true] {

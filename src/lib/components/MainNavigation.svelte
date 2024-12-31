@@ -55,7 +55,13 @@
       <li>
         <MainNavigationToggle class="layout__multi-hidden" />
       </li>
-      <li><h2>Diary</h2></li>
+      <div class="flex__row flex__justify-between flex__align-center">
+        <h2>Pesto</h2>
+        <a href="/settings" class="p__block-2 p__inline-3"  aria-label="Settings" accesskey="s">
+          <IconaMoonSettings role="presentation" class=" icon__size-2" height=none width=none alt="" />
+        </a>
+
+      </div>
       <li>
         <MainNavigationLink 
           href="/my/notes/add" 
@@ -111,9 +117,7 @@
       {/if}
       <li><h2>Data</h2></li>
       <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
-      <li class="flex__grow"></li>
-      <li><hr /></li>
-      <li><MainNavigationLink href="/settings" accesskey="s"><IconaMoonSettings role="presentation" alt="" /> Settings</MainNavigationLink></li>
+      <li class="p__block-2"></li>
     </ul>
   </nav>
 </aside>
