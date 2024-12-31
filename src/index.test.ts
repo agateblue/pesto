@@ -331,7 +331,8 @@ describe('query language', () => {
         }
       },
       tags: ['world', 'sad'],
-      _deleted: false
+      _deleted: false,
+      source: 'Tempo',
     };
     expect(tempoToPestoDocument(input, 0)).toStrictEqual(expected);
   });
@@ -371,7 +372,8 @@ describe('query language', () => {
           column: 1
         }
       },
-      tags: []
+      tags: [],
+      source: 'Tempo',
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -406,7 +408,8 @@ describe('query language', () => {
           column: -1
         }
       },
-      tags: []
+      tags: [],
+      source: 'Tempo',
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -429,7 +432,8 @@ describe('query language', () => {
       data: { columns: ['Today', 'Tomorrow', 'Done'] },
       fragments: {},
       tags: [],
-      title: null
+      title: null,
+      source: 'Tempo',
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -441,7 +445,8 @@ describe('query language', () => {
     };
     const expected: DocumentDocument & RxBaseDoc = {
       id: 'ignored:tempo:settings:something',
-      type: 'ignored'
+      type: 'ignored',
+      source: 'Tempo',
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });

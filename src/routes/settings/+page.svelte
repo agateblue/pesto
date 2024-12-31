@@ -124,7 +124,7 @@
         messages.push({ type: 'info', text: `Skipping ${form.id} at it already exists` });
       } else {
         // to avoid clashing ids we wait a few milliseconds
-        await createOrUpdateForm(null, form);
+        await createOrUpdateForm(null, form, 'Tempo');
         messages.push({ type: 'info', text: `Inserted ${form.id}!` });
       }
     }
@@ -160,7 +160,7 @@
           query: a.query,
         }
       })
-      await createOrUpdateSetting('settings:collections', {collections});
+      await createOrUpdateSetting('settings:collections', {collections}, 'Tempo');
     }
     if (boardConfig?.lists) {
       messages.push({ type: 'info', text: `Importing Tempo board config…` });
@@ -170,7 +170,7 @@
         type: 'info',
         text: `Importing Tempo board columns: ${newBoardConfig.columns.join(', ')}`
       });
-      await createOrUpdateSetting('settings:board', newBoardConfig);
+      await createOrUpdateSetting('settings:board', newBoardConfig, 'Tempo');
     }
 
     messages.push({ type: 'info', text: `Importing ${entries.length} entries…` });
