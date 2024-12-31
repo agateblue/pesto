@@ -9,7 +9,8 @@ import {
   globals,
   CURRENT_DOCUMENT_VERSION,
   migrationStrategies,
-  documentSchemaLiteral
+  documentSchemaLiteral,
+  getNewFormFragment
 } from './db';
 import { parseTags, type LogMessage } from './ui';
 import isEmpty from 'lodash/isEmpty';
@@ -186,10 +187,10 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       }
 
       if (!isEmpty(document.data || {})) {
-        let formFragment = {
-          id: document.form || null,
-          data: document.data || {}
-        };
+        let formFragment = getNewFormFragment(
+          document.form || null,
+          document.data || {},
+        )
         data.fragments.form = formFragment;
       }
     }
