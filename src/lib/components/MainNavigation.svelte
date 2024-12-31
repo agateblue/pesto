@@ -25,6 +25,7 @@
   let totalTodos: number | null = $state(null);
   let totalStarred: number | null = $state(null);
   let boardColumns = $state([])
+  let collections = $state([])
 
   const subscriptions = [
     globals.db?.documents
@@ -40,9 +41,9 @@
       let columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
       boardColumns = columns.map(c => {return {name: c, total: 0}})
       boardColumns.pop()
-      // for (var i=0; i < columns.length; i++) {
-        
-      // }
+    }),
+    globals.db?.documents.findOne({ selector: { id: 'settings:collections' } }).$.subscribe((settings) => {
+      collections = settings?.toMutableJSON()?.data?.collections || [];
     }),
   ];
   onDestroy(clearSubscriptions(subscriptions));
@@ -94,6 +95,20 @@
           <IconaMoonMenuKebabVerticalSquare role="presentation" alt="" />{column.name}</MainNavigationLink>
       </li>
       {/each}
+      {#if collections.length}
+        <li>
+          <h2>
+            Collections
+          </h2>
+        </li>
+        {#each collections as collection}
+        <li>
+          <MainNavigationLink href={`/my?q=${collection.query}`}>
+            {collection.name}
+          </MainNavigationLink>
+        </li>
+        {/each}
+      {/if}
       <li><h2>Data</h2></li>
       <li><MainNavigationLink href="/forms" accesskey="d"><IconaMoonFileDocument role="presentation" alt="" /> Forms</MainNavigationLink></li>
       <li class="flex__grow"></li>

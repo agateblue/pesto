@@ -131,6 +131,10 @@
     let tasks: [] = data?.board?.tasks || [];
     messages.push({ type: 'info', text: `${tasks.length} tempo tasks found` });
     let boardConfig: object = data?.board?.settings;
+    let settingsById = {}
+    for (const setting of (data.settings || [])) {
+      settingsById[setting._id] = setting 
+    }
     messages.push({
       type: 'info',
       text: boardConfig
@@ -145,6 +149,17 @@
     let newBoardConfig = await getSettingData('settings:board', {
       columns: ['Todo', 'Doing', 'Done']
     });
+    if (settingsById.aliases) {
+      messages.push({ type: 'info', text: `Importing ${settingsById.aliases.length} Tempo aliases…` });
+      let collections = settingsById.aliases.value.map(a => {
+        return {
+          id: a._id,
+          name: a.name,
+          query: a.query,
+        }
+      })
+      await createOrUpdateSetting('settings:collections', {collections});
+    }
     if (boardConfig?.lists) {
       messages.push({ type: 'info', text: `Importing Tempo board config…` });
       // Tempo doesn't include the "done" column in the export, we add it manually
