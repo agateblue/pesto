@@ -12,13 +12,20 @@
     type DocumentType,
     createOrUpdateForm,
     globals,
-    getNewNote
+    getNewNote,
+    createOrUpdateSetting,
+    getSetting,
   } from '$lib/db';
   import { onDestroy } from 'svelte';
   import sortBy from 'lodash/sortBy';
 
   let editedForm: FormConfiguration | null = $state(null);
-
+  let webhookUrl = $state('')
+  let subscriptions = [
+    getSetting('settings:form-webhook-url')?.$.subscribe(s => {
+      webhookUrl = s?.data?.url || ''
+    })
+  ]
   let forms: DocumentType = $state([]);
   function loadForms() {
     return globals.db.documents
@@ -42,7 +49,7 @@
     subscription = loadForms();
   });
 
-  onDestroy(clearSubscriptions([subscription]));
+  onDestroy(clearSubscriptions([...subscriptions, subscription]));
 </script>
 
 <div class="my__layout">
@@ -54,7 +61,7 @@
         <h2 class="flex__grow">Forms</h2>
 
         <DialogForm
-          anchorClass="button"
+          anchorClass="m__inline-2 button"
           anchorText="Add a new form"
           title="Add a new form"
           onopen={() =>
@@ -73,6 +80,21 @@
             <FormBuilder bind:form={editedForm} />
           {/if}
         </DialogForm>
+        <DialogForm
+          anchorClass="button__discrete button__outlined"
+          anchorText="Settings"
+          title="Form settings"
+          onsubmit={async (e: SubmitEvent) => {
+            e.preventDefault();
+            await createOrUpdateSetting('settings:form-webhook-url', {url: webhookUrl})
+          }}
+        >
+          <div class="form__field">
+            <label for="form-webhook-url">Webhook URL</label>
+            <input name="form-webhook-url" id="form-webhook-url" type="url" bind:value={webhookUrl}>
+            <p class="form__help">Notify an URL via a POST request when an form entry is created, updated or deleted.</p>
+          </div>
+        </DialogForm>
       </header>
       <div class="scroll">
         <div class="grid grid__gap">
@@ -81,6 +103,7 @@
               elClass="card card__narrow | flow"
               form={form.data}
               id={form.id}
+              {webhookUrl}
               onsubmit={async (values: object) => {
                 let noteData = getNewNote();
                 noteData.fragments = {
