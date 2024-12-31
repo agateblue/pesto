@@ -4,10 +4,11 @@ import {
   getQueryTokens,
   type QueryToken,
   type DocumentDocument,
-  type FormConfiguration
+  type FormConfiguration,
+  type DocumentType
 } from '$lib/db';
 import {
-  pestoToTempoDocument,
+  pestoToTempoDocuments,
   tempoToPestoDocument,
   tempoBlueprintsToPestoForm,
   type TempoEntry,
@@ -143,8 +144,8 @@ describe('query language', () => {
     expect(renderMarkdown(input)).toStrictEqual(expected);
   });
 
-  it('replication pestoToTempoDocument note', () => {
-    const input: DocumentDocument & RxBaseDoc = {
+  it('replication pestoToTempoDocuments note', () => {
+    const input: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
@@ -155,11 +156,11 @@ describe('query language', () => {
           content: "Hello #world I'm -sad"
         }
       },
-      tags: ['world', 'sad'],
-      _deleted: false
+      tags: ['world', 'sad']
     };
     const expected: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       text: "Hello #world I'm -sad",
       tags: [
@@ -182,17 +183,151 @@ describe('query language', () => {
       ],
       mood: -1,
       type: 'entry',
-      _deleted: false,
       thread: null,
       replies: [],
       form: null,
-      data: null,
+      data: {},
       favorite: false
     };
-    expect(pestoToTempoDocument(input, 0)).toStrictEqual(expected);
+    expect(pestoToTempoDocuments(input, 0)).toStrictEqual([expected]);
+  });
+  it('replication pestoToTempoDocuments note with annotations', () => {
+    const input: DocumentType = {
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      tags: [],
+      fragments: {
+        text: {
+          content: `@weight:kilos=66
+@weight:scale="home"`
+        }
+      }
+    };
+    const expected: TempoEntry = {
+      _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
+      date: '2024-11-06T12:10:22.438Z',
+      text: `@weight:kilos=66
+@weight:scale="home"`,
+      thread: null,
+      favorite: false,
+      form: null,
+      replies: [],
+      tags: [
+        {
+          text: '@weight:kilos=66',
+          sign: '@',
+          id: 'weight:kilos',
+          type: 'annotation',
+          value: '66',
+          mood: null
+        },
+        {
+          text: '@weight:scale="home"',
+          sign: '@',
+          id: 'weight:scale',
+          type: 'annotation',
+          value: 'home',
+          mood: null
+        }
+      ],
+      mood: 0,
+      type: 'entry',
+      data: {
+        'weight:kilos': 66,
+        'weight:scale': 'home'
+      }
+    };
+    expect(pestoToTempoDocuments(input, 0)).toStrictEqual([expected]);
+  });
+  it('replication pestoToTempoDocuments note form fragment with annotations', () => {
+    const input: DocumentType = {
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      tags: [],
+      fragments: {
+        text: {
+          content: '@weight:kilos=66'
+        },
+        form: {
+          id: 'weighing',
+          data: {
+            scale: 'home'
+          }
+        }
+      }
+    };
+    const expected: TempoEntry = {
+      _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
+      date: '2024-11-06T12:10:22.438Z',
+      text: `@weight:kilos=66`,
+      thread: null,
+      favorite: false,
+      form: 'weighing',
+      replies: [],
+      tags: [
+        {
+          text: '@weight:kilos=66',
+          sign: '@',
+          id: 'weight:kilos',
+          type: 'annotation',
+          value: '66',
+          mood: null
+        }
+      ],
+      mood: 0,
+      type: 'entry',
+      data: {
+        'weight:kilos': 66,
+        scale: 'home'
+      }
+    };
+    expect(pestoToTempoDocuments(input, 0)).toStrictEqual([expected]);
+  });
+  it('replication pestoToTempoDocuments note form only', () => {
+    const input: DocumentType = {
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      tags: [],
+      fragments: {
+        form: {
+          id: 'weighing',
+          data: {
+            scale: 'home'
+          }
+        }
+      }
+    };
+    const expected: TempoEntry = {
+      _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
+      date: '2024-11-06T12:10:22.438Z',
+      text: '',
+      thread: null,
+      favorite: false,
+      form: 'weighing',
+      replies: [],
+      tags: [],
+      mood: 0,
+      type: 'entry',
+      data: {
+        scale: 'home'
+      }
+    };
+    expect(pestoToTempoDocuments(input, 0)).toStrictEqual([expected]);
   });
   it('replication pestoToTempoDocument task not done', () => {
-    const input: DocumentDocument & RxBaseDoc = {
+    const input: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
@@ -217,11 +352,11 @@ describe('query language', () => {
           column: 1
         }
       },
-      tags: [],
-      _deleted: false
+      tags: []
     };
     const expected: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -231,20 +366,66 @@ describe('query language', () => {
       subtasks: [
         { done: false, label: 'Dishes' },
         { done: true, label: 'Laundry' }
-      ],
-      _deleted: false
+      ]
     };
-    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+    expect(pestoToTempoDocuments(input, 3)).toStrictEqual([expected]);
+  });
+
+  it('replication pestoToTempoDocument task and text done', () => {
+    const input: DocumentType = {
+      id: '2024-11-06T12:10:22.999Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.999Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: null,
+      fragments: {
+        text: { content: 'hello' },
+        todolist: {
+          done: true,
+          title: 'Cleaning day',
+          todos: [],
+          column: 1
+        }
+      },
+      tags: []
+    };
+    const expected: (TempoTask | TempoEntry)[] = [
+      {
+        _id: '2024-11-06T12:10:22.999Z',
+        _rev: "1-00000000000000000000000000000000",
+        date: '2024-11-06T12:10:22.999Z',
+        text: 'hello',
+        thread: null,
+        favorite: false,
+        form: null,
+        replies: [],
+        tags: [],
+        mood: 0,
+        type: 'entry',
+        data: {}
+      },
+      {
+        _id: '2024-11-06T12:10:22.000Z',
+        _rev: "1-00000000000000000000000000000000",
+        date: '2024-11-06T12:10:22.999Z',
+        type: 'task',
+        text: 'Cleaning day',
+        category: null,
+        index: -1,
+        list: 1,
+        subtasks: []
+      }
+    ];
+    expect(pestoToTempoDocuments(input, 3)).toStrictEqual(expected);
   });
 
   it('replication pestoToTempoDocument task done', () => {
-    const input: DocumentDocument & RxBaseDoc = {
+    const input: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:26:37.871Z',
       title: null,
-      _deleted: false,
       fragments: {
         todolist: {
           done: true,
@@ -258,30 +439,30 @@ describe('query language', () => {
     };
     const expected: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
       category: null,
       index: -1,
       list: 3,
-      subtasks: [],
-      _deleted: false
+      subtasks: []
     };
-    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+    expect(pestoToTempoDocuments(input, 3)).toStrictEqual([expected]);
   });
   it('replication pestoToTempoDocument other type ignored', () => {
-    const input: DocumentDocument & RxBaseDoc = {
+    const input: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'settings',
       data: {}
     };
-    const expected = null;
-    expect(pestoToTempoDocument(input, 3)).toStrictEqual(expected);
+    expect(pestoToTempoDocuments(input, 3)).toStrictEqual([]);
   });
 
-  it('replication tempoToPestoDocument note', () => {
+  it('replication tempoToPestoDocuments note', () => {
     const input: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       text: "Hello #world I'm -sad",
       tags: [
@@ -312,7 +493,7 @@ describe('query language', () => {
       },
       favorite: true
     };
-    const expected: DocumentDocument & RxBaseDoc = {
+    const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
@@ -338,9 +519,10 @@ describe('query language', () => {
     expect(tempoToPestoDocument(input, 0)).toStrictEqual(expected);
   });
 
-  it('replication tempoToPestoDocument task not done', () => {
+  it('replication tempoToPestoDocuments task not done', () => {
     const input: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -354,7 +536,7 @@ describe('query language', () => {
       _deleted: false,
       favorite: false
     };
-    const expected: DocumentDocument & RxBaseDoc = {
+    const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
@@ -379,9 +561,10 @@ describe('query language', () => {
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
-  it('replication tempoToPestoDocument task done', () => {
+  it('replication tempoToPestoDocuments task done', () => {
     const input: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
+      _rev: "1-00000000000000000000000000000000",
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -392,7 +575,7 @@ describe('query language', () => {
       _deleted: false,
       favorite: true
     };
-    const expected: DocumentDocument & RxBaseDoc = {
+    const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
@@ -415,9 +598,10 @@ describe('query language', () => {
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
-  it('replication tempoToPestoDocument boardconfig', () => {
+  it('replication tempoToPestoDocuments boardconfig', () => {
     const input = {
       _id: 'boardConfig',
+      _rev: "1-00000000000000000000000000000000",
       type: 'settings',
       date: new Date().toISOString(),
       value: {
@@ -425,7 +609,7 @@ describe('query language', () => {
         categories: ['a', 'b', 'c']
       }
     };
-    const expected: DocumentDocument & RxBaseDoc = {
+    const expected: DocumentType = {
       id: 'settings:board',
       type: 'setting',
       modified_at: input.date,
@@ -439,12 +623,13 @@ describe('query language', () => {
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
 
-  it('replication tempoToPestoDocument other document ignored', () => {
+  it('replication tempoToPestoDocuments other document ignored', () => {
     const input = {
       _id: 'something',
+      _rev: "1-00000000000000000000000000000000",
       type: 'settings'
     };
-    const expected: DocumentDocument & RxBaseDoc = {
+    const expected: DocumentType = {
       id: 'ignored:tempo:settings:something',
       type: 'ignored',
       source: 'Tempo'
