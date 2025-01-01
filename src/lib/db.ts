@@ -761,6 +761,7 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     if (token.type === 'text') {
       let orQuery = [];
       let regex = { $regex: `.*${token.value}.*`, $options: 'i' };
+      orQuery.push({ 'title': regex });
       orQuery.push({ 'fragments.text.content': regex });
       orQuery.push({ 'fragments.todolist.title': regex });
       orQuery.push({ 'fragments.todolist.todos': { $elemMatch: { text: regex } } });

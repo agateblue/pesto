@@ -76,6 +76,7 @@ describe('query language', () => {
     const expected = [
       {
         $or: [
+          { 'title': { $regex: '.*hop.*', $options: 'i' } },
           { 'fragments.text.content': { $regex: '.*hop.*', $options: 'i' } },
           { 'fragments.todolist.title': { $regex: '.*hop.*', $options: 'i' } },
           {
