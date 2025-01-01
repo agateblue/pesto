@@ -91,10 +91,12 @@
     })}
     aria-label="Delete"
   >
-    {#if trashIcon}
-      <IconaMoonTrash role="presentation" alt="" />
-    {:else}
-      <IconaMoonSIgnMinusCircle role="presentation" alt="" />
+    {#if todo.text}
+      {#if trashIcon}
+        <IconaMoonTrash role="presentation" alt="" />
+      {:else}
+        <IconaMoonSIgnMinusCircle role="presentation" alt="" />
+      {/if}
     {/if}
   </button>
 </div>
