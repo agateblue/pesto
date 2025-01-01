@@ -1,4 +1,6 @@
 <script lang="ts">
+  import IconaMoonClose from 'virtual:icons/iconamoon/close';
+
   interface Props {
     anchorClass: string;
     anchorText?: string;
@@ -31,26 +33,46 @@
   {anchorText}
 </button>
 
-<dialog bind:this={dialog} aria-labelledby="dialog-title" aria-describedby="dialog-description">
-  <form class="flow" {onsubmit}>
-    <h2 id="dialog-title" class="m__block-0">{title}</h2>
-    <div class="flow" id="dialog-description">
-      {@render children?.()}
-    </div>
-    <hr />
-    <div class="flex__row | flex__justify-between">
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<dialog
+  bind:this={dialog}
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-description"
+  onmousedown={(event) => {event.target==dialog && dialog.close()}}
+>
+  <div class="scroll__wrapper">
+    <header class="flex__row flex__justify-between flex__align-center p__inline-3">
+      <h2 id="dialog-title" class="m__block-0">{title}</h2>
+
       <button
         type="button"
+        class="button__icon"
         onclick={() => {
           dialog.close();
-        }}>Cancel</button
-      >
+        }}>
+        <IconaMoonClose 
+          role="presentation"
+          class=" icon__size-3"
+          height="none"
+          width="none"
+          alt=""
+        />
+      </button>
+  
+    </header>
+    <form class="scroll" {onsubmit}>
+      <div id="dialog-description">
+        <div class="p__inline-2 | flow">
+          {@render children?.()}
+        </div>
+      </div>
+      <hr />
       <button
         type="submit"
         onclick={() => {
           dialog.close();
         }}>Confirm</button
       >
-    </div>
-  </form>
+    </form>
+  </div>
 </dialog>
