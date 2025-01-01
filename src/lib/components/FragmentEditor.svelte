@@ -16,7 +16,7 @@
     type TodolistType,
     type Database
   } from '$lib/db';
-  import { clearSubscriptions } from '$lib/ui';
+  import { clearSubscriptions, getTodoListFromMarkdown } from '$lib/ui';
   import { createEventDispatcher, onDestroy } from 'svelte';
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
@@ -30,7 +30,8 @@
   let { note = $bindable(), columns }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
-
+  let todolistKey = $state(0);
+  let todolistFromText: TodolistType | null = $state(getTodoListFromMarkdown(note?.fragments?.text?.content || ''))
   let webhookUrl = $state('')
   let subscriptions = [
     getSetting('settings:form-webhook-url')?.$.subscribe(s => {
@@ -77,14 +78,34 @@
 <TextFragmentEditor
   fragment={note?.fragments?.text || getNewTextFragment()}
   fieldId={`note-text-${id}`}
-  on:update={debounce((event) => updateFragment('text', event.detail.fragment), 200)}
+  on:update={debounce((event) => {
+    updateFragment('text', event.detail.fragment)
+    if (!note?.fragments?.todolist) {
+      todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId)
+    }
+  }, 200)}
   on:delete={(event) => updateFragment('text', undefined)}
 />
-<TodoListFragmentEditor
-  {columns}
-  editText={true}
-  fragment={note?.fragments?.todolist || getNewTodoListFragment()}
-  autofocus={false}
-  on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
-  on:delete={(event) => updateFragment('todolist', undefined)}
-/>
+
+{#if todolistFromText && !note?.fragments?.todolist}
+  <button
+    type="button"
+    class="button__link"
+    onclick={async () => {
+      await updateFragment('todolist', todolistFromText)
+      todolistKey += 1
+    }}
+  >
+    Load todolist from text
+  </button>
+{/if}
+{#key todolistKey}
+  <TodoListFragmentEditor
+    {columns}
+    editText={true}
+    fragment={note?.fragments?.todolist || getNewTodoListFragment()}
+    autofocus={false}
+    on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
+    on:delete={(event) => updateFragment('todolist', undefined)}
+  />
+{/key}

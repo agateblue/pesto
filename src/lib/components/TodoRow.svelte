@@ -45,7 +45,7 @@
 </script>
 
 <div class="flex__row flex__align-start">
-  {#if todo.text.trim()}
+  {#if todo.text?.trim()}
     <div>
       {#key todo.text.trim() + todo.done}
         <input
@@ -68,7 +68,7 @@
       autocomplete="off"
       id={`todo-${id}-text`}
       bind:this={textarea}
-      value={todo.text}
+      value={todo.text || ''}
       onkeyup={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
@@ -81,7 +81,7 @@
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>
-      {@html renderMarkdown(todo.text)}
+      {@html renderMarkdown(todo.text || '')}
     </label>
   {/if}
   <button

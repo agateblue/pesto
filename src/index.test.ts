@@ -3,10 +3,12 @@ import {
   tokensToMangoQuery,
   getQueryTokens,
   type QueryToken,
+  buildUniqueId,
 } from '$lib/db';
-import { insertTagMarkup, renderMarkdown, parseTags } from '$lib/ui';
+import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown } from '$lib/ui';
 
 describe('query language', () => {
+
   it('getQueryTokens', () => {
     const input =
       'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
@@ -131,5 +133,30 @@ describe('query language', () => {
     const expected =
       '<p>hello this is a <a href="/my?q=tag:hashtag">#hashtag</a> <strong>yes</strong></p>\n';
     expect(renderMarkdown(input)).toStrictEqual(expected);
+  });
+  it('ui get tasks from markdown source', () => {
+    const input = `
+- [ ] Task 1
+  - [x] Task 2
+- [ ] Task 3
+`
+    const expected = {
+      title: 'Task 1',
+      done: false,
+      column: 0,
+      todos: [
+        {
+          id: 'noop',
+          text: 'Task 2',
+          done: true,
+        },
+        {
+          id: 'noop',
+          text: 'Task 3',
+          done: false,
+        },
+      ]
+    }
+    expect(getTodoListFromMarkdown(input, () => 'noop')).toStrictEqual(expected);
   });
 });
