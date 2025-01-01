@@ -35,14 +35,16 @@
   }
 </script>
 
-<label for={fieldId}>Content</label>
-<textarea
-  id={fieldId}
-  onfocus={() => (focused = true)}
-  onblur={() => (focused = false)}
-  class="editor autoresize"
-  placeholder="What's on your mind?"
-  onkeyup={(e) => handleChange(e.target.value)}
-  value={content}
-  accesskey="w"
-></textarea>
+<div class="form__field">
+  <label for={fieldId}>Content</label>
+  <textarea
+    id={fieldId}
+    onfocus={() => (focused = true)}
+    onblur={() => (focused = false)}
+    class="editor autoresize"
+    placeholder="What's on your mind?"
+    onkeyup={(e) => handleChange(e.target.value)}
+    value={content}
+    accesskey="w"
+  ></textarea>
+</div>
