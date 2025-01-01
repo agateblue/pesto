@@ -179,9 +179,11 @@ body {
     background: var(--sidebar-background);
     border-inline-end: var(--layout-separator);
   }
-  aside:last-child:not([data-fullpage=true]) {
-    flex-basis: 40ch;
+  aside:last-child {
     border-inline-start: var(--layout-separator);
+  }
+  aside:last-child:not([data-fullpage=true]) {
+    flex-basis: 30ch;
   }
   aside[data-fullpage=true] + main + aside[data-fullpage=true] {
     display: none;
