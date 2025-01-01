@@ -60,7 +60,7 @@
   <MainNavigation />
   <main>
     <div class="scroll__wrapper">
-      <header class="p__inline-3 flex__row flex__justify-between">
+      <header class="p__inline-3 flex__row flex__justify-between flex__align-center">
         <MainNavigationToggle class="layout__multi-hidden" />
 
         <h2 class="flex__grow">Forms</h2>
