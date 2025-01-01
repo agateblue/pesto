@@ -240,16 +240,16 @@
                     note.fragments.todolist.column = column.index;
                     autofocusKey = note.id;
                     await globals.db?.documents.insert(note);
-                  }}>
-                    <IconaMoonSignPlusCircle
-                      role="presentation"
-                      class=" icon__size-3"
-                      height="none"
-                      width="none"
-                      alt=""
-                    />
-                  </button
+                  }}
                 >
+                  <IconaMoonSignPlusCircle
+                    role="presentation"
+                    class=" icon__size-3"
+                    height="none"
+                    width="none"
+                    alt=""
+                  />
+                </button>
               </div>
               <LoadingState isLoading={column.isLoading}>Loading data…</LoadingState>
               <ol

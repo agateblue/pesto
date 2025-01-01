@@ -13,13 +13,13 @@ export async function load() {
   globals.db = db;
   globals.uiState = uiState;
 
-  if (!await db?.collections.documents.migrationNeeded()) {
+  if (!(await db?.collections.documents.migrationNeeded())) {
     // ensure forms are loaded immediately so that they can be displayed properly
     (await loadFormsQuery().exec()).forEach((document) => {
       globals.forms[document.data.id] = document.data;
     });
     observeLoadForms();
-  
+
     launchReplications(globals.uiState, globals.db);
   }
 

@@ -1,7 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
 import debounce from 'lodash/debounce';
-import {type TodolistType} from '$lib/db'
+import { type TodolistType } from '$lib/db';
 
 export type LogMessage = {
   text: string;
@@ -129,48 +129,48 @@ export function clearSubscriptions(subscriptions: []) {
     });
   };
 }
-export function makeFile (text: string, mimetype: string) {
-  let data = new Blob([text], {type: mimetype})
-  let textFile = window.URL.createObjectURL(data)
-  return textFile
+export function makeFile(text: string, mimetype: string) {
+  let data = new Blob([text], { type: mimetype });
+  let textFile = window.URL.createObjectURL(data);
+  return textFile;
 }
 
-export function downloadFile (text: string, mimetype: string, name: string) {
-  let f = makeFile(text, mimetype)
-  var link = document.createElement('a')
-  link.setAttribute('download', name)
-  link.href = f
-  document.body.appendChild(link)
+export function downloadFile(text: string, mimetype: string, name: string) {
+  let f = makeFile(text, mimetype);
+  var link = document.createElement('a');
+  link.setAttribute('download', name);
+  link.href = f;
+  document.body.appendChild(link);
 
   window.requestAnimationFrame(function () {
-    var event = new MouseEvent('click')
-    link.dispatchEvent(event)
-    document.body.removeChild(link)
-  })
+    var event = new MouseEvent('click');
+    link.dispatchEvent(event);
+    document.body.removeChild(link);
+  });
 }
 
 export function getTodoListFromMarkdown(text: string, getId: Function) {
-  const regex = new RegExp(/- \[(x| )?\] (.*)/gi)
+  const regex = new RegExp(/- \[(x| )?\] (.*)/gi);
   let match = regex.exec(text);
-  let todolist: null | TodolistType = null
+  let todolist: null | TodolistType = null;
   while (match != null) {
     if (match[2].trim()) {
       if (todolist) {
         todolist.todos.push({
           id: getId(),
           done: !!match[1].trim(),
-          text: match[2].trim(),
-        })
+          text: match[2].trim()
+        });
       } else {
         todolist = {
           title: match[2].trim(),
           done: !!match[1]?.trim(),
           column: !!match[1]?.trim() ? -1 : 0,
-          todos: [],
-        }
+          todos: []
+        };
       }
     }
     match = regex.exec(text);
   }
-  return todolist
+  return todolist;
 }

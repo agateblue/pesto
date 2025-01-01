@@ -18,18 +18,18 @@
     getNewNote,
     createOrUpdateSetting,
     getSetting,
-    getNewFormFragment,
+    getNewFormFragment
   } from '$lib/db';
   import { onDestroy } from 'svelte';
   import sortBy from 'lodash/sortBy';
 
   let editedForm: FormConfiguration | null = $state(null);
-  let webhookUrl = $state('')
+  let webhookUrl = $state('');
   let subscriptions = [
-    getSetting('settings:form-webhook-url')?.$.subscribe(s => {
-      webhookUrl = s?.data?.url || ''
+    getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
+      webhookUrl = s?.data?.url || '';
     })
-  ]
+  ];
   let forms: DocumentType = $state([]);
   function loadForms() {
     return globals.db.documents
@@ -112,16 +112,22 @@
           title="Form settings"
           onsubmit={async (e: SubmitEvent) => {
             e.preventDefault();
-            await createOrUpdateSetting('settings:form-webhook-url', {url: webhookUrl})
+            await createOrUpdateSetting('settings:form-webhook-url', { url: webhookUrl });
           }}
         >
           <div class="form__field">
             <label for="form-webhook-url">Webhook URL</label>
-            <input name="form-webhook-url" id="form-webhook-url" type="url" bind:value={webhookUrl}>
-            <p class="form__help">Notify an URL via a POST request when an form entry is created, updated or deleted.</p>
+            <input
+              name="form-webhook-url"
+              id="form-webhook-url"
+              type="url"
+              bind:value={webhookUrl}
+            />
+            <p class="form__help">
+              Notify an URL via a POST request when an form entry is created, updated or deleted.
+            </p>
           </div>
         </DialogForm>
-
       </header>
       <div class="scroll">
         <div class="grid grid__gap">

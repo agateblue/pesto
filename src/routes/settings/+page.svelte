@@ -12,7 +12,12 @@
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
   import { type LogMessage, renderMarkdown, downloadFile } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
-  import { handleImportTempo, handleImportPesto, handleExportPesto, handleExportTempo} from '$lib/replication';
+  import {
+    handleImportTempo,
+    handleImportPesto,
+    handleExportPesto,
+    handleExportTempo
+  } from '$lib/replication';
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
@@ -118,7 +123,7 @@ Export to a Tempo JSON file.
           id: 'tasks',
           label: 'Export tasks and board',
           value: true
-        },
+        }
       ],
       handler: handleExportTempo
     }
@@ -255,7 +260,6 @@ Export to a Tempo JSON file.
             {/if}
           </DialogForm>
 
-
           <form
             id="export"
             class="flow m__block-3"
@@ -267,18 +271,15 @@ Export to a Tempo JSON file.
                 flags[flag.id] = flag.value;
               }
               let data = await exportTypes[exportType].handler(exportMessages, flags);
-              let d = (new Date()).toISOString().slice(0, 16)
-              let filename = `pesto_to_${exportType}_${d}.json`
-              downloadFile(
-                JSON.stringify(data, null, 2),
-                'application/json',
-                filename,
-              )
+              let d = new Date().toISOString().slice(0, 16);
+              let filename = `pesto_to_${exportType}_${d}.json`;
+              downloadFile(JSON.stringify(data, null, 2), 'application/json', filename);
             }}
           >
             <h1>Export data</h1>
             <p>
-              Export data from Pesto. This can be used to create a backup or convert Pesto data to other applications.
+              Export data from Pesto. This can be used to create a backup or convert Pesto data to
+              other applications.
             </p>
             <div class="form__field">
               <label for="export-format">Export format</label>
@@ -290,7 +291,7 @@ Export to a Tempo JSON file.
 
             {#if exportType}
               {@html renderMarkdown(exportTypes[exportType].help)}
-              
+
               {#if exportTypes[exportType].flags.length > 0}
                 {#each exportTypes[exportType].flags as flag, i (i)}
                   <div class="form__field">

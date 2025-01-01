@@ -16,7 +16,7 @@
     webhookUrl?: string;
   }
 
-  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl} = $props();
+  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl } = $props();
 
   let v = $state(values || {});
   function setDefaultValues() {
@@ -75,12 +75,12 @@
       onsubmit(cloneDeep(v));
       if (webhookUrl) {
         fetch(webhookUrl, {
-          method: "POST",
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({})
-        })
+        });
       }
     }}
   >

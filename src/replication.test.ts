@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  type FormConfiguration,
-  type DocumentType
-} from '$lib/db';
+import { type FormConfiguration, type DocumentType } from '$lib/db';
 import {
   pestoToTempoDocuments,
   tempoToPestoDocument,
@@ -12,7 +9,6 @@ import {
 } from '$lib/replication';
 
 describe('query language', () => {
-  
   it('replication pestoToTempoDocuments note', () => {
     const input: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
@@ -29,7 +25,7 @@ describe('query language', () => {
     };
     const expected: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       text: "Hello #world I'm -sad",
       tags: [
@@ -77,7 +73,7 @@ describe('query language', () => {
     };
     const expected: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       text: `@weight:kilos=66
 @weight:scale="home"`,
@@ -134,7 +130,7 @@ describe('query language', () => {
     };
     const expected: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       text: `@weight:kilos=66`,
       thread: null,
@@ -179,7 +175,7 @@ describe('query language', () => {
     };
     const expected: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       text: '',
       thread: null,
@@ -225,7 +221,7 @@ describe('query language', () => {
     };
     const expected: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -261,7 +257,7 @@ describe('query language', () => {
     const expected: (TempoTask | TempoEntry)[] = [
       {
         _id: '2024-11-06T12:10:22.999Z',
-        _rev: "1-00000000000000000000000000000000",
+        _rev: '1-00000000000000000000000000000000',
         date: '2024-11-06T12:10:22.999Z',
         text: 'hello',
         thread: null,
@@ -275,7 +271,7 @@ describe('query language', () => {
       },
       {
         _id: '2024-11-06T12:10:22.000Z',
-        _rev: "1-00000000000000000000000000000000",
+        _rev: '1-00000000000000000000000000000000',
         date: '2024-11-06T12:10:22.999Z',
         type: 'task',
         text: 'Cleaning day',
@@ -308,7 +304,7 @@ describe('query language', () => {
     };
     const expected: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -331,7 +327,7 @@ describe('query language', () => {
   it('replication tempoToPestoDocuments note', () => {
     const input: TempoEntry = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       text: "Hello #world I'm -sad",
       tags: [
@@ -392,7 +388,7 @@ describe('query language', () => {
   it('replication tempoToPestoDocuments task not done', () => {
     const input: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -434,7 +430,7 @@ describe('query language', () => {
   it('replication tempoToPestoDocuments task done', () => {
     const input: TempoTask = {
       _id: '2024-11-06T12:10:22.438Z',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
       text: 'Cleaning day',
@@ -471,7 +467,7 @@ describe('query language', () => {
   it('replication tempoToPestoDocuments boardconfig', () => {
     const input = {
       _id: 'boardConfig',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       type: 'settings',
       date: new Date().toISOString(),
       value: {
@@ -496,7 +492,7 @@ describe('query language', () => {
   it('replication tempoToPestoDocuments other document ignored', () => {
     const input = {
       _id: 'something',
-      _rev: "1-00000000000000000000000000000000",
+      _rev: '1-00000000000000000000000000000000',
       type: 'settings'
     };
     const expected: DocumentType = {

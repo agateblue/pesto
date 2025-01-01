@@ -196,40 +196,42 @@ export const migrationStrategies = {
     return oldDocumentData;
   },
   7: function (oldDocumentData) {
-    oldDocumentData.starred = false; 
+    oldDocumentData.starred = false;
     return oldDocumentData;
   },
-  8: function (oldDocumentData) {  
+  8: function (oldDocumentData) {
     return oldDocumentData;
   },
-  9: function (oldDocumentData) {     
+  9: function (oldDocumentData) {
     return oldDocumentData;
   },
-  10: function (oldDocumentData) {     
+  10: function (oldDocumentData) {
     if (oldDocumentData?.fragments?.form) {
-      oldDocumentData.fragments.form.annotations = {}
+      oldDocumentData.fragments.form.annotations = {};
     }
     return oldDocumentData;
   },
-  11: function (oldDocumentData) {     
+  11: function (oldDocumentData) {
     if (oldDocumentData?.fragments?.form) {
       if (!oldDocumentData.fragments.form.annotations) {
-        oldDocumentData.fragments.form.annotations = {}
+        oldDocumentData.fragments.form.annotations = {};
       }
     }
     return oldDocumentData;
   },
-  12: function (oldDocumentData) {     
+  12: function (oldDocumentData) {
     if (oldDocumentData?.fragments?.form) {
       if (oldDocumentData.fragments.form.id === undefined) {
-        oldDocumentData.fragments.form.id = null
+        oldDocumentData.fragments.form.id = null;
       }
     }
     return oldDocumentData;
-  },
-} 
+  }
+};
 
-export const CURRENT_DOCUMENT_VERSION = Math.max(...Object.keys(migrationStrategies).map(m => parseInt(m)))
+export const CURRENT_DOCUMENT_VERSION = Math.max(
+  ...Object.keys(migrationStrategies).map((m) => parseInt(m))
+);
 
 const documentSchemaTyped = toTypedRxJsonSchema(documentSchemaLiteral);
 
@@ -340,7 +342,7 @@ export async function getDb() {
     documents: {
       schema: documentSchema,
       autoMigrate: false,
-      migrationStrategies,
+      migrationStrategies
     }
   });
 
@@ -546,7 +548,7 @@ export function getNewFormFragment(id = null, data = {}, annotations = {}) {
   return {
     id,
     data,
-    annotations,
+    annotations
   };
 }
 
@@ -593,7 +595,7 @@ export async function createOrUpdateSetting(
 }
 
 export function getSetting(id: string) {
-  return globals.db?.documents.findOne({ selector: { id, type: 'setting' } })
+  return globals.db?.documents.findOne({ selector: { id, type: 'setting' } });
 }
 export async function getSettingData(id: string, defaultValue: object = {}) {
   let existing = await getSetting(id).exec();
@@ -604,8 +606,8 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data);
   data.modified_at = new Date().toISOString();
 
-  let tagsSource = data['fragments.text']?.content || ''
-  let parsedTags = parseTags(tagsSource)
+  let tagsSource = data['fragments.text']?.content || '';
+  let parsedTags = parseTags(tagsSource);
   const tags = parsedTags.map((t) => {
     return t.id;
   });
@@ -613,34 +615,35 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   if (tagsSource) {
     data.tags = [...new Set(tags)];
   }
-  
-  const dataTags = {}
-  parsedTags.filter(t => {
-    return t.type === 'annotation'
-  }).forEach(t => {
-    try {
-      dataTags[t.id] = JSON.parse(t.value)
-    } catch {
-      dataTags[t.id] = t.value
-    }
-  })
+
+  const dataTags = {};
+  parsedTags
+    .filter((t) => {
+      return t.type === 'annotation';
+    })
+    .forEach((t) => {
+      try {
+        dataTags[t.id] = JSON.parse(t.value);
+      } catch {
+        dataTags[t.id] = t.value;
+      }
+    });
   if (Object.keys(dataTags).length > 0) {
-    data['fragments.form.annotations'] = dataTags
+    data['fragments.form.annotations'] = dataTags;
     if (note.fragments.form) {
       // remove data that is present in both form fields and annotations from form field
-      let formData = cloneDeep(note.fragments.form.data)
+      let formData = cloneDeep(note.fragments.form.data);
       for (const key in dataTags) {
         if (Object.prototype.hasOwnProperty.call(dataTags, key)) {
           if (formData[key] != undefined) {
-            delete formData[key]
+            delete formData[key];
           }
         }
       }
-      data['fragments.form.data'] = formData
+      data['fragments.form.data'] = formData;
     } else {
-      data['fragments.form.id'] = null
-      data['fragments.form.data'] = {}
-      
+      data['fragments.form.id'] = null;
+      data['fragments.form.data'] = {};
     }
   } else if (data['fragments.text'] && note.fragments.form) {
     // text was updated and no available annotation are present
@@ -648,10 +651,10 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
 
     if (isEmpty(note.fragments.form.data)) {
       // the form itself don't contain data, wipe everything
-      data['fragments.form'] = undefined
+      data['fragments.form'] = undefined;
     } else {
       // wipe only annotations
-      data['fragments.form.annotations'] = {}
+      data['fragments.form.annotations'] = {};
     }
   }
 
@@ -761,7 +764,7 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
     if (token.type === 'text') {
       let orQuery = [];
       let regex = { $regex: `.*${token.value}.*`, $options: 'i' };
-      orQuery.push({ 'title': regex });
+      orQuery.push({ title: regex });
       orQuery.push({ 'fragments.text.content': regex });
       orQuery.push({ 'fragments.todolist.title': regex });
       orQuery.push({ 'fragments.todolist.todos': { $elemMatch: { text: regex } } });

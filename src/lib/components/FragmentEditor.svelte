@@ -31,17 +31,19 @@
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
   let todolistKey = $state(0);
-  let todolistFromText: TodolistType | null = $state(getTodoListFromMarkdown(note?.fragments?.text?.content || ''))
-  let webhookUrl = $state('')
+  let todolistFromText: TodolistType | null = $state(
+    getTodoListFromMarkdown(note?.fragments?.text?.content || '')
+  );
+  let webhookUrl = $state('');
   let subscriptions = [
-    getSetting('settings:form-webhook-url')?.$.subscribe(s => {
-      webhookUrl = s?.data?.url || ''
+    getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
+      webhookUrl = s?.data?.url || '';
     })
-  ]
-  
+  ];
+
   async function updateTitle(title: string) {
     if (!note && !title.trim()) {
-      return
+      return;
     }
     if (!note) {
       let noteData = getNewNote();
@@ -76,8 +78,8 @@
     dispatch('update', { note });
   }
   onDestroy(() => {
-    clearSubscriptions(subscriptions)
-  })
+    clearSubscriptions(subscriptions);
+  });
 </script>
 
 <div class="flow">
@@ -89,11 +91,11 @@
       name="note-title"
       value={note?.title || ''}
       onkeyup={debounce(async (e) => {
-        await updateTitle(e.target.value)
+        await updateTitle(e.target.value);
       }, 300)}
     />
   </div>
-  
+
   {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
     <FormRendered
       elClass="flow"
@@ -111,21 +113,21 @@
     fragment={note?.fragments?.text || getNewTextFragment()}
     fieldId={`note-text-${id}`}
     on:update={debounce((event) => {
-      updateFragment('text', event.detail.fragment)
+      updateFragment('text', event.detail.fragment);
       if (!note?.fragments?.todolist) {
-        todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId)
+        todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId);
       }
     }, 200)}
     on:delete={(event) => updateFragment('text', undefined)}
   />
-  
+
   {#if todolistFromText && !note?.fragments?.todolist}
     <button
       type="button"
       class="button__link"
       onclick={async () => {
-        await updateFragment('todolist', todolistFromText)
-        todolistKey += 1
+        await updateFragment('todolist', todolistFromText);
+        todolistKey += 1;
       }}
     >
       Load todolist from text

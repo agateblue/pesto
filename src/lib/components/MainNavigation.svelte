@@ -62,18 +62,19 @@
       <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
       <a href="/settings" class="button__icon p__inline-2" aria-label="Settings" accesskey="s">
         <IconaMoonSettings
-        role="presentation"
-        class=" icon__size-3"
-        height="none"
-        width="none"
-        alt=""
+          role="presentation"
+          class=" icon__size-3"
+          height="none"
+          width="none"
+          alt=""
         />
       </a>
     </header>
     <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add" accesskey="a"
-          ><IconaMoonPen role="presentation" alt="" /><span class="flex__grow">New note</span></MainNavigationLink
+          ><IconaMoonPen role="presentation" alt="" /><span class="flex__grow">New note</span
+          ></MainNavigationLink
         >
       </li>
       <li>
@@ -90,7 +91,9 @@
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
-          ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow">Recently modified</span></MainNavigationLink
+          ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow"
+            >Recently modified</span
+          ></MainNavigationLink
         >
       </li>
       <li><h2>To-dos</h2></li>
@@ -125,7 +128,8 @@
       <li><h2>Data</h2></li>
       <li>
         <MainNavigationLink href="/forms" accesskey="d"
-          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">Forms</span></MainNavigationLink
+          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">Forms</span
+          ></MainNavigationLink
         >
       </li>
       <li class="p__block-2"></li>
