@@ -1,7 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
-import { pushState } from '$app/navigation';
 import debounce from 'lodash/debounce';
+import {type TodolistType} from '$lib/db'
 
 export type LogMessage = {
   text: string;
@@ -147,4 +147,30 @@ export function downloadFile (text: string, mimetype: string, name: string) {
     link.dispatchEvent(event)
     document.body.removeChild(link)
   })
+}
+
+export function getTodoListFromMarkdown(text: string, getId: Function) {
+  const regex = new RegExp(/- \[(x| )?\] (.*)/gi)
+  let match = regex.exec(text);
+  let todolist: null | TodolistType = null
+  while (match != null) {
+    if (match[2].trim()) {
+      if (todolist) {
+        todolist.todos.push({
+          id: getId(),
+          done: !!match[1].trim(),
+          text: match[2].trim(),
+        })
+      } else {
+        todolist = {
+          title: match[2].trim(),
+          done: !!match[1]?.trim(),
+          column: !!match[1]?.trim() ? -1 : 0,
+          todos: [],
+        }
+      }
+    }
+    match = regex.exec(text);
+  }
+  return todolist
 }
