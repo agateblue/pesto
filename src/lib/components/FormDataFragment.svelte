@@ -9,8 +9,8 @@
 
   let { fragment }: Props = $props();
 
-  let fields: string[] = $state(Object.keys(fragment.data));
-  let annotations: string[] = $state(Object.keys(fragment.annotations));
+  let fields: string[] = $state(Object.keys(fragment.data || {}));
+  let annotations: string[] = $state(Object.keys(fragment.annotations || {}));
 
   let form = globals.forms[fragment.id];
   let fieldsById = {};
