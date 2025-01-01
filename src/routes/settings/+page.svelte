@@ -174,7 +174,8 @@ Export to a Tempo JSON file.
   async function handleSubmit() {
     window.localStorage.clear();
     try {
-      await globals.db.remove();
+      await globals.db?.remove();
+      await globals.db?.destroy();
       window.indexedDB.databases().then((r) => {
         for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
       });
