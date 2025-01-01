@@ -54,7 +54,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 11,
+  version: 12,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -113,7 +113,7 @@ export const documentSchemaLiteral = {
         },
         form: {
           type: 'object',
-          required: ['id', 'data'],
+          required: ['id', 'data', 'annotations'],
           properties: {
             id: {
               type: ['string', 'null']
@@ -214,6 +214,14 @@ export const migrationStrategies = {
     if (oldDocumentData?.fragments?.form) {
       if (!oldDocumentData.fragments.form.annotations) {
         oldDocumentData.fragments.form.annotations = {}
+      }
+    }
+    return oldDocumentData;
+  },
+  12: function (oldDocumentData) {     
+    if (oldDocumentData?.fragments?.form) {
+      if (oldDocumentData.fragments.form.id === undefined) {
+        oldDocumentData.fragments.form.id = null
       }
     }
     return oldDocumentData;

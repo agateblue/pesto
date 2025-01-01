@@ -343,7 +343,13 @@ export async function handleImportPesto(
         type: 'info',
         text: `Checking ${docs.length} ${step.label} for correctness…`
       });
-      docs = docs.filter((s) => validate(s));
+      docs = docs.filter((s) => {
+        let isValid = validate(s)
+        if (!isValid) {
+          console.debug("Invalid document", validate.errors, s)
+        }
+        return isValid
+      });
       messages.push({ type: 'info', text: `Inserting ${docs.length} ${step.label} in DB…` });
       let result = await globals.db?.documents.bulkInsert(docs);
       console.debug(`Saving ${step.label} result:`, result);
