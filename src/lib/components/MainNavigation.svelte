@@ -58,46 +58,45 @@
 <aside data-fullpage={sidebarFullpage}>
   <nav class="nav__main" aria-label="Main menu">
     <header class="flex__row flex__justify-between flex__align-center">
-      <h1 class="m__block-1">Pesto</h1>
-      <div>
-        <a href="/settings" class="button__icon" aria-label="Settings" accesskey="s">
-          <IconaMoonSettings
-          role="presentation"
-          class=" icon__size-2"
-          height="none"
-          width="none"
-          alt=""
-          />
-        </a><MainNavigationToggle class="layout__multi-hidden" />
-      </div>
+      <MainNavigationToggle class="layout__multi-hidden" />
+      <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
+      <a href="/settings" class="button__icon p__inline-2" aria-label="Settings" accesskey="s">
+        <IconaMoonSettings
+        role="presentation"
+        class=" icon__size-3"
+        height="none"
+        width="none"
+        alt=""
+        />
+      </a>
     </header>
     <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add" accesskey="a"
-          ><IconaMoonPen role="presentation" alt="" />New note</MainNavigationLink
+          ><IconaMoonPen role="presentation" alt="" /><span class="flex__grow">New note</span></MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/my" accesskey="n">
-          <IconaMoonCategory role="presentation" alt="" />All notes
+          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">All notes</span>
           <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true" accesskey="f">
-          <IconaMoonStarFill role="presentation" alt="" />Starred
+          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">Starred</span>
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
-          ><IconaMoonClock role="presentation" alt="" />Recently modified</MainNavigationLink
+          ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow">Recently modified</span></MainNavigationLink
         >
       </li>
       <li><h2>To-dos</h2></li>
       <li>
         <MainNavigationLink href="/board" accesskey="b">
-          <IconaMoonApps role="presentation" alt="" />Board
+          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">Board</span>
           <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
       </li>
@@ -126,7 +125,7 @@
       <li><h2>Data</h2></li>
       <li>
         <MainNavigationLink href="/forms" accesskey="d"
-          ><IconaMoonFileDocument role="presentation" alt="" />Forms</MainNavigationLink
+          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">Forms</span></MainNavigationLink
         >
       </li>
       <li class="p__block-2"></li>
