@@ -61,12 +61,14 @@
   <main>
     <div class="scroll__wrapper">
       <header class="p__inline-3 flex__row flex__justify-between">
+        <MainNavigationToggle class="layout__multi-hidden" />
+
         <h2 class="flex__grow">Forms</h2>
 
         {#snippet plusIcon()}
           <IconaMoonSignPlusCircle
             role="presentation"
-            class=" icon__size-2"
+            class=" icon__size-3"
             height="none"
             width="none"
             alt=""
@@ -97,7 +99,7 @@
         {#snippet settingsIcon()}
           <IconaMoonSettings
             role="presentation"
-            class=" icon__size-2"
+            class=" icon__size-3"
             height="none"
             width="none"
             alt=""
@@ -119,7 +121,6 @@
             <p class="form__help">Notify an URL via a POST request when an form entry is created, updated or deleted.</p>
           </div>
         </DialogForm>
-        <MainNavigationToggle class="layout__multi-hidden" />
 
       </header>
       <div class="scroll">

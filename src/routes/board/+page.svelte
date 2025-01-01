@@ -163,11 +163,12 @@
   <main>
     <div class="scroll__wrapper">
       <header class="flex__row flex__justify-between p__inline-3">
+        <MainNavigationToggle class="layout__multi-hidden" />
         <h2 class="flex__grow">Board</h2>
         {#snippet settingsIcon()}
           <IconaMoonSettings
             role="presentation"
-            class=" icon__size-2"
+            class=" icon__size-3"
             height="none"
             width="none"
             alt=""
@@ -215,7 +216,6 @@
             }}>Add column</button
           >
         </DialogForm>
-        <MainNavigationToggle class="layout__multi-hidden" />
       </header>
       <div class="scroll">
         <div class="flex__row | board">

@@ -191,8 +191,8 @@ Export to a Tempo JSON file.
   <main>
     <div class="scroll__wrapper">
       <header class="flex__row flex__justify-between p__inline-3">
-        <h2>Settings</h2>
         <MainNavigationToggle class="layout__multi-hidden" />
+        <h2 class="flex__grow">Settings</h2>
       </header>
       <section class="flow | scroll">
         <div class="wrapper">
