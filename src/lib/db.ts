@@ -19,6 +19,7 @@ import { dev } from '$app/environment';
 import { RxDBCleanupPlugin } from 'rxdb/plugins/cleanup';
 import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
 import cloneDeep from 'lodash/cloneDeep';
+import isEmpty from 'lodash/isEmpty';
 import { delay, parseTags } from './ui';
 import { tempoToPestoDocument } from './replication';
 
@@ -603,7 +604,7 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   data = cloneDeep(data);
   data.modified_at = new Date().toISOString();
 
-  let tagsSource = data['fragments.text']?.content || note.fragments.text?.content;
+  let tagsSource = data['fragments.text']?.content || ''
   let parsedTags = parseTags(tagsSource)
   const tags = parsedTags.map((t) => {
     return t.id;
@@ -618,23 +619,38 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
       dataTags[t.id] = t.value
     }
   })
-
-  data['fragments.form.annotations'] = dataTags
-  
-  // remove data that is present in both form fields and annotations from form field
-  if (note.fragments?.form) {
-    let formData = cloneDeep(note.fragments.form.data)
-    for (const key in dataTags) {
-      if (Object.prototype.hasOwnProperty.call(dataTags, key)) {
-        if (formData[key] != undefined) {
-          delete formData[key]
+  if (Object.keys(dataTags).length > 0) {
+    data['fragments.form.annotations'] = dataTags
+    if (note.fragments.form) {
+      // remove data that is present in both form fields and annotations from form field
+      let formData = cloneDeep(note.fragments.form.data)
+      for (const key in dataTags) {
+        if (Object.prototype.hasOwnProperty.call(dataTags, key)) {
+          if (formData[key] != undefined) {
+            delete formData[key]
+          }
         }
-        
       }
+      data['fragments.form.data'] = formData
+    } else {
+      data['fragments.form.id'] = null
+      data['fragments.form.data'] = {}
+      
     }
-    data['fragments.form.data'] = formData
+  } else if (data['fragments.text'] && note.fragments.form) {
+    // text was updated and no available annotation are present
+    // we just remove everything that is stale
+
+    if (isEmpty(note.fragments.form.data)) {
+      // the form itself don't contain data, wipe everything
+      data['fragments.form'] = undefined
+    } else {
+      // wipe only annotations
+      data['fragments.form.annotations'] = {}
+    }
   }
   data.tags = [...new Set(tags)];
+
   return data;
 }
 export type QueryToken = {
