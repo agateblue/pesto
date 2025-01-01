@@ -57,9 +57,7 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          VUE_APP_DOMAIN: pesto.agate.blue
-          VUE_APP_PLAUSIBLE_HOST: https://stats.agate.blue
-          VUE_APP_BUILD_ID: ${{ github.sha }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
