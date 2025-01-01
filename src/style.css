@@ -177,9 +177,12 @@ body {
     background: var(--sidebar-background);
     border-inline-end: var(--layout-separator);
   }
-  aside:last-child {
+  aside:last-child:not([data-fullpage=true]) {
     flex-basis: 40ch;
     border-inline-start: var(--layout-separator);
+  }
+  aside[data-fullpage=true] + main + aside[data-fullpage=true] {
+    display: none;
   }
   aside,
   main {
