@@ -1,5 +1,6 @@
 <script lang="ts">
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
+  import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
 
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import TodoCard from '$lib/components/TodoCard.svelte';
@@ -225,19 +226,31 @@
               aria-busy={column.isloading}
               aria-live="polite"
             >
-              <h3>{column.name}</h3>
-              <button
-                class="m__block-1"
-                type="button"
-                style={column.index === -1 ? 'visibility: hidden' : ''}
-                onclick={async (e) => {
-                  let note = getNewNote();
-                  note.fragments.todolist = getNewTodoListFragment();
-                  note.fragments.todolist.column = column.index;
-                  autofocusKey = note.id;
-                  await globals.db?.documents.insert(note);
-                }}>Add task</button
-              >
+              <div class="flex__row flex__justify-between flex__align-center">
+                <h3 class="m__block-0">{column.name}</h3>
+
+                <button
+                  class="button__icon"
+                  type="button"
+                  aria-label={`Add task in ${column.name}`}
+                  style={column.index === -1 ? 'visibility: hidden' : ''}
+                  onclick={async (e) => {
+                    let note = getNewNote();
+                    note.fragments.todolist = getNewTodoListFragment();
+                    note.fragments.todolist.column = column.index;
+                    autofocusKey = note.id;
+                    await globals.db?.documents.insert(note);
+                  }}>
+                    <IconaMoonSignPlusCircle
+                      role="presentation"
+                      class=" icon__size-3"
+                      height="none"
+                      width="none"
+                      alt=""
+                    />
+                  </button
+                >
+              </div>
               <LoadingState isLoading={column.isLoading}>Loading data…</LoadingState>
               <ol
                 class="flex__grow | p__block-0 p__inline-0 | flow"
