@@ -609,6 +609,11 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
   const tags = parsedTags.map((t) => {
     return t.id;
   });
+
+  if (tagsSource) {
+    data.tags = [...new Set(tags)];
+  }
+  
   const dataTags = {}
   parsedTags.filter(t => {
     return t.type === 'annotation'
@@ -649,7 +654,6 @@ export function getNoteUpdateData(note: DocumentType, data: object) {
       data['fragments.form.annotations'] = {}
     }
   }
-  data.tags = [...new Set(tags)];
 
   return data;
 }
