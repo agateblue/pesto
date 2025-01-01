@@ -15,7 +15,7 @@
           console.log('State', state);
           if (state.status === 'DONE') {
             setTimeout(async () => {
-              await goto('/my');
+              location.reload();
             }, 3000);
           }
         },
