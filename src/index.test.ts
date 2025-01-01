@@ -46,6 +46,11 @@ describe('query language', () => {
     const expected = [{ 'fragments.text.content': { $exists: true } }];
     expect(tokensToMangoQuery(input)).toStrictEqual(expected);
   });
+  it('is:form', () => {
+    const input: QueryToken[] = [{ type: 'is', value: 'form' }];
+    const expected = [{ 'fragments.form': { $exists: true } }];
+    expect(tokensToMangoQuery(input)).toStrictEqual(expected);
+  });
   it('tag:hello', () => {
     const input: QueryToken[] = [{ type: 'tag', value: 'hello' }];
     const expected = [{ tags: 'hello' }];
