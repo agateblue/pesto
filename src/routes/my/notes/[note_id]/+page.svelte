@@ -13,10 +13,12 @@
 
 {#if note}
   <main class="wrapper | flex__grow">
-    {#key note._rev}
-      <RenderedNote {note} limitSize={false} class="diary__note flow" onDelete={() => goto('/my')}
-      ></RenderedNote>
-    {/key}
+    <div class="m__block-4">
+      {#key note._rev}
+        <RenderedNote {note} limitSize={false} class="diary__note flow" onDelete={() => goto('/my')}
+        ></RenderedNote>
+      {/key}
+    </div>
   </main>
   <aside data-fullpage="true">
     <NoteForm

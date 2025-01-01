@@ -12,6 +12,7 @@
   observable.subscribe((newValue: string) => {
     sidebarFullpage = newValue === 'mainMenu';
   });
+
 </script>
 
 <button
