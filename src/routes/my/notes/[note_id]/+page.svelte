@@ -19,17 +19,15 @@
     {/key}
   </main>
   <aside data-fullpage="true">
-    <section class="wrapper">
-      <NoteForm
-        {note}
-        on:update={(e) => {
-          handleUpdate(e.detail.note);
-        }}
-        on:delete={(e) => {
-          goto('/my');
-        }}
-      />
-    </section>
+    <NoteForm
+      {note}
+      on:update={(e) => {
+        handleUpdate(e.detail.note);
+      }}
+      on:delete={(e) => {
+        goto('/my');
+      }}
+    />
   </aside>
 {:else}
   <main class="wrapper | flex__grow">

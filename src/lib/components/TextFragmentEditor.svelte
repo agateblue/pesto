@@ -35,9 +35,7 @@
   }
 </script>
 
-<h3>
-  <label for={fieldId}>Note content</label>
-</h3>
+<label for={fieldId}>Content</label>
 <textarea
   id={fieldId}
   onfocus={() => (focused = true)}

@@ -55,7 +55,7 @@
     </DialogForm>
     <DialogForm
       anchorClass="button__link"
-      anchorText="Delete..."
+      anchorText="Delete…"
       title="Delete this synchronisation?"
       onsubmit={(e: SubmitEvent) => {
         e.preventDefault();

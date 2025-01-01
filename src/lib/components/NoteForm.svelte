@@ -1,5 +1,7 @@
 <script lang="ts">
+  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
   import FragmentEditor from './FragmentEditor.svelte';
+  import MainNavigationToggle from './MainNavigationToggle.svelte';
   import { createEventDispatcher } from 'svelte';
   import { type DocumentDocument, type Database, globals } from '$lib/db';
   import { isRxDocument } from 'rxdb';
@@ -27,21 +29,32 @@
   });
 </script>
 
-<form class="flow" onsubmit={(e) => onSubmitHandler?.(e)}>
-  <a href="/my" class="layout__multi-hidden">Go back</a>
-  <FragmentEditor
-    {note}
-    {columns}
-    on:update={(e) => {
-      handleUpdate(e.detail.note);
-    }}
-  />
-  <div class="flex__row flex__justify-between">
-    {@render children?.()}
-    {#if note}
+<div class="scroll__wrapper">
+  <header class="flex__row flex__justify-between p__inline-3">
+    <MainNavigationToggle class="layout__multi-hidden" />
+    <h2 class="flex__grow">
+      {#if note}
+        Edit note
+      {:else}
+        New note
+      {/if}
+    </h2>
+
+
+    {#if note} 
+      {#snippet trashIcon()}
+        <IconaMoonTrash
+          role="presentation"
+          class=" icon__size-3"
+          height="none"
+          width="none"
+          alt=""
+        />
+      {/snippet}
       <DialogForm
-        anchorClass="button__link"
-        anchorText="Delete..."
+        anchorClass="button__icon"
+        anchorLabel="Delete note"
+        anchor={trashIcon}
         title="Delete this note?"
         accesskey="r"
         onsubmit={(e: SubmitEvent) => {
@@ -53,5 +66,19 @@
         <p>This will remove the note from your diary. This action is irreversible.</p>
       </DialogForm>
     {/if}
-  </div>
-</form>
+  </header>
+  <form class="flow | scroll" onsubmit={(e) => onSubmitHandler?.(e)}>
+    <div class="wrapper">
+      <FragmentEditor
+        {note}
+        {columns}
+        on:update={(e) => {
+          handleUpdate(e.detail.note);
+        }}
+      />
+      <div class="flex__row flex__justify-between">
+        {@render children?.()}
+      </div>
+    </div>
+  </form>
+</div>
