@@ -9,6 +9,7 @@
   --primary-color: rgb(199, 240, 240);
   --text-color: rgba(44, 44, 44, 1);
   --text-discrete-color: rgba(125, 125, 125, 1);
+  --page-header-font-size: 1.1rem;
   --font-family: Helvetica, sans-serif;
   --background-color: white;
   --card-background: var(--background-color);
@@ -149,6 +150,10 @@ body {
       margin-block: 0;
       padding: var(--space-1);
     }
+    h2 {
+      font-size: var(--page-header-font-size);
+      padding: var(--space-1);
+    }
   }
   > .scroll {
     flex: 1;
@@ -167,7 +172,7 @@ body {
   align-items: stretch;
   min-height: 100vh;
 
-  aside:first-child {
+  aside:first-child:not([data-fullpage=true]) {
     min-width: 30ch;
     background: var(--sidebar-background);
     border-inline-end: var(--layout-separator);
@@ -425,7 +430,6 @@ input[type='submit']:hover {
 .button__icon {
   background: none;
   color: hsl(from var(--text-color) h s l / 0.7);
-  padding-block: var(--space-2);
 }
 .button__transparent {
   background: none;
@@ -481,10 +485,17 @@ textarea {
 a:visited svg:only-child {
   color: initial;
 }
-.nav__main {
-  h1,
+.nav__main {  background: var(--background-color);
+  header {
+    border-bottom: var(--layout-separator);
+    padding-block: var(--space-1);
+    padding-inline-start: var(--space-1);
+  }
+  h1 {
+    padding-inline: var(--space-2);
+  }
   h2 {
-    font-size: 1.1rem;
+    font-size: var(--page-header-font-size);
     padding-inline: var(--space-2);
     margin-block-end: var(--space-2);
     font-weight: bold;
@@ -510,7 +521,7 @@ a:visited svg:only-child {
       background: var(--primary-color);
     }
   }
-  svg {
+  li svg {
     margin-inline-end: var(--space-2);
   }
   [data-current-page='true'] {

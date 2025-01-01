@@ -27,7 +27,6 @@
 <main class="flex__grow">
   <div class="scroll__wrapper">
     <header class="p__inline-3">
-      <MainNavigationToggle class="layout__multi-hidden" />
       <input
         class="flex__grow"
         type="search"
@@ -42,8 +41,9 @@
             triggerSearch();
           }
         }}
+        style="margin-inline-end: var(--space-2)"
       />
-      <a href="/my/notes/add" class="button | layout__multi-hidden">New note</a>
+      <MainNavigationToggle class="layout__multi-hidden" />
     </header>
 
     <div class="scroll">

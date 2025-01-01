@@ -2,6 +2,7 @@
   interface Props {
     anchorClass: string;
     anchorText?: string;
+    anchorLabel?: string;
     title: string;
     anchor: import('svelte').Snippet;
     children: import('svelte').Snippet;
@@ -10,7 +11,7 @@
     accesskey?: string;
   }
 
-  let { anchorClass, anchorText, children, anchor, onsubmit, title, onopen, accesskey }: Props = $props();
+  let { anchorClass, anchorText, anchorLabel, children, anchor, onsubmit, title, onopen, accesskey }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
 
@@ -19,6 +20,7 @@
 <button
   type="button"
   class={anchorClass}
+  aria-label={anchorLabel}
   onclick={() => {
     onopen ? onopen() : null;
     dialog.showModal();
