@@ -17,7 +17,7 @@
   --layout-separator: 1px solid rgb(120, 112, 112);
   --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
-
+  --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
   --dialog-backdrop: rgba(55, 55, 55, 0.7);
@@ -146,6 +146,7 @@ body {
     display: flex;
     flex-direction: row;
     vertical-align: center;
+    height: var(--page-header-height);
     > *:not(dialog) {
       margin-block: 0;
       padding: var(--space-1);
@@ -488,14 +489,15 @@ textarea {
 a:visited svg:only-child {
   color: initial;
 }
-[data-fullpage=true] .nav__main header {
-  border-bottom: var(--layout-separator);
-}
+
 .nav__main {  
-  background: var(--background-color);
+  display: flex;
+  flex-direction: column;
   header {
     padding-block: var(--space-1);
     padding-inline-start: var(--space-1);
+    height: var(--page-header-height);
+    border-bottom: var(--layout-separator);
   }
   h2 {
     font-size: var(--page-header-font-size);
@@ -504,7 +506,7 @@ a:visited svg:only-child {
     font-weight: bold;
   }
   ul {
-    min-height: 100vh;
+    flex-grow: 1;
     margin: 0;
     margin-top: var(--space-2);
     padding: 0;

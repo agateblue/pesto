@@ -42,7 +42,6 @@
             triggerSearch();
           }
         }}
-        style="margin-inline-end: var(--space-2)"
       />
     </header>
 
@@ -60,7 +59,7 @@
 </main>
 
 <aside>
-  <section class="wrapper">
+  <section>
     {@render children?.()}
     {#key noteFormKey}
       <NoteForm
