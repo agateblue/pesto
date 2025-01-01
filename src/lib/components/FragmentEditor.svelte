@@ -62,50 +62,53 @@
   })
 </script>
 
-{#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
-  <FormRendered
-    elClass="flow"
-    form={globals.forms[note.fragments.form.id]}
-    id={note.fragments.form.id}
-    {webhookUrl}
-    onsubmit={async (values: object) => {
-      updateFragment('form', { id: note.fragments.form.id, data: values });
-    }}
-    values={note?.fragments?.form?.data}
-    showActions={false}
-  ></FormRendered>
-{/if}
-<TextFragmentEditor
-  fragment={note?.fragments?.text || getNewTextFragment()}
-  fieldId={`note-text-${id}`}
-  on:update={debounce((event) => {
-    updateFragment('text', event.detail.fragment)
-    if (!note?.fragments?.todolist) {
-      todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId)
-    }
-  }, 200)}
-  on:delete={(event) => updateFragment('text', undefined)}
-/>
+<div class="flow">
 
-{#if todolistFromText && !note?.fragments?.todolist}
-  <button
-    type="button"
-    class="button__link"
-    onclick={async () => {
-      await updateFragment('todolist', todolistFromText)
-      todolistKey += 1
-    }}
-  >
-    Load todolist from text
-  </button>
-{/if}
-{#key todolistKey}
-  <TodoListFragmentEditor
-    {columns}
-    editText={true}
-    fragment={note?.fragments?.todolist || getNewTodoListFragment()}
-    autofocus={false}
-    on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
-    on:delete={(event) => updateFragment('todolist', undefined)}
+  {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
+    <FormRendered
+      elClass="flow"
+      form={globals.forms[note.fragments.form.id]}
+      id={note.fragments.form.id}
+      {webhookUrl}
+      onsubmit={async (values: object) => {
+        updateFragment('form', { id: note.fragments.form.id, data: values });
+      }}
+      values={note?.fragments?.form?.data}
+      showActions={false}
+    ></FormRendered>
+  {/if}
+  <TextFragmentEditor
+    fragment={note?.fragments?.text || getNewTextFragment()}
+    fieldId={`note-text-${id}`}
+    on:update={debounce((event) => {
+      updateFragment('text', event.detail.fragment)
+      if (!note?.fragments?.todolist) {
+        todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId)
+      }
+    }, 200)}
+    on:delete={(event) => updateFragment('text', undefined)}
   />
-{/key}
+  
+  {#if todolistFromText && !note?.fragments?.todolist}
+    <button
+      type="button"
+      class="button__link"
+      onclick={async () => {
+        await updateFragment('todolist', todolistFromText)
+        todolistKey += 1
+      }}
+    >
+      Load todolist from text
+    </button>
+  {/if}
+  {#key todolistKey}
+    <TodoListFragmentEditor
+      {columns}
+      editText={true}
+      fragment={note?.fragments?.todolist || getNewTodoListFragment()}
+      autofocus={false}
+      on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
+      on:delete={(event) => updateFragment('todolist', undefined)}
+    />
+  {/key}
+</div>
