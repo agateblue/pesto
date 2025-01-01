@@ -738,6 +738,8 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
         query.push({ 'fragments.todolist.done': { $eq: true } });
       } else if (token.value === 'text') {
         query.push({ 'fragments.text.content': { $exists: true } });
+      } else if (token.value === 'form') {
+        query.push({ 'fragments.form': { $exists: true } });
       }
     }
     if (token.type === 'tag') {
