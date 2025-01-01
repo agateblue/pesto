@@ -21,9 +21,20 @@
 
 <article {...rest}>
   <div class="flex__row flex__justify-between">
-    <a href={`/my/notes/${note.id}`}>
-      <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
-    </a>
+    <div class="flow">
+      {#if note.title?.trim()}
+        <h2>
+          <a href={`/my/notes/${note.id}`}>
+            {note.title}
+          </a>
+        </h2>
+      {/if}
+      <div>
+        <a class="button__link" href={`/my/notes/${note.id}`}>
+          <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
+        </a>
+      </div>
+    </div>
 
     <button
       class="button__icon"

@@ -38,7 +38,25 @@
       webhookUrl = s?.data?.url || ''
     })
   ]
-
+  
+  async function updateTitle(title: string) {
+    if (!note && !title.trim()) {
+      return
+    }
+    if (!note) {
+      let noteData = getNewNote();
+      noteData.id = id;
+      note = await db.documents.insert(noteData);
+    }
+    let updateData = {};
+    updateData['title'] = title.trim() || null;
+    updateData[`modified_at`] = new Date().toISOString();
+    await note.incrementalUpdate({
+      $set: getNoteUpdateData(note, updateData)
+    });
+    note = await note.getLatest();
+    dispatch('update', { note });
+  }
   async function updateFragment(
     fragmentType: string,
     fragment: TodolistType | TextType | FormType | undefined
@@ -63,7 +81,19 @@
 </script>
 
 <div class="flow">
-
+  <div class="form__field">
+    <label for="note-title">Title</label>
+    <input
+      type="text"
+      id="note-title"
+      name="note-title"
+      value={note?.title || ''}
+      onkeyup={debounce(async (e) => {
+        await updateTitle(e.target.value)
+      }, 300)}
+    />
+  </div>
+  
   {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
     <FormRendered
       elClass="flow"
