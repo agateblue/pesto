@@ -62,7 +62,7 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
       date: document.created_at,
       _id: document.id,
       // a revision is mandatory so we hardcode one
-      _rev: '1-00000000000000000000000000000000',
+      _rev: '1-00000000000000000000000000000000'
     };
     if (document.fragments?.text?.content) {
       let text = document.fragments?.text?.content;
@@ -187,10 +187,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       }
 
       if (!isEmpty(document.data || {})) {
-        let formFragment = getNewFormFragment(
-          document.form || null,
-          document.data || {},
-        )
+        let formFragment = getNewFormFragment(document.form || null, document.data || {});
         data.fragments.form = formFragment;
       }
     }
@@ -344,11 +341,11 @@ export async function handleImportPesto(
         text: `Checking ${docs.length} ${step.label} for correctness…`
       });
       docs = docs.filter((s) => {
-        let isValid = validate(s)
+        let isValid = validate(s);
         if (!isValid) {
-          console.debug("Invalid document", validate.errors, s)
+          console.debug('Invalid document', validate.errors, s);
         }
-        return isValid
+        return isValid;
       });
       messages.push({ type: 'info', text: `Inserting ${docs.length} ${step.label} in DB…` });
       let result = await globals.db?.documents.bulkInsert(docs);
@@ -581,46 +578,54 @@ export async function handleExportTempo(
   messages: LogMessage[],
   flags = {
     entries: true,
-    tasks: true,
+    tasks: true
   }
 ) {
   // init
   let data = {};
 
-  let boardConfig = await globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).exec()
+  let boardConfig = await globals.db?.documents
+    .findOne({ selector: { id: 'settings:board' } })
+    .exec();
   let columns = [...(boardConfig?.data.columns || ['Todo', 'Doing', 'Done'])];
-  columns.pop()
-  let doneColumn = columns.length
-  
+  columns.pop();
+  let doneColumn = columns.length;
+
   messages.push({ type: 'info', text: `Preparing documents for export…` });
-  let tempoDocuments: (TempoEntry | TempoTask)[] = []
-  let pestoDocuments = await globals.db?.documents.find({
-    limit: 99999999999,
-    sort: [{ created_at: 'asc' }],
-    selector: { type: 'note'}
-  }).exec()
-  
-  pestoDocuments.forEach(d => {
-    pestoToTempoDocuments(d.toJSON(), doneColumn).forEach(t => {
-      tempoDocuments.push(t)
+  let tempoDocuments: (TempoEntry | TempoTask)[] = [];
+  let pestoDocuments = await globals.db?.documents
+    .find({
+      limit: 99999999999,
+      sort: [{ created_at: 'asc' }],
+      selector: { type: 'note' }
     })
-    
-  })
+    .exec();
+
+  pestoDocuments.forEach((d) => {
+    pestoToTempoDocuments(d.toJSON(), doneColumn).forEach((t) => {
+      tempoDocuments.push(t);
+    });
+  });
   messages.push({ type: 'info', text: `Prepared ${pestoDocuments.length}.` });
-  
+
   if (flags.tasks) {
     data.board = {
       settings: {
-        lists: columns.map(c => {return {label: c}}),
-        categories: [],
+        lists: columns.map((c) => {
+          return { label: c };
+        }),
+        categories: []
       },
-      tasks: tempoDocuments.filter(t => t.type === 'task')
-    }
+      tasks: tempoDocuments.filter((t) => t.type === 'task')
+    };
     messages.push({ type: 'info', text: `Added ${data.board.tasks.length} tasks to export file` });
   }
   if (flags.entries) {
-    data.entries = tempoDocuments.filter(t => t.type === 'entry')
-    messages.push({ type: 'info', text: `Added ${data.board.tasks.length} entries to export file` });
+    data.entries = tempoDocuments.filter((t) => t.type === 'entry');
+    messages.push({
+      type: 'info',
+      text: `Added ${data.board.tasks.length} entries to export file`
+    });
   }
 
   messages.push({ type: 'success', text: `Export complete!` });

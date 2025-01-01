@@ -13,11 +13,19 @@
     accesskey?: string;
   }
 
-  let { anchorClass, anchorText, anchorLabel, children, anchor, onsubmit, title, onopen, accesskey }: Props = $props();
+  let {
+    anchorClass,
+    anchorText,
+    anchorLabel,
+    children,
+    anchor,
+    onsubmit,
+    title,
+    onopen,
+    accesskey
+  }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
-
-
 
 <button
   type="button"
@@ -38,7 +46,9 @@
   bind:this={dialog}
   aria-labelledby="dialog-title"
   aria-describedby="dialog-description"
-  onmousedown={(event) => {event.target==dialog && dialog.close()}}
+  onmousedown={(event) => {
+    event.target == dialog && dialog.close();
+  }}
 >
   <div class="scroll__wrapper">
     <header class="flex__row flex__justify-between flex__align-center p__inline-3">
@@ -49,8 +59,9 @@
         class="button__icon"
         onclick={() => {
           dialog.close();
-        }}>
-        <IconaMoonClose 
+        }}
+      >
+        <IconaMoonClose
           role="presentation"
           class=" icon__size-3"
           height="none"
@@ -58,7 +69,6 @@
           alt=""
         />
       </button>
-  
     </header>
     <form class="scroll" {onsubmit}>
       <div id="dialog-description">

@@ -40,8 +40,7 @@
       {/if}
     </h2>
 
-
-    {#if note} 
+    {#if note}
       {#snippet trashIcon()}
         <IconaMoonTrash
           role="presentation"

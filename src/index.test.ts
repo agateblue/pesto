@@ -1,14 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import {
-  tokensToMangoQuery,
-  getQueryTokens,
-  type QueryToken,
-  buildUniqueId,
-} from '$lib/db';
+import { tokensToMangoQuery, getQueryTokens, type QueryToken, buildUniqueId } from '$lib/db';
 import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown } from '$lib/ui';
 
 describe('query language', () => {
-
   it('getQueryTokens', () => {
     const input =
       'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
@@ -76,7 +70,7 @@ describe('query language', () => {
     const expected = [
       {
         $or: [
-          { 'title': { $regex: '.*hop.*', $options: 'i' } },
+          { title: { $regex: '.*hop.*', $options: 'i' } },
           { 'fragments.text.content': { $regex: '.*hop.*', $options: 'i' } },
           { 'fragments.todolist.title': { $regex: '.*hop.*', $options: 'i' } },
           {
@@ -145,7 +139,7 @@ describe('query language', () => {
 - [ ] Task 1
   - [x] Task 2
 - [ ] Task 3
-`
+`;
     const expected = {
       title: 'Task 1',
       done: false,
@@ -154,15 +148,15 @@ describe('query language', () => {
         {
           id: 'noop',
           text: 'Task 2',
-          done: true,
+          done: true
         },
         {
           id: 'noop',
           text: 'Task 3',
-          done: false,
-        },
+          done: false
+        }
       ]
-    }
+    };
     expect(getTodoListFromMarkdown(input, () => 'noop')).toStrictEqual(expected);
   });
 });
