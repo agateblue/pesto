@@ -1,4 +1,6 @@
 <script lang="ts">
+  import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
+
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import TodoCard from '$lib/components/TodoCard.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
@@ -160,13 +162,21 @@
   <MainNavigation />
   <main>
     <div class="scroll__wrapper">
-      <header class="p__inline-3">
-        <MainNavigationToggle class="layout__multi-hidden" />
+      <header class="flex__row flex__justify-between p__inline-3">
         <h2 class="flex__grow">Board</h2>
-
+        {#snippet settingsIcon()}
+          <IconaMoonSettings
+            role="presentation"
+            class=" icon__size-2"
+            height="none"
+            width="none"
+            alt=""
+          />
+        {/snippet}
         <DialogForm
-          anchorClass="button__link"
-          anchorText="Settings"
+          anchorClass="button__icon"
+          anchorLabel="Board settings"
+          anchor={settingsIcon}
           title="Update board settings"
           onsubmit={async (e: SubmitEvent) => {
             saveBoard();
@@ -205,6 +215,7 @@
             }}>Add column</button
           >
         </DialogForm>
+        <MainNavigationToggle class="layout__multi-hidden" />
       </header>
       <div class="scroll">
         <div class="flex__row | board">

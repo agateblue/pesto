@@ -57,22 +57,21 @@
 
 <aside data-fullpage={sidebarFullpage}>
   <nav class="nav__main" aria-label="Main menu">
-    <ul class="flex__column">
-      <li>
-        <MainNavigationToggle class="layout__multi-hidden" />
-      </li>
-      <div class="flex__row flex__justify-between flex__align-center">
-        <h2>Pesto</h2>
-        <a href="/settings" class="icon__link" aria-label="Settings" accesskey="s">
+    <header class="flex__row flex__justify-between flex__align-center">
+      <h1 class="m__block-1">Pesto</h1>
+      <div>
+        <a href="/settings" class="button__icon" aria-label="Settings" accesskey="s">
           <IconaMoonSettings
-            role="presentation"
-            class=" icon__size-2"
-            height="none"
-            width="none"
-            alt=""
+          role="presentation"
+          class=" icon__size-2"
+          height="none"
+          width="none"
+          alt=""
           />
-        </a>
+        </a><MainNavigationToggle class="layout__multi-hidden" />
       </div>
+    </header>
+    <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add" accesskey="a"
           ><IconaMoonPen role="presentation" alt="" />New note</MainNavigationLink

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
+  import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
+
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import DialogForm from '$lib/components/DialogForm.svelte';
@@ -57,13 +60,22 @@
   <MainNavigation />
   <main>
     <div class="scroll__wrapper">
-      <header class="p__inline-3">
-        <MainNavigationToggle class="layout__multi-hidden" />
+      <header class="p__inline-3 flex__row flex__justify-between">
         <h2 class="flex__grow">Forms</h2>
 
+        {#snippet plusIcon()}
+          <IconaMoonSignPlusCircle
+            role="presentation"
+            class=" icon__size-2"
+            height="none"
+            width="none"
+            alt=""
+          />
+        {/snippet}
         <DialogForm
-          anchorClass="m__inline-2 button"
-          anchorText="Add a new form"
+          anchorClass="button__icon"
+          anchor={plusIcon}
+          anchorLabel="Add a new form"
           title="Add a new form"
           onopen={() =>
             (editedForm = {
@@ -81,9 +93,20 @@
             <FormBuilder bind:form={editedForm} />
           {/if}
         </DialogForm>
+
+        {#snippet settingsIcon()}
+          <IconaMoonSettings
+            role="presentation"
+            class=" icon__size-2"
+            height="none"
+            width="none"
+            alt=""
+          />
+        {/snippet}
         <DialogForm
-          anchorClass="button__discrete button__outlined"
-          anchorText="Settings"
+          anchorClass="button__icon"
+          anchor={settingsIcon}
+          anchorLabel="Form settings"
           title="Form settings"
           onsubmit={async (e: SubmitEvent) => {
             e.preventDefault();
@@ -96,6 +119,8 @@
             <p class="form__help">Notify an URL via a POST request when an form entry is created, updated or deleted.</p>
           </div>
         </DialogForm>
+        <MainNavigationToggle class="layout__multi-hidden" />
+
       </header>
       <div class="scroll">
         <div class="grid grid__gap">
