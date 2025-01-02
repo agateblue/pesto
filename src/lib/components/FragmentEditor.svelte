@@ -51,7 +51,7 @@
       note = await db.documents.insert(noteData);
     }
     let updateData = {};
-    updateData['title'] = title.trim() || null;
+    updateData['title'] = title || null;
     updateData[`modified_at`] = new Date().toISOString();
     await note.incrementalUpdate({
       $set: getNoteUpdateData(note, updateData)
