@@ -66,6 +66,9 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
     };
     if (document.fragments?.text?.content) {
       let text = document.fragments?.text?.content;
+      if (document.title) {
+        text = `# ${document.title}\n\n${text}`
+      }
       let tags: TempoTag[] = parseTags(text);
       let d = { ...(document.fragments?.form?.data || {}) };
       tags.forEach((t) => {
@@ -104,8 +107,8 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
         favorite: false
       });
     }
-    if (document.fragments?.todolist?.title) {
-      let text = document.fragments?.todolist?.title;
+    if (document.fragments?.todolist?.todos?.length > 0) {
+      let text = document.title || document.fragments.todolist.todos.length[0]
       let column = document.fragments.todolist.column;
       let subtasks: TempoSubtask[] = (document.fragments.todolist.todos || []).map((t) => {
         return { label: t.text, done: t.done };

@@ -31,7 +31,7 @@
   let subscriptions = [
     syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
       if (!todosFocused) {
-        let n = [...v]
+        let n = [...(v || [])]
         if (n.slice(-1)[0]?.text?.trim()) {
           n.push(getNewTodo())
         }
@@ -48,14 +48,8 @@
 
   onDestroy(clearSubscriptions(subscriptions));
   function handleChange() {
-    let hasContent = todos.filter((t) => {
-      return t.text.trim();
-    }).length > 0;
-    if (hasContent) {
-      dispatch('update', { fragment: { ...fragment, done, todos, column } });
-    } else {
-      dispatch('delete', {});
-    }
+    dispatch('update', { fragment: { ...fragment, done, todos, column } });
+    
   }
   function updateTodo(index: number, todo: TodoType | null) {
     todos = cloneDeep(todos);
@@ -64,29 +58,36 @@
     } else {
       todos.splice(index, 1);
     }
-    todos = todos.filter((t) => {
-      return t.text.trim();
-    });
-    todos = [...todos, getNewTodo()];
+    if (todos.slice(-1)[0].text.trim()) {
+      todos = [...todos, getNewTodo()];
+    }
     stats = getStats();
     done = stats.complete 
+    if (done) {
+      column = -1
+    } else if (column === -1) {
+      column = 0
+    }
     handleChange();
   }
   function getStats() {
     let stats = {
-      done: done ? 1 : 0,
+      done: 0,
       total: 0,
       complete: false
     };
-    for (const todo of todos || []) {
-      if (todo.text.trim()) {
-        stats.total += 1;
-        if (todo.done) {
-          stats.done += 1;
-        }
+    let t = [...todos]
+    if (!t.slice(-1)[0]?.text.trim()) {
+      t.pop()
+    }
+    for (const todo of t || []) {
+      stats.total += 1;
+      if (todo.done) {
+        stats.done += 1;
       }
     }
-    if (stats.done >= stats.total) {
+    
+    if (t.length > 0 && stats.done >= stats.total) {
       stats.complete = true;
     }
     return stats;
@@ -131,6 +132,7 @@
             autofocus={false}
             onblur={() => (todosFocused = false)}
             onfocus={() => (todosFocused = true)}
+            showDelete={i < todos.length - 1}
             {editText}
             on:delete={(e) => {
               updateTodo(i, null);
