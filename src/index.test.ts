@@ -72,7 +72,6 @@ describe('query language', () => {
         $or: [
           { title: { $regex: '.*hop.*', $options: 'i' } },
           { 'fragments.text.content': { $regex: '.*hop.*', $options: 'i' } },
-          { 'fragments.todolist.title': { $regex: '.*hop.*', $options: 'i' } },
           {
             'fragments.todolist.todos': {
               $elemMatch: { text: { $regex: '.*hop.*', $options: 'i' } }

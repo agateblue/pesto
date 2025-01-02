@@ -2,7 +2,6 @@
   import { preventDefault } from 'svelte/legacy';
 
   import { createEventDispatcher, onMount } from 'svelte';
-  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
   import IconaMoonSIgnMinusCircle from 'virtual:icons/iconamoon/sign-minus-circle';
 
   import { type TodoType } from '$lib/db';
@@ -17,7 +16,6 @@
     todo: TodoType;
     editText: boolean;
     autofocus: boolean;
-    trashIcon: boolean;
     onfocus: Function;
     onblur: Function;
     accesskey?: string;
@@ -27,7 +25,6 @@
     todo,
     editText,
     autofocus = false,
-    trashIcon = false,
     onblur,
     onfocus,
     accesskey
@@ -92,11 +89,7 @@
     aria-label="Delete"
   >
     {#if todo.text}
-      {#if trashIcon}
-        <IconaMoonTrash role="presentation" alt="" />
-      {:else}
-        <IconaMoonSIgnMinusCircle role="presentation" alt="" />
-      {/if}
+      <IconaMoonSIgnMinusCircle role="presentation" alt="" />
     {/if}
   </button>
 </div>

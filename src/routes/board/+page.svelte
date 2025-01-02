@@ -15,7 +15,10 @@
     getNoteUpdateData,
     getNewNote,
     getNewTodoListFragment,
-    createOrUpdateSetting
+    createOrUpdateSetting,
+
+    getNewTodo
+
   } from '$lib/db';
   import type { MangoQuerySelector } from 'rxdb';
 
@@ -238,6 +241,7 @@
                     let note = getNewNote();
                     note.fragments.todolist = getNewTodoListFragment();
                     note.fragments.todolist.column = column.index;
+                    note.fragments.todolist.todos.push(getNewTodo());
                     autofocusKey = note.id;
                     await globals.db?.documents.insert(note);
                   }}

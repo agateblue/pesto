@@ -60,7 +60,7 @@
   <a href={`/my/notes/${note.id}`}>
     <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
   </a>
-  <span use:dragHandle aria-label={`drag-handle for ${note.fragments.todolist?.title}`}>
+  <span use:dragHandle aria-label={`drag-handle for ${note.title || note.fragments?.todolist?.todos[0]?.text}`}>
     <IconaMoonMoveThin role="presentation" alt="" />
   </span>
 </div>

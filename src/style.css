@@ -596,10 +596,6 @@ hr {
   margin-block: 0;
 }
 
-.todolist > li > .todolist {
-  margin-inline-start: var(--space-4);
-}
-
 input[type='text'].input__discrete {
   border: none;
   border-bottom: var(--layout-separator);
