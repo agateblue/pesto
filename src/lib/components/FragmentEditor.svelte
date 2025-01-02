@@ -103,7 +103,14 @@
       id={note.fragments.form.id}
       {webhookUrl}
       onsubmit={async (values: object) => {
-        updateFragment('form', { id: note.fragments.form.id, data: values });
+        updateFragment(
+          'form', 
+          { 
+            id: note.fragments.form.id, 
+            data: values, 
+            annotations: note.fragments.form.annotations || {} 
+          }
+        );
       }}
       values={note?.fragments?.form?.data}
       showActions={false}
