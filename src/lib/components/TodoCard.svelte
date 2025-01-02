@@ -57,9 +57,14 @@
 </script>
 
 <div class="flex__row | flex__justify-between">
-  <a href={`/my/notes/${note.id}`}>
-    <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
-  </a>
+  <div class="flow">
+    {#if note.title.trim()}
+      <h4>{note.title}</h4>
+    {/if}
+    <a href={`/my/notes/${note.id}`}>
+      <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
+    </a>
+  </div>
   <span use:dragHandle aria-label={`drag-handle for ${note.title || note.fragments?.todolist?.todos[0]?.text}`}>
     <IconaMoonMoveThin role="presentation" alt="" />
   </span>
