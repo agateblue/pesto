@@ -52,7 +52,7 @@
   />
   <label for={`form-advanced-${form.id}`}>Advanced mode</label>
 </div>
-{JSON.stringify(form)}
+
 <div class="form__field">
   <input
     type="checkbox"
