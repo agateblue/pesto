@@ -57,6 +57,9 @@
           id={`field-id-${field.id}`}
           bind:value={field.id}
         />
+        <p class="form__help">
+          A unique ID for the field. Used to build visualizations.
+        </p>
       </div>
     {/if}
   </div>
