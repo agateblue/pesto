@@ -4,12 +4,13 @@
 
   interface Props {
     children: import('svelte').Snippet;
+    formId: string;
     field: FormFieldConfiguration;
     label?: string;
     value?: boolean | number | string;
   }
 
-  let { field, label, children, value = $bindable() } = $props();
+  let { field, label, children, formId, value = $bindable() } = $props();
 
   let suggestions = $state(field.suggestions || []);
 
@@ -39,19 +40,19 @@
 
 <div class="form__field">
   {#if field.type === 'text' || field.type === 'number'}
-    <label for={`field-${field.id}`}>{label || field.label}</label>
+    <label for={`field-${formId}-${field.id}`}>{label || field.label}</label>
     <input
       onfocus={() => {
         loadSuggestions();
       }}
-      id={`field-${field.id}`}
-      name={`field-${field.id}`}
+      id={`field-${formId}-${field.id}`}
+      name={`field-${formId}-${field.id}`}
       type={field.type}
-      list={`field-autocomplete-${field.id}`}
+      list={`field-autocomplete-${formId}-${field.id}`}
       step="any"
       bind:value
     />
-    <datalist id={`field-autocomplete-${field.id}`}>
+    <datalist id={`field-autocomplete-${formId}-${field.id}`}>
       {#each suggestions as suggestion}
         <option value={suggestion}>{suggestion}</option>
       {/each}
@@ -59,12 +60,12 @@
   {/if}
   {#if field.type === 'boolean'}
     <input
-      id={`field-${field.id}`}
-      name={`field-${field.id}`}
+      id={`field-${formId}-${field.id}`}
+      name={`field-${formId}-${field.id}`}
       type="checkbox"
       bind:checked={value}
     />
-    <label for={`field-${field.id}`}>{field.label}</label>
+    <label for={`field-${formId}-${field.id}`}>{field.label}</label>
   {/if}
   {#if field.help}
     <p class="form__help">{field.help}</p>
