@@ -55,7 +55,7 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 12,
+  version: 14,
   primaryKey: 'id',
   type: 'object',
   required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
@@ -131,11 +131,8 @@ export const documentSchemaLiteral = {
         },
         todolist: {
           type: 'object',
-          required: ['todos', 'title', 'done', 'column'],
+          required: ['todos', 'done', 'column'],
           properties: {
-            title: {
-              type: ['string']
-            },
             done: {
               type: 'boolean'
             },
@@ -224,6 +221,27 @@ export const migrationStrategies = {
       if (oldDocumentData.fragments.form.id === undefined) {
         oldDocumentData.fragments.form.id = null;
       }
+    }
+    return oldDocumentData;
+  },
+  // remove todolist title, use note title
+  13: function (oldDocumentData) {
+    if (oldDocumentData?.fragments?.todolist) {
+      if (!oldDocumentData.title) {
+        oldDocumentData.title = oldDocumentData.fragments.todolist.title
+      }
+      delete oldDocumentData.fragments.todolist.title
+    }
+    return oldDocumentData;
+  },
+  // fix bugged 13 migration that ended up with todolists with no todos
+  14: function (oldDocumentData) {
+    if (oldDocumentData?.fragments?.todolist?.todos.length === 0) {
+      oldDocumentData.fragments.todolist.todos.push({
+        text: oldDocumentData.title || 'Empty task',
+        done: oldDocumentData.fragments.todolist.done,
+        id: oldDocumentData.id,
+      })
     }
     return oldDocumentData;
   }
@@ -366,7 +384,7 @@ export function observeLoadForms() {
 }
 
 export function launchReplications(uiState, db) {
-  console.debug('Launching replications…');
+  console.log('Launching replications…');
   return uiState.replications$.subscribe(async (v) => {
     v = v || [];
     let newReplications = await setupReplications(db, globals.replications, v);
@@ -537,7 +555,6 @@ export function getNewTextFragment(content = '') {
 
 export function getNewTodoListFragment() {
   return {
-    title: '',
     done: false,
     todos: [],
     column: 0
@@ -766,7 +783,6 @@ export function tokensToMangoQuery(tokens: QueryToken[]) {
       let regex = { $regex: `.*${token.value}.*`, $options: 'i' };
       orQuery.push({ title: regex });
       orQuery.push({ 'fragments.text.content': regex });
-      orQuery.push({ 'fragments.todolist.title': regex });
       orQuery.push({ 'fragments.todolist.todos': { $elemMatch: { text: regex } } });
       query.push({ $or: orQuery });
     }

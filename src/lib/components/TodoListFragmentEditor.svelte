@@ -20,16 +20,22 @@
 
   let { fragment, editText, columns, autofocus = false }: Props = $props();
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
-  let title: string = $state(fragment.title || '');
+  $effect(() => {
+    if (todos.length === 0) {
+      todos.push(getNewTodo())
+    }
+  })
   let done: boolean = $state(fragment.done);
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
-  let id: string = $state(buildUniqueId());
   let todosFocused = $state(false);
-  let titleFocused = $state(false);
   let subscriptions = [
     syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
       if (!todosFocused) {
-        todos = v;
+        let n = [...v]
+        if (n.slice(-1)[0]?.text?.trim()) {
+          n.push(getNewTodo())
+        }
+        todos = n;
       }
     }),
     syncPropertiesWithExternalChanges(fragment.column$, (v) => {
@@ -37,23 +43,16 @@
     }),
     syncPropertiesWithExternalChanges(fragment.done$, (v) => {
       done = v;
-    }),
-    syncPropertiesWithExternalChanges(fragment.title$, (v) => {
-      if (!titleFocused) {
-        title = v;
-      }
     })
   ];
 
   onDestroy(clearSubscriptions(subscriptions));
   function handleChange() {
-    let hasContent =
-      !!title ||
-      todos.filter((t) => {
-        return t.text.trim();
-      }).length > 0;
+    let hasContent = todos.filter((t) => {
+      return t.text.trim();
+    }).length > 0;
     if (hasContent) {
-      dispatch('update', { fragment: { ...fragment, title, done, todos, column } });
+      dispatch('update', { fragment: { ...fragment, done, todos, column } });
     } else {
       dispatch('delete', {});
     }
@@ -68,16 +67,15 @@
     todos = todos.filter((t) => {
       return t.text.trim();
     });
-    if (title) {
-      todos = [...todos, getNewTodo()];
-    }
+    todos = [...todos, getNewTodo()];
     stats = getStats();
+    done = stats.complete 
     handleChange();
   }
   function getStats() {
     let stats = {
       done: done ? 1 : 0,
-      total: title.trim() ? 1 : 0,
+      total: 0,
       complete: false
     };
     for (const todo of todos || []) {
@@ -88,7 +86,7 @@
         }
       }
     }
-    if (stats.done === stats.total) {
+    if (stats.done >= stats.total) {
       stats.complete = true;
     }
     return stats;
@@ -97,7 +95,7 @@
   let stats = $state(getStats());
 </script>
 
-{#if title && columns}
+{#if todos[0]?.text?.trim() && columns}
   <div class="form__field">
     <label for="todolist-column">Column</label>
     <select
@@ -124,66 +122,25 @@
 {/if}
 
 <ol class="todolist">
-  <li>
-    {#key id}
-      <TodoRow
-        {editText}
-        trashIcon={true}
-        {autofocus}
-        todo={{ text: title, done: done, id }}
-        onblur={() => (titleFocused = false)}
-        onfocus={() => (titleFocused = true)}
-        accesskey="t"
-        on:update={(e) => {
-          done = e.detail.todo.done;
-          title = e.detail.todo.text;
-          column = done ? -1 : 0;
-          if (done) {
-            todos = cloneDeep(todos);
-            todos = todos.map((t) => {
-              return { ...t, done: true };
-            });
-          } else if (title && todos.length === 0) {
-            todos = [...todos, getNewTodo()];
-          }
-          handleChange();
-          stats = getStats();
-        }}
-        on:delete={(e) => {
-          title = '';
-          done = false;
-          todos = [];
-          handleChange();
-          stats = getStats();
-          id = buildUniqueId();
-        }}
-      />
-    {/key}
-    {#if stats.total > 1 || title}
-      <ol class="todolist">
-        {#each todos as todo, i (i)}
-          {#if editText || todo.text}
-            <li>
-              {#key todo.id}
-                <TodoRow
-                  todo={todos[i]}
-                  autofocus={false}
-                  trashIcon={false}
-                  onblur={() => (todosFocused = false)}
-                  onfocus={() => (todosFocused = true)}
-                  {editText}
-                  on:delete={(e) => {
-                    updateTodo(i, null);
-                  }}
-                  on:update={(e) => {
-                    updateTodo(i, e.detail.todo);
-                  }}
-                />
-              {/key}
-            </li>
-          {/if}
-        {/each}
-      </ol>
+  {#each todos as todo, i (i)}
+    {#if editText || todo.text}
+      <li>
+        {#key todo.id}
+          <TodoRow
+            todo={todos[i]}
+            autofocus={false}
+            onblur={() => (todosFocused = false)}
+            onfocus={() => (todosFocused = true)}
+            {editText}
+            on:delete={(e) => {
+              updateTodo(i, null);
+            }}
+            on:update={(e) => {
+              updateTodo(i, e.detail.todo);
+            }}
+          />
+        {/key}
+      </li>
     {/if}
-  </li>
+  {/each}
 </ol>
