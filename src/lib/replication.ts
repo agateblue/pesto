@@ -108,9 +108,18 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
       });
     }
     if (document.fragments?.todolist?.todos?.length > 0) {
-      let text = document.title || document.fragments.todolist.todos.length[0]
       let column = document.fragments.todolist.column;
-      let subtasks: TempoSubtask[] = (document.fragments.todolist.todos || []).map((t) => {
+      let todos = document.fragments.todolist.todos
+      
+      // tempo has a top level task, we use the note title if any or the first
+      // todo for that
+      let text = document.title?.trim()
+      if (!text) {
+        text = todos[0].text
+        todos.shift()
+      }
+    
+      let subtasks: TempoSubtask[] = (todos || []).map((t) => {
         return { label: t.text, done: t.done };
       });
       let _id = baseData._id;

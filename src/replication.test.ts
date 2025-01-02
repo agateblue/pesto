@@ -197,11 +197,10 @@ describe('query language', () => {
       type: 'note',
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:26:37.871Z',
-      title: null,
+      title: 'Cleaning day',
       fragments: {
         todolist: {
           done: false,
-          title: 'Cleaning day',
           todos: [
             {
               id: '018fe787-270b-7000-8000-0862afeaa8e3',
@@ -247,8 +246,7 @@ describe('query language', () => {
         text: { content: 'hello' },
         todolist: {
           done: true,
-          title: 'Cleaning day',
-          todos: [],
+          todos: [{text: 'Cleaning day', done: true, id: 'noop'}],
           column: 1
         }
       },
@@ -294,8 +292,7 @@ describe('query language', () => {
       fragments: {
         todolist: {
           done: true,
-          title: 'Cleaning day',
-          todos: [],
+          todos: [{text: 'hello', done: true, id: 'noop'}],
           // this means done
           column: -1
         }
@@ -307,7 +304,7 @@ describe('query language', () => {
       _rev: '1-00000000000000000000000000000000',
       date: '2024-11-06T12:10:22.438Z',
       type: 'task',
-      text: 'Cleaning day',
+      text: 'hello',
       category: null,
       index: -1,
       list: 3,
