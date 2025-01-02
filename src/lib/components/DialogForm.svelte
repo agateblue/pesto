@@ -46,9 +46,6 @@
   bind:this={dialog}
   aria-labelledby="dialog-title"
   aria-describedby="dialog-description"
-  onmousedown={(event) => {
-    event.target == dialog && dialog.close();
-  }}
 >
   <div class="scroll__wrapper">
     <header class="flex__row flex__justify-between flex__align-center p__inline-3">
