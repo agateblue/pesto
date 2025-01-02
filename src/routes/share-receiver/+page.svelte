@@ -18,21 +18,24 @@
       await goto('/');
     }
     let noteParts = [];
-    if (title) {
-      noteParts.push(`# ${title}`);
-    }
-
+    
     if (url) {
       noteParts.push(url);
     }
 
     if (text) {
-      noteParts.push(text);
+      let lines = text.split('\n')
+      if (lines[lines.length - 1].includes(':~:text=')) {
+        // remove included link to exact text in page if any
+        // this happens when sharing text selection through a web browser
+        lines.pop()
+      }
+      noteParts.push(lines.join('\n'));
     }
 
-    let body = noteParts.join('\n\n');
+    let body = noteParts.join('\n\n').trim();
 
-    await globals.uiState.set('sharedNote', () => body);
+    await globals.uiState.set('sharedNote', () => {return {title, body}});
     await delay(500);
     await goto('/my/notes/add?from=share');
   });
