@@ -16,6 +16,7 @@
     todo: TodoType;
     editText: boolean;
     autofocus: boolean;
+    showDelete: boolean;
     onfocus: Function;
     onblur: Function;
     accesskey?: string;
@@ -27,7 +28,8 @@
     autofocus = false,
     onblur,
     onfocus,
-    accesskey
+    accesskey,
+    showDelete,
   }: Props = $props();
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
@@ -42,22 +44,20 @@
 </script>
 
 <div class="flex__row flex__align-start">
-  {#if todo.text?.trim()}
-    <div>
-      {#key todo.text.trim() + todo.done}
-        <input
-          type="checkbox"
-          id={`todo-${id}-done`}
-          checked={todo.text.trim() && todo.done}
-          onchange={(e) => {
-            handleChange({ done: e.target.checked });
-          }}
-          disabled={!todo.text.trim()}
-          aria-labelledby={editText ? `todo-${id}-text` : undefined}
-        />
-      {/key}
-    </div>
-  {/if}
+  <div>
+    {#key todo.text.trim() + todo.done}
+      <input
+        type="checkbox"
+        id={`todo-${id}-done`}
+        checked={todo.text.trim() && todo.done}
+        onchange={(e) => {
+          handleChange({ done: e.target.checked });
+        }}
+        disabled={!todo.text.trim()}
+        aria-labelledby={editText ? `todo-${id}-text` : undefined}
+      />
+    {/key}
+  </div>
   {#if editText}
     <textarea
       class="flex__grow | input__discrete autoresize"
@@ -81,6 +81,7 @@
       {@html renderMarkdown(todo.text || '')}
     </label>
   {/if}
+  {#if showDelete}
   <button
     class="button__icon"
     onclick={preventDefault((e) => {
@@ -88,8 +89,7 @@
     })}
     aria-label="Delete"
   >
-    {#if todo.text}
-      <IconaMoonSIgnMinusCircle role="presentation" alt="" />
-    {/if}
+    <IconaMoonSIgnMinusCircle role="presentation" alt="" />
   </button>
+  {/if}
 </div>

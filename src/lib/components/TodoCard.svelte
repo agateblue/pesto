@@ -34,8 +34,6 @@
     };
     if (fragment) {
       updateData.fragments.todolist = fragment;
-    } else {
-      delete updateData.fragments.todolist;
     }
 
     note.incrementalUpdate({
@@ -45,7 +43,7 @@
 
   let subscriptions = [
     note.$.subscribe(async (newNote: DocumentDocument) => {
-      if (isEmpty(newNote.fragments) && !deleted) {
+      if (!note.title && isEmpty(newNote.fragments) && !deleted) {
         deleted = true;
         await newNote.incrementalRemove();
       }
@@ -58,7 +56,7 @@
 
 <div class="flex__row | flex__justify-between">
   <div class="flow">
-    {#if note.title.trim()}
+    {#if note.title?.trim()}
       <h4>{note.title}</h4>
     {/if}
     <a href={`/my/notes/${note.id}`}>
