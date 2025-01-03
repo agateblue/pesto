@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { tokensToMangoQuery, getQueryTokens, type QueryToken, buildUniqueId } from '$lib/db';
-import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown } from '$lib/ui';
+import { tokensToMangoQuery, getQueryTokens, type QueryToken, type DocumentType } from '$lib/db';
+import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown, noteToText } from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
@@ -161,5 +161,46 @@ describe('query language', () => {
       ]
     };
     expect(getTodoListFromMarkdown(input, () => 'noop')).toStrictEqual(expected);
+  });
+  it('ui noteToText', () => {
+    const input: DocumentType = {
+      id: '2024-11-06T12:10:22.438Z',
+      type: 'note',
+      created_at: '2024-11-06T12:10:22.438Z',
+      modified_at: '2024-11-06T12:26:37.871Z',
+      title: 'Cleaning day',
+      fragments: {
+        text: {content: "Hello world"},
+        todolist: {
+          done: false,
+          todos: [
+            {
+              id: '018fe787-270b-7000-8000-0862afeaa8e3',
+              done: false,
+              text: 'Dishes'
+            },
+            {
+              id: '018fe787-270b-7000-8000-11c1dd22dc7d',
+              done: true,
+              text: 'Laundry'
+            },
+            {
+              id: '018fe787-270b-7000-8000-11c1dd22dc7d',
+              done: false,
+              text: ''
+            }
+          ],
+          column: 1
+        }
+      },
+      tags: []
+    };
+    const expected = `# Cleaning day
+
+Hello world
+
+- [ ] Dishes
+- [x] Laundry`
+    expect(noteToText(input)).toStrictEqual(expected);
   });
 });
