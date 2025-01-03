@@ -679,7 +679,7 @@ dialog {
     margin: var(--space-2);
   }
 }
-[data-layout='multi-column'] {
+[data-layout='multi-columns'] {
   dialog {
     width: 60ch;
     max-width: 100%;
