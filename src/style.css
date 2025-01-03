@@ -380,6 +380,9 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
   }
 }
+header > h2 {
+  font-size: var(--page-header-font-size);
+}
 input,
 button,
 textarea,
