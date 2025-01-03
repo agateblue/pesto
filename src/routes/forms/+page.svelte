@@ -129,7 +129,7 @@
           </div>
         </DialogForm>
       </header>
-      <div class="scroll">
+      <div class="scroll  p__inline-2">
         <div class="grid grid__gap">
           {#each forms as form}
             <FormRendered

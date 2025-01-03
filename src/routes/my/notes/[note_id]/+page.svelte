@@ -26,7 +26,7 @@
   
       <div class="scroll">
         {#key note._rev}
-          <div class="wrapper">
+          <div class="wrapper p__inline-3">
             <RenderedNote
               {note}
               limitSize={false} 
@@ -50,7 +50,7 @@
     />
   </aside>
 {:else}
-  <main class="wrapper | flex__grow">
+  <main class="wrapper  p__inline-3 | flex__grow">
     <p>This note doesn't exist.</p>
   </main>
 {/if}
