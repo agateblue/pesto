@@ -163,10 +163,9 @@ export function getTodoListFromMarkdown(text: string, getId: Function) {
         });
       } else {
         todolist = {
-          title: match[2].trim(),
           done: !!match[1]?.trim(),
           column: !!match[1]?.trim() ? -1 : 0,
-          todos: []
+          todos: [{id: getId(), done: !!match[1]?.trim(), text: match[2].trim()}]
         };
       }
     }

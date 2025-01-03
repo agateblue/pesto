@@ -140,10 +140,14 @@ describe('query language', () => {
 - [ ] Task 3
 `;
     const expected = {
-      title: 'Task 1',
       done: false,
       column: 0,
       todos: [
+        {
+          id: 'noop',
+          text: 'Task 1',
+          done: false
+        },
         {
           id: 'noop',
           text: 'Task 2',
