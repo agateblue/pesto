@@ -14,11 +14,11 @@
   interface Props {
     fragment: TodolistType;
     editText: boolean;
-    columns: string[] | null;
-    autofocus: boolean;
+    columns?: string[] | null;
+    autofocus?: boolean;
   }
 
-  let { fragment, editText, columns, autofocus = false }: Props = $props();
+  let { fragment, editText, columns = null, autofocus = false }: Props = $props();
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   $effect(() => {
     if (todos.length === 0) {
