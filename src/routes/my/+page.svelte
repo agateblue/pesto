@@ -1,4 +1,6 @@
 <script lang="ts">
+  import IconaMoonClose from 'virtual:icons/iconamoon/close';
+
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
   import NoteList from '$lib/components/NoteList.svelte';
@@ -43,16 +45,30 @@
           }
         }}
       />
+      {#if searchQuery.trim()}
+        <button
+          type="button"
+          class="button__icon"
+          onclick={() => {
+            searchQuery = '';
+            triggerSearch();
+          }}
+        >
+          <IconaMoonClose
+            role="presentation"
+            class=" icon__size-3"
+            height="none"
+            width="none"
+            alt=""
+          />
+        </button>
+      {/if}
     </header>
 
     <div class="scroll">
       <NoteList
         {searchQuery}
         {orderQuery}
-        onclear={() => {
-          searchQuery = '';
-          triggerSearch();
-        }}
       />
     </div>
   </div>
