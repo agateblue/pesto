@@ -74,7 +74,7 @@
         {note}
         includeHeader={true}
         limitSize={true}
-        class="diary__note flow | p__block-3" role="listitem">
+        class="diary__note flow | p__block-3 p__inline-3" role="listitem">
       </RenderedNote>
     {/key}
   {/each}

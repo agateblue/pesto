@@ -200,7 +200,7 @@ Export to a Tempo JSON file.
         <h2 class="flex__grow">Settings</h2>
       </header>
       <section class="flow | scroll">
-        <div class="wrapper">
+        <div class="wrapper p__inline-3">
           <h1>Synchronisation</h1>
           <p>
             Pesto data can be synchronized with other devices. With WebRTC, the data transit only

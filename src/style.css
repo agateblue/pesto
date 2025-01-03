@@ -6,7 +6,6 @@
   --space-4: 1.5rem;
 
   --green: #4cb248;
-  --layout-narrow-switch: 700px;
   --primary-color: rgb(199, 240, 240);
   --text-color: rgba(44, 44, 44, 1);
   --text-discrete-color: rgba(125, 125, 125, 1);
@@ -126,7 +125,6 @@ body {
 
 .wrapper {
   margin-inline: auto;
-  padding-inline: var(--space-3);
   max-width: 70ch;
 }
 
@@ -162,7 +160,6 @@ body {
     flex: 1;
     overflow-x: auto;
     overflow-y: auto;
-    padding: var(--space-1);
     width: 100%;
   }
 }
@@ -682,7 +679,7 @@ dialog {
     margin: var(--space-2);
   }
 }
-@media (min-width: 700px) {
+[data-layout='multi-column'] {
   dialog {
     width: 60ch;
     max-width: 100%;
