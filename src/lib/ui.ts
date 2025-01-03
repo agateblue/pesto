@@ -1,7 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
 import debounce from 'lodash/debounce';
-import { type TodolistType } from '$lib/db';
+import { type DocumentType, type TodolistType } from '$lib/db';
 
 export type LogMessage = {
   text: string;
@@ -172,4 +172,24 @@ export function getTodoListFromMarkdown(text: string, getId: Function) {
     match = regex.exec(text);
   }
   return todolist;
+}
+
+export function noteToText(note: DocumentType) {
+  let parts = []
+  if (note.title?.trim()) {
+    parts.push(`# ${note.title.trim()}`)
+  }
+  if (note.fragments.text) {
+    parts.push(note.fragments.text.content.trim())
+  }
+  if (note.fragments.todolist?.todos) {
+    let formattedTodos = note.fragments.todolist.todos.filter(t => t.text.trim()).map(t => {
+      return `- [${t.done ? 'x' : ' '}] ${t.text.trim()}`
+    })
+    let todos = formattedTodos.join('\n')
+    if (todos.trim()) {
+      parts.push(todos)
+    }
+  }
+  return parts.join('\n\n')
 }

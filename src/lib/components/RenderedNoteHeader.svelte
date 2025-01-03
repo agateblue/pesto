@@ -1,8 +1,10 @@
 <script lang="ts">
   import { type DocumentDocument, formatDate, getNoteUpdateData } from '$lib/db';
+  import { noteToText } from '$lib/ui';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   
   import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
+  import IconaMoonCopy from 'virtual:icons/iconamoon/copy';
   import IconaMoonStar from 'virtual:icons/iconamoon/star';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
 
@@ -46,6 +48,24 @@
         width="none"
       />
     </a>
+
+    <button
+      class="button__icon"
+      type="button"
+      onclick={(e) => {
+        navigator.clipboard.writeText(noteToText(note));
+      }}
+      aria-label="Copy note contents to clipboard"
+      title="Copy note contents to clipboard"
+    >
+      <IconaMoonCopy
+        role="presentation" 
+        alt=""
+        class=" icon__size-3"
+        height="none"
+        width="none"
+      />
+    </button>
 
     <button
       class="button__icon"
