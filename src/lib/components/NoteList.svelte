@@ -78,7 +78,12 @@
   {/if}
   {#each notes as note}
     {#key note._rev}
-      <RenderedNote {note} class="diary__note flow | p__block-3" role="listitem"></RenderedNote>
+      <RenderedNote
+        {note}
+        includeHeader={true}
+        limitSize={true}
+        class="diary__note flow | p__block-3" role="listitem">
+      </RenderedNote>
     {/key}
   {/each}
   {#if notes.length > 0}

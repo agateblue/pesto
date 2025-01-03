@@ -3,8 +3,8 @@
   import type { HTMLBaseAttributes } from 'svelte/elements';
   interface Props extends HTMLBaseAttributes {
     children: import('svelte').Snippet;
-    expanded: boolean;
-    limitSize: boolean;
+    expanded?: boolean;
+    limitSize?: boolean;
   }
 
   let id = getRandomId();
