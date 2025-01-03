@@ -15,9 +15,9 @@
   --background-color: white;
   --card-background: var(--background-color);
   --header-background: var(--background-color);
-  --layout-separator: 1px solid rgb(120, 112, 112);
   --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
+  --layout-separator: var(--list-separator);
   --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
