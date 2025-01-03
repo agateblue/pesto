@@ -21,7 +21,7 @@
     <MainNavigationToggle class="layout__multi-hidden" />
   {/if}
 
-  <h2 class="flex__grow m__block-0" style="padding: 0">
+  <h2 class="flex__grow m__block-0">
     <a href={`/my/notes/${note.id}`}>
       {#if note.title?.trim()}
         {note.title}
