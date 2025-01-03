@@ -19,35 +19,27 @@
   let suggestions = field.suggestions?.join('\n') || '';
 </script>
 
-<div class="builder__field flex__row flex__gap flex__equal-size">
+<div class="builder__field">
   <div class="flow m__block-4">
-    <div class="form__field flow">
-      <label for={`field-label-${field.id}`}>Label</label>
-      <input
-        type="text"
-        name={`field-label-${field.id}`}
-        id={`field-label-${field.id}`}
-        bind:value={field.label}
-      />
+    <div class="flex__row flex__gap">
+      <div class="form__field flow">
+        <label for={`field-label-${field.id}`}>Label</label>
+        <input
+          type="text"
+          name={`field-label-${field.id}`}
+          id={`field-label-${field.id}`}
+          bind:value={field.label}
+        />
+      </div>
+      <div class="form__field flow">
+        <label for={`field-type-${field.id}`}>Type</label>
+        <select name={`field-type-${field.id}`} id={`field-type-${field.id}`} bind:value={field.type}>
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="boolean">Yes/no</option>
+        </select>
+      </div>
     </div>
-    <div class="form__field flow">
-      <label for={`field-type-${field.id}`}>Type</label>
-      <select name={`field-type-${field.id}`} id={`field-type-${field.id}`} bind:value={field.type}>
-        <option value="text">Text</option>
-        <option value="number">Number</option>
-        <option value="boolean">Yes/no</option>
-      </select>
-    </div>
-    <div class="form__field flow">
-      <input
-        type="checkbox"
-        name={`field-required-${field.id}`}
-        id={`field-required-${field.id}`}
-        bind:checked={field.required}
-      />
-      <label for={`field-required-${field.id}`}>This field is required</label>
-    </div>
-
     {#if advanced}
       <div class="form__field flow">
         <label for={`field-id-${field.id}`}>ID</label>
@@ -62,6 +54,16 @@
         </p>
       </div>
     {/if}
+    <div class="form__field flow">
+      <input
+        type="checkbox"
+        name={`field-required-${field.id}`}
+        id={`field-required-${field.id}`}
+        bind:checked={field.required}
+      />
+      <label for={`field-required-${field.id}`}>This field is required</label>
+    </div>
+
   </div>
 
   <div class="flow m__block-4">
