@@ -47,6 +47,7 @@
           class="button__icon button layout__multi-hidden"
           href={`/my/notes/${note.id}?view=detail`}
           aria-label="View note"
+          title="View note"
         >
           <IconaMoonEye
             role="presentation"

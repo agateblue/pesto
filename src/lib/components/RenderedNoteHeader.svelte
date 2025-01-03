@@ -36,6 +36,7 @@
       class="button__icon button layout__multi-hidden"
       href={`/my/notes/${note.id}?view=edit`}
       aria-label="Edit note"
+      title="Edit note"
     >
       <IconaMoonEdit
         role="presentation"
@@ -55,6 +56,7 @@
         });
       }}
       aria-label={note.starred ? 'Unstar' : 'Star'}
+      title={note.starred ? 'Unstar' : 'Star'}
     >
       {#if note.starred}
         <IconaMoonStarFill

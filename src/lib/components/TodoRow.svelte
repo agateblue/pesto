@@ -69,9 +69,9 @@
       onkeyup={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
-      placeholder="Add new task…"
+      placeholder="Add new todo…"
       rows="1"
-      aria-label="Add a new task"
+      aria-label="Add a new todo"
       {onblur}
       {onfocus}
       {accesskey}
@@ -87,7 +87,8 @@
     onclick={preventDefault((e) => {
       dispatch('delete');
     })}
-    aria-label="Delete"
+    aria-label="Delete todo"
+    title="Delete todo"
   >
     <IconaMoonSIgnMinusCircle role="presentation" alt="" />
   </button>

@@ -235,7 +235,8 @@
                 <button
                   class="button__icon"
                   type="button"
-                  aria-label={`Add task in ${column.name}`}
+                  aria-label={`Add todo in ${column.name}`}
+                  title={`Add todo in ${column.name}`}
                   style={column.index === -1 ? 'visibility: hidden' : ''}
                   onclick={async (e) => {
                     let note = getNewNote();
