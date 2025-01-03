@@ -24,7 +24,7 @@
     <NoteForm
       {note}
       on:update={(e) => {
-        handleUpdate(e.detail.note);
+        note = e.detail.note
       }}
       on:delete={(e) => {
         goto('/my');
