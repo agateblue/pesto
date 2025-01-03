@@ -32,7 +32,7 @@
   let db = globals.db;
   let todolistKey = $state(0);
   let todolistFromText: TodolistType | null = $state(
-    getTodoListFromMarkdown(note?.fragments?.text?.content || '')
+    getTodoListFromMarkdown(note?.fragments?.text?.content || '', buildUniqueId)
   );
   let webhookUrl = $state('');
   let subscriptions = [
