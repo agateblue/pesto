@@ -63,7 +63,7 @@
   });
 </script>
 
-<div class="wrapper | m__block-3" role="list" aria-live="polite" aria-busy={isLoading}>
+<div class="wrapper" role="list" aria-live="polite" aria-busy={isLoading}>
   <LoadingState {isLoading}>Loading data…</LoadingState>
   {#if !isLoading && notes.length === 0}
     <p>No note found.</p>
