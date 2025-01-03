@@ -31,6 +31,7 @@
   type="button"
   class={anchorClass}
   aria-label={anchorLabel}
+  title={anchorLabel}
   onclick={() => {
     onopen ? onopen() : null;
     dialog.showModal();
@@ -54,6 +55,8 @@
       <button
         type="button"
         class="button__icon"
+        aria-label="Close dialog"
+        title="Close dialog"
         onclick={() => {
           dialog.close();
         }}
