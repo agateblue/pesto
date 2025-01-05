@@ -12,6 +12,7 @@ import {
   type MangoQuerySelector
 } from 'rxdb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
+import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBStatePlugin } from 'rxdb/plugins/state';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
@@ -348,15 +349,23 @@ export async function getDb() {
   if (globals.db) {
     return globals;
   }
-  let db = await createRxDatabase<Database>({
+  let storage = getRxStorageDexie()
+  if (dev) {
+    storage = wrappedValidateAjvStorage({
+      storage
+  });
+  }
+  globals.replications = []
+
+  globals.db = await createRxDatabase<Database>({
     name: 'main',
-    storage: getRxStorageDexie(),
+    storage,
     allowSlowCount: true,
     eventReduce: true
   });
 
   const documentSchema: RxJsonSchema<DocumentType> = documentSchemaLiteral;
-  await db.addCollections({
+  await globals.db.addCollections({
     documents: {
       schema: documentSchema,
       autoMigrate: false,
@@ -364,9 +373,9 @@ export async function getDb() {
     }
   });
 
-  let uiState = await db.addState('ui');
+  globals.uiState = await globals.db.addState('ui');
 
-  return { db, uiState, replications: [] };
+  return { db: globals.db, uiState: globals.uiState, replications: globals.replications };
 }
 
 export function loadFormsQuery() {

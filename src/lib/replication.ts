@@ -232,6 +232,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
     console.debug('Converting document from tempo to pesto', document, data);
   }
   data.source = 'Tempo';
+  data._deleted = false
   return data;
 }
 

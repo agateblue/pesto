@@ -481,7 +481,8 @@ describe('query language', () => {
       fragments: {},
       tags: [],
       title: null,
-      source: 'Tempo'
+      source: 'Tempo',
+      _deleted: false,
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -495,7 +496,8 @@ describe('query language', () => {
     const expected: DocumentType = {
       id: 'ignored:tempo:settings:something',
       type: 'ignored',
-      source: 'Tempo'
+      source: 'Tempo',
+      _deleted: false,
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
