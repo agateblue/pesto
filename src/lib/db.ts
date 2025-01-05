@@ -41,7 +41,6 @@ export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/';
 export const LOCALE = new Intl.NumberFormat().resolvedOptions().locale;
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
-  weekday: 'long',
   day: '2-digit',
   month: '2-digit',
   year: '2-digit'

@@ -60,7 +60,7 @@
     <header class="flex__row flex__justify-between flex__align-center">
       <MainNavigationToggle class="layout__multi-hidden" />
       <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
-      <a href="/settings" class="button__icon p__inline-2" aria-label="Settings" title="Settings">
+      <a href="/settings" class="button__icon p__inline-2 m__inline-1" aria-label="Settings" title="Settings">
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"

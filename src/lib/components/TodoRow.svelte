@@ -87,7 +87,7 @@
     aria-label="Delete todo"
     title="Delete todo"
   >
-    <IconaMoonSIgnMinusCircle role="presentation" alt="" />
+    <IconaMoonSIgnMinusCircle class="icon__size-3" height=none width=none role="presentation" alt="" />
   </button>
   {/if}
 </div>

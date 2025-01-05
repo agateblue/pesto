@@ -452,7 +452,7 @@ input[type='submit']:hover {
 .button__icon {
   background: none;
   color: hsl(from var(--text-color) h s l / 0.7);
-  min-width: var(--space-4);
+  padding: var(--space-1);
 }
 .button__transparent {
   background: none;
