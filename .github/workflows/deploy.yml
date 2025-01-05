@@ -38,10 +38,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: setup env file
         run: |
@@ -52,10 +52,10 @@ jobs:
           cat .env
 
       - name: Run tests
-        run: npm run test
+        run: yarn test
 
       - name: Build
-        run: npm run build
+        run: yarn build
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
