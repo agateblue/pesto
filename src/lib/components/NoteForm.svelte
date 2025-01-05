@@ -71,7 +71,6 @@
           anchorLabel="Delete note"
           anchor={trashIcon}
           title="Delete this note?"
-          accesskey="r"
           onsubmit={(e: SubmitEvent) => {
             e.preventDefault();
             note.remove();

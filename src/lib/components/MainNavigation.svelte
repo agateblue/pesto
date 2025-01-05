@@ -60,7 +60,7 @@
     <header class="flex__row flex__justify-between flex__align-center">
       <MainNavigationToggle class="layout__multi-hidden" />
       <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
-      <a href="/settings" class="button__icon p__inline-2" aria-label="Settings" title="Settings" accesskey="s">
+      <a href="/settings" class="button__icon p__inline-2" aria-label="Settings" title="Settings">
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"
@@ -72,25 +72,25 @@
     </header>
     <ul class="flex__column">
       <li>
-        <MainNavigationLink href="/my/notes/add" accesskey="a"
+        <MainNavigationLink href="/my/notes/add"
           ><IconaMoonPen role="presentation" alt="" /><span class="flex__grow">New note</span
           ></MainNavigationLink
         >
       </li>
       <li>
-        <MainNavigationLink href="/my" accesskey="n">
+        <MainNavigationLink href="/my">
           <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">All notes</span>
           <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
-        <MainNavigationLink href="/my?q=starred:true" accesskey="f">
+        <MainNavigationLink href="/my?q=starred:true">
           <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">Starred</span>
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
-        <MainNavigationLink href="/my?o=modified_at:desc" accesskey="m"
+        <MainNavigationLink href="/my?o=modified_at:desc"
           ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow"
             >Recently modified</span
           ></MainNavigationLink
@@ -98,7 +98,7 @@
       </li>
       <li><h2>To-dos</h2></li>
       <li>
-        <MainNavigationLink href="/board" accesskey="b">
+        <MainNavigationLink href="/board">
           <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">Board</span>
           <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
@@ -127,7 +127,7 @@
       {/if}
       <li><h2>Data</h2></li>
       <li>
-        <MainNavigationLink href="/forms" accesskey="d"
+        <MainNavigationLink href="/forms"
           ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">Forms</span
           ></MainNavigationLink
         >

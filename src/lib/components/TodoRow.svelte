@@ -19,7 +19,6 @@
     showDelete: boolean;
     onfocus: Function;
     onblur: Function;
-    accesskey?: string;
   }
 
   let {
@@ -28,7 +27,6 @@
     autofocus = false,
     onblur,
     onfocus,
-    accesskey,
     showDelete,
   }: Props = $props();
   let id = $state(getRandomId());
@@ -74,7 +72,6 @@
       aria-label="Add a new todo"
       {onblur}
       {onfocus}
-      {accesskey}
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>

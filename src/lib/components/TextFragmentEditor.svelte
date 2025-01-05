@@ -45,6 +45,5 @@
     placeholder="What's on your mind?"
     onkeyup={(e) => handleChange(e.target.value)}
     value={content}
-    accesskey="w"
   ></textarea>
 </div>

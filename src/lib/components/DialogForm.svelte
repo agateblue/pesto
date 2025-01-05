@@ -10,7 +10,6 @@
     children: import('svelte').Snippet;
     onsubmit: Function;
     onopen?: Function;
-    accesskey?: string;
   }
 
   let {
@@ -22,7 +21,6 @@
     onsubmit,
     title,
     onopen,
-    accesskey
   }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
@@ -36,7 +34,6 @@
     onopen ? onopen() : null;
     dialog.showModal();
   }}
-  {accesskey}
 >
   {@render anchor?.()}
   {anchorText}

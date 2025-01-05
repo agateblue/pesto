@@ -370,46 +370,6 @@ Export to a Tempo JSON file.
             {/if}
           </form>
 
-          <h1>Keyboard shortcuts</h1>
-
-          <p>
-            Some keyboard shortcuts are available through <a
-              href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey"
-              >access keys</a
-            >:
-          </p>
-          <ul>
-            <li>
-              <kbd>a</kbd> : Add a new note
-            </li>
-            <li>
-              <kbd>n</kbd> : List notes
-            </li>
-            <li>
-              <kbd>f</kbd> : List starred notes
-            </li>
-            <li>
-              <kbd>m</kbd> : List last modified notes
-            </li>
-            <li>
-              <kbd>b</kbd> : View board page
-            </li>
-            <li>
-              <kbd>d</kbd> : View forms/data entry page
-            </li>
-            <li>
-              <kbd>s</kbd> : View settings page
-            </li>
-            <li>
-              <kbd>w</kbd> : On note edition page, focus the note field
-            </li>
-            <li>
-              <kbd>t</kbd> : On note edition page, focus the task field
-            </li>
-            <li>
-              <kbd>r</kbd> : On note edition page, open the deletion modal
-            </li>
-          </ul>
           <h1>Clear data</h1>
 
           <p>You can remove all your Pesto data if needed. You will be asked for confirmation</p>
