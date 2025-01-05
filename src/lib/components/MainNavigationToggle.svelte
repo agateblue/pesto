@@ -4,13 +4,18 @@
   import { globals } from '$lib/db';
   import IconaMoonMenuBurgerHorizontal from 'virtual:icons/iconamoon/menu-burger-horizontal';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
+  import { tick } from 'svelte';
   interface Props extends HTMLBaseAttributes {}
   let { ...restProps } = $props();
   let sidebarFullpage = $state(false);
 
   const observable = globals.uiState.get$('currentPage');
-  observable.subscribe((newValue: string) => {
+  observable.subscribe(async (newValue: string) => {
     sidebarFullpage = newValue === 'mainMenu';
+    if (sidebarFullpage) {
+      await tick()
+      window.scrollTo(0, 0)
+    }
   });
 </script>
 
