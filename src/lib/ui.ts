@@ -88,13 +88,16 @@ export function renderMarkdown(text: string): string {
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export function updateURLParam(pageUrl, param: string, value: string) {
-  let query = new URLSearchParams(pageUrl.searchParams.toString());
-  if (!value) {
-    query.delete(param);
-  } else {
-    query.set(param, value);
-  }
+export function updateURLParam(searchParams, params: object[]) {
+  let query = new URLSearchParams(searchParams.toString());
+  params.forEach(p => {
+    if (!p.value) {
+      query.delete(p.param);
+    } else {
+      query.set(p.param, p.value);
+    }
+
+  })
 
   return query;
 }

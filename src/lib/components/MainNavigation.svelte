@@ -3,6 +3,7 @@
   import MainNavigationLink from './MainNavigationLink.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
+  import IconaMoonSearch from 'virtual:icons/iconamoon/search';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
   import IconaMoonApps from 'virtual:icons/iconamoon/apps';
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
@@ -60,6 +61,16 @@
     <header class="flex__row flex__justify-between flex__align-center">
       <MainNavigationToggle class="layout__multi-hidden" />
       <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
+
+      <a href="/my?action=search" class="button__icon p__inline-2 m__inline-1" aria-label="Search" title="Search">
+        <IconaMoonSearch
+          role="presentation"
+          class=" icon__size-3"
+          height="none"
+          width="none"
+          alt=""
+        />
+      </a>
       <a href="/settings" class="button__icon p__inline-2 m__inline-1" aria-label="Settings" title="Settings">
         <IconaMoonSettings
           role="presentation"

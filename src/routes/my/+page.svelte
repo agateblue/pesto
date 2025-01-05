@@ -8,21 +8,28 @@
   import { goto } from '$app/navigation';
 
   import { updateURLParam } from '$lib/ui';
+  import { tick } from 'svelte';
 
   let { data, children } = $props();
 
   let searchQuery = $state('');
   let orderQuery = $state('id:desc');
-
+  let action = $state('')
   let noteFormKey = $state(0);
-
+  let searchInput: HTMLInputElement
   function triggerSearch() {
-    let params = updateURLParam($page.url, 'q', searchQuery);
+    let params = updateURLParam($page.url.searchParams, [{param: 'q', value: searchQuery}, {param: 'action', value: 'search'}]);
     goto(`?${params.toString()}`);
   }
   $effect(() => {
     searchQuery = $page.url.searchParams.get('q') || '';
     orderQuery = $page.url.searchParams.get('o') || 'id:desc';
+    action = $page.url.searchParams.get('action') || '';
+    tick().then(() => {
+      if (action === 'search') {
+        searchInput.focus()
+      }
+    })
   });
 </script>
 
@@ -30,7 +37,9 @@
   <div class="scroll__wrapper">
     <header class="p__inline-3">
       <MainNavigationToggle class="layout__multi-hidden" />
+      
       <input
+        bind:this={searchInput}
         class="flex__grow"
         type="search"
         autocomplete="off"
@@ -40,6 +49,7 @@
         value={searchQuery}
         onkeydown={async (e) => {
           if (e.key === 'Enter') {
+            action = ''
             searchQuery = e.target.value.trim();
             triggerSearch();
           }
