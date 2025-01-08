@@ -77,7 +77,6 @@
       <button
         type="submit"
         onclick={(e) => {
-          e.preventDefault()
           dialog.close();
         }}>Confirm</button
       >
