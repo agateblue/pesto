@@ -400,6 +400,13 @@ export function launchReplications(uiState, db) {
   });
 }
 
+export async function syncReplications(replications: []) {
+  for (const replication of replications) {
+    if (replication.reSync) {
+      await replication.reSync()
+    }
+  }
+}
 async function setupReplications(db: Database, current: [], config: AnyReplication[]) {
   // we stop and delete any existing replications
   for (const replicationState of current) {

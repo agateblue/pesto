@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { globals } from '$lib/db';
+  import { globals, syncReplications } from '$lib/db';
   import MainNavigationLink from './MainNavigationLink.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
   import IconaMoonSearch from 'virtual:icons/iconamoon/search';
+  import IconaMoonSynchronize from 'virtual:icons/iconamoon/synchronize';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
   import IconaMoonApps from 'virtual:icons/iconamoon/apps';
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
@@ -16,6 +17,7 @@
   import { clearSubscriptions } from '$lib/ui';
 
   let sidebarFullpage = $state(false);
+  let isSyncing = $state(false);
 
   const observable = globals.uiState.get$('currentPage');
   observable.subscribe((newValue) => {
@@ -27,8 +29,12 @@
   let totalStarred: number | null = $state(null);
   let boardColumns = $state([]);
   let collections = $state([]);
+  let replications: [] = $state([]);
 
   const subscriptions = [
+    globals.uiState.get$('replications').subscribe((newValue) => {
+      replications = newValue || []
+    }),
     globals.db?.documents
       .count({ selector: { type: 'note' } })
       .$.subscribe((v) => (totalNotes = v)),
@@ -62,6 +68,29 @@
       <MainNavigationToggle class="layout__multi-hidden" />
       <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
 
+      {#if replications.length > 0}
+        <button
+          type="button" 
+          class="button__icon p__inline-2 m__inline-1"
+          aria-label="Synchronize" 
+          title="Synchronize"
+          onclick={async (e) => {
+            isSyncing = true
+            await syncReplications(globals.replications)
+            setTimeout(() => {
+              isSyncing = false
+            }, 1000)
+          }}
+        >
+          <IconaMoonSynchronize
+            role="presentation"
+            class={`icon__size-3 ` + (isSyncing ? 'rotating' : '')}
+            height="none"
+            width="none"
+            alt=""
+          />
+        </button>
+      {/if}
       <a href="/my?action=search" class="button__icon p__inline-2 m__inline-1" aria-label="Search" title="Search">
         <IconaMoonSearch
           role="presentation"
