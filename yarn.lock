@@ -3341,15 +3341,15 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-graphql-ws@5.16.0:
-  version "5.16.0"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.16.0.tgz#849efe02f384b4332109329be01d74c345842729"
-  integrity sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==
+graphql-ws@5.16.2:
+  version "5.16.2"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.16.2.tgz#7b0306c1bdb0e97a05e800ccd523f46fb212e37c"
+  integrity sha512-E1uccsZxt/96jH/OwmLPuXMACILs76pKF2i3W861LpKBCYtGIyPQGtWLuBLkND4ox1KHns70e83PS4te50nvPQ==
 
-graphql@15.9.0:
-  version "15.9.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.9.0.tgz#4e8ca830cfd30b03d44d3edd9cac2b0690304b53"
-  integrity sha512-GCOQdvm7XxV1S4U4CGrsdlEN37245eC8P9zaYCMr6K1BG0IPGy5lUwmJsEOGyl1GD6HXjOtl2keCP9asRBwNvA==
+graphql@15.10.1:
+  version "15.10.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.10.1.tgz#e9ff3bb928749275477f748b14aa5c30dcad6f2f"
+  integrity sha512-BL/Xd/T9baO6NFzoMpiMD7YUZ62R6viR5tp/MULVEnbYJXZA//kRNW7J0j1w/wXArgL0sCxhDfK5dczSKn3+cg==
 
 has-flag@^4.0.0:
   version "4.0.0"
@@ -3998,10 +3998,10 @@ nanoid@^3.3.7:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
 
-nats@2.28.2:
-  version "2.28.2"
-  resolved "https://registry.yarnpkg.com/nats/-/nats-2.28.2.tgz#b3ad20e1204fe917d87b7d3fbcd76985461fa490"
-  integrity sha512-02cvR8EPach+0BfVaQjPgsbPFn6uMjEQAuvXS2ppg8jiWEm2KYdfmeFmtshiU9b2+kFh3LSEKMEaIfRgk3K8tw==
+nats@2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/nats/-/nats-2.29.1.tgz#0612053e030dfb31107987d6083d17e50fb295c7"
+  integrity sha512-OHVsxrQCITTdMKG3So0jhtnBd5jS2u1xpS91UCws7VklsaCbctwg5vT/8lYpVldPW0x3aHGF8uuAoMfCoJy7Sg==
   dependencies:
     nkeys.js "1.1.0"
 
@@ -4562,10 +4562,10 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-rxdb@^16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-16.0.0.tgz#657a008b47b58b0dc9e4f732eab3f2579020c8d5"
-  integrity sha512-AVsFqteTxN25JZUkh9isvwMRGgU2yPcX2DkKfOJUW0V94wBShGiWjSxAIbFdaiFDwTaODp+MxNfJtEOFDgb9lw==
+rxdb@16.3.0:
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-16.3.0.tgz#f3384a2f1416f23664ec888949408d6a2f3f3afc"
+  integrity sha512-jAXAg+22MHpIr/EeMSY0w4ddASqPj4HAZY5xoqeeKO+4kzikBJVUvF7Kfqgf92HlwjPLR+xbFaBOrqsyrLpq6w==
   dependencies:
     "@babel/runtime" "7.26.0"
     "@types/clone" "2.1.4"
@@ -4583,15 +4583,15 @@ rxdb@^16.0.0:
     event-reduce-js "5.2.7"
     firebase "11.1.0"
     get-graphql-from-jsonschema "8.1.0"
-    graphql "15.9.0"
-    graphql-ws "5.16.0"
+    graphql "15.10.1"
+    graphql-ws "5.16.2"
     is-my-json-valid "2.20.6"
     isomorphic-ws "5.0.0"
     js-base64 "3.7.7"
     jsonschema-key-compression "1.7.0"
     mingo "6.4.15"
     mongodb "6.12.0"
-    nats "2.28.2"
+    nats "2.29.1"
     oblivious-set "1.4.0"
     reconnecting-websocket "4.4.0"
     simple-peer "9.11.1"
