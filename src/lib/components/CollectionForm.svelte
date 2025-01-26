@@ -21,7 +21,10 @@
   <label for="collection-query">
     Collection query
   </label>
-  <input type="text" id="collection-query" name="collection-query" bind:value={collection.data.query}>
+  <textarea
+    class="autoresize"
+    id="collection-query" name="collection-query" bind:value={collection.data.query}>
+  </textarea>
   <p class="form__help">
     Automatically include notes matching this query in the collection.
   </p>
