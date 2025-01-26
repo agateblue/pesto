@@ -32,6 +32,7 @@ describe('query language', () => {
         {
           text: '#world',
           sign: '#',
+          fullSign: '#',
           id: 'world',
           type: 'tag',
           mood: null,
@@ -40,6 +41,7 @@ describe('query language', () => {
         {
           text: '-sad',
           sign: '-',
+          fullSign: '-',
           id: 'sad',
           type: 'feeling',
           mood: -1,
@@ -85,6 +87,7 @@ describe('query language', () => {
         {
           text: '@weight:kilos=66',
           sign: '@',
+          fullSign: '@',
           id: 'weight:kilos',
           type: 'annotation',
           value: '66',
@@ -93,6 +96,7 @@ describe('query language', () => {
         {
           text: '@weight:scale="home"',
           sign: '@',
+          fullSign: '@',
           id: 'weight:scale',
           type: 'annotation',
           value: 'home',
@@ -141,6 +145,7 @@ describe('query language', () => {
         {
           text: '@weight:kilos=66',
           sign: '@',
+          fullSign: '@',
           id: 'weight:kilos',
           type: 'annotation',
           value: '66',

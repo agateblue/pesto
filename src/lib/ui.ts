@@ -26,7 +26,7 @@ const signToMood = {
   '!': null,
   '@': null
 };
-const signToType = {
+export const signToType = {
   '+': 'feeling',
   '-': 'feeling',
   '~': 'feeling',
@@ -47,6 +47,7 @@ export function parseTags(text: string) {
     let tag = {
       text: match[2],
       sign: match[3][0],
+      fullSign: match[3],
       id: match[4].replace(/"/g, ''),
       type: null,
       value: null

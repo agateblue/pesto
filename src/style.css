@@ -16,6 +16,8 @@
   --header-background: var(--background-color);
   --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
+  --input-border: 1px solid rgb(213, 213, 213);
+  --input-border-focus: 2px solid var(--primary-color);
   --layout-separator: var(--list-separator);
   --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
@@ -204,6 +206,7 @@ body {
 
   main:has(+ aside:last-child:not([data-fullpage='true'])) {
     max-width: 70ch;
+    width: 70ch;
   }
   aside:last-child:not([data-fullpage='true']) {
     flex-basis: 50ch;
@@ -490,6 +493,16 @@ input[type='submit']:hover {
 textarea {
   width: 100%;
   padding: var(--space-1);
+  border: var(--input-border);
+}
+
+input, textarea {
+  border-radius: 2px;
+  border: var(--input-border);
+  &:focus {
+    border: none;
+    outline: var(--input-border-focus);
+  }
 }
 
 .message {
@@ -608,10 +621,7 @@ a:visited svg:only-child {
 
   textarea {
     border: none;
-    border-bottom: var(--list-separator);
-  }
-  textarea:focus {
-    border: 0;
+    border-bottom: var(--input-border);
   }
 }
 
@@ -650,6 +660,50 @@ input[type='text'].input__discrete {
   --flow-space: var(--space-3);
 }
 
+.mirror__container {
+  position: relative;
+  textarea {
+    background: transparent;
+    position: relative;
+  }
+
+  .mirror__reflection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    color: transparent;
+  }
+  .mirror__suggestions {
+    border: 1px solid var(--primary-color);
+    background: #fff;
+    position: absolute;
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    [data-focused=true] {
+      background: white;
+    }
+    li {
+      margin: 0;
+      padding: 0;
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: 2rem;
+    }
+    button {
+      width: 100%;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
 .diary__note[role='listitem'] {
   border-bottom: var(--list-separator);
 }

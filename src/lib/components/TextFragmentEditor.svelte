@@ -3,7 +3,7 @@
   import { onDestroy } from 'svelte';
   import { type TextType } from '$lib/db';
   import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
-
+  import TextareaAutocomplete from './TextareaAutocomplete.svelte';
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
     delete: {};
@@ -37,7 +37,7 @@
 
 <div class="form__field">
   <label for={fieldId}>Content</label>
-  <textarea
+  <TextareaAutocomplete
     id={fieldId}
     onfocus={() => (focused = true)}
     onblur={() => (focused = false)}
@@ -45,5 +45,5 @@
     placeholder="What's on your mind?"
     oninput={(e) => handleChange(e.target.value)}
     value={content}
-  ></textarea>
+  ></TextareaAutocomplete>
 </div>

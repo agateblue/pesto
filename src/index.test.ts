@@ -91,6 +91,7 @@ describe('query language', () => {
         type: 'tag',
         mood: null,
         sign: '!',
+        fullSign: '!',
         text: '!is',
         value: null
       },
@@ -98,6 +99,7 @@ describe('query language', () => {
         id: 'a',
         mood: null,
         sign: '#',
+        fullSign: '#',
         text: '#a',
         type: 'tag',
         value: null
@@ -106,6 +108,7 @@ describe('query language', () => {
         id: 'mood',
         mood: -1,
         sign: '-',
+        fullSign: '-',
         text: '-mood',
         type: 'feeling',
         value: null
@@ -114,6 +117,7 @@ describe('query language', () => {
         id: 'foo',
         mood: null,
         sign: '@',
+        fullSign: '@',
         text: '@foo=bar',
         type: 'annotation',
         value: 'bar'
