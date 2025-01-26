@@ -685,7 +685,7 @@ input[type='text'].input__discrete {
     margin: 0;
     padding: 0;
     z-index: 1;
-    [data-focused=true] {
+    [aria-selected=true] button {
       background: white;
     }
     li {

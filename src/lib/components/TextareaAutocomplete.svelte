@@ -92,7 +92,7 @@
     return startIndex;
   };
 
-  const replaceCurrentWord = (element, newWord) => {
+  const replaceCurrentWord = (element, newWord, input = false) => {
     const currentValue = element.value;
     const cursorPos = element.selectionStart;
     const startIndex = findIndexOfCurrentWord(element);
@@ -103,6 +103,13 @@
     element.value = newValue;
     element.focus();
     element.selectionStart = element.selectionEnd = startIndex + 1 + newWord.length;
+    if (input) {
+      var event = new Event('input', {
+        bubbles: true,
+      });
+        
+      element.dispatchEvent(event);
+    }
   };
   
   function updateMirror() {
@@ -173,6 +180,7 @@
   <div bind:this={reflection} class="mirror__reflection"></div>
   <textarea 
     bind:this={textarea} 
+    aria-autocomplete="list"
     oninput={(e) => {
       updateMirror()
       oninput?.(e)
@@ -200,17 +208,18 @@
       switch (e.key) {
         case 'ArrowDown':
           currentSuggestionIndex = clamp(0, currentSuggestionIndex + 1, numSuggestions - 1);
+          replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
           break;
         case 'ArrowUp':
           currentSuggestionIndex = clamp(0, currentSuggestionIndex - 1, numSuggestions - 1);
+          replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
           break;
         case 'Enter':
-          replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
+          replaceCurrentWord(textarea, matches[currentSuggestionIndex], true);
           matches = []
           break;
         case 'ArrowRight':
-          currentSuggestionIndex = Math.max(0, currentSuggestionIndex)
-          replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
+          replaceCurrentWord(textarea, matches[currentSuggestionIndex], true);
           matches = []
           break;
         case 'Escape':
@@ -227,11 +236,19 @@
   {#if matches.length > 0}
     <ul 
       bind:this={suggestions} 
-      class="mirror__suggestions">
+      class="mirror__suggestions"
+      role="listbox"
+    >
       {#each matches as match, i (i) }
-        <li>
-          <button type="button" data-focused={currentSuggestionIndex === i} onclick={(e) => {
-            replaceCurrentWord(textarea, match)
+        <li
+          aria-posinset={i+1}
+          aria-setsize={matches.length}
+          role="option"
+          tabindex="-1"
+          aria-selected={currentSuggestionIndex === i} 
+        >
+          <button type="button" tabindex="-1" onclick={(e) => {
+            replaceCurrentWord(textarea, match, true)
             matches = []
             e.preventDefault()
           }}>{match}</button>
