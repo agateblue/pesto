@@ -87,7 +87,7 @@
           id={`field-suggestions-${field.id}`}
           value={suggestions}
           class="autoresize"
-          onkeyup={(e: Event) => {
+          oninput={(e: Event) => {
             field.suggestions = getSuggestions(e.target.value, field.type);
           }}
         ></textarea>

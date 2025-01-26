@@ -64,7 +64,7 @@
       id={`todo-${id}-text`}
       bind:this={textarea}
       value={todo.text || ''}
-      onkeyup={ignoreTab((e) => {
+      oninput={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
       placeholder="Add new todo…"

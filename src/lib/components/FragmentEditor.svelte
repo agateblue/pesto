@@ -90,7 +90,7 @@
       id="note-title"
       name="note-title"
       value={note?.title || ''}
-      onkeyup={debounce(async (e) => {
+      oninput={debounce(async (e) => {
         await updateTitle(e.target.value);
       }, 300)}
     />

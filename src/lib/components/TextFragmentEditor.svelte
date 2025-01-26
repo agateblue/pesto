@@ -43,7 +43,7 @@
     onblur={() => (focused = false)}
     class="editor autoresize"
     placeholder="What's on your mind?"
-    onkeyup={(e) => handleChange(e.target.value)}
+    oninput={(e) => handleChange(e.target.value)}
     value={content}
   ></textarea>
 </div>
