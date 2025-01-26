@@ -25,10 +25,11 @@
 
   interface Props {
     note: DocumentDocument | null;
+    collection: string | null;
     columns: string[] | null;
   }
 
-  let { note = $bindable(), columns }: Props = $props();
+  let { note = $bindable(), columns, collection }: Props = $props();
   let id: string = note ? note.id : buildUniqueId();
   let db = globals.db;
   let todolistKey = $state(0);
@@ -53,7 +54,7 @@
       return;
     }
     if (!note) {
-      let noteData = getNewNote();
+      let noteData = getNewNote({collection});
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -69,7 +70,7 @@
   async function updateCollection(collection: string) {
     
     if (!note) {
-      let noteData = getNewNote();
+      let noteData = getNewNote({collection});
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -86,7 +87,7 @@
     fragment: TodolistType | TextType | FormType | undefined
   ) {
     if (!note) {
-      let noteData = getNewNote();
+      let noteData = getNewNote({collection});
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -123,7 +124,7 @@
       <select
         id="note-collection"
         name="note-collection"
-        value={note?.col}
+        value={note?.col || collection}
         onchange={async (e) => {
           await updateCollection(e.target.value);
         }}

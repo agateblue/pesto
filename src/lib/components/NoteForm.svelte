@@ -17,11 +17,12 @@
 
   interface Props {
     note: DocumentDocument | null;
+    collection: string | null;
     children?: import('svelte').Snippet;
     onSubmitHandler?: Function;
   }
 
-  let { note, children, onSubmitHandler }: Props = $props();
+  let { note, collection, children, onSubmitHandler }: Props = $props();
   let columns: string[] = $state([]);
   let forms: DocumentType[] = $state([]);
   let localNote: DocumentDocument | null = $state(note)
@@ -163,6 +164,7 @@
       <FragmentEditor
         note={localNote}
         {columns}
+        {collection}
         on:update={(e) => {
           handleUpdate(e.detail.note);
           localNote = e.detail.note

@@ -551,12 +551,12 @@ export function buildUniqueId(date: Date | null = null) {
   return (date || new Date()).toISOString();
 }
 
-export function getNewNote() {
+export function getNewNote(params = {collection: ''}) {
   let date = new Date();
   return {
     id: buildUniqueId(date),
     type: 'note',
-    col: null,
+    col: params.collection || null,
     created_at: date.toISOString(),
     modified_at: date.toISOString(),
     title: null,

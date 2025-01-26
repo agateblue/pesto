@@ -93,6 +93,7 @@
     {#key noteFormKey}
       <NoteForm
         note={null}
+        collection={data.collection?.id || null}
         onSubmitHandler={(e) => {
           noteFormKey++;
           e.preventDefault();
