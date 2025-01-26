@@ -131,7 +131,10 @@
       >
         <option value={null}>---</option>
         {#each collections as collection}
-          <option value={collection.id}>{collection.title}</option>
+          <option value={collection.id}>
+            {collection.data.emoji || '📋️'} 
+            {collection.title}
+          </option>
         {/each}
       </select>
     </div>
