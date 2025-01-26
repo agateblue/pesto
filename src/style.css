@@ -566,6 +566,9 @@ a:visited svg:only-child {
     list-style-type: none;
     --flow-space: var(--space-1);
   }
+  dialog {
+    --flow-space: var(--space-3);
+  }
   li {
     hr {
       margin: 0;
@@ -650,7 +653,7 @@ input[type='text'].input__discrete {
 
 /* see https://piccalil.li/blog/my-favourite-3-lines-of-css/ */
 .flow > * + * {
-  margin-block-start: var(--flow-space, 1em);
+  margin-block-start: var(--flow-space, var(--space-3));
 }
 .flow > *:first-child {
   margin-block-start: 0;
