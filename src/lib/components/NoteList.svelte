@@ -150,7 +150,7 @@
       </RenderedNote>
     {/key}
   {/each}
-  {#if notes.length < matchingCount}
+  {#if notes.length < matchingCount && !isLoading}
     <button
       onclick={async (e) => {
         let newNotes = await globals.db.documents
