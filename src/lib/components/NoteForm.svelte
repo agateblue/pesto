@@ -4,11 +4,12 @@
   import FragmentEditor from './FragmentEditor.svelte';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
   import MainNavigationToggle from './MainNavigationToggle.svelte';
-  import { createEventDispatcher } from 'svelte';
-  import { type DocumentDocument, type Database, globals } from '$lib/db';
-
-  import { isRxDocument } from 'rxdb';
+  import { createEventDispatcher, onDestroy } from 'svelte';
+  import { type DocumentDocument, type DocumentType, globals, getNewNote, buildUniqueId, getNewFormFragment, getNoteUpdateData} from '$lib/db';
+  import sortBy from 'lodash/sortBy';
   import DialogForm from './DialogForm.svelte';
+  import { clearSubscriptions } from '$lib/ui';
+
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
     delete: { note: DocumentDocument };
@@ -22,14 +23,37 @@
 
   let { note, children, onSubmitHandler }: Props = $props();
   let columns: string[] = $state([]);
+  let forms: DocumentType[] = $state([]);
   let localNote: DocumentDocument | null = $state(note)
+  let selectedForm: null | undefined | string = $state(undefined)
+  $effect(() => {
+    selectedForm = localNote?.fragments?.form?.id
+  })
   function handleUpdate(n: DocumentDocument) {
     dispatch('update', { note: n });
   }
 
-  globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
-    columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
-  });
+  let subscriptions = [
+    globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
+      columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
+    }),
+    globals.db.documents.find({
+      limit: 20000,
+      selector: { type: 'form' }
+    })
+    .$.subscribe((documents) => {
+      forms = sortBy(
+        documents.map((d) => {
+          return d.toMutableJSON();
+        }),
+        ['data.name']
+      );
+    })
+  ];
+
+  onDestroy(clearSubscriptions(subscriptions));
+
+  
 </script>
 
 <div class="scroll__wrapper">
@@ -43,8 +67,8 @@
       {/if}
     </h2>
 
-    {#if localNote}
-      <div>
+    <div>
+      {#if localNote}
         <a
           class="button__icon button layout__multi-hidden"
           href={`/my/notes/${localNote.id}?view=detail`}
@@ -59,6 +83,56 @@
             width="none"
           />
         </a>
+      {/if}
+      {#if forms.length > 0}
+        {#snippet formIcon()}
+          <IconaMoonFileDocument
+            role="presentation"
+            class=" icon__size-3"
+            height="none"
+            width="none"
+            alt=""
+          />
+        {/snippet}
+        <DialogForm
+          anchorClass="button__icon"
+          anchorLabel="Add form"
+          anchor={formIcon}
+          title="Add form"
+          onsubmit={async (e: SubmitEvent) => {
+            if (!localNote) {
+              let noteData = getNewNote();
+              noteData.id = buildUniqueId();
+              localNote = await globals.db.documents.insert(noteData);
+            }
+            let updateData = {
+              fragments: {...(localNote.fragments || {})}
+            };
+            if (selectedForm) {
+              updateData.fragments.form = getNewFormFragment(selectedForm, {}, {})
+            } else {
+              updateData.fragments.form = undefined
+            }
+            await localNote.incrementalUpdate({
+              $set: getNoteUpdateData(localNote, updateData)
+            });
+            localNote = await localNote.getLatest()
+            e.preventDefault();
+          }}
+        > 
+          <div class="form__field">
+            <label for="form-id">Form</label>
+            <select name="form-id" id="form-id" bind:value={selectedForm}>
+              <option value={undefined}>---</option>
+              {#each forms as form}
+                <option value={form.data.id}>{form.data.name}</option>
+              {/each}
+            </select>
+          </div>
+          <p>Add the given form to the note.</p>
+        </DialogForm>
+      {/if}
+      {#if localNote}
         {#snippet trashIcon()}
           <IconaMoonTrash
             role="presentation"
@@ -81,13 +155,13 @@
         >
           <p>This will remove the note from your diary. This action is irreversible.</p>
         </DialogForm>
-      </div>
-    {/if}
+      {/if}
+    </div>
   </header>
   <form class="flow | scroll" onsubmit={(e) => onSubmitHandler?.(e)}>
     <div class="wrapper p__inline-3">
       <FragmentEditor
-        {note}
+        note={localNote}
         {columns}
         on:update={(e) => {
           handleUpdate(e.detail.note);

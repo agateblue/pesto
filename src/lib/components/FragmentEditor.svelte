@@ -101,6 +101,7 @@
       elClass="flow"
       form={globals.forms[note.fragments.form.id]}
       id={note.fragments.form.id}
+      ignoredEntryId={note.id}
       {webhookUrl}
       onsubmit={async (values: object) => {
         updateFragment(

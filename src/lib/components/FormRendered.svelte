@@ -14,9 +14,10 @@
     values?: object;
     elClass?: string;
     webhookUrl?: string;
+    ignoredEntryId?: string;
   }
 
-  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl } = $props();
+  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl, ignoredEntryId } = $props();
 
   let v = $state(values || {});
   function setDefaultValues() {
@@ -96,7 +97,7 @@
         onclick={async () => {
           let last = await globals.db.documents
             .findOne({
-              selector: { 'fragments.form.id': form.id },
+              selector: { 'fragments.form.id': form.id, id: {$ne: ignoredEntryId} },
               sort: [{ id: 'desc' }]
             })
             .exec();
