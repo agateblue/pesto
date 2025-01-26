@@ -1,6 +1,7 @@
 import {globals} from '$lib/db'
 
-export async function load({url}) {
+export async function load({url, parent}) {
+  let data = await parent();
   let collection = null
   let collectionId = url.searchParams.get('collection')
   if (collectionId) {
@@ -9,6 +10,7 @@ export async function load({url}) {
     }).exec())?.toMutableJSON()
   }
   return {
+    ...data,
     collection
   };
 }
