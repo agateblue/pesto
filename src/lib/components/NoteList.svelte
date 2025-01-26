@@ -16,15 +16,17 @@
     orderQuery: string;
     collection?: DocumentType;
   }
-
+  
   let { searchQuery = $bindable(), orderQuery = $bindable(), collection}: Props = $props();
-
+  
   let notes: DocumentDocument[] = $state([]);
   let matchingCount: number = $state(0);
   let isLoading = $state(false);
   let currentCollection = $state(cloneDeep(collection));
   let editedCollection = $state(cloneDeep(currentCollection));
-
+  let countSubscription = null
+  let subscriptions = [];
+  const PAGE_SIZE = 20
   function getSortFromOrderQuery(o: string) {
     let field, direction;
     [field, direction] = o.split(':');
@@ -37,35 +39,34 @@
     isLoading = true;
     matchingCount = 0
     notes = [];
-    return [
-      globals.db.documents
-        .find({
-          limit: 20,
-          sort: [getSortFromOrderQuery(o)],
-          selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
+    return globals.db.documents
+      .find({
+        limit: PAGE_SIZE,
+        sort: [getSortFromOrderQuery(o)],
+        selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
+      })
+      .$.subscribe((documents) => {
+        isLoading = false;
+        notes = documents;
+        clearSubscriptions([countSubscription])
+        countSubscription = globals.db.documents
+          .count({
+            selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
+          })
+          .$.subscribe((count) => {
+            matchingCount = count;
+          }) 
         })
-        .$.subscribe((documents) => {
-          isLoading = false;
-          notes = documents;
-        }),
-      globals.db.documents
-        .count({
-          selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
-        })
-        .$.subscribe((count) => {
-          matchingCount = count;
-        }),  
-      ]
   }
-
-  let subscriptions = [];
   $effect(() => {
     clearSubscriptions(subscriptions)
+    clearSubscriptions([countSubscription])
     subscriptions = loadNotes(searchQuery, orderQuery);
   });
 
   onDestroy(() => {
     clearSubscriptions(subscriptions);
+    clearSubscriptions([countSubscription]);
   });
 </script>
 <div class="wrapper" role="list" aria-live="polite" aria-busy={isLoading}>
@@ -134,9 +135,11 @@
           </DialogForm>
         </div>
       {/if}
-      <span>
-        {matchingCount} notes found
-      </span>
+      {#if matchingCount >= notes.length}
+        <span>
+          {matchingCount} notes found
+        </span>
+      {/if}
     </header>
   {/if}
   <LoadingState {isLoading}>Loading data…</LoadingState>
@@ -155,7 +158,7 @@
       onclick={async (e) => {
         let newNotes = await globals.db.documents
           .find({
-            limit: 20,
+            limit: PAGE_SIZE,
             sort: [getSortFromOrderQuery(orderQuery)],
             selector: {
               type: 'note',
