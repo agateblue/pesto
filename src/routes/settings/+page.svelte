@@ -101,7 +101,7 @@ Export to a Pesto JSON file, creating a full or partial backup depending on your
           value: true
         },
         {
-          id: 'collectiotns',
+          id: 'collections',
           label: 'Export collections',
           value: true
         },
