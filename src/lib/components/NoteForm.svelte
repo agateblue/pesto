@@ -2,9 +2,11 @@
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
   import IconaMoonEye from 'virtual:icons/iconamoon/eye';
   import FragmentEditor from './FragmentEditor.svelte';
+  import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
   import MainNavigationToggle from './MainNavigationToggle.svelte';
   import { createEventDispatcher } from 'svelte';
   import { type DocumentDocument, type Database, globals } from '$lib/db';
+
   import { isRxDocument } from 'rxdb';
   import DialogForm from './DialogForm.svelte';
   const dispatch = createEventDispatcher<{
@@ -20,7 +22,7 @@
 
   let { note, children, onSubmitHandler }: Props = $props();
   let columns: string[] = $state([]);
-
+  let localNote: DocumentDocument | null = $state(note)
   function handleUpdate(n: DocumentDocument) {
     dispatch('update', { note: n });
   }
@@ -34,18 +36,18 @@
   <header class="flex__row flex__justify-between flex__align-center p__inline-3">
     <MainNavigationToggle class="layout__multi-hidden" />
     <h2 class="flex__grow">
-      {#if note}
+      {#if localNote}
         Edit note
       {:else}
         New note
       {/if}
     </h2>
 
-    {#if note}
+    {#if localNote}
       <div>
         <a
           class="button__icon button layout__multi-hidden"
-          href={`/my/notes/${note.id}?view=detail`}
+          href={`/my/notes/${localNote.id}?view=detail`}
           aria-label="View note"
           title="View note"
         >
@@ -73,8 +75,8 @@
           title="Delete this note?"
           onsubmit={(e: SubmitEvent) => {
             e.preventDefault();
-            note.remove();
-            dispatch('delete', { note });
+            localNote.remove();
+            dispatch('delete', { note: localNote });
           }}
         >
           <p>This will remove the note from your diary. This action is irreversible.</p>
@@ -89,6 +91,7 @@
         {columns}
         on:update={(e) => {
           handleUpdate(e.detail.note);
+          localNote = e.detail.note
         }}
       />
       <div class="flex__row flex__justify-between">
