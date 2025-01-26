@@ -555,7 +555,7 @@ a:visited svg:only-child {
   h2 {
     font-size: var(--page-header-font-size);
     padding-inline: var(--space-2);
-    margin-block-end: var(--space-2);
+    margin-block: var(--space-2);
     font-weight: bold;
   }
   ul {
@@ -573,7 +573,7 @@ a:visited svg:only-child {
     }
     a {
       padding: var(--space-1);
-      display: flex;
+      display: block;
       text-decoration: none;
       align-items: center;
       flex-direction: row;

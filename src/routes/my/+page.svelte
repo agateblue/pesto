@@ -77,6 +77,7 @@
 
     <div class="scroll">
       <NoteList
+        collection={data.collection}
         {searchQuery}
         {orderQuery}
       />

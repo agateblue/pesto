@@ -12,6 +12,7 @@
     getNoteUpdateData,
     getSetting,
     type DocumentDocument,
+    type DocumentType,
     type TextType,
     type TodolistType,
     type Database
@@ -35,7 +36,13 @@
     getTodoListFromMarkdown(note?.fragments?.text?.content || '', buildUniqueId)
   );
   let webhookUrl = $state('');
+  let collections: DocumentType[] = $state([])
   let subscriptions = [
+    globals.db?.documents
+      .find({ selector: { type: 'collection' } })
+      .$.subscribe((documents) => {
+        collections = documents.map(d => d.toMutableJSON())
+      }),
     getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
       webhookUrl = s?.data?.url || '';
     })
@@ -53,6 +60,21 @@
     let updateData = {};
     updateData['title'] = title || null;
     updateData[`modified_at`] = new Date().toISOString();
+    await note.incrementalUpdate({
+      $set: getNoteUpdateData(note, updateData)
+    });
+    note = await note.getLatest();
+    dispatch('update', { note });
+  }
+  async function updateCollection(collection: string) {
+    
+    if (!note) {
+      let noteData = getNewNote();
+      noteData.id = id;
+      note = await db.documents.insert(noteData);
+    }
+    let updateData = {};
+    updateData['col'] = collection || null;
     await note.incrementalUpdate({
       $set: getNoteUpdateData(note, updateData)
     });
@@ -95,6 +117,24 @@
       }, 300)}
     />
   </div>
+  {#if collections.length > 0}
+    <div class="form__field">
+      <label for="note-collection">Collection</label>
+      <select
+        id="note-collection"
+        name="note-collection"
+        value={note?.col}
+        onchange={async (e) => {
+          await updateCollection(e.target.value);
+        }}
+      >
+        <option value={null}>---</option>
+        {#each collections as collection}
+          <option value={collection.id}>{collection.title}</option>
+        {/each}
+      </select>
+    </div>
+  {/if}
 
   {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
     <FormRendered

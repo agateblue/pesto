@@ -1,16 +1,17 @@
 <script lang="ts">
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import LoadingState from '$lib/components/LoadingState.svelte';
-  import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery } from '$lib/db';
+  import { type DocumentDocument, globals, getQueryTokens, tokensToMangoQuery, type DocumentType, getNoteSelector } from '$lib/db';
   import { clearSubscriptions } from '$lib/ui';
   import { onDestroy } from 'svelte';
 
   interface Props {
     searchQuery: string;
     orderQuery: string;
+    collection?: DocumentType;
   }
 
-  let { searchQuery = $bindable(), orderQuery = $bindable() }: Props = $props();
+  let { searchQuery = $bindable(), orderQuery = $bindable(), collection}: Props = $props();
 
   let notes: DocumentDocument[] = $state([]);
   let isLoading = $state(false);
@@ -23,20 +24,6 @@
     return sort;
   }
 
-  function getSelector(q: string) {
-    if (!q.trim()) {
-      return {};
-    }
-
-    let tokens = q.split(',').map((v) => getQueryTokens(v));
-    let selector = {
-      $or: tokens.map((t) => {
-        return { $and: tokensToMangoQuery(t) };
-      })
-    };
-    return selector;
-  }
-
   function loadNotes(q: string, o: string) {
     isLoading = true;
     notes = [];
@@ -44,7 +31,7 @@
       .find({
         limit: 20,
         sort: [getSortFromOrderQuery(o)],
-        selector: { type: 'note', ...getSelector(q) }
+        selector: { type: 'note', ...getNoteSelector(q, collection)}
       })
       .$.subscribe((documents) => {
         isLoading = false;
@@ -88,7 +75,7 @@
             selector: {
               type: 'note',
               id: { $lt: notes.slice(-1)[0].id },
-              ...getSelector(searchQuery)
+              ...getNoteSelector(searchQuery, collection)
             }
           })
           .exec();

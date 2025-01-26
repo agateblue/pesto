@@ -1,17 +1,24 @@
 <script lang="ts">
-  import { globals, syncReplications } from '$lib/db';
+  import { globals, syncReplications, getNewCollection, getNoteSelector } from '$lib/db';
   import MainNavigationLink from './MainNavigationLink.svelte';
+  import DialogForm from './DialogForm.svelte';
+  import CollectionForm from './CollectionForm.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import IconaMoonPen from 'virtual:icons/iconamoon/pen';
   import IconaMoonSearch from 'virtual:icons/iconamoon/search';
+  import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
   import IconaMoonSynchronize from 'virtual:icons/iconamoon/synchronize';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
+  import IconaMoonComponent from 'virtual:icons/iconamoon/component';
+  import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
   import IconaMoonApps from 'virtual:icons/iconamoon/apps';
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
   import IconaMoonCategory from 'virtual:icons/iconamoon/category';
   import IconaMoonMenuKebabVerticalSquare from 'virtual:icons/iconamoon/menu-kebab-vertical-square';
+
+  import cloneDeep from 'lodash/cloneDeep'
 
   import { onDestroy } from 'svelte';
   import { clearSubscriptions } from '$lib/ui';
@@ -30,6 +37,9 @@
   let boardColumns = $state([]);
   let collections = $state([]);
   let replications: [] = $state([]);
+  let newCollection = $state(getNewCollection())
+  let totalByCollection = $state({})
+  let collectionsSubscriptions = $state([])
 
   const subscriptions = [
     globals.uiState.get$('replications').subscribe((newValue) => {
@@ -54,12 +64,24 @@
         boardColumns.pop();
       }),
     globals.db?.documents
-      .findOne({ selector: { id: 'settings:collections' } })
-      .$.subscribe((settings) => {
-        collections = settings?.toMutableJSON()?.data?.collections || [];
+      .find({ selector: { type: 'collection' } })
+      .$.subscribe((documents) => {
+        collections = documents.map(d => d.toMutableJSON())
+        clearSubscriptions(collectionsSubscriptions)
+        collectionsSubscriptions = []
+        for (const collection of collections) {
+          collectionsSubscriptions.push(
+            globals.db?.documents
+              .count({ selector: { type: 'note', ...getNoteSelector('', collection) } })
+              .$.subscribe((total) => {
+                totalByCollection[collection.id] = total
+              })
+          )
+        }
       })
   ];
   onDestroy(clearSubscriptions(subscriptions));
+  onDestroy(clearSubscriptions(collectionsSubscriptions));
 </script>
 
 <aside data-fullpage={sidebarFullpage}>
@@ -153,18 +175,71 @@
           >
         </li>
       {/each}
-      {#if collections.length}
-        <li>
-          <h2>Collections</h2>
+        <li class="flex__row flex__justify-between flex__align-center">
+          <h2>
+            Collections
+          </h2>
+
+          {#snippet newCollectionIcon()}
+            <IconaMoonSignPlusCircle
+              role="presentation"
+              class=" icon__size-2"
+              height="none"
+              width="none"
+              alt=""
+            />
+          {/snippet}
+          <DialogForm
+            anchorClass="button__icon"
+            anchorLabel="Add collection"
+            anchor={newCollectionIcon}
+            title="Add collection"
+            onopen={() => {
+              newCollection = getNewCollection()
+            }}
+            onsubmit={async (e: SubmitEvent) => {                
+              e.preventDefault();
+              await globals.db.documents.upsert(cloneDeep(newCollection))
+              newCollection = getNewCollection()
+            }}
+          > 
+            <CollectionForm bind:collection={newCollection}></CollectionForm>
+          </DialogForm>
+
         </li>
-        {#each collections as collection}
+        {#each collections as collection, i (i)}
           <li>
-            <MainNavigationLink href={`/my?q=${collection.query}`}>
-              {collection.name}
+            {#snippet editCollectionIcon()}
+            <IconaMoonEdit
+                role="presentation"
+                class=" icon__size-2"
+                height="none"
+                width="none"
+                alt=""
+                />
+                {/snippet}
+                <DialogForm
+              anchorClass="button__icon float__end"
+              anchorLabel="Edit collection"
+              anchor={editCollectionIcon}
+              title="Edit collection"
+              onopen={(e) => {
+                newCollection = cloneDeep(collections[i])
+              }}
+              onsubmit={async (e: SubmitEvent) => {                
+                e.preventDefault();
+                await globals.db.documents.upsert(cloneDeep(newCollection))
+              }}
+            > 
+            <CollectionForm bind:collection={newCollection}></CollectionForm>
+          </DialogForm>
+          
+          <MainNavigationLink href={`/my?collection=${collection.id}`}>
+            <IconaMoonComponent role="presentation" alt="" />{collection.title}
+              <span class="badge float__end">{totalByCollection[collection.id] || 0}</span>
             </MainNavigationLink>
           </li>
         {/each}
-      {/if}
       <li><h2>Data</h2></li>
       <li>
         <MainNavigationLink href="/forms"

@@ -324,8 +324,6 @@ export type FormConfiguration = {
 };
 
 export type CollectionConfiguration = {
-  id: string;
-  name: string;
   query: string;
 };
 
@@ -595,12 +593,13 @@ export function getNewFormFragment(id = null, data = {}, annotations = {}) {
   };
 }
 
-function getNewCollection () {
+export function getNewCollection () {
   let note = getNewNote()
+  note.id = getRandomId().toLowerCase()
   note.type = 'collection'
+  note.title = 'My collection'
   note.data = {
-    id: getRandomId().toLowerCase(),
-    label: 'My collection',
+    query: null,
   };
   return note
 }
@@ -787,6 +786,35 @@ export function getQueryTokens(q: string) {
       }
     });
 }
+
+export function getNoteSelector (q: string, collection: DocumentType | null | undefined) {
+  if (!q.trim() && !collection) {
+    return {};
+  }
+
+  let tokens = q.split(',').map((v) => getQueryTokens(v));
+  let selector = {
+    $or: tokens.map((t) => {
+      return { $and: tokensToMangoQuery(t) };
+    })
+  };
+  if (collection) {
+    let collectionSelector = [
+      {col: collection.id},
+    ]
+    if (collection.data?.query) {
+      collectionSelector.push(getNoteSelector(collection.data.query, null))
+    }
+    selector = {
+      $and: [
+        {$or: collectionSelector},
+        selector
+      ]
+    }
+  }
+  return selector;
+}
+
 export function tokensToMangoQuery(tokens: QueryToken[]) {
   let query = [];
   for (const token of tokens) {
