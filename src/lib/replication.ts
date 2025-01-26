@@ -342,6 +342,11 @@ export async function handleImportPesto(
       flag: 'notes',
       type: 'note',
       label: 'notes'
+    },
+    {
+      flag: 'collections',
+      type: 'collection',
+      label: 'Collections'
     }
   ];
 
@@ -563,6 +568,11 @@ export async function handleExportPesto(
       flag: 'notes',
       type: 'note',
       label: 'notes'
+    },
+    {
+      flag: 'collections',
+      type: 'collection',
+      label: 'Collections'
     }
   ];
 
