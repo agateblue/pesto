@@ -21,7 +21,7 @@ import { RxDBCleanupPlugin } from 'rxdb/plugins/cleanup';
 import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
-import { delay, parseTags } from './ui';
+import { delay, parseTags, getRandomId } from './ui';
 import { tempoToPestoDocument } from './replication';
 
 if (dev) {
@@ -55,10 +55,10 @@ export const TIME_FORMATTER = new Intl.DateTimeFormat(LOCALE, {
   timeStyle: 'short'
 });
 export const documentSchemaLiteral = {
-  version: 14,
+  version: 15,
   primaryKey: 'id',
   type: 'object',
-  required: ['id', 'type', 'created_at', 'modified_at', 'tags', 'fragments'],
+  required: ['id', 'type', 'col', 'created_at', 'modified_at', 'tags', 'fragments'],
   indexes: [['type', 'created_at']],
   properties: {
     id: {
@@ -67,7 +67,12 @@ export const documentSchemaLiteral = {
     },
     type: {
       type: 'string',
-      enum: ['note', 'setting', 'form'],
+      enum: ['note', 'setting', 'form', 'collection'],
+      maxLength: 40
+    },
+    // collection is a reserved RxDB keyword
+    col: {
+      type: ['string', 'null'],
       maxLength: 40
     },
     title: {
@@ -243,6 +248,11 @@ export const migrationStrategies = {
         id: oldDocumentData.id,
       })
     }
+    return oldDocumentData;
+  },
+  // Added col type
+  15: function (oldDocumentData) {
+    oldDocumentData.col = null
     return oldDocumentData;
   }
 };
@@ -548,6 +558,7 @@ export function getNewNote() {
   return {
     id: buildUniqueId(date),
     type: 'note',
+    col: null,
     created_at: date.toISOString(),
     modified_at: date.toISOString(),
     title: null,
@@ -584,6 +595,16 @@ export function getNewFormFragment(id = null, data = {}, annotations = {}) {
   };
 }
 
+function getNewCollection () {
+  let note = getNewNote()
+  note.type = 'collection'
+  note.data = {
+    id: getRandomId().toLowerCase(),
+    label: 'My collection',
+  };
+  return note
+}
+
 export function getNewTodo() {
   return {
     id: buildUniqueId(),
@@ -616,6 +637,7 @@ export async function createOrUpdateSetting(
     return await globals.db?.documents.insert({
       id,
       type: 'setting',
+      col: null,
       created_at: d,
       modified_at: d,
       tags: [],

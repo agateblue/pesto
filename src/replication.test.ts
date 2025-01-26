@@ -363,6 +363,7 @@ describe('query language', () => {
     const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
+      col: null,
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
@@ -407,6 +408,7 @@ describe('query language', () => {
     const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
+      col: null,
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
@@ -446,6 +448,7 @@ describe('query language', () => {
     const expected: DocumentType = {
       id: '2024-11-06T12:10:22.438Z',
       type: 'note',
+      col: null,
       created_at: '2024-11-06T12:10:22.438Z',
       modified_at: '2024-11-06T12:10:22.438Z',
       title: null,
@@ -480,6 +483,7 @@ describe('query language', () => {
     const expected: DocumentType = {
       id: 'settings:board',
       type: 'setting',
+      col: null,
       modified_at: input.date,
       created_at: input.date,
       data: { columns: ['Today', 'Tomorrow', 'Done'] },

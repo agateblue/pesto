@@ -165,6 +165,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
       data = {
         id: 'settings:board',
         type: 'setting',
+        col: null,
         created_at: date,
         modified_at: date,
         fragments: {},
@@ -178,6 +179,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
     let baseData = {
       id,
       type: 'note',
+      col: null,
       created_at: document.date,
       modified_at: document.date,
       _deleted: document._deleted,
