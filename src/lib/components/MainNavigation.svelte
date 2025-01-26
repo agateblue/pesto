@@ -37,8 +37,6 @@
   let collections = $state([]);
   let replications: [] = $state([]);
   let newCollection = $state(getNewCollection())
-  let totalByCollection = $state({})
-  let collectionsSubscriptions = $state([])
 
   const subscriptions = [
     globals.uiState.get$('replications').subscribe((newValue) => {
@@ -66,21 +64,9 @@
       .find({ selector: { type: 'collection' } })
       .$.subscribe((documents) => {
         collections = documents.map(d => d.toMutableJSON())
-        clearSubscriptions(collectionsSubscriptions)
-        collectionsSubscriptions = []
-        for (const collection of collections) {
-          collectionsSubscriptions.push(
-            globals.db?.documents
-              .count({ selector: { type: 'note', ...getNoteSelector('', collection) } })
-              .$.subscribe((total) => {
-                totalByCollection[collection.id] = total
-              })
-          )
-        }
       })
   ];
   onDestroy(clearSubscriptions(subscriptions));
-  onDestroy(clearSubscriptions(collectionsSubscriptions));
 </script>
 
 <aside data-fullpage={sidebarFullpage}>
@@ -210,7 +196,6 @@
           <li>    
             <MainNavigationLink href={`/my?collection=${collection.id}`}>
               <IconaMoonComponent role="presentation" alt="" />{collection.title}
-              <span class="badge float__end">{totalByCollection[collection.id] || 0}</span>
             </MainNavigationLink>
           </li>
         {/each}

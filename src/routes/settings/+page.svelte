@@ -63,7 +63,12 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
       flags: [
         {
           id: 'notes',
-          label: 'Import entries',
+          label: 'Import notes',
+          value: true
+        },
+        {
+          id: 'collections',
+          label: 'Import collections',
           value: true
         },
         {
@@ -92,7 +97,12 @@ Export to a Pesto JSON file, creating a full or partial backup depending on your
       flags: [
         {
           id: 'notes',
-          label: 'Export entries',
+          label: 'Export notes',
+          value: true
+        },
+        {
+          id: 'collectiotns',
+          label: 'Export collections',
           value: true
         },
         {
