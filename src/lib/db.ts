@@ -764,6 +764,11 @@ export function getQueryTokens(q: string) {
           type: 'tag',
           value: raw.slice(4)
         } as QueryToken;
+      } else if (raw.startsWith('#')) {
+        return {
+          type: 'tag',
+          value: raw.slice(1)
+        } as QueryToken;
       } else if (raw.startsWith('form:')) {
         return {
           type: 'form',

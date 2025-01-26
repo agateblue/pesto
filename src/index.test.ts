@@ -5,7 +5,7 @@ import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown, no
 describe('query language', () => {
   it('getQueryTokens', () => {
     const input =
-      'is:todo is:subtask is:done plop plip ploup tag:hello form:toto starred:true column:2';
+      'is:todo is:subtask is:done plop plip ploup tag:hello #hello form:toto starred:true column:2';
     const expected = [
       { type: 'is', value: 'todo' },
       { type: 'is', value: 'subtask' },
@@ -13,6 +13,7 @@ describe('query language', () => {
       { type: 'text', value: 'plop' },
       { type: 'text', value: 'plip' },
       { type: 'text', value: 'ploup' },
+      { type: 'tag', value: 'hello' },
       { type: 'tag', value: 'hello' },
       { type: 'form', value: 'toto' },
       { type: 'starred', value: 'true' },
