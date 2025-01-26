@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { globals, syncReplications, getNewCollection, getNoteSelector } from '$lib/db';
+  import { globals, syncReplications, getNewCollection } from '$lib/db';
   import MainNavigationLink from './MainNavigationLink.svelte';
   import DialogForm from './DialogForm.svelte';
   import CollectionForm from './CollectionForm.svelte';
@@ -9,7 +9,6 @@
   import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
   import IconaMoonSynchronize from 'virtual:icons/iconamoon/synchronize';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
-  import IconaMoonComponent from 'virtual:icons/iconamoon/component';
   import IconaMoonApps from 'virtual:icons/iconamoon/apps';
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
@@ -195,7 +194,10 @@
         {#each collections as collection, i (i)}
           <li>    
             <MainNavigationLink href={`/my?collection=${collection.id}`}>
-              <IconaMoonComponent role="presentation" alt="" />{collection.title}
+              <span class="icon">
+                {collection.data.emoji || '📋️'} 
+              </span>
+              {collection.title}
             </MainNavigationLink>
           </li>
         {/each}

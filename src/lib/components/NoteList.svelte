@@ -76,6 +76,7 @@
       {#if collection}
         <div class="flex__grow">
           <strong>
+            {currentCollection.data.emoji || '📋️'}
             {currentCollection.title} 
           </strong>
 

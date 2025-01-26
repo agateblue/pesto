@@ -600,6 +600,7 @@ export function getNewCollection () {
   note.title = 'My collection'
   note.data = {
     query: null,
+    emoji: '📋️',
   };
   return note
 }
