@@ -76,11 +76,13 @@
     </header>
 
     <div class="scroll">
-      <NoteList
-        collection={data.collection}
-        {searchQuery}
-        {orderQuery}
-      />
+      {#key data.collection?.id + searchQuery}
+        <NoteList
+          collection={data.collection}
+          {searchQuery}
+          {orderQuery}
+        />
+      {/key}
     </div>
   </div>
 </main>

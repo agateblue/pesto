@@ -10,7 +10,6 @@
   import IconaMoonSynchronize from 'virtual:icons/iconamoon/synchronize';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
   import IconaMoonComponent from 'virtual:icons/iconamoon/component';
-  import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
   import IconaMoonApps from 'virtual:icons/iconamoon/apps';
   import IconaMoonClock from 'virtual:icons/iconamoon/clock';
   import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
@@ -208,34 +207,9 @@
 
         </li>
         {#each collections as collection, i (i)}
-          <li>
-            {#snippet editCollectionIcon()}
-            <IconaMoonEdit
-                role="presentation"
-                class=" icon__size-2"
-                height="none"
-                width="none"
-                alt=""
-                />
-                {/snippet}
-                <DialogForm
-              anchorClass="button__icon float__end"
-              anchorLabel="Edit collection"
-              anchor={editCollectionIcon}
-              title="Edit collection"
-              onopen={(e) => {
-                newCollection = cloneDeep(collections[i])
-              }}
-              onsubmit={async (e: SubmitEvent) => {                
-                e.preventDefault();
-                await globals.db.documents.upsert(cloneDeep(newCollection))
-              }}
-            > 
-            <CollectionForm bind:collection={newCollection}></CollectionForm>
-          </DialogForm>
-          
-          <MainNavigationLink href={`/my?collection=${collection.id}`}>
-            <IconaMoonComponent role="presentation" alt="" />{collection.title}
+          <li>    
+            <MainNavigationLink href={`/my?collection=${collection.id}`}>
+              <IconaMoonComponent role="presentation" alt="" />{collection.title}
               <span class="badge float__end">{totalByCollection[collection.id] || 0}</span>
             </MainNavigationLink>
           </li>
