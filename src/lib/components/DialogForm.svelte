@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
 
   interface Props {
@@ -67,7 +68,7 @@
         />
       </button>
     </header>
-    <form class="scroll" {onsubmit}>
+    <form class="scroll" onsubmit={(e) => {e.preventDefault(); onsubmit(e)}}>
       <div id="dialog-description">
         <div class="p__inline-2 | flow">
           {@render children?.()}
