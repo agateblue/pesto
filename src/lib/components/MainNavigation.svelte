@@ -49,7 +49,7 @@
       .count({ selector: { starred: true } })
       .$.subscribe((v) => (totalStarred = v)),
     globals.db?.documents
-      .find({ selector: { type: 'collection' } })
+      .find({ selector: { type: 'collection' }, sort: [{title: 'asc'}] })
       .$.subscribe((documents) => {
         collections = documents.map(d => d.toMutableJSON())
       })
