@@ -9,7 +9,6 @@
 
   let select = $state(document.createElement('select'))
   let choices = $state([])
-  let loaded = false
   let subscription = null
 
   let { findOptions, choiceConverter, ...restProps }: Props = $props();

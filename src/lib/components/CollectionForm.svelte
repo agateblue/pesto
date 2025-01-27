@@ -1,7 +1,6 @@
 <script lang="ts">
   import { type DocumentDocument } from '$lib/db';
-  import 'emoji-picker-element';
-
+  import EmojiPicker from './EmojiPicker.svelte';
   interface Props {
     collection: DocumentDocument;
   }
@@ -20,10 +19,10 @@
 </div>
 <div class="form__field">
   <label for="collection-icon">Icon:  {collection.data.emoji || '📋️'}</label>
-  <emoji-picker 
+  <EmojiPicker 
     onemoji-click={(e) => {collection.data.emoji = e.detail.unicode}}
     style="width: 100%"
-  ></emoji-picker>
+  ></EmojiPicker>
 </div>
 <div class="form__field">
   <label for="collection-query">
