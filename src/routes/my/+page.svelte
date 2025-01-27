@@ -90,7 +90,7 @@
 <aside>
   <section>
     {@render children?.()}
-    {#key noteFormKey}
+    {#key data.collection?.id +noteFormKey}
       <NoteForm
         note={null}
         collection={data.collection?.id || null}
