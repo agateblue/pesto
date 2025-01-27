@@ -2,6 +2,7 @@
   import debounce from 'lodash/debounce';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import FormRendered from './FormRendered.svelte';
+  import SelectDocument from './SelectDocument.svelte';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
   import {
     globals,
@@ -37,13 +38,7 @@
     getTodoListFromMarkdown(note?.fragments?.text?.content || '', buildUniqueId)
   );
   let webhookUrl = $state('');
-  let collections: DocumentType[] = $state([])
   let subscriptions = [
-    globals.db?.documents
-      .find({ selector: { type: 'collection' } })
-      .$.subscribe((documents) => {
-        collections = documents.map(d => d.toMutableJSON())
-      }),
     getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
       webhookUrl = s?.data?.url || '';
     })
@@ -118,27 +113,19 @@
       }, 300)}
     />
   </div>
-  {#if collections.length > 0}
-    <div class="form__field">
-      <label for="note-collection">Collection</label>
-      <select
-        id="note-collection"
-        name="note-collection"
-        value={note?.col || collection}
-        onchange={async (e) => {
-          await updateCollection(e.target.value);
-        }}
-      >
-        <option value={null}>---</option>
-        {#each collections as collection}
-          <option value={collection.id}>
-            {collection.data.emoji || '📋️'} 
-            {collection.title}
-          </option>
-        {/each}
-      </select>
-    </div>
-  {/if}
+  <div class="form__field">
+    <label for="note-collection">Collection</label>
+    <SelectDocument
+      id="note-collection"
+      name="note-collection"
+      value={note?.col || collection}
+      onchange={async (e) => {
+        await updateCollection(e.target.value);
+      }}
+      findOptions={{selector: {type: 'collection'}, sort: [{title: 'asc'}]}}
+      choiceConverter={(c) => {return {value: c.id, text: `${c.data.emoji || '📋️'} ${c.title}`}}}
+    ></SelectDocument>
+  </div>
 
   {#if note?.fragments?.form?.id && globals.forms[note.fragments.form.id]}
     <FormRendered
