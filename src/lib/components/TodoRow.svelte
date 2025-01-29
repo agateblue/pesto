@@ -2,7 +2,7 @@
   import { preventDefault } from 'svelte/legacy';
 
   import { createEventDispatcher, onMount } from 'svelte';
-  import IconaMoonSIgnMinusCircle from 'virtual:icons/iconamoon/sign-minus-circle';
+  import IconaMoonClose from 'virtual:icons/iconamoon/close';
 
   import { type TodoType } from '$lib/db';
   import { ignoreTab, renderMarkdown, getRandomId } from '$lib/ui';
@@ -87,7 +87,7 @@
     aria-label="Delete todo"
     title="Delete todo"
   >
-    <IconaMoonSIgnMinusCircle class="icon__size-3" height=none width=none role="presentation" alt="" />
+    <IconaMoonClose class="icon__size-3" height=none width=none role="presentation" alt="" />
   </button>
   {/if}
 </div>

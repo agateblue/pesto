@@ -2,11 +2,13 @@
   import { type DocumentDocument, formatDate, getNoteUpdateData } from '$lib/db';
   import { noteToText } from '$lib/ui';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  
+  import DropDown from './DropDown.svelte';
+
   import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
   import IconaMoonCopy from 'virtual:icons/iconamoon/copy';
   import IconaMoonStar from 'virtual:icons/iconamoon/star';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
+  import IconaMoonMenuKebabVerticalCircle from 'virtual:icons/iconamoon/menu-burger-horizontal';
 
   interface Props {
     note: DocumentDocument;
@@ -26,75 +28,86 @@
   <h2 class="flex__grow m__block-0">
     <a href={`/my/notes/${note.id}`}>
       {#if note.title?.trim()}
-        {note.title}
+      {note.title}
       {:else}
-        <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
+      <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
       {/if}
     </a>
   </h2>
-
-  <div>
-    <a
-      class="button__icon button layout__multi-hidden"
-      href={`/my/notes/${note.id}?view=edit`}
-      aria-label="Edit note"
-      title="Edit note"
-    >
-      <IconaMoonEdit
-        role="presentation"
-        alt=""
-        class=" icon__size-3"
-        height="none"
-        width="none"
-      />
-    </a>
-
-    <button
-      class="button__icon"
-      type="button"
-      onclick={(e) => {
-        navigator.clipboard.writeText(noteToText(note));
-      }}
-      aria-label="Copy note contents to clipboard"
-      title="Copy note contents to clipboard"
-    >
-      <IconaMoonCopy
-        role="presentation" 
-        alt=""
-        class=" icon__size-3"
-        height="none"
-        width="none"
-      />
-    </button>
-
-    <button
-      class="button__icon"
-      type="button"
-      onclick={(e) => {
-        note.incrementalUpdate({
-          $set: getNoteUpdateData(note, { starred: !note.starred })
-        });
-      }}
-      aria-label={note.starred ? 'Unstar' : 'Star'}
-      title={note.starred ? 'Unstar' : 'Star'}
-    >
-      {#if note.starred}
-        <IconaMoonStarFill
+  {#snippet dropdownControl()}
+    <IconaMoonMenuKebabVerticalCircle
+      role="presentation"
+      class="icon icon__size-3"
+      height="none"
+      width="none"
+      alt=""
+    />
+  {/snippet}
+  <DropDown control={dropdownControl} controlClass="button__discrete button__icon" class="right">
+    <li>
+      <a
+        class="button button__icon"
+        href={`/my/notes/${note.id}?view=edit`}
+      >
+        <IconaMoonEdit
+          role="presentation"
+          alt=""
+          class="icon icon__size-3"
+          height="none"
+          width="none"
+        />
+        Edit note
+      </a>
+    </li>
+    <li>
+      
+      <button
+        class="button__icon"
+        type="button"
+        onclick={(e) => {
+          navigator.clipboard.writeText(noteToText(note));
+        }}
+      >
+        <IconaMoonCopy
           role="presentation" 
           alt=""
-          class=" icon__size-3"
+          class="icon icon__size-3"
           height="none"
           width="none"
-        />
-      {:else}
-        <IconaMoonStar
+        /> Copy content
+      </button>
+    </li>
+    <li>
+      <button
+        class="button__icon"
+        type="button"
+        onclick={(e) => {
+          note.incrementalUpdate({
+            $set: getNoteUpdateData(note, { starred: !note.starred })
+          });
+        }}
+      >
+        {#if note.starred}
+          <IconaMoonStarFill
+            role="presentation" 
+            alt=""
+            class="icon icon__size-3"
+            height="none"
+            width="none"
+          />
+          Unstar
+        {:else}
+          <IconaMoonStar
           role="presentation"
           alt="" 
-          class=" icon__size-3"
+          class="icon icon__size-3"
           height="none"
           width="none"
-        />
-      {/if}
-    </button>
-  </div>
+          />
+          Star
+        {/if}
+      </button>
+    </li>
+  </DropDown>
+
 </header>
