@@ -5,8 +5,15 @@
   --space-3: 1rem;
   --space-4: 1.5rem;
 
-  --green: #4cb248;
-  --primary-color: rgb(199, 240, 240);
+  --color-1: #ffde67;
+  --color-2: #cae572;
+  --color-3: #96dca1;
+  --color-4: #60d6a4;
+  --color-5: #64dcda;
+
+  --primary-color: var(--color-2);
+  --accent-color: var(--color-3);
+  --badge-color: var(--text-color);
   --text-color: rgba(44, 44, 44, 1);
   --text-discrete-color: rgba(125, 125, 125, 1);
   --page-header-font-size: 1.1rem;
@@ -17,7 +24,7 @@
   --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
   --list-separator: 1px solid rgb(213, 213, 213);
   --input-border: 1px solid rgb(213, 213, 213);
-  --input-border-focus: 2px solid var(--primary-color);
+  --input-border-focus: 2px solid var(--accent-color);
   --layout-separator: var(--list-separator);
   --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
@@ -111,6 +118,9 @@ h4 {
 a:not([class]) {
   text-decoration-skip-ink: auto;
   color: currentColor;
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 /* Inherit fonts for inputs and buttons */
@@ -410,7 +420,7 @@ textarea,
 [contenteditable='true'],
 select,
 button {
-  accent-color: var(--primary-color);
+  accent-color: var(--accent-color);
 }
 
 svg {
@@ -597,7 +607,9 @@ a:visited svg:only-child {
 }
 
 .badge {
-  background: var(--primary-color);
+  border: 1px solid var(--badge-color);
+  color: var(--badge-color);
+  font-size: 85%;
   border-radius: 2px;
   padding: 0 var(--space-1);
 }
