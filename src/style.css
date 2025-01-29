@@ -847,9 +847,10 @@ table {
     list-style: none;
     margin: 0;
     padding: 0;
+    z-index: 1;
     box-shadow: 0px 0px 3px var(--text-discrete-color);
   }
-  > ul > li > * {
+  > ul > li > *:not(dialog) {
     width: 100%;
     display: block;
     text-align: left;

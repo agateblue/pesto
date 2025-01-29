@@ -20,7 +20,9 @@
 
 <article {...rest}>
   {#if includeHeader}
-    <RenderedNoteHeader {note} pageHeader={false} />
+    {#key note.id}
+      <RenderedNoteHeader {note} pageHeader={false} {onDelete} />
+    {/key}
   {/if}
   
   {#if note.title?.trim()}

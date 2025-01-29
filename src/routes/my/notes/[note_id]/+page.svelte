@@ -21,7 +21,7 @@
   <main class="flex__grow">
     <div class="scroll__wrapper">
       {#key note._rev}
-        <RenderedNoteHeader {note} pageHeader={true} />
+        <RenderedNoteHeader {note} pageHeader={true} onDelete={() => goto('/my')} />
       {/key}
   
       <div class="scroll">

@@ -3,19 +3,22 @@
   import { noteToText } from '$lib/ui';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import DropDown from './DropDown.svelte';
+  import DialogForm from './DialogForm.svelte';
 
   import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
   import IconaMoonCopy from 'virtual:icons/iconamoon/copy';
   import IconaMoonStar from 'virtual:icons/iconamoon/star';
   import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
-  import IconaMoonMenuKebabVerticalCircle from 'virtual:icons/iconamoon/menu-burger-horizontal';
+  import IconaMoonMenuKebabVerticalCircle from 'virtual:icons/iconamoon/menu-kebab-vertical-light';
+  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
 
   interface Props {
     note: DocumentDocument;
     pageHeader: boolean;
+    onDelete?: Function;
   }
 
-  let { note = $bindable(), pageHeader }: Props = $props();
+  let { note = $bindable(), onDelete, pageHeader }: Props = $props();
 
 </script>
 
@@ -43,7 +46,7 @@
       alt=""
     />
   {/snippet}
-  <DropDown control={dropdownControl} controlClass="button__discrete button__icon" class="right">
+  <DropDown control={dropdownControl} controlClass="button__icon" class="right">
     <li>
       <a
         class="button button__icon"
@@ -107,6 +110,31 @@
           Star
         {/if}
       </button>
+    </li>
+    <li>
+      {#snippet trashIcon()}
+        Delete
+        <IconaMoonTrash
+          role="presentation"
+          class="icon icon__size-3"
+          height="none"
+          width="none"
+          alt=""
+        />
+      {/snippet}
+      <DialogForm
+        anchorClass="button__icon"
+        anchorLabel="Delete note"
+        anchor={trashIcon}
+        title="Delete this note?"
+        onsubmit={async (e: SubmitEvent) => {
+          e.preventDefault();
+          await note.incrementalRemove();
+          onDelete?.();
+        }}
+      >
+        <p>This will remove the note from your diary. This action is irreversible.</p>
+      </DialogForm>
     </li>
   </DropDown>
 
