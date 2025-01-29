@@ -54,18 +54,18 @@
   });
 </script>
 
-<div class="flex__row | flex__justify-between">
-  <div class="flow">
+<div class="flex__row | flex__align-center">
+  <div class="flex__row flex__grow flex__align-center">
+    <span use:dragHandle aria-label={`drag-handle for ${note.title || note.fragments?.todolist?.todos[0]?.text}`}>
+      <IconaMoonMoveThin role="presentation" alt="" />
+    </span>
     {#if note.title?.trim()}
-      <h4>{note.title}</h4>
+      <h4 class="m__block-0 m__inline-2">{note.title}</h4>
     {/if}
-    <a href={`/my/notes/${note.id}`}>
-      <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
-    </a>
   </div>
-  <span use:dragHandle aria-label={`drag-handle for ${note.title || note.fragments?.todolist?.todos[0]?.text}`}>
-    <IconaMoonMoveThin role="presentation" alt="" />
-  </span>
+  <a href={`/my/notes/${note.id}`}>
+    <time datetime={note.created_at}>{formatDateShort(note.created_at)}</time>
+  </a>
 </div>
 
 <div class="p__block-3">
