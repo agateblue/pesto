@@ -177,7 +177,7 @@
 </script>
 
 <div bind:this={container} class="mirror__container">
-  <div bind:this={reflection} class="mirror__reflection"></div>
+  <div bind:this={reflection} class="mirror__reflection" aria-hidden="true"></div>
   <textarea 
     bind:this={textarea} 
     aria-autocomplete="list"
