@@ -544,7 +544,8 @@ textarea {
     font-style: italic;
   }
   input:not([type='checkbox']),
-  textarea {
+  textarea,
+  select {
     width: 100%;
   }
 }
