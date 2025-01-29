@@ -457,6 +457,19 @@ svg {
   animation: rotating 3s linear infinite;
 }
 
+*:focus-visible {
+  outline-color: var(--accent-color);
+  outline-style: solid;
+  outline-offset: 2px;
+  outline-width: 2px;
+}
+
+
+input, textarea, button, .button, select, .button__icon {
+  border-radius: 2px;
+  border: var(--input-border);
+}
+
 .button,
 button,
 input[type='submit'] {
@@ -487,6 +500,7 @@ input[type='submit']:hover {
   background: none;
   color: hsl(from var(--text-color) h s l / 0.7);
   padding: var(--space-1);
+  border: none;
 }
 .button__transparent {
   background: none;
@@ -506,14 +520,6 @@ textarea {
   border: var(--input-border);
 }
 
-input, textarea {
-  border-radius: 2px;
-  border: var(--input-border);
-  &:focus {
-    border: none;
-    outline: var(--input-border-focus);
-  }
-}
 
 .message {
   text-transform: capitalize;
