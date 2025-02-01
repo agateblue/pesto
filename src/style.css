@@ -498,7 +498,7 @@ input[type='submit']:hover {
 
 .button__link {
   background: none;
-  text-decoration: underline;
+  text-decoration: none;
   color: hsl(from var(--text-color) h s l / 0.7);
   padding-inline: 0;
   padding-block: var(--space-1);
