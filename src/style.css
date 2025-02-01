@@ -21,11 +21,9 @@
   --background-color: white;
   --card-background: var(--background-color);
   --header-background: var(--background-color);
-  --discrete-layout-separator: 1px solid rgb(120, 112, 112, 0.6);
-  --list-separator: 1px solid rgb(213, 213, 213);
-  --input-border: 1px solid rgb(213, 213, 213);
   --input-border-focus: 2px solid var(--accent-color);
-  --layout-separator: var(--list-separator);
+  --layout-separator: 1px solid rgba(213, 213, 213, 0.6);
+  --input-border: var(--layout-separator);
   --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
@@ -113,6 +111,13 @@ h2,
 h3,
 h4 {
   text-wrap: balance;
+}
+
+*:focus-visible {
+  outline-color: var(--accent-color);
+  outline-style: solid;
+  outline-offset: 2px;
+  outline-width: 2px;
 }
 
 /* A elements that don't have a class get default styles */
@@ -422,6 +427,10 @@ textarea,
 select,
 button {
   accent-color: var(--accent-color);
+
+  &:not(button):focus-visible {
+    border: 1px solid transparent;
+  }
 }
 
 svg {
@@ -458,12 +467,6 @@ svg {
   animation: rotating 3s linear infinite;
 }
 
-*:focus-visible {
-  outline-color: var(--accent-color);
-  outline-style: solid;
-  outline-offset: 2px;
-  outline-width: 2px;
-}
 
 
 input, textarea, button, .button, select, .button__icon, details > summary {
@@ -601,10 +604,6 @@ a:visited svg:only-child {
     --flow-space: var(--space-3);
   }
   li {
-    hr {
-      margin: 0;
-      border: var(--list-separator);
-    }
     a {
       padding: var(--space-1);
       display: block;
@@ -741,7 +740,7 @@ input[type='text'].input__discrete {
   }
 }
 .diary__note[role='listitem'] {
-  border-bottom: var(--list-separator);
+  border-bottom: var(--layout-separator);
 }
 
 .board {
@@ -759,7 +758,7 @@ input[type='text'].input__discrete {
 }
 .card {
   background: var(--card-background);
-  border: var(--list-separator);
+  border: var(--layout-separator);
   padding: var(--space-2);
   list-style: none;
   width: 100%;
