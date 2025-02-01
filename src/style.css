@@ -29,6 +29,7 @@
   --page-header-height: 3.5rem;
   --sidebar-background: rgb(240, 240, 240);
   --button-radius: 2px;
+  --button-border: 1px solid rgb(120, 112, 112, 0.2);
   --dialog-backdrop: rgba(55, 55, 55, 0.7);
 }
 
@@ -478,8 +479,12 @@ input[type='submit'] {
   border: none;
   padding: var(--space-2);
   border-radius: var(--button-radius);
+  border: var(--button-border);
   text-decoration: none;
   cursor: pointer;
+  &:not(.button__icon):hover {
+    filter: brightness(95%);
+  }
 }
 
 .button:hover,
@@ -505,6 +510,9 @@ input[type='submit']:hover {
   color: hsl(from var(--text-color) h s l / 0.7);
   padding: var(--space-1);
   border: none;
+  &:hover {
+    background: rgba(125, 125, 125, 0.1);
+  }
 }
 .button__transparent {
   background: none;
@@ -551,9 +559,13 @@ textarea {
   textarea,
   select {
     width: 100%;
+    background: white;
   }
 }
 
+form {
+  padding-block-end: var(--space-2);
+}
 .builder__field {
   --flow-space: var(--space-2);
 }
