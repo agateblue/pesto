@@ -18,13 +18,6 @@
   <input type="text" id="collection-name" name="collection-name" bind:value={collection.title}>
 </div>
 <div class="form__field">
-  <label for="collection-icon">Icon:  {collection.data.emoji || '📋️'}</label>
-  <EmojiPicker 
-    onemoji-click={(e) => {collection.data.emoji = e.detail.unicode}}
-    style="width: 100%"
-  ></EmojiPicker>
-</div>
-<div class="form__field">
   <label for="collection-query">
     Query
   </label>
@@ -35,4 +28,11 @@
   <p class="form__help">
     Automatically include notes matching this query in the collection.
   </p>
+</div>
+<div class="form__field">
+  <label for="collection-icon">Icon:  {collection.data.emoji || '📋️'}</label>
+  <EmojiPicker 
+    onemoji-click={(e) => {collection.data.emoji = e.detail.unicode}}
+    style="width: 100%"
+  ></EmojiPicker>
 </div>
