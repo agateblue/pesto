@@ -171,7 +171,7 @@ body {
     position: sticky;
     top: 0;
     background-color: var(--header-background);
-    padding: var(--space-2);
+    padding: var(--space-2);    
     margin-block-end: var(--space-2);
     z-index: 4;
     border-bottom: var(--layout-separator);
@@ -571,7 +571,6 @@ a:visited svg:only-child {
     padding-block: var(--space-1);
     padding-inline-start: var(--space-1);
     height: var(--page-header-height);
-    border-bottom: var(--layout-separator);
   }
   h2 {
     font-size: var(--page-header-font-size);
@@ -582,7 +581,6 @@ a:visited svg:only-child {
   ul {
     flex-grow: 1;
     margin: 0;
-    margin-top: var(--space-2);
     padding: 0;
     list-style-type: none;
     --flow-space: var(--space-1);

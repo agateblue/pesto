@@ -106,13 +106,11 @@
       </a>
     </header>
     <ul class="flex__column">
-      <li class="flex__row flex__justify-between flex__align-center">
-        <h2>Notes</h2>
-        <a href="/my/notes/add" class="button button__icon"
-          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow"></span
-          ></a>
-      </li>
       <li>
+        <MainNavigationLink href="/my/notes/add"
+          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">New note</span
+          ></MainNavigationLink
+        >
       </li>
       <li>
         <MainNavigationLink href="/my">
