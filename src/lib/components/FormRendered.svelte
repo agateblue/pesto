@@ -106,7 +106,7 @@
           if (last) {
             v = cloneDeep(last.fragments.form.data);
           }
-        }}>{$_("Pré-remplir à partir du dernier formulaire", "")}</button
+        }}>{$_("Pré-remplir", "")}</button
       >
     </div>
     {@render children?.()}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
 
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
@@ -37,7 +38,6 @@
   <div class="scroll__wrapper">
     <header class="p__inline-3">
       <MainNavigationToggle class="layout__multi-hidden" />
-      
       <input
         bind:this={searchInput}
         class="flex__grow"
@@ -45,7 +45,7 @@
         autocomplete="off"
         name="search"
         id="search"
-        placeholder="Search"
+        placeholder={$_("Rechercher", "")}
         value={searchQuery}
         onkeydown={async (e) => {
           if (e.key === 'Enter') {
@@ -59,6 +59,7 @@
         <button
           type="button"
           class="button__icon"
+          aria-label={$_("Effacer la recherche", "")}
           onclick={() => {
             searchQuery = '';
             triggerSearch();
@@ -102,7 +103,7 @@
           noteFormKey++;
         }}
       >
-        <button type="submit"> Save and add new </button>
+        <button type="submit"> {$_("Enregistrer et rédiger une nouvelle note", "")} </button>
       </NoteForm>
     {/key}
   </section>

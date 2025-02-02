@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import LoadingState from '$lib/components/LoadingState.svelte';
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import { onMount } from 'svelte';
@@ -44,6 +45,9 @@
 <div class="my__layout">
   <MainNavigation />
   <main class="p__block-4">
-    <LoadingState {isLoading}>Processing share…</LoadingState>
+    <LoadingState {isLoading}>
+      {$_("", "")}
+      Traitement en cours…
+    </LoadingState>
   </main>
 </div>

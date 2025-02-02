@@ -22,13 +22,13 @@
 <div {...rest}>
   {#if replication.type === 'webrtc'}
   
-    <strong>{$_("Type :", "Nom")}</strong> {$_("WebRTC :", "")} <br />
+    <strong>{$_("Mode :", "")}</strong> {$_("WebRTC :", "")} <br />
     <strong>{$_("Serveur de mise en relation :", "")}</strong>
     {replication.signalingServer} <br />
   {/if}
   {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
-    <strong>{$_("Type :", "Nom")}</strong>
-    {replication.type === 'couchdb' ? $_("CouchDB :", "") : $_("CouchDB (Avec compatibilité Tempo)", "")} <br />
+    <strong>{$_("Mode :", "")}</strong>
+    {replication.type === 'couchdb' ? $_("CouchDB :", "") : $_("CouchDB (avec compatibilité Tempo)", "")} <br />
     <strong>{$_("URL du serveur :", "")}</strong>
     {replication.server} <br />
     <strong>{$_("Base de données :", "")}</strong>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import RenderedNoteHeader from '$lib/components/RenderedNoteHeader.svelte';
   import NoteForm from '$lib/components/NoteForm.svelte';
@@ -51,6 +52,6 @@
   </aside>
 {:else}
   <main class="wrapper  p__inline-3 | flex__grow">
-    <p>This note doesn't exist.</p>
+    <p>{$_("Cette note n'existe pas.", "")}</p>
   </main>
 {/if}

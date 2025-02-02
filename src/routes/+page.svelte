@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { globals } from '$lib/db';
@@ -34,9 +35,9 @@
   <main>
     <div class="wrapper">
       <header class="p__inline-3">
-        <h1>Loading Pesto…</h1>
+        <h1>{$_("Chargement de Pesto", "")}</h1>
         {#if migrationNeeded}
-          <p>Preparing data to new version…</p>
+          <p>{$_("Préparation des données pour la nouvelle version", "")}</p>
           <div role="status" aria-live="polite">
             {#if migrationState}
               <p>
@@ -48,7 +49,7 @@
                 <p><strong>{migrationState.error.message}</strong></p>
               {/if}
               {#if migrationState.status === 'DONE'}
-                <p>Data preparation complete, you will be redirected shortly…</p>
+                <p>{$_("Préparation des données terminée, vous serez redirigé·e sous peu…", "")}</p>
               {/if}
             {/if}
           </div>

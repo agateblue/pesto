@@ -32,28 +32,26 @@
   let importTypes = $state({
     tempo: {
       name: 'Tempo',
-      help: `
-Import from a Tempo JSON file. Visualizations are not supported yet.
-      `,
+      help: $_("Restaurer depuis un fichier JSON/Tempo.", ""),
       flags: [
         {
           id: 'entries',
-          label: 'Import entries',
+          label: $_("Restaurer les notes", ""),
           value: true
         },
         {
           id: 'tasks',
-          label: 'Import tasks and board',
+          label: $_("Restaurer les tâches et le tableau", ""),
           value: true
         },
         {
           id: 'forms',
-          label: 'Import forms',
-          value: true
+          label: $_("Restaurer les formulaires", ""),
+          value: true,
         },
         {
           id: 'aliases',
-          label: 'Import aliases (as collections)',
+          label: $_("Restaurer les alias (en tant que collections)", ""),
           value: true
         }
       ],
@@ -61,28 +59,26 @@ Import from a Tempo JSON file. Visualizations are not supported yet.
     },
     pesto: {
       name: 'Pesto',
-      help: `
-Import from a Pesto JSON file. This is a way to restore a full backup made from another Pesto session. 
-      `,
+      help: $_("Restaurer depuis un fichier JSON/Pesto. C'est un moyen de restaurer une sauvegarde complète effectuée depuis une autre session Pesto.", ""),
       flags: [
         {
           id: 'notes',
-          label: 'Import notes',
+          label: $_("Restaurer les notes", ""),
           value: true
         },
         {
           id: 'collections',
-          label: 'Import collections',
+          label: $_("Restaurer les collections", ""),
           value: true
         },
         {
           id: 'forms',
-          label: 'Import forms',
+          label: $_("Restaurer les formulaires", ""),
           value: true
         },
         {
           id: 'settings',
-          label: 'Import settings',
+          label: $_("Restaurer les réglages", ""),
           value: true
         }
       ],
@@ -95,28 +91,26 @@ Import from a Pesto JSON file. This is a way to restore a full backup made from 
   let exportTypes = $state({
     pesto: {
       name: 'Pesto',
-      help: `
-Export to a Pesto JSON file, creating a full or partial backup depending on your needs. 
-      `,
+      help: $_("Créer une sauvegarde partielle ou complète au format JSON/Pesto.", ""),
       flags: [
         {
           id: 'notes',
-          label: 'Export notes',
+          label: $_("Sauvegarder les notes", ""),
           value: true
         },
         {
           id: 'collections',
-          label: 'Export collections',
+          label: $_("Sauvegarder les collections", ""),
           value: true
         },
         {
           id: 'forms',
-          label: 'Export forms',
+          label: $_("Sauvegarder les formulaires", ""),
           value: true
         },
         {
           id: 'settings',
-          label: 'Export settings',
+          label: $_("Sauvegarder les réglages", ""),
           value: true
         }
       ],
@@ -124,18 +118,16 @@ Export to a Pesto JSON file, creating a full or partial backup depending on your
     },
     tempo: {
       name: 'Tempo',
-      help: `
-Export to a Tempo JSON file. 
-      `,
+      help: $_("Créer une sauvegarde partielle ou complète au format JSON/Tempo.", ""),
       flags: [
         {
           id: 'entries',
-          label: 'Export entries',
+          label: $_("Sauvegarder les notes", ""),
           value: true
         },
         {
           id: 'tasks',
-          label: 'Export tasks and board',
+          label: $_("Sauvegarder les tâches et le tableau", ""),
           value: true
         }
       ],
@@ -217,7 +209,7 @@ Export to a Tempo JSON file.
     <div class="scroll__wrapper">
       <header class="flex__row flex__justify-between flex__align-center p__inline-3">
         <MainNavigationToggle class="layout__multi-hidden" />
-        <h2 class="flex__grow">Settings</h2>
+        <h2 class="flex__grow">{$_("Réglages", "")}</h2>
       </header>
       <section class="flow | scroll">
         <div class="wrapper p__inline-3">
@@ -232,13 +224,15 @@ Export to a Tempo JSON file.
               </select>
             </div>
           </div>
-          <h1>Synchronisation</h1>
+          <h1>{$_("Synchronisation", "")}</h1>
           <p>
-            Pesto data can be synchronized with other devices. With WebRTC, the data transit only
-            between devices and stay safe from third-parties.
+            {$_("Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si vous utilisez le mode WebRTC, les données transitent directement d'un appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers.", "")}
+            
           </p>
           {#if replications.length > 0}
-            <h2>Existing synchronisations</h2>
+            <h2>
+              {$_("Synchronisations existantes", "")}
+            </h2>
             <div class="flow" role="list">
               {#each replications as replication, i (i)}
                 <ReplicationCard
@@ -261,8 +255,8 @@ Export to a Tempo JSON file.
           {/if}
           <DialogForm
             anchorClass="button"
-            anchorText="Setup synchronisation…"
-            title="Setup a new synchronisation"
+            anchorText={$_("Configurer une nouvelle synchronisation", "")}
+            title={$_("Configurer une nouvelle synchronisation", "")}
             onsubmit={async (e: SubmitEvent) => {
               e.preventDefault();
               await handleSubmitReplication(newReplication, null);
@@ -271,7 +265,7 @@ Export to a Tempo JSON file.
             }}
           >
             <div class="form__field">
-              <label for="replication-type">Type</label>
+              <label for="replication-type">{$_("Mode", "")}</label>
               <select
                 name="replication-type"
                 id="replication-type"
@@ -281,9 +275,9 @@ Export to a Tempo JSON file.
                 }}
               >
                 <option value={null}>---</option>
-                <option value="webrtc">WebRTC</option>
-                <option value="couchdb">CouchDB</option>
-                <option value="couchdb-tempo">CouchDB (with Tempo compatibility)</option>
+                <option value="webrtc">{$_("WebRTC", "")}</option>
+                <option value="couchdb">{$_("CouchDB", "")}</option>
+                <option value="couchdb-tempo">{$_("CouchDB (avec compatibilité Tempo", "")}</option>
               </select>
             </div>
             {#if newReplication}
@@ -307,16 +301,15 @@ Export to a Tempo JSON file.
               downloadFile(JSON.stringify(data, null, 2), 'application/json', filename);
             }}
           >
-            <h1>Export data</h1>
+            <h1>{$_("Sauvegarde", "")}</h1>
             <p>
-              Export data from Pesto. This can be used to create a backup or convert Pesto data to
-              other applications.
+              {$_("Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application. ", "")}
             </p>
             <div class="form__field">
-              <label for="export-format">Export format</label>
+              <label for="export-format">{$_("Format de sauvegarde", "")}</label>
               <select name="export-format" id="export-format" bind:value={exportType}>
-                <option value="pesto">Pesto</option>
-                <option value="tempo">Tempo</option>
+                <option value="pesto">JSON/Pesto</option>
+                <option value="tempo">JSON/Tempo</option>
               </select>
             </div>
 
@@ -338,7 +331,7 @@ Export to a Tempo JSON file.
               {/if}
               <FormResult messages={exportMessages} forEl="export-format" />
               <div class="flex__row flex__justify-end">
-                <button type="submit"> Export </button>
+                <button type="submit"> {$_("Sauvegarder", "")} </button>
               </div>
             {/if}
           </form>
@@ -356,23 +349,22 @@ Export to a Tempo JSON file.
               importTypes[importType].handler(importFiles, importMessages, flags);
             }}
           >
-            <h1>Import data</h1>
+            <h1>{$_("Restauration", "")}</h1>
             <p>
-              Import data into Pesto from another source. Duplicates are discarded and your local
-              Pesto data will always be preserved in case of a conflict.
+              {$_("Restaurer les données d'une autre source dans Tempo. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit.", "")}
             </p>
             <div class="form__field">
-              <label for="import-source">Import source</label>
+              <label for="import-source">{$_("Type de restauration", "")}</label>
               <select name="import-source" id="import-source" bind:value={importType}>
-                <option value="pesto">Pesto</option>
-                <option value="tempo">Tempo</option>
+                <option value="pesto">JSON/Pesto</option>
+                <option value="tempo">JSON/Tempo</option>
               </select>
             </div>
 
             {#if importType}
               {@html renderMarkdown(importTypes[importType].help)}
               <div class="form__field">
-                <label for="import-file">Select the import file</label>
+                <label for="import-file">{$_("Sélectionner le fichier à restaurer", "")}</label>
                 <input
                   accept=".json,application/json"
                   id="import-file"
@@ -396,31 +388,31 @@ Export to a Tempo JSON file.
               {/if}
               <FormResult messages={importMessages} forEl="import-file" />
               <div class="flex__row flex__justify-end">
-                <button type="submit"> Import </button>
+                <button type="submit"> {$_("Restaurer", "")} </button>
               </div>
             {/if}
           </form>
 
-          <h1>Clear data</h1>
+          <h1>{$_("Effacer mes données", "")}</h1>
 
-          <p>You can remove all your Pesto data if needed. You will be asked for confirmation</p>
+          <p>
+            {$_("Vous pouvez supprimer l'intégralité de vos données Pesto. Une confirmation vous sera demandée.", "")}
+          </p>
           <DialogForm
             anchorClass="button"
-            anchorText="Remove all data…"
-            title="Remove all Pesto data?"
+            anchorText={$_("Effacer toutes mes données", "")}
+            title={$_("Effacer toutes les données de Pesto ?", "")}
             onsubmit={(e: SubmitEvent) => {
               e.preventDefault();
               handleSubmit();
             }}
           >
             <p>
-              Remove all local data including entries, tasks, settings and drafts. This action is
-              irreversible.
+              {$_("Supprimer toutes les données locales y compris les notes, tâches, paramètres, collections et formulaires. Cette action est irréversible.", "")}
             </p>
           </DialogForm>
-
-          <h1>Application information</h1>
-          <p>Build ID: {PUBLIC_BUILD_ID}</p>
+          <h1>{$_("Informations de l'application", "")}</h1>
+          <p>{$_("Version : %0", "", [PUBLIC_BUILD_ID])}</p>
         </div>
       </section>
     </div>

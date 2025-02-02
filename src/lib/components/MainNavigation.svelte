@@ -103,8 +103,8 @@
       <a 
         href="/settings" 
         class="button__icon p__inline-2 m__inline-1" 
-        aria-label={$_("Paramètres", "")} 
-        title={$_("Paramètres", "")}>
+        aria-label={$_("Réglages", "")} 
+        title={$_("Réglages", "")}>
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"

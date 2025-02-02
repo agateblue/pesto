@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
   import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
 
@@ -89,7 +90,7 @@
         // we use the default settings
         columns = [
           {
-            name: 'Todo',
+            name:  $_("À faire", "Colonne du tableau"),
             cards: [],
             index: 0,
             limit: 9999,
@@ -97,7 +98,7 @@
             isLoading: true
           },
           {
-            name: 'Doing',
+            name:  $_("En cours", "Colonne du tableau"),
             cards: [],
             index: 1,
             limit: 9999,
@@ -105,7 +106,7 @@
             isLoading: true
           },
           {
-            name: 'Done',
+            name:  $_("Terminé", "Colonne du tableau"),
             cards: [],
             index: -1,
             limit: 30,
@@ -168,7 +169,7 @@
     <div class="scroll__wrapper">
       <header class="flex__row flex__justify-between flex__align-center p__inline-3">
         <MainNavigationToggle class="layout__multi-hidden" />
-        <h2 class="flex__grow">Board</h2>
+        <h2 class="flex__grow">Tableau</h2>
         {#snippet settingsIcon()}
           <IconaMoonSettings
             role="presentation"
@@ -178,11 +179,12 @@
             alt=""
           />
         {/snippet}
+        
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel="Board settings"
+          anchorLabel={$_("Réglages du tableau", "")}
           anchor={settingsIcon}
-          title="Update board settings"
+          title={$_("Réglages du tableau", "")}
           onsubmit={async (e: SubmitEvent) => {
             saveBoard();
             e.preventDefault();
@@ -191,7 +193,7 @@
         >
           {#each boardColumnsConfig as column, i (i)}
             <div class="form__field">
-              <label for={`column-${i}`}>Column #{i + 1}</label>
+              <label for={`column-${i}`}>{$_("Colonne %0", "Tableau", [i + 1])}</label>
               <input
                 type="text"
                 id={`column-${i}`}
@@ -204,7 +206,7 @@
                   onclick={() => {
                     boardColumnsConfig.splice(i, 1);
                     boardColumnsConfig = [...boardColumnsConfig];
-                  }}>Delete</button
+                  }}>{$_("Supprimer", "")}</button
                 >
               {/if}
             </div>
@@ -217,7 +219,7 @@
                 'New column',
                 ...boardColumnsConfig.slice(-1)
               ];
-            }}>Add column</button
+            }}>{$_("Ajouter une colonne", "")}</button
           >
         </DialogForm>
       </header>
@@ -298,7 +300,7 @@
                         return { id: n.id, note: n };
                       })
                     ];
-                  }}>Load more</button
+                  }}>{$_("Charger plus", "")}</button
                 >
               {/if}
             </section>

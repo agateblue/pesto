@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
   import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
 
@@ -63,7 +64,7 @@
       <header class="p__inline-3 flex__row flex__justify-between flex__align-center">
         <MainNavigationToggle class="layout__multi-hidden" />
 
-        <h2 class="flex__grow">Forms</h2>
+        <h2 class="flex__grow">{$_("Formulaires", "")}</h2>
 
         {#snippet plusIcon()}
           <IconaMoonSignPlusCircle
@@ -77,12 +78,12 @@
         <DialogForm
           anchorClass="button__icon"
           anchor={plusIcon}
-          anchorLabel="Add a new form"
-          title="Add a new form"
+          anchorLabel={$_("Ajouter un formulaire", "")}
+          title={$_("Ajouter un formulaire", "")}
           onopen={() =>
             (editedForm = {
               id: getRandomId().toLowerCase(),
-              name: 'My form',
+              name: $_("Mon formulaire", ""),
               fields: []
             })}
           onsubmit={async (e: SubmitEvent) => {
@@ -108,15 +109,15 @@
         <DialogForm
           anchorClass="button__icon"
           anchor={settingsIcon}
-          anchorLabel="Form settings"
-          title="Form settings"
+          anchorLabel={$_("Réglages du formulaire", "")}
+          title={$_("Réglages du formulaire", "")}
           onsubmit={async (e: SubmitEvent) => {
             e.preventDefault();
             await createOrUpdateSetting('settings:form-webhook-url', { url: webhookUrl });
           }}
         >
           <div class="form__field">
-            <label for="form-webhook-url">Webhook URL</label>
+            <label for="form-webhook-url">{$_("URL de webhook", "")}</label>
             <input
               name="form-webhook-url"
               id="form-webhook-url"
@@ -124,7 +125,7 @@
               bind:value={webhookUrl}
             />
             <p class="form__help">
-              Notify an URL via a POST request when an form entry is created, updated or deleted.
+              {$_("Notifier une URL via une requête POST lorsque une entrée de formulaire est créée, modifiée ou supprimée", "")}
             </p>
           </div>
         </DialogForm>
