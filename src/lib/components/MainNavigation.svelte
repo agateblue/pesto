@@ -16,7 +16,7 @@
   import IconaMoonCategory from 'virtual:icons/iconamoon/category';
   import IconaMoonMenuKebabVerticalSquare from 'virtual:icons/iconamoon/menu-kebab-vertical-square';
 
-  import cloneDeep from 'lodash/cloneDeep'
+  import cloneDeep from 'lodash/cloneDeep';
 
   import { onDestroy } from 'svelte';
   import { clearSubscriptions } from '$lib/ui';
@@ -34,11 +34,11 @@
   let totalStarred: number | null = $state(null);
   let collections = $state([]);
   let replications: [] = $state([]);
-  let newCollection = $state(getNewCollection())
+  let newCollection = $state(getNewCollection());
 
   const subscriptions = [
     globals.uiState.get$('replications').subscribe((newValue) => {
-      replications = newValue || []
+      replications = newValue || [];
     }),
     globals.db?.documents
       .count({ selector: { type: 'note' } })
@@ -50,9 +50,9 @@
       .count({ selector: { starred: true } })
       .$.subscribe((v) => (totalStarred = v)),
     globals.db?.documents
-      .find({ selector: { type: 'collection' }, sort: [{title: 'asc'}] })
+      .find({ selector: { type: 'collection' }, sort: [{ title: 'asc' }] })
       .$.subscribe((documents) => {
-        collections = documents.map(d => d.toMutableJSON())
+        collections = documents.map((d) => d.toMutableJSON());
       })
   ];
   onDestroy(clearSubscriptions(subscriptions));
@@ -66,16 +66,16 @@
 
       {#if replications.length > 0}
         <button
-          type="button" 
+          type="button"
           class="button__icon p__inline-2 m__inline-1"
-          aria-label={$_("Synchroniser", "")} 
-          title={$_("Synchroniser", "")}
+          aria-label={$_('Synchroniser', '')}
+          title={$_('Synchroniser', '')}
           onclick={async (e) => {
-            isSyncing = true
-            await syncReplications(globals.replications)
+            isSyncing = true;
+            await syncReplications(globals.replications);
             setTimeout(() => {
-              isSyncing = false
-            }, 1000)
+              isSyncing = false;
+            }, 1000);
           }}
         >
           <IconaMoonSynchronize
@@ -87,11 +87,12 @@
           />
         </button>
       {/if}
-      <a 
-        href="/my?action=search" 
-        class="button__icon p__inline-2 m__inline-1" 
-        aria-label={$_("Rechercher", "")} 
-        title={$_("Rechercher", "")}>
+      <a
+        href="/my?action=search"
+        class="button__icon p__inline-2 m__inline-1"
+        aria-label={$_('Rechercher', '')}
+        title={$_('Rechercher', '')}
+      >
         <IconaMoonSearch
           role="presentation"
           class=" icon__size-3"
@@ -100,11 +101,12 @@
           alt=""
         />
       </a>
-      <a 
-        href="/settings" 
-        class="button__icon p__inline-2 m__inline-1" 
-        aria-label={$_("Réglages", "")} 
-        title={$_("Réglages", "")}>
+      <a
+        href="/settings"
+        class="button__icon p__inline-2 m__inline-1"
+        aria-label={$_('Réglages', '')}
+        title={$_('Réglages', '')}
+      >
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"
@@ -117,47 +119,50 @@
     <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add"
-          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">{$_("Nouvelle note", "")}</span
+          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow"
+            >{$_('Nouvelle note', '')}</span
           ></MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/my">
-          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">{$_("Toutes les notes", "")}</span>
+          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow"
+            >{$_('Toutes les notes', '')}</span
+          >
           <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true">
-          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">{$_("Favoris", "")}</span>
+          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow"
+            >{$_('Favoris', '')}</span
+          >
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc"
           ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow"
-            >{$_("Récemment modifié", "")}</span
+            >{$_('Récemment modifié', '')}</span
           ></MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href={`/my?q=is:todo`}>
-          <IconaMoonMenuKebabVerticalSquare
-            role="presentation"
-            alt=""
-          />{$_("Tâches", "")}
+          <IconaMoonMenuKebabVerticalSquare role="presentation" alt="" />{$_('Tâches', '')}
           <span class="badge float__end">{totalTodos}</span>
-          </MainNavigationLink
-        >
+        </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/board">
-          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">{$_("Tableau", "")}</span>
+          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow"
+            >{$_('Tableau', '')}</span
+          >
         </MainNavigationLink>
       </li>
       <li class="flex__row flex__justify-between flex__align-center">
         <h2>
-          {$_("Collections", "")}
+          {$_('Collections', '')}
         </h2>
 
         {#snippet newCollectionIcon()}
@@ -171,36 +176,36 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_("Ajouter une collection", "")}
+          anchorLabel={$_('Ajouter une collection', '')}
           anchor={newCollectionIcon}
-          title={$_("Ajouter une collection", "")}
+          title={$_('Ajouter une collection', '')}
           onopen={() => {
-            newCollection = getNewCollection()
+            newCollection = getNewCollection();
           }}
-          onsubmit={async (e: SubmitEvent) => {                
+          onsubmit={async (e: SubmitEvent) => {
             e.preventDefault();
-            await globals.db.documents.upsert(cloneDeep(newCollection))
-            newCollection = getNewCollection()
+            await globals.db.documents.upsert(cloneDeep(newCollection));
+            newCollection = getNewCollection();
           }}
-        > 
+        >
           <CollectionForm bind:collection={newCollection}></CollectionForm>
         </DialogForm>
-
       </li>
       {#each collections as collection, i (i)}
-        <li>    
+        <li>
           <MainNavigationLink href={`/my?collection=${collection.id}`}>
             <span class="icon">
-              {collection.data.emoji || '📋️'} 
+              {collection.data.emoji || '📋️'}
             </span>
             {collection.title}
           </MainNavigationLink>
         </li>
       {/each}
-      <li><h2>{$_("Données", "")}</h2></li>
+      <li><h2>{$_('Données', '')}</h2></li>
       <li>
         <MainNavigationLink href="/forms"
-          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">{$_("Formulaires", "")}</span
+          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow"
+            >{$_('Formulaires', '')}</span
           ></MainNavigationLink
         >
       </li>

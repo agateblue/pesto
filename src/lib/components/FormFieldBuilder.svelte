@@ -24,7 +24,7 @@
   <div class="flow m__block-4">
     <div class="flex__row flex__gap">
       <div class="form__field flow">
-        <label for={`field-label-${field.id}`}>{$_("Libellé", "")}</label>
+        <label for={`field-label-${field.id}`}>{$_('Libellé', '')}</label>
         <input
           type="text"
           name={`field-label-${field.id}`}
@@ -33,8 +33,12 @@
         />
       </div>
       <div class="form__field flow">
-        <label for={`field-type-${field.id}`}>{$_("Type", "Nom")}</label>
-        <select name={`field-type-${field.id}`} id={`field-type-${field.id}`} bind:value={field.type}>
+        <label for={`field-type-${field.id}`}>{$_('Type', 'Nom')}</label>
+        <select
+          name={`field-type-${field.id}`}
+          id={`field-type-${field.id}`}
+          bind:value={field.type}
+        >
           <option value="text">Text</option>
           <option value="number">Number</option>
           <option value="boolean">Yes/no</option>
@@ -43,7 +47,7 @@
     </div>
     {#if advanced}
       <div class="form__field flow">
-        <label for={`field-id-${field.id}`}>{$_("ID", "")}</label>
+        <label for={`field-id-${field.id}`}>{$_('ID', '')}</label>
         <input
           type="text"
           name={`field-id-${field.id}`}
@@ -51,7 +55,10 @@
           bind:value={field.id}
         />
         <p class="form__help">
-          {$_("Un identifiant unique pour ce champ. Utilisé pour construire des visualisations.", "")}
+          {$_(
+            'Un identifiant unique pour ce champ. Utilisé pour construire des visualisations.',
+            ''
+          )}
         </p>
       </div>
     {/if}
@@ -62,27 +69,26 @@
         id={`field-required-${field.id}`}
         bind:checked={field.required}
       />
-      <label for={`field-required-${field.id}`}>{$_("Ce champ est requis", "")}</label>
+      <label for={`field-required-${field.id}`}>{$_('Ce champ est requis', '')}</label>
     </div>
-
   </div>
 
   <div class="flow m__block-4">
     <div class="form__field flow">
-      <label for={`field-help-${field.id}`}>{$_("Texte d'aide", "")}</label>
+      <label for={`field-help-${field.id}`}>{$_("Texte d'aide", '')}</label>
       <textarea
         name={`field-help-${field.id}`}
         id={`field-help-${field.id}`}
         class="autoresize"
         bind:value={field.help}
       ></textarea>
-      <p class="form__help">{$_("Un texte d'aide qui sera affiché sous le champ.", "")}</p>
+      <p class="form__help">{$_("Un texte d'aide qui sera affiché sous le champ.", '')}</p>
     </div>
   </div>
   <div class="flow m__block-4">
     {#if field.type === 'number' || field.type === 'text'}
       <div class="form__field flow">
-        <label for={`field-suggestions-${field.id}`}>{$_("Suggestions", "")}</label>
+        <label for={`field-suggestions-${field.id}`}>{$_('Suggestions', '')}</label>
         <textarea
           name={`field-suggestions-${field.id}`}
           id={`field-suggestions-${field.id}`}
@@ -93,7 +99,10 @@
           }}
         ></textarea>
         <p class="form__help">
-          {$_("Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées sous forme d'autocomplétion.", "")}
+          {$_(
+            "Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées sous forme d'autocomplétion.",
+            ''
+          )}
         </p>
       </div>
 
@@ -105,9 +114,8 @@
           bind:checked={field.autosuggest}
         />
         <label for={`field-autosuggest-${field.id}`}>
-          {$_("Inclure les futures valeurs saisies dans les suggestions.", "")}
-        </label
-        >
+          {$_('Inclure les futures valeurs saisies dans les suggestions.', '')}
+        </label>
       </div>
     {/if}
     <div class="form__field flow m__block-4">
@@ -116,10 +124,10 @@
         class="button__link"
         onclick={(e) => {
           onDelete(e);
-        }}>
-          {$_("Supprimer ce champ", "")}
-        </button
+        }}
       >
+        {$_('Supprimer ce champ', '')}
+      </button>
     </div>
   </div>
 </div>

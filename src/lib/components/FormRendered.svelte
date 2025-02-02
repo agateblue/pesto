@@ -19,7 +19,17 @@
     ignoredEntryId?: string;
   }
 
-  let { form, children, id, onsubmit, showActions = true, values, elClass, webhookUrl, ignoredEntryId } = $props();
+  let {
+    form,
+    children,
+    id,
+    onsubmit,
+    showActions = true,
+    values,
+    elClass,
+    webhookUrl,
+    ignoredEntryId
+  } = $props();
 
   let v = $state(values || {});
   function setDefaultValues() {
@@ -43,8 +53,8 @@
       <div>
         <DialogForm
           anchorClass="button button__link"
-          anchorText={$_("Éditer", "")}
-          title={$_("Éditer le formulaire %0", "", [form.name])}
+          anchorText={$_('Éditer', '')}
+          title={$_('Éditer le formulaire %0', '', [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             await createOrUpdateForm(id, form);
             return e.preventDefault();
@@ -55,8 +65,8 @@
         <br />
         <DialogForm
           anchorClass="button button__link"
-          anchorText={$_("Supprimer", "")}
-          title={$_("Supprimer le formulaire %0", "", [form.name])}
+          anchorText={$_('Supprimer', '')}
+          title={$_('Supprimer le formulaire %0', '', [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             let form = await getById(globals.db.documents, id);
             await form.remove();
@@ -64,8 +74,10 @@
           }}
         >
           <p>
-            {$_("Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas supprimées. Cette action est irréversible.", "")}
-            
+            {$_(
+              'Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas supprimées. Cette action est irréversible.',
+              ''
+            )}
           </p>
         </DialogForm>
       </div>
@@ -92,21 +104,21 @@
     {/each}
 
     <div class="flex__row flex__justify-between">
-      <button type="submit">{$_("Sauvegarder", "")}</button>
+      <button type="submit">{$_('Sauvegarder', '')}</button>
       <button
         type="button"
         class="button__link"
         onclick={async () => {
           let last = await globals.db.documents
             .findOne({
-              selector: { 'fragments.form.id': form.id, id: {$ne: ignoredEntryId} },
+              selector: { 'fragments.form.id': form.id, id: { $ne: ignoredEntryId } },
               sort: [{ id: 'desc' }]
             })
             .exec();
           if (last) {
             v = cloneDeep(last.fragments.form.data);
           }
-        }}>{$_("Pré-remplir", "")}</button
+        }}>{$_('Pré-remplir', '')}</button
       >
     </div>
     {@render children?.()}

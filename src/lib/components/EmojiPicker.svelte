@@ -6,10 +6,6 @@
   interface Props extends HTMLBaseAttributes {}
 
   let { ...restProps }: Props = $props();
-
 </script>
 
-<emoji-picker 
-  data-source="/emojis.json"
-  {...restProps}
-></emoji-picker>
+<emoji-picker data-source="/emojis.json" {...restProps}></emoji-picker>

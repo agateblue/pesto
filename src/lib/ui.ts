@@ -91,14 +91,13 @@ export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export function updateURLParam(searchParams, params: object[]) {
   let query = new URLSearchParams(searchParams.toString());
-  params.forEach(p => {
+  params.forEach((p) => {
     if (!p.value) {
       query.delete(p.param);
     } else {
       query.set(p.param, p.value);
     }
-
-  })
+  });
 
   return query;
 }
@@ -169,7 +168,7 @@ export function getTodoListFromMarkdown(text: string, getId: Function) {
         todolist = {
           done: !!match[1]?.trim(),
           column: !!match[1]?.trim() ? -1 : 0,
-          todos: [{id: getId(), done: !!match[1]?.trim(), text: match[2].trim()}]
+          todos: [{ id: getId(), done: !!match[1]?.trim(), text: match[2].trim() }]
         };
       }
     }
@@ -179,21 +178,23 @@ export function getTodoListFromMarkdown(text: string, getId: Function) {
 }
 
 export function noteToText(note: DocumentType) {
-  let parts = []
+  let parts = [];
   if (note.title?.trim()) {
-    parts.push(`# ${note.title.trim()}`)
+    parts.push(`# ${note.title.trim()}`);
   }
   if (note.fragments.text) {
-    parts.push(note.fragments.text.content.trim())
+    parts.push(note.fragments.text.content.trim());
   }
   if (note.fragments.todolist?.todos) {
-    let formattedTodos = note.fragments.todolist.todos.filter(t => t.text.trim()).map(t => {
-      return `- [${t.done ? 'x' : ' '}] ${t.text.trim()}`
-    })
-    let todos = formattedTodos.join('\n')
+    let formattedTodos = note.fragments.todolist.todos
+      .filter((t) => t.text.trim())
+      .map((t) => {
+        return `- [${t.done ? 'x' : ' '}] ${t.text.trim()}`;
+      });
+    let todos = formattedTodos.join('\n');
     if (todos.trim()) {
-      parts.push(todos)
+      parts.push(todos);
     }
   }
-  return parts.join('\n\n')
+  return parts.join('\n\n');
 }

@@ -22,14 +22,7 @@
     onblur: Function;
   }
 
-  let {
-    todo,
-    editText,
-    autofocus = false,
-    onblur,
-    onfocus,
-    showDelete,
-  }: Props = $props();
+  let { todo, editText, autofocus = false, onblur, onfocus, showDelete }: Props = $props();
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {
@@ -68,9 +61,9 @@
       oninput={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
-      placeholder={$_("Ajouter une nouvelle tâche…", "")}
+      placeholder={$_('Ajouter une nouvelle tâche…', '')}
       rows="1"
-      aria-label={$_("Ajouter une nouvelle tâche…", "")}
+      aria-label={$_('Ajouter une nouvelle tâche…', '')}
       {onblur}
       {onfocus}
     ></textarea>
@@ -80,15 +73,15 @@
     </label>
   {/if}
   {#if showDelete}
-  <button
-    class="button__icon"
-    onclick={preventDefault((e) => {
-      dispatch('delete');
-    })}
-    aria-label={$_("Supprimer la tâche", "")}
-    title={$_("Supprimer la tâche", "")}
-  >
-    <IconaMoonClose class="icon__size-3" height=none width=none role="presentation" alt="" />
-  </button>
+    <button
+      class="button__icon"
+      onclick={preventDefault((e) => {
+        dispatch('delete');
+      })}
+      aria-label={$_('Supprimer la tâche', '')}
+      title={$_('Supprimer la tâche', '')}
+    >
+      <IconaMoonClose class="icon__size-3" height="none" width="none" role="presentation" alt="" />
+    </button>
   {/if}
 </div>

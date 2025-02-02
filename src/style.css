@@ -33,21 +33,27 @@
 
 @font-face {
   font-family: 'Roboto';
-  src: url('./fonts/roboto/Roboto-Regular.woff2') format('woff2'), url('./fonts/roboto/Roboto-Regular.woff') format('woff');
+  src:
+    url('./fonts/roboto/Roboto-Regular.woff2') format('woff2'),
+    url('./fonts/roboto/Roboto-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('./fonts/roboto/Roboto-Bold.woff2') format('woff2'), url('./fonts/roboto/Roboto-Bold.woff') format('woff');
+  src:
+    url('./fonts/roboto/Roboto-Bold.woff2') format('woff2'),
+    url('./fonts/roboto/Roboto-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('./fonts/roboto/Roboto-RegularItalic.woff2') format('woff2'), url('./fonts/roboto/Roboto-RegularItalic.woff') format('woff');
+  src:
+    url('./fonts/roboto/Roboto-RegularItalic.woff2') format('woff2'),
+    url('./fonts/roboto/Roboto-RegularItalic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
 }
@@ -177,7 +183,7 @@ body {
     position: sticky;
     top: 0;
     background-color: var(--header-background);
-    padding: var(--space-2);    
+    padding: var(--space-2);
     z-index: 4;
     border-bottom: var(--layout-separator);
     display: flex;
@@ -412,7 +418,12 @@ body {
 
 /* blocks */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   a {
     text-decoration: none;
   }
@@ -467,9 +478,13 @@ svg {
   animation: rotating 3s linear infinite;
 }
 
-
-
-input, textarea, button, .button, select, .button__icon, details > summary {
+input,
+textarea,
+button,
+.button,
+select,
+.button__icon,
+details > summary {
   border-radius: 2px;
   border: var(--input-border);
 }
@@ -535,7 +550,6 @@ textarea {
   padding: var(--space-1);
   border: var(--input-border);
 }
-
 
 .message {
   text-transform: capitalize;
@@ -619,7 +633,8 @@ a:visited svg:only-child {
       background: var(--primary-color);
     }
   }
-  li svg, li .icon {
+  li svg,
+  li .icon {
     margin-inline: var(--space-2);
   }
   [data-current-page='true'] {
@@ -724,7 +739,7 @@ input[type='text'].input__discrete {
     margin: 0;
     padding: 0;
     z-index: 1;
-    [aria-selected=true] button {
+    [aria-selected='true'] button {
       background: white;
     }
     li {
@@ -841,7 +856,6 @@ table {
   }
 }
 
-
 /**
  * Style the clickable text
  * Add your own styles to match other navigation items
@@ -849,7 +863,7 @@ table {
 .dropdown {
   position: relative;
   > summary {
-	  cursor: pointer;
+    cursor: pointer;
     list-style: none;
   }
   > ul {
@@ -880,8 +894,7 @@ table {
     height: 1rem;
     margin-right: var(--space-1);
   }
-  &.right > ul{
+  &.right > ul {
     right: 0;
   }
 }
-

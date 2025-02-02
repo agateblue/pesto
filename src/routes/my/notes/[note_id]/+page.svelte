@@ -6,7 +6,7 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import type { DocumentDocument } from '$lib/db.js';
-  
+
   let { data } = $props();
 
   let note: DocumentDocument = $state(data.note);
@@ -15,7 +15,6 @@
   $effect(() => {
     viewQuery = $page.url.searchParams.get('view') || 'detail';
   });
-  
 </script>
 
 {#if note}
@@ -24,26 +23,27 @@
       {#key note._rev}
         <RenderedNoteHeader {note} pageHeader={true} onDelete={() => goto('/my')} />
       {/key}
-  
+
       <div class="scroll">
         {#key note._rev}
           <div class="wrapper p__inline-3">
             <RenderedNote
               {note}
-              limitSize={false} 
-              class="diary__note flow" 
+              limitSize={false}
+              class="diary__note flow"
               onDelete={() => goto('/my')}
               includeHeader={false}
             ></RenderedNote>
           </div>
         {/key}
+      </div>
     </div>
   </main>
   <aside data-fullpage={viewQuery === 'edit'}>
     <NoteForm
       {note}
       on:update={(e) => {
-        note = e.detail.note
+        note = e.detail.note;
       }}
       on:delete={(e) => {
         goto('/my');
@@ -51,7 +51,7 @@
     />
   </aside>
 {:else}
-  <main class="wrapper  p__inline-3 | flex__grow">
-    <p>{$_("Cette note n'existe pas.", "")}</p>
+  <main class="wrapper p__inline-3 | flex__grow">
+    <p>{$_("Cette note n'existe pas.", '')}</p>
   </main>
 {/if}

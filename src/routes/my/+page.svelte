@@ -15,11 +15,14 @@
 
   let searchQuery = $state('');
   let orderQuery = $state('id:desc');
-  let action = $state('')
+  let action = $state('');
   let noteFormKey = $state(0);
-  let searchInput: HTMLInputElement
+  let searchInput: HTMLInputElement;
   function triggerSearch() {
-    let params = updateURLParam($page.url.searchParams, [{param: 'q', value: searchQuery}, {param: 'action', value: 'search'}]);
+    let params = updateURLParam($page.url.searchParams, [
+      { param: 'q', value: searchQuery },
+      { param: 'action', value: 'search' }
+    ]);
     goto(`?${params.toString()}`);
   }
   $effect(() => {
@@ -28,9 +31,9 @@
     action = $page.url.searchParams.get('action') || '';
     tick().then(() => {
       if (action === 'search') {
-        searchInput.focus()
+        searchInput.focus();
       }
-    })
+    });
   });
 </script>
 
@@ -45,11 +48,11 @@
         autocomplete="off"
         name="search"
         id="search"
-        placeholder={$_("Rechercher", "")}
+        placeholder={$_('Rechercher', '')}
         value={searchQuery}
         onkeydown={async (e) => {
           if (e.key === 'Enter') {
-            action = ''
+            action = '';
             searchQuery = e.target.value.trim();
             triggerSearch();
           }
@@ -59,7 +62,7 @@
         <button
           type="button"
           class="button__icon"
-          aria-label={$_("Effacer la recherche", "")}
+          aria-label={$_('Effacer la recherche', '')}
           onclick={() => {
             searchQuery = '';
             triggerSearch();
@@ -78,11 +81,7 @@
 
     <div class="scroll">
       {#key data.collection?.id + searchQuery}
-        <NoteList
-          collection={data.collection}
-          {searchQuery}
-          {orderQuery}
-        />
+        <NoteList collection={data.collection} {searchQuery} {orderQuery} />
       {/key}
     </div>
   </div>
@@ -91,7 +90,7 @@
 <aside>
   <section>
     {@render children?.()}
-    {#key data.collection?.id +noteFormKey}
+    {#key data.collection?.id + noteFormKey}
       <NoteForm
         note={null}
         collection={data.collection?.id || null}
@@ -103,7 +102,7 @@
           noteFormKey++;
         }}
       >
-        <button type="submit"> {$_("Enregistrer et rédiger une nouvelle note", "")} </button>
+        <button type="submit"> {$_('Enregistrer et rédiger une nouvelle note', '')} </button>
       </NoteForm>
     {/key}
   </section>

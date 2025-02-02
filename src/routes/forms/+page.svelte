@@ -64,7 +64,7 @@
       <header class="p__inline-3 flex__row flex__justify-between flex__align-center">
         <MainNavigationToggle class="layout__multi-hidden" />
 
-        <h2 class="flex__grow">{$_("Formulaires", "")}</h2>
+        <h2 class="flex__grow">{$_('Formulaires', '')}</h2>
 
         {#snippet plusIcon()}
           <IconaMoonSignPlusCircle
@@ -78,12 +78,12 @@
         <DialogForm
           anchorClass="button__icon"
           anchor={plusIcon}
-          anchorLabel={$_("Ajouter un formulaire", "")}
-          title={$_("Ajouter un formulaire", "")}
+          anchorLabel={$_('Ajouter un formulaire', '')}
+          title={$_('Ajouter un formulaire', '')}
           onopen={() =>
             (editedForm = {
               id: getRandomId().toLowerCase(),
-              name: $_("Mon formulaire", ""),
+              name: $_('Mon formulaire', ''),
               fields: []
             })}
           onsubmit={async (e: SubmitEvent) => {
@@ -109,15 +109,15 @@
         <DialogForm
           anchorClass="button__icon"
           anchor={settingsIcon}
-          anchorLabel={$_("Réglages du formulaire", "")}
-          title={$_("Réglages du formulaire", "")}
+          anchorLabel={$_('Réglages du formulaire', '')}
+          title={$_('Réglages du formulaire', '')}
           onsubmit={async (e: SubmitEvent) => {
             e.preventDefault();
             await createOrUpdateSetting('settings:form-webhook-url', { url: webhookUrl });
           }}
         >
           <div class="form__field">
-            <label for="form-webhook-url">{$_("URL de webhook", "")}</label>
+            <label for="form-webhook-url">{$_('URL de webhook', '')}</label>
             <input
               name="form-webhook-url"
               id="form-webhook-url"
@@ -125,12 +125,15 @@
               bind:value={webhookUrl}
             />
             <p class="form__help">
-              {$_("Notifier une URL via une requête POST lorsque une entrée de formulaire est créée, modifiée ou supprimée", "")}
+              {$_(
+                'Notifier une URL via une requête POST lorsque une entrée de formulaire est créée, modifiée ou supprimée',
+                ''
+              )}
             </p>
           </div>
         </DialogForm>
       </header>
-      <div class="scroll  p__inline-2">
+      <div class="scroll p__inline-2">
         <div class="grid grid__gap">
           {#each forms as form}
             <FormRendered

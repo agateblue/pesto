@@ -19,4 +19,6 @@
   }}
 />
 
-<button type="button" onclick={() => (show = !show)}>{show ? $_("Masquer", "") : $_("Montrer", "")}</button>
+<button type="button" onclick={() => (show = !show)}
+  >{show ? $_('Masquer', '') : $_('Montrer', '')}</button
+>

@@ -2,7 +2,7 @@
   import { _, _n } from '$lib/i18n/index.svelte';
   import { preventDefault } from 'svelte/legacy';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
-  
+
   interface Props {
     anchorClass: string;
     anchorText?: string;
@@ -13,20 +13,11 @@
     onsubmit: Function;
     onopen?: Function;
   }
-  
-  let {
-    anchorClass,
-    anchorText,
-    anchorLabel,
-    children,
-    anchor,
-    onsubmit,
-    title,
-    onopen,
-  }: Props = $props();
+
+  let { anchorClass, anchorText, anchorLabel, children, anchor, onsubmit, title, onopen }: Props =
+    $props();
   let dialog: HTMLDialogElement;
 </script>
-
 
 <button
   type="button"
@@ -43,11 +34,7 @@
 </button>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<dialog
-  bind:this={dialog}
-  aria-labelledby="dialog-title"
-  aria-describedby="dialog-description"
->
+<dialog bind:this={dialog} aria-labelledby="dialog-title" aria-describedby="dialog-description">
   <div class="scroll__wrapper">
     <header class="flex__row flex__justify-between flex__align-center p__inline-3">
       <h2 id="dialog-title" class="m__block-0">{title}</h2>
@@ -55,8 +42,8 @@
       <button
         type="button"
         class="button__icon"
-        aria-label={$_("Fermer la fenêtre", "")}
-        title={$_("Fermer la fenêtre", "")}
+        aria-label={$_('Fermer la fenêtre', '')}
+        title={$_('Fermer la fenêtre', '')}
         onclick={() => {
           dialog.close();
         }}
@@ -70,7 +57,13 @@
         />
       </button>
     </header>
-    <form class="scroll" onsubmit={(e) => {e.preventDefault(); onsubmit(e)}}>
+    <form
+      class="scroll"
+      onsubmit={(e) => {
+        e.preventDefault();
+        onsubmit(e);
+      }}
+    >
       <div id="dialog-description">
         <div class="p__inline-2 | flow">
           {@render children?.()}
@@ -81,7 +74,7 @@
         type="submit"
         onclick={(e) => {
           dialog.close();
-        }}>{$_("Confirmer", "")}</button
+        }}>{$_('Confirmer', '')}</button
       >
     </form>
   </div>

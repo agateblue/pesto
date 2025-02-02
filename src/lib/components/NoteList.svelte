@@ -8,27 +8,33 @@
   import CollectionForm from '$lib/components/CollectionForm.svelte';
   import RenderedNote from '$lib/components/RenderedNote.svelte';
   import LoadingState from '$lib/components/LoadingState.svelte';
-  import { type DocumentDocument, globals, getById, type DocumentType, getNoteSelector } from '$lib/db';
+  import {
+    type DocumentDocument,
+    globals,
+    getById,
+    type DocumentType,
+    getNoteSelector
+  } from '$lib/db';
   import { clearSubscriptions } from '$lib/ui';
   import { onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
-  import cloneDeep from 'lodash/cloneDeep'
+  import cloneDeep from 'lodash/cloneDeep';
   interface Props {
     searchQuery: string;
     orderQuery: string;
     collection?: DocumentType;
   }
-  
-  let { searchQuery = $bindable(), orderQuery = $bindable(), collection}: Props = $props();
-  
+
+  let { searchQuery = $bindable(), orderQuery = $bindable(), collection }: Props = $props();
+
   let notes: DocumentDocument[] = $state([]);
   let matchingCount: number = $state(0);
   let isLoading = $state(false);
   let currentCollection = $state(cloneDeep(collection));
   let editedCollection = $state(cloneDeep(currentCollection));
-  let countSubscription = null
+  let countSubscription = null;
   let subscriptions = [];
-  const PAGE_SIZE = 20
+  const PAGE_SIZE = 20;
   function getSortFromOrderQuery(o: string) {
     let field, direction;
     [field, direction] = o.split(':');
@@ -39,30 +45,30 @@
 
   function loadNotes(q: string, o: string) {
     isLoading = true;
-    matchingCount = 0
+    matchingCount = 0;
     notes = [];
     return globals.db.documents
       .find({
         limit: PAGE_SIZE,
         sort: [getSortFromOrderQuery(o)],
-        selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
+        selector: { type: 'note', ...getNoteSelector(q, currentCollection) }
       })
       .$.subscribe((documents) => {
         isLoading = false;
         notes = documents;
-        clearSubscriptions([countSubscription])
+        clearSubscriptions([countSubscription]);
         countSubscription = globals.db.documents
           .count({
-            selector: { type: 'note', ...getNoteSelector(q, currentCollection)}
+            selector: { type: 'note', ...getNoteSelector(q, currentCollection) }
           })
           .$.subscribe((count) => {
             matchingCount = count;
-          }) 
-        })
+          });
+      });
   }
   $effect(() => {
-    clearSubscriptions(subscriptions)
-    clearSubscriptions([countSubscription])
+    clearSubscriptions(subscriptions);
+    clearSubscriptions([countSubscription]);
     subscriptions = loadNotes(searchQuery, orderQuery);
   });
 
@@ -71,15 +77,15 @@
     clearSubscriptions([countSubscription]);
   });
 </script>
+
 <div class="wrapper" role="list" aria-live="polite" aria-busy={isLoading}>
-  
   {#if !isLoading}
     <header class="p__block-3 p__inline-3 | flex__row flex__align-center flex__justify-between">
       {#if collection}
         <div class="flex__grow">
           <strong>
             {currentCollection.data.emoji || '📋️'}
-            {currentCollection.title} 
+            {currentCollection.title}
           </strong>
 
           {#snippet editCollectionIcon()}
@@ -97,16 +103,16 @@
             anchor={editCollectionIcon}
             title="Edit collection"
             onopen={(e) => {
-              editedCollection = cloneDeep(currentCollection)
+              editedCollection = cloneDeep(currentCollection);
             }}
-            onsubmit={async (e: SubmitEvent) => {                
+            onsubmit={async (e: SubmitEvent) => {
               e.preventDefault();
-              await globals.db.documents.upsert(cloneDeep(editedCollection))
-              currentCollection = editedCollection
-              clearSubscriptions(subscriptions)
+              await globals.db.documents.upsert(cloneDeep(editedCollection));
+              currentCollection = editedCollection;
+              clearSubscriptions(subscriptions);
               subscriptions = loadNotes(searchQuery, orderQuery);
             }}
-          > 
+          >
             <CollectionForm bind:collection={editedCollection}></CollectionForm>
           </DialogForm>
           {#snippet trashIcon()}
@@ -120,19 +126,24 @@
           {/snippet}
           <DialogForm
             anchorClass="button__icon"
-            anchorLabel={$_("Supprimer la collection %0", "", [collection.title])}
+            anchorLabel={$_('Supprimer la collection %0', '', [collection.title])}
             anchor={trashIcon}
-            title={$_("Supprimer la collection %0", "", [collection.title])}
+            title={$_('Supprimer la collection %0', '', [collection.title])}
             onsubmit={async (e: SubmitEvent) => {
-              await globals.db.documents.find({selector: {col: collection.id}}).patch({col: null})
+              await globals.db.documents
+                .find({ selector: { col: collection.id } })
+                .patch({ col: null });
               let document = await getById(globals.db.documents, collection.id);
               await document.remove();
-              goto('/my')
+              goto('/my');
               return e.preventDefault();
             }}
           >
             <p>
-              {$_("Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible.", "")}
+              {$_(
+                'Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible.',
+                ''
+              )}
             </p>
           </DialogForm>
         </div>
@@ -144,15 +155,16 @@
       {/if}
     </header>
   {/if}
-  <LoadingState {isLoading}>{$_("Chargement des notes…", "")}</LoadingState>
+  <LoadingState {isLoading}>{$_('Chargement des notes…', '')}</LoadingState>
   {#each notes as note}
     {#key note._rev}
       <RenderedNote
         {note}
         includeHeader={true}
         limitSize={true}
-        class="diary__note flow | p__block-3 p__inline-3" role="listitem">
-      </RenderedNote>
+        class="diary__note flow | p__block-3 p__inline-3"
+        role="listitem"
+      ></RenderedNote>
     {/key}
   {/each}
   {#if notes.length < matchingCount && !isLoading}
@@ -170,7 +182,7 @@
           })
           .exec();
         notes = [...notes, ...newNotes];
-      }}>{$_("Montrer plus de notes", "")}</button
+      }}>{$_('Montrer plus de notes', '')}</button
     >
   {/if}
 </div>

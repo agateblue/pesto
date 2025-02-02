@@ -20,11 +20,9 @@
   }
 
   let { note = $bindable(), onDelete, pageHeader }: Props = $props();
-
 </script>
 
 <header class="flex__row flex__justify-between flex__align-center">
-
   {#if pageHeader}
     <MainNavigationToggle class="layout__multi-hidden" />
   {/if}
@@ -32,9 +30,9 @@
   <h2 class="flex__grow m__block-0">
     <a href={`/my/notes/${note.id}`}>
       {#if note.title?.trim()}
-      {note.title}
+        {note.title}
       {:else}
-      <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
+        <time datetime={note.created_at}>{formatDate(note.created_at)}</time>
       {/if}
     </a>
   </h2>
@@ -49,10 +47,7 @@
   {/snippet}
   <DropDown control={dropdownControl} controlClass="button__icon" class="right">
     <li>
-      <a
-        class="button button__icon"
-        href={`/my/notes/${note.id}?view=edit`}
-      >
+      <a class="button button__icon" href={`/my/notes/${note.id}?view=edit`}>
         <IconaMoonEdit
           role="presentation"
           alt=""
@@ -60,11 +55,10 @@
           height="none"
           width="none"
         />
-        {$_("Éditer cette note", "")}
+        {$_('Éditer cette note', '')}
       </a>
     </li>
     <li>
-      
       <button
         class="button__icon"
         type="button"
@@ -73,12 +67,13 @@
         }}
       >
         <IconaMoonCopy
-          role="presentation" 
+          role="presentation"
           alt=""
           class="icon icon__size-3"
           height="none"
           width="none"
-        /> {$_("Copier le contenu", "")}
+        />
+        {$_('Copier le contenu', '')}
       </button>
     </li>
     <li>
@@ -93,28 +88,28 @@
       >
         {#if note.starred}
           <IconaMoonStarFill
-            role="presentation" 
+            role="presentation"
             alt=""
             class="icon icon__size-3"
             height="none"
             width="none"
           />
-          {$_("Retirer des favoris", "")}
+          {$_('Retirer des favoris', '')}
         {:else}
           <IconaMoonStar
-          role="presentation"
-          alt="" 
-          class="icon icon__size-3"
-          height="none"
-          width="none"
+            role="presentation"
+            alt=""
+            class="icon icon__size-3"
+            height="none"
+            width="none"
           />
-          {$_("Ajouter aux favoris", "")}
+          {$_('Ajouter aux favoris', '')}
         {/if}
       </button>
     </li>
     <li>
       {#snippet trashIcon()}
-        {$_("Supprimer", "")}
+        {$_('Supprimer', '')}
         <IconaMoonTrash
           role="presentation"
           class="icon icon__size-3"
@@ -125,9 +120,9 @@
       {/snippet}
       <DialogForm
         anchorClass="button__icon"
-        anchorLabel={$_("Supprimer cette note", "")}
+        anchorLabel={$_('Supprimer cette note', '')}
         anchor={trashIcon}
-        title={$_("Supprimer cette note ?", "")}
+        title={$_('Supprimer cette note ?', '')}
         onsubmit={async (e: SubmitEvent) => {
           e.preventDefault();
           await note.incrementalRemove();
@@ -135,10 +130,9 @@
         }}
       >
         <p>
-          {$_("La note sera supprimée de votre journal. Cette action est irréversible.", "")}
+          {$_('La note sera supprimée de votre journal. Cette action est irréversible.', '')}
         </p>
       </DialogForm>
     </li>
   </DropDown>
-
 </header>

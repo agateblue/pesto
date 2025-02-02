@@ -233,9 +233,9 @@ export const migrationStrategies = {
   13: function (oldDocumentData) {
     if (oldDocumentData?.fragments?.todolist) {
       if (!oldDocumentData.title) {
-        oldDocumentData.title = oldDocumentData.fragments.todolist.title
+        oldDocumentData.title = oldDocumentData.fragments.todolist.title;
       }
-      delete oldDocumentData.fragments.todolist.title
+      delete oldDocumentData.fragments.todolist.title;
     }
     return oldDocumentData;
   },
@@ -245,14 +245,14 @@ export const migrationStrategies = {
       oldDocumentData.fragments.todolist.todos.push({
         text: oldDocumentData.title || 'Empty task',
         done: oldDocumentData.fragments.todolist.done,
-        id: oldDocumentData.id,
-      })
+        id: oldDocumentData.id
+      });
     }
     return oldDocumentData;
   },
   // Added col type
   15: function (oldDocumentData) {
-    oldDocumentData.col = null
+    oldDocumentData.col = null;
     return oldDocumentData;
   }
 };
@@ -356,13 +356,13 @@ export async function getDb() {
   if (globals.db) {
     return globals;
   }
-  let storage = getRxStorageDexie()
+  let storage = getRxStorageDexie();
   if (dev) {
     storage = wrappedValidateAjvStorage({
       storage
-  });
+    });
   }
-  globals.replications = []
+  globals.replications = [];
 
   globals.db = await createRxDatabase<Database>({
     name: 'main',
@@ -411,7 +411,7 @@ export function launchReplications(uiState, db) {
 export async function syncReplications(replications: []) {
   for (const replication of replications) {
     if (replication.reSync) {
-      await replication.reSync()
+      await replication.reSync();
     }
   }
 }
@@ -551,7 +551,7 @@ export function buildUniqueId(date: Date | null = null) {
   return (date || new Date()).toISOString();
 }
 
-export function getNewNote(params = {collection: ''}) {
+export function getNewNote(params = { collection: '' }) {
   let date = new Date();
   return {
     id: buildUniqueId(date),
@@ -593,16 +593,16 @@ export function getNewFormFragment(id = null, data = {}, annotations = {}) {
   };
 }
 
-export function getNewCollection () {
-  let note = getNewNote()
-  note.id = getRandomId().toLowerCase()
-  note.type = 'collection'
-  note.title = 'My collection'
+export function getNewCollection() {
+  let note = getNewNote();
+  note.id = getRandomId().toLowerCase();
+  note.type = 'collection';
+  note.title = 'My collection';
   note.data = {
     query: null,
-    emoji: '📋️',
+    emoji: '📋️'
   };
-  return note
+  return note;
 }
 
 export function getNewTodo() {
@@ -793,7 +793,7 @@ export function getQueryTokens(q: string) {
     });
 }
 
-export function getNoteSelector (q: string, collection: DocumentType | null | undefined) {
+export function getNoteSelector(q: string, collection: DocumentType | null | undefined) {
   if (!q.trim() && !collection) {
     return {};
   }
@@ -805,18 +805,13 @@ export function getNoteSelector (q: string, collection: DocumentType | null | un
     })
   };
   if (collection) {
-    let collectionSelector = [
-      {col: collection.id},
-    ]
+    let collectionSelector = [{ col: collection.id }];
     if (collection.data?.query) {
-      collectionSelector.push(getNoteSelector(collection.data.query, null))
+      collectionSelector.push(getNoteSelector(collection.data.query, null));
     }
     selector = {
-      $and: [
-        {$or: collectionSelector},
-        selector
-      ]
-    }
+      $and: [{ $or: collectionSelector }, selector]
+    };
   }
   return selector;
 }

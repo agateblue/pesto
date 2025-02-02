@@ -67,7 +67,7 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
     if (document.fragments?.text?.content) {
       let text = document.fragments?.text?.content;
       if (document.title) {
-        text = `# ${document.title}\n\n${text}`
+        text = `# ${document.title}\n\n${text}`;
       }
       let tags: TempoTag[] = parseTags(text);
       let d = { ...(document.fragments?.form?.data || {}) };
@@ -109,16 +109,16 @@ export function pestoToTempoDocuments(document: DocumentType, doneIndex: number)
     }
     if (document.fragments?.todolist?.todos?.length > 0) {
       let column = document.fragments.todolist.column;
-      let todos = document.fragments.todolist.todos
-      
+      let todos = document.fragments.todolist.todos;
+
       // tempo has a top level task, we use the note title if any or the first
       // todo for that
-      let text = document.title?.trim()
+      let text = document.title?.trim();
       if (!text) {
-        text = todos[0].text
-        todos.shift()
+        text = todos[0].text;
+        todos.shift();
       }
-    
+
       let subtasks: TempoSubtask[] = (todos || []).map((t) => {
         return { label: t.text, done: t.done };
       });
@@ -234,7 +234,7 @@ export function tempoToPestoDocument(document: TempoEntry | TempoTask, doneIndex
     console.debug('Converting document from tempo to pesto', document, data);
   }
   data.source = 'Tempo';
-  data._deleted = false
+  data._deleted = false;
   return data;
 }
 

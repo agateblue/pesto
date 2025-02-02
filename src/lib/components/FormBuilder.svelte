@@ -16,7 +16,7 @@
   function getNewField() {
     let field: FormFieldConfiguration = {
       id: getRandomId().toLowerCase(),
-      label: $_("Mon champ", ""),
+      label: $_('Mon champ', ''),
       required: true,
       type: 'text',
       suggestions: [],
@@ -28,7 +28,7 @@
 </script>
 
 <div class="form__field">
-  <label for={`form-name-${form.id}`}>{$_("Nom", "")}</label>
+  <label for={`form-name-${form.id}`}>{$_('Nom', '')}</label>
   <input
     type="text"
     id={`form-name-${form.id}`}
@@ -38,9 +38,14 @@
 </div>
 {#if advanced}
   <div class="form__field">
-    <label for={`form-id-${form.id}`}>{$_("ID", "")}</label>
+    <label for={`form-id-${form.id}`}>{$_('ID', '')}</label>
     <input type="text" id={`form-id-${form.id}`} name={`form-id-${form.id}`} bind:value={form.id} />
-    <p class="form__help">{$_("Un identifiant unique pour le formulaire. Utilisé pour construire des visualisations.", "")}</p>
+    <p class="form__help">
+      {$_(
+        'Un identifiant unique pour le formulaire. Utilisé pour construire des visualisations.',
+        ''
+      )}
+    </p>
   </div>
 {/if}
 
@@ -51,7 +56,7 @@
     name={`form-advanced-${form.id}`}
     bind:checked={advanced}
   />
-  <label for={`form-advanced-${form.id}`}>{$_("Mode avancé", "")}</label>
+  <label for={`form-advanced-${form.id}`}>{$_('Mode avancé', '')}</label>
 </div>
 
 <div class="form__field">
@@ -61,13 +66,17 @@
     name={`form-rendered-${form.id}`}
     bind:checked={rendered}
   />
-  <label for={`form-rendered-${form.id}`}>{$_("Aperçu du formulaire", "")}</label>
+  <label for={`form-rendered-${form.id}`}>{$_('Aperçu du formulaire', '')}</label>
 </div>
 
 <div class="flex__stacking-container">
   {#each form.fields as field, i (i)}
     {#if rendered}
-      <FormFieldRendered field={form.fields[i]} formId={form.id} bind:value={form.fields[i].default} />
+      <FormFieldRendered
+        field={form.fields[i]}
+        formId={form.id}
+        bind:value={form.fields[i].default}
+      />
     {:else}
       <hr />
       <FormFieldBuilder
@@ -83,6 +92,6 @@
     type="button"
     onclick={(e) => {
       form.fields.push(getNewField());
-    }}>{$_("Ajouter un  nouveau champ", "")}</button
+    }}>{$_('Ajouter un  nouveau champ', '')}</button
   >
 {/if}

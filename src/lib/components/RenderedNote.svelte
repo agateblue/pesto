@@ -24,7 +24,7 @@
       <RenderedNoteHeader {note} pageHeader={false} {onDelete} />
     {/key}
   {/if}
-  
+
   {#if note.title?.trim()}
     <p>
       <time datetime={note.created_at}>{formatDate(note.created_at)}</time>

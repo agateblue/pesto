@@ -23,6 +23,6 @@
     type="button"
     onclick={() => (expanded = !expanded)}
   >
-    {#if expanded}{$_("Replier", "")}{:else}{$_("Déplier", "")}{/if}
+    {#if expanded}{$_('Replier', '')}{:else}{$_('Déplier', '')}{/if}
   </button>
 {/if}

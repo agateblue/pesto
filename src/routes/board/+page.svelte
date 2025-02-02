@@ -17,9 +17,7 @@
     getNewNote,
     getNewTodoListFragment,
     createOrUpdateSetting,
-
     getNewTodo
-
   } from '$lib/db';
   import type { MangoQuerySelector } from 'rxdb';
 
@@ -90,7 +88,7 @@
         // we use the default settings
         columns = [
           {
-            name:  $_("À faire", "Colonne du tableau"),
+            name: $_('À faire', 'Colonne du tableau'),
             cards: [],
             index: 0,
             limit: 9999,
@@ -98,7 +96,7 @@
             isLoading: true
           },
           {
-            name:  $_("En cours", "Colonne du tableau"),
+            name: $_('En cours', 'Colonne du tableau'),
             cards: [],
             index: 1,
             limit: 9999,
@@ -106,7 +104,7 @@
             isLoading: true
           },
           {
-            name:  $_("Terminé", "Colonne du tableau"),
+            name: $_('Terminé', 'Colonne du tableau'),
             cards: [],
             index: -1,
             limit: 30,
@@ -179,12 +177,12 @@
             alt=""
           />
         {/snippet}
-        
+
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_("Réglages du tableau", "")}
+          anchorLabel={$_('Réglages du tableau', '')}
           anchor={settingsIcon}
-          title={$_("Réglages du tableau", "")}
+          title={$_('Réglages du tableau', '')}
           onsubmit={async (e: SubmitEvent) => {
             saveBoard();
             e.preventDefault();
@@ -193,7 +191,7 @@
         >
           {#each boardColumnsConfig as column, i (i)}
             <div class="form__field">
-              <label for={`column-${i}`}>{$_("Colonne %0", "Tableau", [i + 1])}</label>
+              <label for={`column-${i}`}>{$_('Colonne %0', 'Tableau', [i + 1])}</label>
               <input
                 type="text"
                 id={`column-${i}`}
@@ -206,7 +204,7 @@
                   onclick={() => {
                     boardColumnsConfig.splice(i, 1);
                     boardColumnsConfig = [...boardColumnsConfig];
-                  }}>{$_("Supprimer", "")}</button
+                  }}>{$_('Supprimer', '')}</button
                 >
               {/if}
             </div>
@@ -219,7 +217,7 @@
                 'New column',
                 ...boardColumnsConfig.slice(-1)
               ];
-            }}>{$_("Ajouter une colonne", "")}</button
+            }}>{$_('Ajouter une colonne', '')}</button
           >
         </DialogForm>
       </header>
@@ -300,7 +298,7 @@
                         return { id: n.id, note: n };
                       })
                     ];
-                  }}>{$_("Charger plus", "")}</button
+                  }}>{$_('Charger plus', '')}</button
                 >
               {/if}
             </section>

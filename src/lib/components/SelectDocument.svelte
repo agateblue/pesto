@@ -7,9 +7,9 @@
     choiceConverter: Function;
   }
 
-  let select = $state(document.createElement('select'))
-  let choices = $state([])
-  let subscription = null
+  let select = $state(document.createElement('select'));
+  let choices = $state([]);
+  let subscription = null;
 
   let { findOptions, choiceConverter, ...restProps }: Props = $props();
 
@@ -17,17 +17,17 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && !subscription) {
-          subscription = globals.db?.documents.find(findOptions).$.subscribe(results => {
-            choices = results.map(r => choiceConverter(r))
-          })
+          subscription = globals.db?.documents.find(findOptions).$.subscribe((results) => {
+            choices = results.map((r) => choiceConverter(r));
+          });
         }
       });
-    })
-    observer.observe(select)
-  })
+    });
+    observer.observe(select);
+  });
   onDestroy(() => {
-    subscription?.unsubscribe()
-  })
+    subscription?.unsubscribe();
+  });
 </script>
 
 <select bind:this={select} {...restProps}>

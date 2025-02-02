@@ -23,18 +23,18 @@
   let todos: TodoType[] = $state(cloneDeep(fragment.todos));
   $effect(() => {
     if (todos.length === 0) {
-      todos.push(getNewTodo())
+      todos.push(getNewTodo());
     }
-  })
+  });
   let done: boolean = $state(fragment.done);
   let column: number = $state(fragment.column === undefined ? 0 : fragment.column);
   let todosFocused = $state(false);
   let subscriptions = [
     syncPropertiesWithExternalChanges(fragment.todos$, (v) => {
       if (!todosFocused) {
-        let n = [...(v || [])]
+        let n = [...(v || [])];
         if (n.slice(-1)[0]?.text?.trim()) {
-          n.push(getNewTodo())
+          n.push(getNewTodo());
         }
         todos = n;
       }
@@ -50,7 +50,6 @@
   onDestroy(clearSubscriptions(subscriptions));
   function handleChange() {
     dispatch('update', { fragment: { ...fragment, done, todos, column } });
-    
   }
   function updateTodo(index: number, todo: TodoType | null) {
     todos = cloneDeep(todos);
@@ -63,11 +62,11 @@
       todos = [...todos, getNewTodo()];
     }
     stats = getStats();
-    done = stats.complete 
+    done = stats.complete;
     if (done) {
-      column = -1
+      column = -1;
     } else if (column === -1) {
-      column = 0
+      column = 0;
     }
     handleChange();
   }
@@ -77,9 +76,9 @@
       total: 0,
       complete: false
     };
-    let t = [...todos]
+    let t = [...todos];
     if (!t.slice(-1)[0]?.text.trim()) {
-      t.pop()
+      t.pop();
     }
     for (const todo of t || []) {
       stats.total += 1;
@@ -87,7 +86,7 @@
         stats.done += 1;
       }
     }
-    
+
     if (t.length > 0 && stats.done >= stats.total) {
       stats.complete = true;
     }
@@ -99,7 +98,7 @@
 
 {#if todos[0]?.text?.trim() && columns}
   <div class="form__field">
-    <label for="todolist-column">{$_("Colonne", "Tableau")}</label>
+    <label for="todolist-column">{$_('Colonne', 'Tableau')}</label>
     <select
       name="todolist-column"
       id="todolist-column"

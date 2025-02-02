@@ -50,7 +50,7 @@
       return;
     }
     if (!note) {
-      let noteData = getNewNote({collection});
+      let noteData = getNewNote({ collection });
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -64,9 +64,8 @@
     dispatch('update', { note });
   }
   async function updateCollection(collection: string) {
-    
     if (!note) {
-      let noteData = getNewNote({collection});
+      let noteData = getNewNote({ collection });
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -83,7 +82,7 @@
     fragment: TodolistType | TextType | FormType | undefined
   ) {
     if (!note) {
-      let noteData = getNewNote({collection});
+      let noteData = getNewNote({ collection });
       noteData.id = id;
       note = await db.documents.insert(noteData);
     }
@@ -103,7 +102,7 @@
 
 <div class="flow">
   <div class="form__field">
-    <label for="note-title">{$_("Titre", "")}</label>
+    <label for="note-title">{$_('Titre', '')}</label>
     <input
       type="text"
       id="note-title"
@@ -115,7 +114,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="note-collection">{$_("Collection", "")}</label>
+    <label for="note-collection">{$_('Collection', '')}</label>
     <SelectDocument
       id="note-collection"
       name="note-collection"
@@ -123,8 +122,10 @@
       onchange={async (e) => {
         await updateCollection(e.target.value);
       }}
-      findOptions={{selector: {type: 'collection'}, sort: [{title: 'asc'}]}}
-      choiceConverter={(c) => {return {value: c.id, text: `${c.data.emoji || '📋️'} ${c.title}`}}}
+      findOptions={{ selector: { type: 'collection' }, sort: [{ title: 'asc' }] }}
+      choiceConverter={(c) => {
+        return { value: c.id, text: `${c.data.emoji || '📋️'} ${c.title}` };
+      }}
     ></SelectDocument>
   </div>
 
@@ -136,14 +137,11 @@
       ignoredEntryId={note.id}
       {webhookUrl}
       onsubmit={async (values: object) => {
-        updateFragment(
-          'form', 
-          { 
-            id: note.fragments.form.id, 
-            data: values, 
-            annotations: note.fragments.form.annotations || {} 
-          }
-        );
+        updateFragment('form', {
+          id: note.fragments.form.id,
+          data: values,
+          annotations: note.fragments.form.annotations || {}
+        });
       }}
       values={note?.fragments?.form?.data}
       showActions={false}
@@ -170,7 +168,7 @@
         todolistKey += 1;
       }}
     >
-      {$_("Charger la liste de tâche depuis le texte", "")}
+      {$_('Charger la liste de tâche depuis le texte', '')}
     </button>
   {/if}
   {#key todolistKey}

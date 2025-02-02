@@ -14,8 +14,8 @@
   observable.subscribe(async (newValue: string) => {
     sidebarFullpage = newValue === 'mainMenu';
     if (sidebarFullpage) {
-      await tick()
-      window.scrollTo(0, 0)
+      await tick();
+      window.scrollTo(0, 0);
     }
   });
 </script>
@@ -23,7 +23,9 @@
 <button
   type="button"
   class={'button__transparent button__icon ' + restProps.class || ''}
-  aria-label={sidebarFullpage ? $_("Fermer le menu principal", "") : $_("Ouvrir le menu principal", "")}
+  aria-label={sidebarFullpage
+    ? $_('Fermer le menu principal', '')
+    : $_('Ouvrir le menu principal', '')}
   onclick={() => {
     if (sidebarFullpage) {
       globals.uiState.set('currentPage', () => null);

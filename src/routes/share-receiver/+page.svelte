@@ -19,24 +19,26 @@
       await goto('/');
     }
     let noteParts = [];
-    
+
     if (url) {
       noteParts.push(url);
     }
 
     if (text) {
-      let lines = text.split('\n')
+      let lines = text.split('\n');
       if (lines[lines.length - 1].includes(':~:text=')) {
         // remove included link to exact text in page if any
         // this happens when sharing text selection through a web browser
-        lines.pop()
+        lines.pop();
       }
       noteParts.push(lines.join('\n'));
     }
 
     let body = noteParts.join('\n\n').trim();
 
-    await globals.uiState.set('sharedNote', () => {return {title, body}});
+    await globals.uiState.set('sharedNote', () => {
+      return { title, body };
+    });
     await delay(500);
     await goto('/my/notes/add?from=share');
   });
@@ -46,7 +48,7 @@
   <MainNavigation />
   <main class="p__block-4">
     <LoadingState {isLoading}>
-      {$_("Traitement en cours…", "")}
+      {$_('Traitement en cours…', '')}
     </LoadingState>
   </main>
 </div>

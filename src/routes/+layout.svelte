@@ -24,9 +24,9 @@
 
   // to avoid firefox crashing locally because service worker can't register
   onMount(async () => {
-    $lang = globals.uiState.language || window.navigator.language
+    $lang = globals.uiState.language || window.navigator.language;
     if (!languagesById[$lang]) {
-      $lang = defaultLanguage
+      $lang = defaultLanguage;
     }
     if (dev) {
       console.warn('Will not register service worker in dev mode.');
@@ -42,11 +42,11 @@
   $effect(() => {
     if ($lang != defaultLanguage) {
       import(`../lib/i18n/messages/${$lang}.po.json`).then((r) => {
-        $parsedTranslations[$lang] = r;	
+        $parsedTranslations[$lang] = r;
       });
     }
     document.documentElement.setAttribute('lang', $lang);
-  })
+  });
 </script>
 
 {@render children?.()}

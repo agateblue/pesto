@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { tokensToMangoQuery, getQueryTokens, type QueryToken, type DocumentType } from '$lib/db';
-import { insertTagMarkup, renderMarkdown, parseTags, getTodoListFromMarkdown, noteToText } from '$lib/ui';
+import {
+  insertTagMarkup,
+  renderMarkdown,
+  parseTags,
+  getTodoListFromMarkdown,
+  noteToText
+} from '$lib/ui';
 
 describe('query language', () => {
   it('getQueryTokens', () => {
@@ -175,7 +181,7 @@ describe('query language', () => {
       modified_at: '2024-11-06T12:26:37.871Z',
       title: 'Cleaning day',
       fragments: {
-        text: {content: "Hello world"},
+        text: { content: 'Hello world' },
         todolist: {
           done: false,
           todos: [
@@ -205,7 +211,7 @@ describe('query language', () => {
 Hello world
 
 - [ ] Dishes
-- [x] Laundry`
+- [x] Laundry`;
     expect(noteToText(input)).toStrictEqual(expected);
   });
 });

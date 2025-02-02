@@ -251,7 +251,7 @@ describe('query language', () => {
         text: { content: 'hello' },
         todolist: {
           done: true,
-          todos: [{text: 'Cleaning day', done: true, id: 'noop'}],
+          todos: [{ text: 'Cleaning day', done: true, id: 'noop' }],
           column: 1
         }
       },
@@ -297,7 +297,7 @@ describe('query language', () => {
       fragments: {
         todolist: {
           done: true,
-          todos: [{text: 'hello', done: true, id: 'noop'}],
+          todos: [{ text: 'hello', done: true, id: 'noop' }],
           // this means done
           column: -1
         }
@@ -491,7 +491,7 @@ describe('query language', () => {
       tags: [],
       title: null,
       source: 'Tempo',
-      _deleted: false,
+      _deleted: false
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });
@@ -506,7 +506,7 @@ describe('query language', () => {
       id: 'ignored:tempo:settings:something',
       type: 'ignored',
       source: 'Tempo',
-      _deleted: false,
+      _deleted: false
     };
     expect(tempoToPestoDocument(input, 3)).toStrictEqual(expected);
   });

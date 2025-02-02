@@ -6,34 +6,36 @@
     collection: DocumentDocument;
   }
 
-  let {
-    collection = $bindable(),
-  }: Props = $props();
-
+  let { collection = $bindable() }: Props = $props();
 </script>
 
 <div class="form__field">
   <label for="collection-name">
-    {$_("Nom", "")}
+    {$_('Nom', '')}
   </label>
-  <input type="text" id="collection-name" name="collection-name" bind:value={collection.title}>
+  <input type="text" id="collection-name" name="collection-name" bind:value={collection.title} />
 </div>
 <div class="form__field">
   <label for="collection-query">
-    {$_("Requête", "")}
+    {$_('Requête', '')}
   </label>
   <textarea
     class="autoresize"
-    id="collection-query" name="collection-query" bind:value={collection.data.query}>
+    id="collection-query"
+    name="collection-query"
+    bind:value={collection.data.query}
+  >
   </textarea>
   <p class="form__help">
-    {$_("Inclure automatiquement dan la collection les notes correspondant à cette requête.", "")} 
+    {$_('Inclure automatiquement dan la collection les notes correspondant à cette requête.', '')}
   </p>
 </div>
 <div class="form__field">
-  <label for="collection-icon">{$_("Icône :", "")} {collection.data.emoji || '📋️'}</label>
-  <EmojiPicker 
-    onemoji-click={(e) => {collection.data.emoji = e.detail.unicode}}
+  <label for="collection-icon">{$_('Icône :', '')} {collection.data.emoji || '📋️'}</label>
+  <EmojiPicker
+    onemoji-click={(e) => {
+      collection.data.emoji = e.detail.unicode;
+    }}
     style="width: 100%"
   ></EmojiPicker>
 </div>
