@@ -178,7 +178,6 @@ body {
     top: 0;
     background-color: var(--header-background);
     padding: var(--space-2);    
-    margin-block-end: var(--space-2);
     z-index: 4;
     border-bottom: var(--layout-separator);
     display: flex;
@@ -196,6 +195,7 @@ body {
     }
   }
   > .scroll {
+    padding-block-start: var(--space-3);
     flex: 1;
     overflow-x: auto;
     overflow-y: auto;
@@ -671,7 +671,10 @@ li:has(kbd) {
 }
 hr {
   border: none;
-  border-top: 1px solid var(--text-discrete-color);
+  border-top: var(--layout-separator);
+  &.hidden {
+    border-top: none;
+  }
 }
 .todolist input[type='checkbox'] {
   scale: 1.5;

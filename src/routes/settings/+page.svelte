@@ -223,196 +223,201 @@
                 {/each}
               </select>
             </div>
-          </div>
-          <h1>{$_("Synchronisation", "")}</h1>
-          <p>
-            {$_("Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si vous utilisez le mode WebRTC, les données transitent directement d'un appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers.", "")}
-            
-          </p>
-          {#if replications.length > 0}
-            <h2>
-              {$_("Synchronisations existantes", "")}
-            </h2>
-            <div class="flow" role="list">
-              {#each replications as replication, i (i)}
-                <ReplicationCard
-                  bind:replication={replications[i]}
-                  class="card"
-                  role="listitem"
-                  on:submit={async (e) => {
-                    await handleSubmitReplication(e.detail.replication, i);
-                  }}
-                  on:delete={async () => {
-                    replications.splice(i, 1);
-                    replications = [...replications];
-                    await globals.uiState.set('replications', () => {
-                      return replications.map((t) => cloneDeep(t));
-                    });
-                  }}
-                />
-              {/each}
-            </div>
-          {/if}
-          <DialogForm
-            anchorClass="button"
-            anchorText={$_("Configurer une nouvelle synchronisation", "")}
-            title={$_("Configurer une nouvelle synchronisation", "")}
-            onsubmit={async (e: SubmitEvent) => {
-              e.preventDefault();
-              await handleSubmitReplication(newReplication, null);
-              newReplication = null;
-              replicationType = null;
-            }}
-          >
-            <div class="form__field">
-              <label for="replication-type">{$_("Mode", "")}</label>
-              <select
-                name="replication-type"
-                id="replication-type"
-                bind:value={replicationType}
-                onchange={() => {
-                  newReplication = getNewReplication(replicationType);
-                }}
-              >
-                <option value={null}>---</option>
-                <option value="webrtc">{$_("WebRTC", "")}</option>
-                <option value="couchdb">{$_("CouchDB", "")}</option>
-                <option value="couchdb-tempo">{$_("CouchDB (avec compatibilité Tempo", "")}</option>
-              </select>
-            </div>
-            {#if newReplication}
-              <ReplicationForm bind:replication={newReplication} />
-            {/if}
-          </DialogForm>
-
-          <form
-            id="export"
-            class="flow m__block-3"
-            onsubmit={async (e) => {
-              e.preventDefault();
-              exportMessages = [];
-              let flags = {};
-              for (const flag of exportTypes[exportType].flags) {
-                flags[flag.id] = flag.value;
-              }
-              let data = await exportTypes[exportType].handler(exportMessages, flags);
-              let d = new Date().toISOString().slice(0, 16);
-              let filename = `pesto_to_${exportType}_${d}.json`;
-              downloadFile(JSON.stringify(data, null, 2), 'application/json', filename);
-            }}
-          >
-            <h1>{$_("Sauvegarde", "")}</h1>
+            <hr class="hidden" />            
+            <h1>{$_("Synchronisation", "")}</h1>
             <p>
-              {$_("Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application.", "")}
+              {$_("Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si vous utilisez le mode WebRTC, les données transitent directement d'un appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers.", "")}
+              
             </p>
-            <div class="form__field">
-              <label for="export-format">{$_("Format de sauvegarde", "")}</label>
-              <select name="export-format" id="export-format" bind:value={exportType}>
-                <option value="pesto">JSON/Pesto</option>
-                <option value="tempo">JSON/Tempo</option>
-              </select>
-            </div>
-
-            {#if exportType}
-              {@html renderMarkdown(exportTypes[exportType].help)}
-
-              {#if exportTypes[exportType].flags.length > 0}
-                {#each exportTypes[exportType].flags as flag, i (i)}
-                  <div class="form__field">
-                    <input
-                      type="checkbox"
-                      name={`export-flag-${flag.id}`}
-                      id={`export-flag-${flag.id}`}
-                      bind:checked={exportTypes[exportType].flags[i].value}
-                    />
-                    <label for={`export-flag-${flag.id}`}>{flag.label}</label>
-                  </div>
+            {#if replications.length > 0}
+              <h2>
+                {$_("Synchronisations existantes", "")}
+              </h2>
+              <div class="flow" role="list">
+                {#each replications as replication, i (i)}
+                  <ReplicationCard
+                    bind:replication={replications[i]}
+                    class="card"
+                    role="listitem"
+                    on:submit={async (e) => {
+                      await handleSubmitReplication(e.detail.replication, i);
+                    }}
+                    on:delete={async () => {
+                      replications.splice(i, 1);
+                      replications = [...replications];
+                      await globals.uiState.set('replications', () => {
+                        return replications.map((t) => cloneDeep(t));
+                      });
+                    }}
+                  />
                 {/each}
-              {/if}
-              <FormResult messages={exportMessages} forEl="export-format" />
-              <div class="flex__row flex__justify-end">
-                <button type="submit"> {$_("Sauvegarder", "")} </button>
               </div>
             {/if}
-          </form>
-
-          <form
-            id="import"
-            class="flow m__block-3"
-            onsubmit={(e) => {
-              e.preventDefault();
-              importMessages = [];
-              let flags = {};
-              for (const flag of importTypes[importType].flags) {
-                flags[flag.id] = flag.value;
-              }
-              importTypes[importType].handler(importFiles, importMessages, flags);
-            }}
-          >
-            <h1>{$_("Restauration", "")}</h1>
-            <p>
-              {$_("Restaurer les données d'une autre source dans Pesto. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit.", "")}
-            </p>
-            <div class="form__field">
-              <label for="import-source">{$_("Type de restauration", "")}</label>
-              <select name="import-source" id="import-source" bind:value={importType}>
-                <option value="pesto">JSON/Pesto</option>
-                <option value="tempo">JSON/Tempo</option>
-              </select>
-            </div>
-
-            {#if importType}
-              {@html renderMarkdown(importTypes[importType].help)}
+            <DialogForm
+              anchorClass="button"
+              anchorText={$_("Configurer une nouvelle synchronisation", "")}
+              title={$_("Configurer une nouvelle synchronisation", "")}
+              onsubmit={async (e: SubmitEvent) => {
+                e.preventDefault();
+                await handleSubmitReplication(newReplication, null);
+                newReplication = null;
+                replicationType = null;
+              }}
+            >
               <div class="form__field">
-                <label for="import-file">{$_("Sélectionner le fichier à restaurer", "")}</label>
-                <input
-                  accept=".json,application/json"
-                  id="import-file"
-                  name="import-file"
-                  type="file"
-                  bind:files={importFiles}
-                />
+                <label for="replication-type">{$_("Mode", "")}</label>
+                <select
+                  name="replication-type"
+                  id="replication-type"
+                  bind:value={replicationType}
+                  onchange={() => {
+                    newReplication = getNewReplication(replicationType);
+                  }}
+                >
+                  <option value={null}>---</option>
+                  <option value="webrtc">{$_("WebRTC", "")}</option>
+                  <option value="couchdb">{$_("CouchDB", "")}</option>
+                  <option value="couchdb-tempo">{$_("CouchDB (avec compatibilité Tempo", "")}</option>
+                </select>
               </div>
-              {#if importTypes[importType].flags.length > 0}
-                {#each importTypes[importType].flags as flag, i (i)}
-                  <div class="form__field">
-                    <input
-                      type="checkbox"
-                      name={`import-flag-${flag.id}`}
-                      id={`import-flag-${flag.id}`}
-                      bind:checked={importTypes[importType].flags[i].value}
-                    />
-                    <label for={`import-flag-${flag.id}`}>{flag.label}</label>
-                  </div>
-                {/each}
+              {#if newReplication}
+                <ReplicationForm bind:replication={newReplication} />
               {/if}
-              <FormResult messages={importMessages} forEl="import-file" />
-              <div class="flex__row flex__justify-end">
-                <button type="submit"> {$_("Restaurer", "")} </button>
+            </DialogForm>
+            <hr class="hidden" />
+
+            <form
+              id="export"
+              class="flow m__block-3"
+              onsubmit={async (e) => {
+                e.preventDefault();
+                exportMessages = [];
+                let flags = {};
+                for (const flag of exportTypes[exportType].flags) {
+                  flags[flag.id] = flag.value;
+                }
+                let data = await exportTypes[exportType].handler(exportMessages, flags);
+                let d = new Date().toISOString().slice(0, 16);
+                let filename = `pesto_to_${exportType}_${d}.json`;
+                downloadFile(JSON.stringify(data, null, 2), 'application/json', filename);
+              }}
+            >
+              <h1>{$_("Sauvegarde", "")}</h1>
+              <p>
+                {$_("Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application.", "")}
+              </p>
+              <div class="form__field">
+                <label for="export-format">{$_("Format de sauvegarde", "")}</label>
+                <select name="export-format" id="export-format" bind:value={exportType}>
+                  <option value="pesto">JSON/Pesto</option>
+                  <option value="tempo">JSON/Tempo</option>
+                </select>
               </div>
-            {/if}
-          </form>
 
-          <h1>{$_("Effacer mes données", "")}</h1>
+              {#if exportType}
+                {@html renderMarkdown(exportTypes[exportType].help)}
 
-          <p>
-            {$_("Vous pouvez supprimer l'intégralité de vos données Pesto. Une confirmation vous sera demandée.", "")}
-          </p>
-          <DialogForm
-            anchorClass="button"
-            anchorText={$_("Effacer toutes mes données", "")}
-            title={$_("Effacer toutes les données de Pesto ?", "")}
-            onsubmit={(e: SubmitEvent) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
+                {#if exportTypes[exportType].flags.length > 0}
+                  {#each exportTypes[exportType].flags as flag, i (i)}
+                    <div class="form__field">
+                      <input
+                        type="checkbox"
+                        name={`export-flag-${flag.id}`}
+                        id={`export-flag-${flag.id}`}
+                        bind:checked={exportTypes[exportType].flags[i].value}
+                      />
+                      <label for={`export-flag-${flag.id}`}>{flag.label}</label>
+                    </div>
+                  {/each}
+                {/if}
+                <button type="submit"> {$_("Sauvegarder", "")} </button>
+                {#if exportMessages.length > 0}
+                  <FormResult messages={exportMessages} forEl="export-format" />
+                {/if}
+              {/if}
+            </form>
+            <hr class="hidden" />            
+            <form
+              id="import"
+              class="flow m__block-3"
+              onsubmit={(e) => {
+                e.preventDefault();
+                importMessages = [];
+                let flags = {};
+                for (const flag of importTypes[importType].flags) {
+                  flags[flag.id] = flag.value;
+                }
+                importTypes[importType].handler(importFiles, importMessages, flags);
+              }}
+            >
+              <h1>{$_("Restauration", "")}</h1>
+              <p>
+                {$_("Restaurer les données d'une autre source dans Pesto. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit.", "")}
+              </p>
+              <div class="form__field">
+                <label for="import-source">{$_("Type de restauration", "")}</label>
+                <select name="import-source" id="import-source" bind:value={importType}>
+                  <option value="pesto">JSON/Pesto</option>
+                  <option value="tempo">JSON/Tempo</option>
+                </select>
+              </div>
+
+              {#if importType}
+                {@html renderMarkdown(importTypes[importType].help)}
+                <div class="form__field">
+                  <label for="import-file">{$_("Sélectionner le fichier à restaurer", "")}</label>
+                  <input
+                    accept=".json,application/json"
+                    id="import-file"
+                    name="import-file"
+                    type="file"
+                    bind:files={importFiles}
+                  />
+                </div>
+                {#if importTypes[importType].flags.length > 0}
+                  {#each importTypes[importType].flags as flag, i (i)}
+                    <div class="form__field">
+                      <input
+                        type="checkbox"
+                        name={`import-flag-${flag.id}`}
+                        id={`import-flag-${flag.id}`}
+                        bind:checked={importTypes[importType].flags[i].value}
+                      />
+                      <label for={`import-flag-${flag.id}`}>{flag.label}</label>
+                    </div>
+                  {/each}
+                {/if}
+                <button type="submit"> {$_("Restaurer", "")} </button>
+                {#if importMessages.length > 0}
+                  <FormResult messages={importMessages} forEl="import-file" />
+                {/if}
+              {/if}
+            </form>
+
+            <hr class="hidden" />
+
+            <h1>{$_("Effacer mes données", "")}</h1>
             <p>
-              {$_("Supprimer toutes les données locales y compris les notes, tâches, paramètres, collections et formulaires. Cette action est irréversible.", "")}
+              {$_("Vous pouvez supprimer l'intégralité de vos données Pesto. Une confirmation vous sera demandée.", "")}
             </p>
-          </DialogForm>
-          <h1>{$_("Informations de l'application", "")}</h1>
-          <p>{$_("Version : %0", "", [PUBLIC_BUILD_ID])}</p>
+            <DialogForm
+              anchorClass="button"
+              anchorText={$_("Effacer toutes mes données", "")}
+              title={$_("Effacer toutes les données de Pesto ?", "")}
+              onsubmit={(e: SubmitEvent) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
+              <p>
+                {$_("Supprimer toutes les données locales y compris les notes, tâches, paramètres, collections et formulaires. Cette action est irréversible.", "")}
+              </p>
+            </DialogForm>
+            <hr class="hidden" />
+            <h1>{$_("Informations de l'application", "")}</h1>
+            <p>{$_("Version : %0", "", [PUBLIC_BUILD_ID])}</p>
+            <hr class="hidden">
+          </div>
         </div>
       </section>
     </div>
