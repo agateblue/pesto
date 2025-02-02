@@ -36,7 +36,7 @@ addRxPlugin(RxDBUpdatePlugin);
 addRxPlugin(RxDBCleanupPlugin);
 addRxPlugin(RxDBLeaderElectionPlugin);
 
-export const DEFAULT_SIGNALING_SERVER = 'wss://signaling.rxdb.info/';
+export const DEFAULT_SIGNALING_SERVER = 'wss://webrtc.pesto.garden/';
 
 export const LOCALE = new Intl.NumberFormat().resolvedOptions().locale;
 

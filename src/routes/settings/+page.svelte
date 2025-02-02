@@ -14,7 +14,7 @@
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
   import {languages} from '../../lib/i18n'
-  import { type LogMessage, renderMarkdown, downloadFile } from '$lib/ui';
+  import { type LogMessage, renderMarkdown, downloadFile, getRandomId } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
   import {
     handleImportTempo,
@@ -160,7 +160,7 @@
       return {
         type: 'webrtc',
         signalingServer: DEFAULT_SIGNALING_SERVER,
-        room: `pesto-${new Date().toISOString()}`,
+        room: getRandomId(40),
         push: true,
         pull: true
       };
