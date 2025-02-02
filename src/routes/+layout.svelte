@@ -45,6 +45,7 @@
         $parsedTranslations[$lang] = r;	
       });
     }
+    document.documentElement.setAttribute('lang', $lang);
   })
 </script>
 
