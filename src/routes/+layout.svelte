@@ -8,7 +8,6 @@
   import { languagesById, defaultLanguage } from '$lib/i18n';
   import { onMount } from 'svelte';
 
-  import detectBrowserLanguage from 'detect-browser-language'
   import { lang, parsedTranslations } from '$lib/i18n/stores';
 
   /**
@@ -25,7 +24,7 @@
 
   // to avoid firefox crashing locally because service worker can't register
   onMount(async () => {
-    $lang = globals.uiState.language || detectBrowserLanguage() 
+    $lang = globals.uiState.language || window.navigator.language
     if (!languagesById[$lang]) {
       $lang = defaultLanguage
     }

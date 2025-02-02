@@ -49,7 +49,6 @@
     "@sentry/sveltekit": "^8",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "detect-browser-language": "^0.0.2",
     "dompurify": "^3.1.6",
     "emoji-picker-element": "^1.26.0",
     "emoji-picker-element-data": "^1",
