@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
+  import { lang } from '$lib/i18n/stores';
+
   import { PUBLIC_BUILD_ID } from '$env/static/public';
 
   import { preventDefault } from 'svelte/legacy';
@@ -10,6 +13,7 @@
   import MainNavigation from '$lib/components/MainNavigation.svelte';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
   import { globals, DEFAULT_SIGNALING_SERVER, type AnyReplication } from '$lib/db';
+  import {languages} from '../../lib/i18n'
   import { type LogMessage, renderMarkdown, downloadFile } from '$lib/ui';
   import cloneDeep from 'lodash/cloneDeep';
   import {
@@ -199,6 +203,12 @@ Export to a Tempo JSON file.
       console.log(err);
     }
   }
+
+  async function updateLanguage (v: string) {
+    await globals.uiState.set('language', () => v);
+    $lang = v
+
+  }
 </script>
 
 <div class="my__layout">
@@ -211,6 +221,18 @@ Export to a Tempo JSON file.
       </header>
       <section class="flow | scroll">
         <div class="wrapper p__inline-3">
+          <div class="flow">
+            <h1>Interface</h1>
+            <div class="form__field">
+              {$lang}
+              <label for="language">{$_('Language')}</label>
+              <select name="language" id="language" value={$lang} oninput={(e) => updateLanguage(e.target.value)}>
+                {#each languages as language}
+                  <option value={language.id}>{language.name}</option>
+                {/each}
+              </select>
+            </div>
+          </div>
           <h1>Synchronisation</h1>
           <p>
             Pesto data can be synchronized with other devices. With WebRTC, the data transit only
