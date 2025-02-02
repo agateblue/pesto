@@ -1,3 +1,0 @@
-#: src/routes/+page.svelte:35
-msgid "Hello"
-msgstr ""

@@ -26,7 +26,7 @@ main
 # this one is okay to have commited because is should only contain public data
 !.env
 
-src/i18n/messages/*.po.json
+src/lib/i18n/messages/*.po.json
 static/emojis.json
 
 android

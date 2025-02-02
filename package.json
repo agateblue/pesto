@@ -12,9 +12,9 @@
     "test": "yarn i18n:compile && vitest",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "i18n:extract": "node src/i18n/extract.cjs",
-    "i18n:update": "find ./src/i18n/messages -name '*.po' -print0 -exec msgmerge -U {} './src/i18n/messages/messages.pot' ';'; rm ./src/i18n/messages/*.po~",
-    "i18n:compile": "find ./src/i18n/messages -name '*.po' -print0 -exec node node_modules/svelte-i18n-gettext/bin/po2json.cjs -i {} -o {}.json -v ';'"
+    "i18n:extract": "node src/lib/i18n/extract.cjs",
+    "i18n:update": "find ./src/lib/i18n/messages -name '*.po' -print0 -exec msgmerge -U {} './src/lib/i18n/messages/messages.pot' ';'; rm ./src/lib/i18n/messages/*.po~",
+    "i18n:compile": "find ./src/lib/i18n/messages -name '*.po' -print0 -exec node src/lib/i18n/po2json.cjs -i {} -o {}.json -v ';'"
   },
   "devDependencies": {
     "@rgglez/gettext-extractor": "^3.8.1",
@@ -24,9 +24,11 @@
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@types/eslint": "^9.6.0",
     "@types/pouchdb": "^6.4.2",
+    "commander": "^11.1.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.45.1",
+    "gettext-parser": "^7.0.1",
     "globals": "^15.0.0",
     "prettier": "^3.1.1",
     "prettier-plugin-svelte": "^3.2.6",
@@ -43,9 +45,11 @@
   "type": "module",
   "dependencies": {
     "@iconify-json/iconamoon": "^1.1.5",
+    "@postalsys/gettext": "^4.0.1",
     "@sentry/sveltekit": "^8",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
+    "detect-browser-language": "^0.0.2",
     "dompurify": "^3.1.6",
     "emoji-picker-element": "^1.26.0",
     "emoji-picker-element-data": "^1",
@@ -56,7 +60,6 @@
     "plausible-tracker": "^0.3.9",
     "rxdb": "16.3.0",
     "rxjs": "^7.8.1",
-    "svelte-i18n-gettext": "^1.0.15",
     "svelte-lazy": "^1.2.10",
     "unplugin-icons": "^0.19.2"
   }

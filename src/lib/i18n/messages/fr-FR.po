@@ -1,0 +1,3 @@
+#: src/routes/settings/+page.svelte:226
+msgid "Language"
+msgstr "Langue"

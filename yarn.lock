@@ -2785,6 +2785,11 @@ deprecation@^2.0.0:
   resolved "https://registry.yarnpkg.com/deprecation/-/deprecation-2.3.1.tgz#6368cbdb40abf3373b525ac87e4a260c3a700919"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
+detect-browser-language@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/detect-browser-language/-/detect-browser-language-0.0.2.tgz#3113c2f5951d9b9d6d79cfdaca0965ae75ca0564"
+  integrity sha512-P/MsYjpZArhT40nJkJuE9fCTCJxjt73iGPPQqbqB8swVB6vSiOQrsTGDaYLjeNogD2ImuR1qON/7QmQTnrNQFA==
+
 devalue@^5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-5.1.1.tgz#a71887ac0f354652851752654e4bd435a53891ae"
@@ -4976,15 +4981,6 @@ svelte-eslint-parser@^0.43.0:
     espree "^9.6.1"
     postcss "^8.4.39"
     postcss-scss "^4.0.9"
-
-svelte-i18n-gettext@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/svelte-i18n-gettext/-/svelte-i18n-gettext-1.0.15.tgz#23563d0046824fb178c886ce6c748c820b4910fc"
-  integrity sha512-dnQTZ0RUPMT6mElFhkf/wQY3TyYKRh3iE5gmtlhQ82nfu68Vhh+EOxg5Vch+YtyAU13n84+HLOn65xQ2K3XhyA==
-  dependencies:
-    "@postalsys/gettext" "^4.0.1"
-    commander "^11.1.0"
-    gettext-parser "^7.0.1"
 
 svelte-lazy@^1.2.10:
   version "1.2.10"

@@ -2,6 +2,6 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: ./src/routes/+page.svelte:35
-msgid "Hello"
+#: ./src/routes/settings/+page.svelte:228
+msgid "Language"
 msgstr ""

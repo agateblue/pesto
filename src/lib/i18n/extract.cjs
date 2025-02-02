@@ -30,6 +30,6 @@ function getPotString(headers = {}) {
     return po.toString();
 }
 
-fs.writeFileSync('./src/i18n/messages/messages.pot', getPotString());
+fs.writeFileSync('./src/lib/i18n/messages/messages.pot', getPotString());
 
 extractor.printStats();
