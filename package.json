@@ -13,7 +13,7 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "i18n:extract": "node src/lib/i18n/extract.cjs",
-    "i18n:update": "find ./src/lib/i18n/messages -name '*.po' -print0 -exec msgmerge -U {} './src/lib/i18n/messages/messages.pot' ';'; rm ./src/lib/i18n/messages/*.po~",
+    "i18n:update": "find ./src/lib/i18n/messages -name '*.po' -print0 -exec msgmerge -U {} './src/lib/i18n/messages/messages.pot' ';'; rm -f ./src/lib/i18n/messages/*.po~",
     "i18n:compile": "find ./src/lib/i18n/messages -name '*.po' -print0 -exec node src/lib/i18n/po2json.cjs -i {} -o {}.json -v ';'"
   },
   "devDependencies": {

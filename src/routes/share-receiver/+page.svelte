@@ -46,8 +46,7 @@
   <MainNavigation />
   <main class="p__block-4">
     <LoadingState {isLoading}>
-      {$_("", "")}
-      Traitement en cours…
+      {$_("Traitement en cours…", "")}
     </LoadingState>
   </main>
 </div>

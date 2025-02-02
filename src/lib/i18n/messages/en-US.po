@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
 #: src/lib/components/CollapsableContent.svelte:26
@@ -122,8 +122,8 @@ msgstr ""
 "as autocomplete."
 
 #: src/lib/components/FormRendered.svelte:109
-msgid "Pré-remplir à partir du dernier formulaire"
-msgstr "Pre-fill from last form"
+msgid "Pré-remplir"
+msgstr "Prefill"
 
 #: src/lib/components/FormRendered.svelte:46
 #: src/lib/components/ReplicationCard.svelte:48
@@ -136,6 +136,7 @@ msgstr "Edit form %0"
 
 #: src/lib/components/FormRendered.svelte:58
 #: src/lib/components/RenderedNoteHeader.svelte:117
+#: src/routes/board/+page.svelte:209
 msgid "Supprimer"
 msgstr "Delete"
 
@@ -152,6 +153,7 @@ msgstr ""
 "irreversible."
 
 #: src/lib/components/FormRendered.svelte:95
+#: src/routes/settings/+page.svelte:334
 msgid "Sauvegarder"
 msgstr "Save"
 
@@ -168,7 +170,8 @@ msgid "Charger la liste de tâche depuis le texte"
 msgstr "Load todolist from text"
 
 #: src/lib/components/MainNavigation.svelte:106
-msgid "Paramètres"
+#: src/routes/settings/+page.svelte:212
+msgid "Réglages"
 msgstr "Settings"
 
 #: src/lib/components/MainNavigation.svelte:120
@@ -209,6 +212,7 @@ msgid "Données"
 msgstr "Data"
 
 #: src/lib/components/MainNavigation.svelte:202
+#: src/routes/forms/+page.svelte:67
 msgid "Formulaires"
 msgstr "Forms"
 
@@ -216,7 +220,7 @@ msgstr "Forms"
 msgid "Synchroniser"
 msgstr "Synchronize"
 
-#: src/lib/components/MainNavigation.svelte:93
+#: src/lib/components/MainNavigation.svelte:93 src/routes/my/+page.svelte:48
 msgid "Rechercher"
 msgstr "Search"
 
@@ -228,7 +232,7 @@ msgstr "Open main navigation"
 msgid "Fermer le menu principal"
 msgstr "Close main navigation"
 
-#: src/lib/components/NoteForm.svelte:106
+#: src/lib/components/NoteForm.svelte:106 src/routes/forms/+page.svelte:81
 msgid "Ajouter un formulaire"
 msgstr "Add form"
 
@@ -250,17 +254,17 @@ msgstr "Delete note"
 msgid "Supprimer cette note ?"
 msgstr "Delete this note?"
 
-#: src/lib/components/NoteForm.svelte:42
+#: src/lib/components/NoteForm.svelte:42 src/routes/board/+page.svelte:93
 msgctxt "Colonne du tableau"
 msgid "À faire"
 msgstr "Todo"
 
-#: src/lib/components/NoteForm.svelte:43
+#: src/lib/components/NoteForm.svelte:43 src/routes/board/+page.svelte:101
 msgctxt "Colonne du tableau"
 msgid "En cours"
 msgstr "Doing"
 
-#: src/lib/components/NoteForm.svelte:44
+#: src/lib/components/NoteForm.svelte:44 src/routes/board/+page.svelte:109
 msgctxt "Colonne du tableau"
 msgid "Terminé"
 msgstr "Done"
@@ -326,20 +330,19 @@ msgid "Copier le contenu"
 msgstr "Copy content"
 
 #: src/lib/components/ReplicationCard.svelte:25
-msgctxt "Nom"
-msgid "Type :"
-msgstr "Type:"
-
-#: src/lib/components/ReplicationCard.svelte:25
 msgid "WebRTC :"
 msgstr "WebRTC:"
+
+#: src/lib/components/ReplicationCard.svelte:25
+msgid "Mode :"
+msgstr "Mode:"
 
 #: src/lib/components/ReplicationCard.svelte:26
 msgid "Serveur de mise en relation :"
 msgstr "Signaling server:"
 
 #: src/lib/components/ReplicationCard.svelte:31
-msgid "CouchDB (Avec compatibilité Tempo)"
+msgid "CouchDB (avec compatibilité Tempo)"
 msgstr "CouchDB (With Tempo compatibility):"
 
 #: src/lib/components/ReplicationCard.svelte:31
@@ -504,6 +507,262 @@ msgstr "Add a new todo…"
 msgid "Supprimer la tâche"
 msgstr "Delete todo"
 
-#: src/routes/settings/+page.svelte:227
+#: src/routes/+page.svelte:38
+msgid "Chargement de Pesto"
+msgstr "Loading Pesto"
+
+#: src/routes/+page.svelte:40
+msgid "Préparation des données pour la nouvelle version"
+msgstr "Preparing data for the new version"
+
+#: src/routes/+page.svelte:52
+msgid "Préparation des données terminée, vous serez redirigé·e sous peu…"
+msgstr "Data preparation complete, you will be redirected shortly…"
+
+#: src/routes/board/+page.svelte:185
+msgid "Réglages du tableau"
+msgstr "Board settings"
+
+#: src/routes/board/+page.svelte:196
+msgctxt "Tableau"
+msgid "Colonne %0"
+msgstr "Column %0"
+
+#: src/routes/board/+page.svelte:222
+msgid "Ajouter une colonne"
+msgstr "Add a column"
+
+#: src/routes/board/+page.svelte:303
+msgid "Charger plus"
+msgstr "Load more"
+
+#: src/routes/forms/+page.svelte:112
+msgid "Réglages du formulaire"
+msgstr "Form settings"
+
+#: src/routes/forms/+page.svelte:120
+msgid "URL de webhook"
+msgstr "Webhook URL"
+
+#: src/routes/forms/+page.svelte:128
+msgid ""
+"Notifier une URL via une requête POST lorsque une entrée de formulaire est "
+"créée, modifiée ou supprimée"
+msgstr ""
+"Notify a URL trough a POST request when a form entry is added, modified or "
+"deleted"
+
+#: src/routes/forms/+page.svelte:86
+msgid "Mon formulaire"
+msgstr "My form"
+
+#: src/routes/my/+page.svelte:106
+msgid "Enregistrer et rédiger une nouvelle note"
+msgstr "Save and add a new note"
+
+#: src/routes/my/+page.svelte:62
+msgid "Effacer la recherche"
+msgstr "Clear search"
+
+#: src/routes/my/notes/[note_id]/+page.svelte:55
+msgid "Cette note n'existe pas."
+msgstr "This note doesn't exist."
+
+#: src/routes/my/notes/add/+page.svelte:11
+msgid "Enregistrer"
+msgstr "Save"
+
+#: src/routes/settings/+page.svelte:103
+msgid "Sauvegarder les collections"
+msgstr "Save collections"
+
+#: src/routes/settings/+page.svelte:108
+msgid "Sauvegarder les formulaires"
+msgstr "Save forms"
+
+#: src/routes/settings/+page.svelte:113
+msgid "Sauvegarder les réglages"
+msgstr "Save settings"
+
+#: src/routes/settings/+page.svelte:121
+msgid "Créer une sauvegarde partielle ou complète au format JSON/Tempo."
+msgstr "Create a partial or complete JSON/Tempo save."
+
+#: src/routes/settings/+page.svelte:130
+msgid "Sauvegarder les tâches et le tableau"
+msgstr "Save todos and board"
+
+#: src/routes/settings/+page.svelte:219
 msgid "Langue"
 msgstr "Language"
+
+#: src/routes/settings/+page.svelte:227
+msgid "Synchronisation"
+msgstr "Synchronizations"
+
+#: src/routes/settings/+page.svelte:229
+msgid ""
+"Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si "
+"vous utilisez le mode WebRTC, les données transitent directement d'un "
+"appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers."
+msgstr ""
+"Data from Pesto can be synchronized with other devices. If you use the "
+"WebRTC mode, data will flow directly from one device to another and won't be "
+"accessible to any third-party."
+
+#: src/routes/settings/+page.svelte:234
+msgid "Synchronisations existantes"
+msgstr "Existing synchronizations"
+
+#: src/routes/settings/+page.svelte:258
+msgid "Configurer une nouvelle synchronisation"
+msgstr "Configure a new synchronization"
+
+#: src/routes/settings/+page.svelte:268
+msgid "Mode"
+msgstr "Mode"
+
+#: src/routes/settings/+page.svelte:278
+msgid "WebRTC"
+msgstr "WebRTC"
+
+#: src/routes/settings/+page.svelte:279
+msgid "CouchDB"
+msgstr "CouchDB"
+
+#: src/routes/settings/+page.svelte:280
+msgid "CouchDB (avec compatibilité Tempo"
+msgstr "CouchDB (with Tempo compatibility)"
+
+#: src/routes/settings/+page.svelte:304
+msgid "Sauvegarde"
+msgstr "Backup"
+
+#: src/routes/settings/+page.svelte:306
+msgid ""
+"Sauvegarder les données de Pesto afin d'en garder une copie ou de les "
+"transférer vers une autre application."
+msgstr ""
+"Backup data from Pesto to have an external copy or to transfer it to another "
+"app."
+
+#: src/routes/settings/+page.svelte:309
+msgid "Format de sauvegarde"
+msgstr "Backup format"
+
+#: src/routes/settings/+page.svelte:35
+msgid "Restaurer depuis un fichier JSON/Tempo."
+msgstr "Restore from a JSON/Tempo file."
+
+#: src/routes/settings/+page.svelte:352
+msgid "Restauration"
+msgstr "Restore"
+
+#: src/routes/settings/+page.svelte:354
+msgid ""
+"Restaurer les données d'une autre source dans Pesto. Les doublons sont "
+"ignorés et vos données locales sont toujours préservées en cas de conflit."
+msgstr ""
+"Restore data from another source into Pesto. Duplicates are ignored and your "
+"local data will always be preserved in case of conflict."
+
+#: src/routes/settings/+page.svelte:357
+msgid "Type de restauration"
+msgstr "Restoration type"
+
+#: src/routes/settings/+page.svelte:367
+msgid "Sélectionner le fichier à restaurer"
+msgstr "Select the file to restore"
+
+#: src/routes/settings/+page.svelte:39
+msgid "Restaurer les notes"
+msgstr "Restore notes"
+
+#: src/routes/settings/+page.svelte:391
+msgid "Restaurer"
+msgstr "Restore"
+
+#: src/routes/settings/+page.svelte:396
+msgid "Effacer mes données"
+msgstr "Delete my data"
+
+#: src/routes/settings/+page.svelte:399
+msgid ""
+"Vous pouvez supprimer l'intégralité de vos données Pesto. Une confirmation "
+"vous sera demandée."
+msgstr ""
+"You can delete all your Pesto data. You will be asked for confirmation."
+
+#: src/routes/settings/+page.svelte:403
+msgid "Effacer toutes mes données"
+msgstr "Erase all my data"
+
+#: src/routes/settings/+page.svelte:404
+msgid "Effacer toutes les données de Pesto ?"
+msgstr "Erase all Pesto data?"
+
+#: src/routes/settings/+page.svelte:411
+msgid ""
+"Supprimer toutes les données locales y compris les notes, tâches, "
+"paramètres, collections et formulaires. Cette action est irréversible."
+msgstr ""
+"Erase all local data, including notes, todos, settings, collections and "
+"forms. This action is irreversible."
+
+#: src/routes/settings/+page.svelte:414
+msgid "Informations de l'application"
+msgstr "App information"
+
+#: src/routes/settings/+page.svelte:415
+msgid "Version : %0"
+msgstr "Version: %0"
+
+#: src/routes/settings/+page.svelte:44
+msgid "Restaurer les tâches et le tableau"
+msgstr "Restore todos and board"
+
+#: src/routes/settings/+page.svelte:49
+msgid "Restaurer les formulaires"
+msgstr "Restore forms"
+
+#: src/routes/settings/+page.svelte:54
+msgid "Restaurer les alias (en tant que collections)"
+msgstr "Restore aliases (as collections)"
+
+#: src/routes/settings/+page.svelte:62
+msgid ""
+"Restaurer depuis un fichier JSON/Pesto. C'est un moyen de restaurer une "
+"sauvegarde complète effectuée depuis une autre session Pesto."
+msgstr ""
+"Restore from a JSON/Pesto file. This is a way to restore a complete backup "
+"made from another Pesto session."
+
+#: src/routes/settings/+page.svelte:71
+msgid "Restaurer les collections"
+msgstr "Restore collections"
+
+#: src/routes/settings/+page.svelte:81
+msgid "Restaurer les réglages"
+msgstr "Restore settings"
+
+#: src/routes/settings/+page.svelte:94
+msgid "Créer une sauvegarde partielle ou complète au format JSON/Pesto."
+msgstr "Create a full or partial backup, using JSON/Pesto format."
+
+#: src/routes/settings/+page.svelte:98
+msgid "Sauvegarder les notes"
+msgstr "Save notes"
+
+#: src/routes/share-receiver/+page.svelte:49
+msgid "Traitement en cours…"
+msgstr "Processing…"
+
+#~ msgid "Pré-remplir à partir du dernier formulaire"
+#~ msgstr "Pre-fill from last form"
+
+#~ msgid "Paramètres"
+#~ msgstr "Settings"
+
+#~ msgctxt "Nom"
+#~ msgid "Type :"
+#~ msgstr "Type:"

@@ -303,7 +303,7 @@
           >
             <h1>{$_("Sauvegarde", "")}</h1>
             <p>
-              {$_("Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application. ", "")}
+              {$_("Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application.", "")}
             </p>
             <div class="form__field">
               <label for="export-format">{$_("Format de sauvegarde", "")}</label>
@@ -351,7 +351,7 @@
           >
             <h1>{$_("Restauration", "")}</h1>
             <p>
-              {$_("Restaurer les données d'une autre source dans Tempo. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit.", "")}
+              {$_("Restaurer les données d'une autre source dans Pesto. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit.", "")}
             </p>
             <div class="form__field">
               <label for="import-source">{$_("Type de restauration", "")}</label>
