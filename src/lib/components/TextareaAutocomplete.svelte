@@ -219,6 +219,7 @@
           matches = []
           break;
         case 'ArrowRight':
+          currentSuggestionIndex = clamp(0, currentSuggestionIndex, numSuggestions - 1);
           replaceCurrentWord(textarea, matches[currentSuggestionIndex], true);
           matches = []
           break;
