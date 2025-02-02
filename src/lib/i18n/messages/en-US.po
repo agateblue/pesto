@@ -1,0 +1,508 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: src/lib/components/CollapsableContent.svelte:26
+msgid "Déplier"
+msgstr "Expand"
+
+#: src/lib/components/CollapsableContent.svelte:26
+msgid "Replier"
+msgstr "Collapse"
+
+#: src/lib/components/CollectionForm.svelte:17
+#: src/lib/components/FormBuilder.svelte:31
+msgid "Nom"
+msgstr "Name"
+
+#: src/lib/components/CollectionForm.svelte:23
+msgid "Requête"
+msgstr "Query"
+
+#: src/lib/components/CollectionForm.svelte:30
+msgid ""
+"Inclure automatiquement dan la collection les notes correspondant à cette "
+"requête."
+msgstr "Automatically include notes matching this query in the collection."
+
+#: src/lib/components/CollectionForm.svelte:34
+msgid "Icône :"
+msgstr "Icon:"
+
+#: src/lib/components/DialogForm.svelte:58
+msgid "Fermer la fenêtre"
+msgstr "Close dialog"
+
+#: src/lib/components/DialogForm.svelte:84
+msgid "Confirmer"
+msgstr "Confirm"
+
+#: src/lib/components/FormBuilder.svelte:19
+msgid "Mon champ"
+msgstr "My field"
+
+#: src/lib/components/FormBuilder.svelte:41
+#: src/lib/components/FormFieldBuilder.svelte:46
+msgid "ID"
+msgstr "ID"
+
+#: src/lib/components/FormBuilder.svelte:43
+msgid ""
+"Un identifiant unique pour le formulaire. Utilisé pour construire des "
+"visualisations."
+msgstr "A unique ID for the form. Used to build visualizations."
+
+#: src/lib/components/FormBuilder.svelte:54
+msgid "Mode avancé"
+msgstr "Advanced mode"
+
+#: src/lib/components/FormBuilder.svelte:64
+msgid "Aperçu du formulaire"
+msgstr "Preview form"
+
+#: src/lib/components/FormBuilder.svelte:86
+msgid "Ajouter un  nouveau champ"
+msgstr "Add a new field"
+
+#: src/lib/components/FormFieldBuilder.svelte:108
+msgid "Inclure les futures valeurs saisies dans les suggestions."
+msgstr "Include future entered values in suggestions."
+
+#: src/lib/components/FormFieldBuilder.svelte:120
+msgid "Supprimer ce champ"
+msgstr "Delete this field"
+
+#: src/lib/components/FormFieldBuilder.svelte:27
+msgid "Libellé"
+msgstr "Label"
+
+#: src/lib/components/FormFieldBuilder.svelte:36
+msgctxt "Nom"
+msgid "Type"
+msgstr "Type"
+
+#: src/lib/components/FormFieldBuilder.svelte:54
+msgid ""
+"Un identifiant unique pour ce champ. Utilisé pour construire des "
+"visualisations."
+msgstr "A unique ID for the field. Used to build visualizations."
+
+#: src/lib/components/FormFieldBuilder.svelte:65
+msgid "Ce champ est requis"
+msgstr "This field is required"
+
+#: src/lib/components/FormFieldBuilder.svelte:72
+msgid "Texte d'aide"
+msgstr "Help text"
+
+#: src/lib/components/FormFieldBuilder.svelte:79
+msgid "Un texte d'aide qui sera affiché sous le champ."
+msgstr "A help text that will be displayabed below the field."
+
+#: src/lib/components/FormFieldBuilder.svelte:85
+msgid "Suggestions"
+msgstr "Suggestions"
+
+#: src/lib/components/FormFieldBuilder.svelte:96
+msgid ""
+"Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées "
+"sous forme d'autocomplétion."
+msgstr ""
+"Put a suggestion for the field values on each line. They will be available "
+"as autocomplete."
+
+#: src/lib/components/FormRendered.svelte:109
+msgid "Pré-remplir à partir du dernier formulaire"
+msgstr "Pre-fill from last form"
+
+#: src/lib/components/FormRendered.svelte:46
+#: src/lib/components/ReplicationCard.svelte:48
+msgid "Éditer"
+msgstr "Edit"
+
+#: src/lib/components/FormRendered.svelte:47
+msgid "Éditer le formulaire %0"
+msgstr "Edit form %0"
+
+#: src/lib/components/FormRendered.svelte:58
+#: src/lib/components/RenderedNoteHeader.svelte:117
+msgid "Supprimer"
+msgstr "Delete"
+
+#: src/lib/components/FormRendered.svelte:59
+msgid "Supprimer le formulaire %0"
+msgstr "Delete form %0"
+
+#: src/lib/components/FormRendered.svelte:67
+msgid ""
+"Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas "
+"supprimées. Cette action est irréversible."
+msgstr ""
+"Do you want to delete this form? Form data won't be deleted. This action is "
+"irreversible."
+
+#: src/lib/components/FormRendered.svelte:95
+msgid "Sauvegarder"
+msgstr "Save"
+
+#: src/lib/components/FragmentEditor.svelte:106
+msgid "Titre"
+msgstr "Title"
+
+#: src/lib/components/FragmentEditor.svelte:118
+msgid "Collection"
+msgstr "Collection"
+
+#: src/lib/components/FragmentEditor.svelte:173
+msgid "Charger la liste de tâche depuis le texte"
+msgstr "Load todolist from text"
+
+#: src/lib/components/MainNavigation.svelte:106
+msgid "Paramètres"
+msgstr "Settings"
+
+#: src/lib/components/MainNavigation.svelte:120
+#: src/lib/components/NoteForm.svelte:73
+msgid "Nouvelle note"
+msgstr "New note"
+
+#: src/lib/components/MainNavigation.svelte:126
+msgid "Toutes les notes"
+msgstr "All notes"
+
+#: src/lib/components/MainNavigation.svelte:132
+msgid "Favoris"
+msgstr "Starred"
+
+#: src/lib/components/MainNavigation.svelte:139
+msgid "Récemment modifié"
+msgstr "Recently modified"
+
+#: src/lib/components/MainNavigation.svelte:148
+msgid "Tâches"
+msgstr "Todos"
+
+#: src/lib/components/MainNavigation.svelte:153
+msgid "Tableau"
+msgstr "Board"
+
+#: src/lib/components/MainNavigation.svelte:159
+msgid "Collections"
+msgstr "Collections"
+
+#: src/lib/components/MainNavigation.svelte:173
+msgid "Ajouter une collection"
+msgstr "Add collection"
+
+#: src/lib/components/MainNavigation.svelte:199
+msgid "Données"
+msgstr "Data"
+
+#: src/lib/components/MainNavigation.svelte:202
+msgid "Formulaires"
+msgstr "Forms"
+
+#: src/lib/components/MainNavigation.svelte:71
+msgid "Synchroniser"
+msgstr "Synchronize"
+
+#: src/lib/components/MainNavigation.svelte:93
+msgid "Rechercher"
+msgstr "Search"
+
+#: src/lib/components/MainNavigationToggle.svelte:26
+msgid "Ouvrir le menu principal"
+msgstr "Open main navigation"
+
+#: src/lib/components/MainNavigationToggle.svelte:26
+msgid "Fermer le menu principal"
+msgstr "Close main navigation"
+
+#: src/lib/components/NoteForm.svelte:106
+msgid "Ajouter un formulaire"
+msgstr "Add form"
+
+#: src/lib/components/NoteForm.svelte:131
+msgid "Formulaire"
+msgstr "Form"
+
+#: src/lib/components/NoteForm.svelte:139
+msgid "Attacher ce formulaire à la note."
+msgstr "Attach this form to the note."
+
+#: src/lib/components/NoteForm.svelte:154
+#: src/lib/components/RenderedNoteHeader.svelte:128
+msgid "Supprimer cette note"
+msgstr "Delete note"
+
+#: src/lib/components/NoteForm.svelte:156
+#: src/lib/components/RenderedNoteHeader.svelte:130
+msgid "Supprimer cette note ?"
+msgstr "Delete this note?"
+
+#: src/lib/components/NoteForm.svelte:42
+msgctxt "Colonne du tableau"
+msgid "À faire"
+msgstr "Todo"
+
+#: src/lib/components/NoteForm.svelte:43
+msgctxt "Colonne du tableau"
+msgid "En cours"
+msgstr "Doing"
+
+#: src/lib/components/NoteForm.svelte:44
+msgctxt "Colonne du tableau"
+msgid "Terminé"
+msgstr "Done"
+
+#: src/lib/components/NoteForm.svelte:71
+#: src/lib/components/RenderedNoteHeader.svelte:63
+msgid "Éditer cette note"
+msgstr "Edit note"
+
+#: src/lib/components/NoteForm.svelte:82
+msgid "Voir cette note"
+msgstr "View note"
+
+#: src/lib/components/NoteList.svelte:123
+msgid "Supprimer la collection %0"
+msgstr "Delete collection %0"
+
+#: src/lib/components/NoteList.svelte:135
+msgid ""
+"Souhaitez vous supprimer cette collection ? Les notes et données associées "
+"seront conservées. Cette action est irréversible."
+msgstr ""
+"Do you want to delete this collection? Associated notes and data will be "
+"preserved. This action is irreversible."
+
+#: src/lib/components/NoteList.svelte:142
+msgid "1 note trouvée"
+msgid_plural "%n notes trouvées"
+msgstr[0] "1 note found"
+msgstr[1] "%n notes found"
+
+#: src/lib/components/NoteList.svelte:147
+msgid "Chargement des notes…"
+msgstr "Loading notes…"
+
+#: src/lib/components/NoteList.svelte:173
+msgid "Montrer plus de notes"
+msgstr "Load more notes"
+
+#: src/lib/components/PasswordInput.svelte:22
+msgid "Montrer"
+msgstr "Show"
+
+#: src/lib/components/PasswordInput.svelte:22
+msgid "Masquer"
+msgstr "Hide"
+
+#: src/lib/components/RenderedNoteHeader.svelte:102
+msgid "Retirer des favoris"
+msgstr "Unstar"
+
+#: src/lib/components/RenderedNoteHeader.svelte:111
+msgid "Ajouter aux favoris"
+msgstr "Star"
+
+#: src/lib/components/RenderedNoteHeader.svelte:138
+msgid ""
+"La note sera supprimée de votre journal. Cette action est irréversible."
+msgstr "This will remove the note from your diary. This action is irreversible."
+
+#: src/lib/components/RenderedNoteHeader.svelte:81
+msgid "Copier le contenu"
+msgstr "Copy content"
+
+#: src/lib/components/ReplicationCard.svelte:25
+msgid "Type :"
+msgstr "Type:"
+
+#: src/lib/components/ReplicationCard.svelte:25
+msgid "WebRTC :"
+msgstr "WebRTC:"
+
+#: src/lib/components/ReplicationCard.svelte:26
+msgid "Serveur de mise en relation :"
+msgstr "Signaling server:"
+
+#: src/lib/components/ReplicationCard.svelte:31
+msgid "CouchDB :"
+msgstr "CouchDB:"
+
+#: src/lib/components/ReplicationCard.svelte:31
+msgid "CouchDB (Avec compatibilité Tempo)"
+msgstr "CouchDB (With Tempo compatibility):"
+
+#: src/lib/components/ReplicationCard.svelte:32
+msgid "URL du serveur :"
+msgstr "Server URL:"
+
+#: src/lib/components/ReplicationCard.svelte:34
+msgid "Base de données :"
+msgstr "Database:"
+
+#: src/lib/components/ReplicationCard.svelte:36
+msgid "Nom d'utilisateur·ice :"
+msgstr "Username:"
+
+#: src/lib/components/ReplicationCard.svelte:38
+msgid "Mot de passe :"
+msgstr "Password:"
+
+#: src/lib/components/ReplicationCard.svelte:38
+msgid "[masqué]"
+msgstr "[hidden]"
+
+#: src/lib/components/ReplicationCard.svelte:40
+msgid "Envoyer les données locales :"
+msgstr "Push local data:"
+
+#: src/lib/components/ReplicationCard.svelte:41
+msgid "Oui"
+msgstr "Yes"
+
+#: src/lib/components/ReplicationCard.svelte:41
+msgid "Non"
+msgstr "No"
+
+#: src/lib/components/ReplicationCard.svelte:42
+msgid "Télécharger les données distantes :"
+msgstr "Pull remote data:"
+
+#: src/lib/components/ReplicationCard.svelte:49
+msgid "Modifier la synchronisation"
+msgstr "Edit synchronisation"
+
+#: src/lib/components/ReplicationCard.svelte:60
+msgid "Supprimer…"
+msgstr "Delete…"
+
+#: src/lib/components/ReplicationCard.svelte:61
+msgid "Supprimer cette synchronisation ?"
+msgstr "Delete this synchronisation?"
+
+#: src/lib/components/ReplicationCard.svelte:68
+msgid ""
+"La synchronisation des données avec d'autres appareils sera interrompue. Les "
+"données actuellement stockées sur votre appareils seront conservées."
+msgstr ""
+"Data synchronization with other devices will stop. Data currently stored on "
+"your device won't be deleted."
+
+#: src/lib/components/ReplicationForm.svelte:100
+msgid "Envoyer les changements locaux"
+msgstr "Push local changes"
+
+#: src/lib/components/ReplicationForm.svelte:104
+msgid "Télécharger les changements distants"
+msgstr "Pull remote changes"
+
+#: src/lib/components/ReplicationForm.svelte:23
+msgid "Serveur de mise en relation"
+msgstr "Signaling server"
+
+#: src/lib/components/ReplicationForm.svelte:33
+msgid "Identifiant de salon"
+msgstr "Room ID"
+
+#: src/lib/components/ReplicationForm.svelte:40
+msgid ""
+"N'importe qui disposant de cette identifiant de salon pourra accéder à vos "
+"données. Protégez le comme un mot de passe."
+msgstr ""
+"Anyone with this room identifier can access your data. Treat it like a "
+"password."
+
+#: src/lib/components/ReplicationForm.svelte:47
+msgid ""
+"Avertissement : ce mode de synchronisation est conçu pour vous permettre de "
+"migrer de Tempo à Pesto."
+msgstr ""
+"Warning: this synchronisation mode is designed to help you transition from "
+"Tempo to Pesto."
+
+#: src/lib/components/ReplicationForm.svelte:51
+msgid ""
+"Comme Tempo ne prend pas en charge toutes les fonctionnalités de Pesto, "
+"l'écriture de données de Pesto vers Tempo est désactivée. Cela signifie que :"
+msgstr ""
+"Since Tempo does not support all Pesto features, writing data from Pesto to "
+"Tempo is disabled. This means:"
+
+#: src/lib/components/ReplicationForm.svelte:55
+msgid ""
+"Les changements effectués sur Tempo seront répercutés de Tempo vers Pesto"
+msgstr ""
+"Changes done on Tempo documents will be synchronized from Tempo to Pesto"
+
+#: src/lib/components/ReplicationForm.svelte:56
+msgid ""
+"Les changements effectués sur Pesto ne seront pas répercutés de Pesto vers "
+"Tempo"
+msgstr ""
+"Changes done on Pesto documents won't be synchronized from Pesto to Tempo"
+
+#: src/lib/components/ReplicationForm.svelte:58
+msgid ""
+"C'est moins performant et devrait être désactivé lorsque vous basculez "
+"entièrement sur Pesto."
+msgstr ""
+"It is also less performant and should be disabled when you switch definitely "
+"to Pesto."
+
+#: src/lib/components/ReplicationForm.svelte:61
+msgid "Serveur"
+msgstr "Server"
+
+#: src/lib/components/ReplicationForm.svelte:71
+msgid "Base de données"
+msgstr "Database"
+
+#: src/lib/components/ReplicationForm.svelte:80
+msgid "Nom d'utilisateur·ice"
+msgstr "Username"
+
+#: src/lib/components/ReplicationForm.svelte:89
+msgid "Mot de passe"
+msgstr "Password"
+
+#: src/lib/components/TextFragmentEditor.svelte:40
+msgid "Contenu"
+msgstr "Content"
+
+#: src/lib/components/TextFragmentEditor.svelte:46
+msgid "Quoi de neuf ?"
+msgstr "What's on your mind?"
+
+#: src/lib/components/TodoCard.svelte:60
+msgid "Poignée pour glisser/déposer %0"
+msgstr "Drag-handle for %0"
+
+#: src/lib/components/TodoListFragmentEditor.svelte:102
+msgctxt "Tableau"
+msgid "Colonne"
+msgstr "Column"
+
+#: src/lib/components/TodoRow.svelte:71
+msgid "Ajouter une nouvelle tâche…"
+msgstr "Add a new todo…"
+
+#: src/lib/components/TodoRow.svelte:88
+msgid "Supprimer la tâche"
+msgstr "Delete todo"
+
+#: src/routes/settings/+page.svelte:227
+msgid "Langue"
+msgstr "Language"
