@@ -39,9 +39,9 @@
   let subscriptions = [
     globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
       columns = settings?.data.columns || [
-        $_("Todo", "Board column"),
-        $_("Doing", "Board column"),
-        $_("Done", "Board column"),
+        $_("À faire", "Colonne du tableau"),
+        $_("En cours", "Colonne du tableau"),
+        $_("Terminé", "Colonne du tableau"),
       ];
     }),
     globals.db.documents.find({
@@ -68,9 +68,9 @@
     <MainNavigationToggle class="layout__multi-hidden" />
     <h2 class="flex__grow">
       {#if localNote}
-        {$_("Edit note", "")}
+        {$_("Éditer cette note", "")}
       {:else}
-        {$_("New note", "")}
+        {$_("Nouvelle note", "")}
       {/if}
     </h2>
 
@@ -79,8 +79,8 @@
         <a
           class="button__icon button layout__multi-hidden"
           href={`/my/notes/${localNote.id}?view=detail`}
-          aria-label={$_("View note", "")}
-          title={$_("View note", "")}
+          aria-label={$_("Voir cette note", "")}
+          title={$_("Voir cette note", "")}
         >
           <IconaMoonEye
             role="presentation"
@@ -103,9 +103,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_("Add form", "")}
+          anchorLabel={$_("Ajouter un formulaire", "")}
           anchor={formIcon}
-          title={$_("Add form", "")}
+          title={$_("Ajouter un formulaire", "")}
           onsubmit={async (e: SubmitEvent) => {
             if (!localNote) {
               let noteData = getNewNote();
@@ -128,7 +128,7 @@
           }}
         > 
           <div class="form__field">
-            <label for="form-id">{$_("Form", "Name")}</label>
+            <label for="form-id">{$_("Formulaire", "")}</label>
             <select name="form-id" id="form-id" bind:value={selectedForm}>
               <option value={undefined}>---</option>
               {#each forms as form}
@@ -136,7 +136,7 @@
               {/each}
             </select>
           </div>
-          <p>{$_("Attach this form to the note.", "")}</p>
+          <p>{$_("Attacher ce formulaire à la note.", "")}</p>
         </DialogForm>
       {/if}
       {#if localNote}
@@ -151,9 +151,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_("Delete note", "")}
+          anchorLabel={$_("Supprimer cette note", "")}
           anchor={trashIcon}
-          title={$_("Delete this note?", "")}
+          title={$_("Supprimer cette note ?", "")}
           onsubmit={(e: SubmitEvent) => {
             e.preventDefault();
             localNote.remove();

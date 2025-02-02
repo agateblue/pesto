@@ -22,31 +22,31 @@
 <div {...rest}>
   {#if replication.type === 'webrtc'}
   
-    <strong>{$_("Type:", "Name")}</strong> {$_("WebRTC:", "")} <br />
-    <strong>{$_("Signaling server:", "")}</strong>
+    <strong>{$_("Type :", "Nom")}</strong> {$_("WebRTC :", "")} <br />
+    <strong>{$_("Serveur de mise en relation :", "")}</strong>
     {replication.signalingServer} <br />
   {/if}
   {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
-    <strong>{$_("Type:", "Name")}</strong>
-    {replication.type === 'couchdb' ? $_("CouchDB:", "") : $_("CouchDB (With Tempo compatibility):", "")} <br />
-    <strong>{$_("Server URL:", "")}</strong>
+    <strong>{$_("Type :", "Nom")}</strong>
+    {replication.type === 'couchdb' ? $_("CouchDB :", "") : $_("CouchDB (Avec compatibilité Tempo)", "")} <br />
+    <strong>{$_("URL du serveur :", "")}</strong>
     {replication.server} <br />
-    <strong>{$_("Database:", "")}</strong>
+    <strong>{$_("Base de données :", "")}</strong>
     {replication.database} <br />
-    <strong>{$_("Username:", "")}</strong>
+    <strong>{$_("Nom d'utilisateur·ice :", "")}</strong>
     {replication.username} <br />
-    <strong>{$_("Password:", "")}</strong> {$_("[hidden]", "")}<br />
+    <strong>{$_("Mot de passe :", "")}</strong> {$_("[masqué]", "")}<br />
   {/if}
-  <strong>{$_("Push local data:", "")}</strong>
-  {replication.push ? $_("Yes", "") : $_("No", "")} <br />
-  <strong>{$_("Pull remote data:", "")}</strong>
-  {replication.pull ? $_("Yes", "") : $_("No", "")} <br />
+  <strong>{$_("Envoyer les données locales :", "")}</strong>
+  {replication.push ? $_("Oui", "") : $_("Non", "")} <br />
+  <strong>{$_("Télécharger les données distantes :", "")}</strong>
+  {replication.pull ? $_("Oui", "") : $_("Non", "")} <br />
 
   <div>
     <DialogForm
       anchorClass="button__link"
-      anchorText={$_("Edit", "Verb")}
-      title={$_("Edit synchronisation", "")}
+      anchorText={$_("Éditer", "Verb")}
+      title={$_("Modifier la synchronisation", "")}
       onsubmit={async (e: SubmitEvent) => {
         e.preventDefault();
         replication = { ...replication };
@@ -57,15 +57,15 @@
     </DialogForm>
     <DialogForm
       anchorClass="button__link"
-      anchorText={$_("Delete…", "")}
-      title={$_("Delete this synchronisation?", "")}
+      anchorText={$_("Supprimer…", "")}
+      title={$_("Supprimer cette synchronisation ?", "")}
       onsubmit={(e: SubmitEvent) => {
         e.preventDefault();
         dispatch('delete', {});
       }}
     >
       <p>
-        {$_("Data synchronization with other devices will stop. Data currently stored on your device won't be deleted.", "")}
+        {$_("La synchronisation des données avec d'autres appareils sera interrompue. Les données actuellement stockées sur votre appareils seront conservées.", "")}
       </p>
     </DialogForm>
   </div>

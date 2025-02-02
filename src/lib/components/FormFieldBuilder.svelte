@@ -24,7 +24,7 @@
   <div class="flow m__block-4">
     <div class="flex__row flex__gap">
       <div class="form__field flow">
-        <label for={`field-label-${field.id}`}>{$_("Label", "Name")}</label>
+        <label for={`field-label-${field.id}`}>{$_("Libellé", "Name")}</label>
         <input
           type="text"
           name={`field-label-${field.id}`}
@@ -51,7 +51,7 @@
           bind:value={field.id}
         />
         <p class="form__help">
-          {$_("A unique ID for the field. Used to build visualizations.", "")}
+          {$_("Un identifiant unique pour ce champ. Utilisé pour construire des visualisations.", "")}
         </p>
       </div>
     {/if}
@@ -62,21 +62,21 @@
         id={`field-required-${field.id}`}
         bind:checked={field.required}
       />
-      <label for={`field-required-${field.id}`}>{$_("This field is required", "")}</label>
+      <label for={`field-required-${field.id}`}>{$_("Ce champ est requis", "")}</label>
     </div>
 
   </div>
 
   <div class="flow m__block-4">
     <div class="form__field flow">
-      <label for={`field-help-${field.id}`}>{$_("Help text", "")}</label>
+      <label for={`field-help-${field.id}`}>{$_("Texte d'aide", "")}</label>
       <textarea
         name={`field-help-${field.id}`}
         id={`field-help-${field.id}`}
         class="autoresize"
         bind:value={field.help}
       ></textarea>
-      <p class="form__help">{$_("A help text that will be displayabed below the field.", "")}</p>
+      <p class="form__help">{$_("Un texte d'aide qui sera affiché sous le champ.", "")}</p>
     </div>
   </div>
   <div class="flow m__block-4">
@@ -93,7 +93,7 @@
           }}
         ></textarea>
         <p class="form__help">
-          {$_("Put a suggestion for the field values on each line. They will be available as autocomplete.", "")}
+          {$_("Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées sous forme d'autocomplétion.", "")}
         </p>
       </div>
 
@@ -105,7 +105,7 @@
           bind:checked={field.autosuggest}
         />
         <label for={`field-autosuggest-${field.id}`}>
-          {$_("Include future entered values in suggestions.", "")}
+          {$_("Inclure les futures valeurs saisies dans les suggestions.", "")}
         </label
         >
       </div>
@@ -117,7 +117,7 @@
         onclick={(e) => {
           onDelete(e);
         }}>
-          {$_("Delete this field", "")}
+          {$_("Supprimer ce champ", "")}
         </button
       >
     </div>

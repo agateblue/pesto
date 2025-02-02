@@ -1,4 +1,4 @@
-export const defaultLanguage = 'en-US'
+export const defaultLanguage = 'fr-FR'
 export const languages = [
   {id: 'fr-FR', name: 'Français'},
   {id: 'en-US', name: 'English (US)'},

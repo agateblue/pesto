@@ -103,7 +103,7 @@
 
 <div class="flow">
   <div class="form__field">
-    <label for="note-title">{$_("Title", "")}</label>
+    <label for="note-title">{$_("Titre", "")}</label>
     <input
       type="text"
       id="note-title"
@@ -170,7 +170,7 @@
         todolistKey += 1;
       }}
     >
-      {$_("Load todolist from text", "")}
+      {$_("Charger la liste de tâche depuis le texte", "")}
     </button>
   {/if}
   {#key todolistKey}

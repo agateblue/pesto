@@ -68,9 +68,9 @@
       oninput={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
-      placeholder={$_("Add a new todo…", "")}
+      placeholder={$_("Ajouter une nouvelle tâche…", "")}
       rows="1"
-      aria-label={$_("Add a new todo…", "")}
+      aria-label={$_("Ajouter une nouvelle tâche…", "")}
       {onblur}
       {onfocus}
     ></textarea>
@@ -85,8 +85,8 @@
     onclick={preventDefault((e) => {
       dispatch('delete');
     })}
-    aria-label={$_("Delete todo", "")}
-    title={$_("Delete todo", "")}
+    aria-label={$_("Supprimer la tâche", "")}
+    title={$_("Supprimer la tâche", "")}
   >
     <IconaMoonClose class="icon__size-3" height=none width=none role="presentation" alt="" />
   </button>

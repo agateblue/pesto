@@ -132,19 +132,19 @@
             }}
           >
             <p>
-              {$_("Do you want to delete this collection? Associated notes and data will be preserved. This action is irreversible.", "")}
+              {$_("Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible.", "")}
             </p>
           </DialogForm>
         </div>
       {/if}
       {#if matchingCount >= notes.length}
         <span>
-          {$_n(`1 note found`, `%n notes found`, matchingCount)}
+          {$_n(`1 note trouvée`, `%n notes trouvées`, matchingCount)}
         </span>
       {/if}
     </header>
   {/if}
-  <LoadingState {isLoading}>{$_("Loading notes…", "")}</LoadingState>
+  <LoadingState {isLoading}>{$_("Chargement des notes…", "")}</LoadingState>
   {#each notes as note}
     {#key note._rev}
       <RenderedNote
@@ -170,7 +170,7 @@
           })
           .exec();
         notes = [...notes, ...newNotes];
-      }}>{$_("Load more notes", "")}</button
+      }}>{$_("Montrer plus de notes", "")}</button
     >
   {/if}
 </div>

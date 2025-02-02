@@ -19,4 +19,4 @@
   }}
 />
 
-<button type="button" onclick={() => (show = !show)}>{show ? $_("Hide", "Verb") : $_("Show", "Verb")}</button>
+<button type="button" onclick={() => (show = !show)}>{show ? $_("Masquer", "") : $_("Montrer", "")}</button>

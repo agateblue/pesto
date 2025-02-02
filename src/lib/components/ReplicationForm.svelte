@@ -20,7 +20,7 @@
 
 {#if replication.type === 'webrtc'}
   <div class="form__field">
-    <label for="webrtc-signaling-server">{$_("Signaling server", "")}</label>
+    <label for="webrtc-signaling-server">{$_("Serveur de mise en relation", "")}</label>
     <input
       type="text"
       id="webrtc-signaling-server"
@@ -30,35 +30,35 @@
     />
   </div>
   <div class="form__field">
-    <label for="webrtc-room-id">{$_("Room ID", "")}</label>
+    <label for="webrtc-room-id">{$_("Identifiant de salon", "")}</label>
     <PasswordInput
       required
       name="webrtc-room-id"
       id="webrtc-room-id"
       bind:value={replication.room}
     />
-    <p>{$_("Anyone with this room identifier can access your data. Treat it like a password.", "")}</p>
+    <p>{$_("N'importe qui disposant de cette identifiant de salon pourra accéder à vos données. Protégez le comme un mot de passe.", "")}</p>
   </div>
 {/if}
 {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
   {#if replication.type === 'couchdb-tempo'}
     <p>
       <strong
-        >{$_("Warning: this synchronisation mode is designed to help you transition from Tempo to Pesto.", "")}</strong
+        >{$_("Avertissement : ce mode de synchronisation est conçu pour vous permettre de migrer de Tempo à Pesto.", "")}</strong
       >
     </p>
     <p>
-      {$_("Since Tempo does not support all Pesto features, writing data from Pesto to Tempo is disabled. This means:", "")}
+      {$_("Comme Tempo ne prend pas en charge toutes les fonctionnalités de Pesto, l'écriture de données de Pesto vers Tempo est désactivée. Cela signifie que :", "")}
       
     </p>
     <ul>
-      <li>{$_("Changes done on Tempo documents will be synchronized from Tempo to Pesto", "")}</li>
-      <li>{$_("Changes done on Pesto documents won't be synchronized from Pesto to Tempo", "")}</li>
+      <li>{$_("Les changements effectués sur Tempo seront répercutés de Tempo vers Pesto", "")}</li>
+      <li>{$_("Les changements effectués sur Pesto ne seront pas répercutés de Pesto vers Tempo", "")}</li>
     </ul>
-    <p>{$_("It is also less performant and should be disabled when you switch definitely to Pesto.", "")}</p>
+    <p>{$_("C'est moins performant et devrait être désactivé lorsque vous basculez entièrement sur Pesto.", "")}</p>
   {/if}
   <div class="form__field">
-    <label for="couchdb-server">{$_("Server", "")} URL</label>
+    <label for="couchdb-server">{$_("Serveur", "")} URL</label>
     <input
       name="couchdb-server"
       id="couchdb-url"
@@ -68,7 +68,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-database">{$_("Database", "")} name</label>
+    <label for="couchdb-database">{$_("Base de données", "")} name</label>
     <input
       name="couchdb-database"
       id="couchdb-database"
@@ -77,7 +77,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-username">{$_("Username", "")}</label>
+    <label for="couchdb-username">{$_("Nom d'utilisateur·ice", "")}</label>
     <input
       name="couchdb-username"
       id="couchdb-username"
@@ -86,7 +86,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-password">{$_("Password", "")}</label>
+    <label for="couchdb-password">{$_("Mot de passe", "")}</label>
     <PasswordInput
       name="couchdb-password"
       id="couchdb-password"
@@ -97,9 +97,9 @@
 {/if}
 <div class="form__field">
   <input id="push" name="push" type="checkbox" bind:checked={replication.push} />
-  <label for="push">{$_("Push local changes", "")}</label>
+  <label for="push">{$_("Envoyer les changements locaux", "")}</label>
 </div>
 <div class="form__field">
   <input id="pull" name="pull" type="checkbox" bind:checked={replication.pull} />
-  <label for="pull">{$_("Pull remote changes", "")}</label>
+  <label for="pull">{$_("Télécharger les changements distants", "")}</label>
 </div>

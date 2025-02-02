@@ -60,7 +60,7 @@
           height="none"
           width="none"
         />
-        {$_("Edit note", "")}
+        {$_("Éditer cette note", "")}
       </a>
     </li>
     <li>
@@ -78,7 +78,7 @@
           class="icon icon__size-3"
           height="none"
           width="none"
-        /> {$_("Copy content", "")}
+        /> {$_("Copier le contenu", "")}
       </button>
     </li>
     <li>
@@ -99,7 +99,7 @@
             height="none"
             width="none"
           />
-          {$_("Unstar", "Verb")}
+          {$_("Retirer des favoris", "")}
         {:else}
           <IconaMoonStar
           role="presentation"
@@ -108,13 +108,13 @@
           height="none"
           width="none"
           />
-          {$_("Star", "Verb")}
+          {$_("Ajouter aux favoris", "")}
         {/if}
       </button>
     </li>
     <li>
       {#snippet trashIcon()}
-        {$_("Delete", "")}
+        {$_("Supprimer", "")}
         <IconaMoonTrash
           role="presentation"
           class="icon icon__size-3"
@@ -125,9 +125,9 @@
       {/snippet}
       <DialogForm
         anchorClass="button__icon"
-        anchorLabel={$_("Delete note", "")}
+        anchorLabel={$_("Supprimer cette note", "")}
         anchor={trashIcon}
-        title={$_("Delete this note?", "")}
+        title={$_("Supprimer cette note ?", "")}
         onsubmit={async (e: SubmitEvent) => {
           e.preventDefault();
           await note.incrementalRemove();
@@ -135,7 +135,7 @@
         }}
       >
         <p>
-          {$_("This will remove the note from your diary. This action is irreversible.", "")}
+          {$_("La note sera supprimée de votre journal. Cette action est irréversible.", "")}
         </p>
       </DialogForm>
     </li>

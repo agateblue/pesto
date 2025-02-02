@@ -23,7 +23,7 @@
 <button
   type="button"
   class={'button__transparent button__icon ' + restProps.class || ''}
-  aria-label={sidebarFullpage ? $_("Close main navigation", "") : $_("Open main navigation", "")}
+  aria-label={sidebarFullpage ? $_("Fermer le menu principal", "") : $_("Ouvrir le menu principal", "")}
   onclick={() => {
     if (sidebarFullpage) {
       globals.uiState.set('currentPage', () => null);

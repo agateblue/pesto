@@ -37,13 +37,13 @@
 </script>
 
 <div class="form__field">
-  <label for={fieldId}>{$_("Content", "Name")}</label>
+  <label for={fieldId}>{$_("Contenu", "")}</label>
   <TextareaAutocomplete
     id={fieldId}
     onfocus={() => (focused = true)}
     onblur={() => (focused = false)}
     class="editor autoresize"
-    placeholder={$_("What's on your mind?", "")}
+    placeholder={$_("Quoi de neuf ?", "")}
     oninput={(e) => handleChange(e.target.value)}
     value={content}
   ></TextareaAutocomplete>

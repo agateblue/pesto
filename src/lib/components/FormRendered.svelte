@@ -43,7 +43,7 @@
       <div>
         <DialogForm
           anchorClass="button button__link"
-          anchorText={$_("Edit", "Verb")}
+          anchorText={$_("Éditer", "Verb")}
           title={$_(`Edit form %0`, "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             await createOrUpdateForm(id, form);
@@ -55,7 +55,7 @@
         <br />
         <DialogForm
           anchorClass="button button__link"
-          anchorText={$_("Delete", "")}
+          anchorText={$_("Supprimer", "")}
           title={$_(`Delete form %0`, "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             let form = await getById(globals.db.documents, id);
@@ -64,7 +64,7 @@
           }}
         >
           <p>
-            {$_("Do you want to delete this form? Form data won't be deleted. This action is irreversible.", "")}
+            {$_("Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas supprimées. Cette action est irréversible.", "")}
             
           </p>
         </DialogForm>
@@ -92,7 +92,7 @@
     {/each}
 
     <div class="flex__row flex__justify-between">
-      <button type="submit">{$_("Save", "")}</button>
+      <button type="submit">{$_("Sauvegarder", "")}</button>
       <button
         type="button"
         class="button__link"
@@ -106,7 +106,7 @@
           if (last) {
             v = cloneDeep(last.fragments.form.data);
           }
-        }}>{$_("Pre-fill from last form", "")}</button
+        }}>{$_("Pré-remplir à partir du dernier formulaire", "")}</button
       >
     </div>
     {@render children?.()}

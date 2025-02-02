@@ -99,7 +99,7 @@
 
 {#if todos[0]?.text?.trim() && columns}
   <div class="form__field">
-    <label for="todolist-column">{$_("Column", "Board")}</label>
+    <label for="todolist-column">{$_("Colonne", "Tableau")}</label>
     <select
       name="todolist-column"
       id="todolist-column"
