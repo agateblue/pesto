@@ -68,7 +68,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-database">{$_("Base de données", "")} name</label>
+    <label for="couchdb-database">{$_("Base de données", "")}</label>
     <input
       name="couchdb-database"
       id="couchdb-database"
