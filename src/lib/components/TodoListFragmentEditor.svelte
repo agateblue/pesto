@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { createEventDispatcher } from 'svelte';
   import TodoRow from './TodoRow.svelte';
   import { writable } from 'svelte/store';
@@ -98,7 +99,7 @@
 
 {#if todos[0]?.text?.trim() && columns}
   <div class="form__field">
-    <label for="todolist-column">Column</label>
+    <label for="todolist-column">{$_("Column", "Board")}</label>
     <select
       name="todolist-column"
       id="todolist-column"

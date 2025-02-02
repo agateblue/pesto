@@ -224,7 +224,6 @@ Export to a Tempo JSON file.
           <div class="flow">
             <h1>Interface</h1>
             <div class="form__field">
-              {$lang}
               <label for="language">{$_('Language')}</label>
               <select name="language" id="language" value={$lang} oninput={(e) => updateLanguage(e.target.value)}>
                 {#each languages as language}

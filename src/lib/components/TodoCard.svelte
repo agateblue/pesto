@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import debounce from 'lodash/debounce';
   import isEmpty from 'lodash/isEmpty';
   import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
@@ -56,7 +57,7 @@
 
 <div class="flex__row | flex__align-center">
   <div class="flex__row flex__grow flex__align-center">
-    <span use:dragHandle aria-label={`drag-handle for ${note.title || note.fragments?.todolist?.todos[0]?.text}`}>
+    <span use:dragHandle aria-label={$_(`Drag-handle for %0`, "", [note.title || note.fragments?.todolist?.todos[0]?.text])}>
       <IconaMoonMoveThin role="presentation" alt="" />
     </span>
     {#if note.title?.trim()}

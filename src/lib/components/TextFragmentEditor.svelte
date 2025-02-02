@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { createEventDispatcher } from 'svelte';
   import { onDestroy } from 'svelte';
   import { type TextType } from '$lib/db';
@@ -36,14 +37,15 @@
 </script>
 
 <div class="form__field">
-  <label for={fieldId}>Content</label>
+  <label for={fieldId}>{$_("Content", "Name")}</label>
   <TextareaAutocomplete
     id={fieldId}
     onfocus={() => (focused = true)}
     onblur={() => (focused = false)}
     class="editor autoresize"
-    placeholder="What's on your mind?"
+    placeholder={$_("What's on your mind?", "")}
     oninput={(e) => handleChange(e.target.value)}
     value={content}
   ></TextareaAutocomplete>
+  
 </div>

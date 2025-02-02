@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import ReplicationForm from './ReplicationForm.svelte';
   import DialogForm from './DialogForm.svelte';
   import { type AnyReplication } from '$lib/db';
@@ -20,31 +21,32 @@
 
 <div {...rest}>
   {#if replication.type === 'webrtc'}
-    <strong>Type:</strong> WebRTC <br />
-    <strong>Signaling server:</strong>
+  
+    <strong>{$_("Type:", "Name")}</strong> {$_("WebRTC:", "")} <br />
+    <strong>{$_("Signaling server:", "")}</strong>
     {replication.signalingServer} <br />
   {/if}
   {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
-    <strong>Type:</strong>
-    {replication.type === 'couchdb' ? 'CouchDB' : 'CouchDB (With Tempo compatibility)'} <br />
-    <strong>Server URL:</strong>
+    <strong>{$_("Type:", "Name")}</strong>
+    {replication.type === 'couchdb' ? $_("CouchDB:", "") : $_("CouchDB (With Tempo compatibility):", "")} <br />
+    <strong>{$_("Server URL:", "")}</strong>
     {replication.server} <br />
-    <strong>Database:</strong>
+    <strong>{$_("Database:", "")}</strong>
     {replication.database} <br />
-    <strong>Username:</strong>
+    <strong>{$_("Username:", "")}</strong>
     {replication.username} <br />
-    <strong>Password:</strong> [hidden] <br />
+    <strong>{$_("Password:", "")}</strong> {$_("[hidden]", "")}<br />
   {/if}
-  <strong>Push local data:</strong>
-  {replication.push ? 'Yes' : 'No'} <br />
-  <strong>Pull remote data:</strong>
-  {replication.pull ? 'Yes' : 'No'} <br />
+  <strong>{$_("Push local data:", "")}</strong>
+  {replication.push ? $_("Yes", "") : $_("No", "")} <br />
+  <strong>{$_("Pull remote data:", "")}</strong>
+  {replication.pull ? $_("Yes", "") : $_("No", "")} <br />
 
   <div>
     <DialogForm
       anchorClass="button__link"
-      anchorText="Edit"
-      title="Edit synchronisation"
+      anchorText={$_("Edit", "Verb")}
+      title={$_("Edit synchronisation", "")}
       onsubmit={async (e: SubmitEvent) => {
         e.preventDefault();
         replication = { ...replication };
@@ -55,16 +57,15 @@
     </DialogForm>
     <DialogForm
       anchorClass="button__link"
-      anchorText="Delete…"
-      title="Delete this synchronisation?"
+      anchorText={$_("Delete…", "")}
+      title={$_("Delete this synchronisation?", "")}
       onsubmit={(e: SubmitEvent) => {
         e.preventDefault();
         dispatch('delete', {});
       }}
     >
       <p>
-        Data synchronization with other devices will stop. Data currently stored on your device
-        won't be deleted.
+        {$_("Data synchronization with other devices will stop. Data currently stored on your device won't be deleted.", "")}
       </p>
     </DialogForm>
   </div>

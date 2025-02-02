@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import type { HTMLBaseAttributes } from 'svelte/elements';
 
   import { globals } from '$lib/db';
@@ -22,7 +23,7 @@
 <button
   type="button"
   class={'button__transparent button__icon ' + restProps.class || ''}
-  aria-label={sidebarFullpage ? 'Close main navigation' : 'Open main navigation'}
+  aria-label={sidebarFullpage ? $_("Close main navigation", "") : $_("Open main navigation", "")}
   onclick={() => {
     if (sidebarFullpage) {
       globals.uiState.set('currentPage', () => null);

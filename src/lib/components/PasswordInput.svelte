@@ -1,4 +1,5 @@
 <script>
+  import { _, _n } from '$lib/i18n/index.svelte';
   /**
    * @typedef {Object} Props
    * @property {boolean} [show]
@@ -18,4 +19,4 @@
   }}
 />
 
-<button type="button" onclick={() => (show = !show)}>{show ? 'Hide' : 'Show'}</button>
+<button type="button" onclick={() => (show = !show)}>{show ? $_("Hide", "Verb") : $_("Show", "Verb")}</button>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
+
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
   import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
 
@@ -118,9 +120,9 @@
           {/snippet}
           <DialogForm
             anchorClass="button__icon"
-            anchorLabel={`Delete collection ${collection.title}`}
+            anchorLabel={$_(`Delete collection %0`, "", [collection.title])}
             anchor={trashIcon}
-            title={`Delete collection ${collection.title}`}
+            title={$_(`Delete collection %0`, "", [collection.title])}
             onsubmit={async (e: SubmitEvent) => {
               await globals.db.documents.find({selector: {col: collection.id}}).patch({col: null})
               let document = await getById(globals.db.documents, collection.id);
@@ -130,20 +132,19 @@
             }}
           >
             <p>
-              Do you want to delete this collection? Associated notes and data will be preserved. This action is
-              irreversible.
+              {$_("Do you want to delete this collection? Associated notes and data will be preserved. This action is irreversible.", "")}
             </p>
           </DialogForm>
         </div>
       {/if}
       {#if matchingCount >= notes.length}
         <span>
-          {matchingCount} notes found
+          {$_n(`1 note found`, `%n notes found`, matchingCount)}
         </span>
       {/if}
     </header>
   {/if}
-  <LoadingState {isLoading}>Loading data…</LoadingState>
+  <LoadingState {isLoading}>{$_("Loading notes…", "")}</LoadingState>
   {#each notes as note}
     {#key note._rev}
       <RenderedNote
@@ -169,7 +170,7 @@
           })
           .exec();
         notes = [...notes, ...newNotes];
-      }}>Load more</button
+      }}>{$_("Load more notes", "")}</button
     >
   {/if}
 </div>

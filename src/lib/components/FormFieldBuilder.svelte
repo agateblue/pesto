@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { FormFieldConfiguration } from '$lib/db';
+  import { _, _n } from '$lib/i18n/index.svelte';
 
   interface Props {
     field: FormFieldConfiguration;
@@ -23,7 +24,7 @@
   <div class="flow m__block-4">
     <div class="flex__row flex__gap">
       <div class="form__field flow">
-        <label for={`field-label-${field.id}`}>Label</label>
+        <label for={`field-label-${field.id}`}>{$_("Label", "Name")}</label>
         <input
           type="text"
           name={`field-label-${field.id}`}
@@ -32,7 +33,7 @@
         />
       </div>
       <div class="form__field flow">
-        <label for={`field-type-${field.id}`}>Type</label>
+        <label for={`field-type-${field.id}`}>{$_("Type", "Name")}</label>
         <select name={`field-type-${field.id}`} id={`field-type-${field.id}`} bind:value={field.type}>
           <option value="text">Text</option>
           <option value="number">Number</option>
@@ -42,7 +43,7 @@
     </div>
     {#if advanced}
       <div class="form__field flow">
-        <label for={`field-id-${field.id}`}>ID</label>
+        <label for={`field-id-${field.id}`}>{$_("ID", "")}</label>
         <input
           type="text"
           name={`field-id-${field.id}`}
@@ -50,7 +51,7 @@
           bind:value={field.id}
         />
         <p class="form__help">
-          A unique ID for the field. Used to build visualizations.
+          {$_("A unique ID for the field. Used to build visualizations.", "")}
         </p>
       </div>
     {/if}
@@ -61,27 +62,27 @@
         id={`field-required-${field.id}`}
         bind:checked={field.required}
       />
-      <label for={`field-required-${field.id}`}>This field is required</label>
+      <label for={`field-required-${field.id}`}>{$_("This field is required", "")}</label>
     </div>
 
   </div>
 
   <div class="flow m__block-4">
     <div class="form__field flow">
-      <label for={`field-help-${field.id}`}>Help text</label>
+      <label for={`field-help-${field.id}`}>{$_("Help text", "")}</label>
       <textarea
         name={`field-help-${field.id}`}
         id={`field-help-${field.id}`}
         class="autoresize"
         bind:value={field.help}
       ></textarea>
-      <p class="form__help">A help text that will be displayabed below the field.</p>
+      <p class="form__help">{$_("A help text that will be displayabed below the field.", "")}</p>
     </div>
   </div>
   <div class="flow m__block-4">
     {#if field.type === 'number' || field.type === 'text'}
       <div class="form__field flow">
-        <label for={`field-suggestions-${field.id}`}>Suggestions</label>
+        <label for={`field-suggestions-${field.id}`}>{$_("Suggestions", "")}</label>
         <textarea
           name={`field-suggestions-${field.id}`}
           id={`field-suggestions-${field.id}`}
@@ -92,8 +93,7 @@
           }}
         ></textarea>
         <p class="form__help">
-          Put a suggestion for the field values on each line. They will be available as
-          autocomplete.
+          {$_("Put a suggestion for the field values on each line. They will be available as autocomplete.", "")}
         </p>
       </div>
 
@@ -104,8 +104,9 @@
           id={`field-autosuggest-${field.id}`}
           bind:checked={field.autosuggest}
         />
-        <label for={`field-autosuggest-${field.id}`}
-          >Include future entered values in suggestions.</label
+        <label for={`field-autosuggest-${field.id}`}>
+          {$_("Include future entered values in suggestions.", "")}
+        </label
         >
       </div>
     {/if}
@@ -115,7 +116,9 @@
         class="button__link"
         onclick={(e) => {
           onDelete(e);
-        }}>Delete this field</button
+        }}>
+          {$_("Delete this field", "")}
+        </button
       >
     </div>
   </div>

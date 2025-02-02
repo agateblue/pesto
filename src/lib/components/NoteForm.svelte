@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
+
   import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
   import IconaMoonEye from 'virtual:icons/iconamoon/eye';
   import FragmentEditor from './FragmentEditor.svelte';
@@ -36,7 +38,11 @@
 
   let subscriptions = [
     globals.db?.documents.findOne({ selector: { id: 'settings:board' } }).$.subscribe((settings) => {
-      columns = settings?.data.columns || ['Todo', 'Doing', 'Done'];
+      columns = settings?.data.columns || [
+        $_("Todo", "Board column"),
+        $_("Doing", "Board column"),
+        $_("Done", "Board column"),
+      ];
     }),
     globals.db.documents.find({
       limit: 20000,
@@ -62,9 +68,9 @@
     <MainNavigationToggle class="layout__multi-hidden" />
     <h2 class="flex__grow">
       {#if localNote}
-        Edit note
+        {$_("Edit note", "")}
       {:else}
-        New note
+        {$_("New note", "")}
       {/if}
     </h2>
 
@@ -73,8 +79,8 @@
         <a
           class="button__icon button layout__multi-hidden"
           href={`/my/notes/${localNote.id}?view=detail`}
-          aria-label="View note"
-          title="View note"
+          aria-label={$_("View note", "")}
+          title={$_("View note", "")}
         >
           <IconaMoonEye
             role="presentation"
@@ -97,9 +103,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel="Add form"
+          anchorLabel={$_("Add form", "")}
           anchor={formIcon}
-          title="Add form"
+          title={$_("Add form", "")}
           onsubmit={async (e: SubmitEvent) => {
             if (!localNote) {
               let noteData = getNewNote();
@@ -122,7 +128,7 @@
           }}
         > 
           <div class="form__field">
-            <label for="form-id">Form</label>
+            <label for="form-id">{$_("Form", "Name")}</label>
             <select name="form-id" id="form-id" bind:value={selectedForm}>
               <option value={undefined}>---</option>
               {#each forms as form}
@@ -130,7 +136,7 @@
               {/each}
             </select>
           </div>
-          <p>Add the given form to the note.</p>
+          <p>{$_("Attach this form to the note.", "")}</p>
         </DialogForm>
       {/if}
       {#if localNote}
@@ -145,9 +151,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel="Delete note"
+          anchorLabel={$_("Delete note", "")}
           anchor={trashIcon}
-          title="Delete this note?"
+          title={$_("Delete this note?", "")}
           onsubmit={(e: SubmitEvent) => {
             e.preventDefault();
             localNote.remove();

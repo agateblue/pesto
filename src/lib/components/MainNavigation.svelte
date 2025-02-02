@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { globals, syncReplications, getNewCollection } from '$lib/db';
   import MainNavigationLink from './MainNavigationLink.svelte';
   import DialogForm from './DialogForm.svelte';
@@ -67,8 +68,8 @@
         <button
           type="button" 
           class="button__icon p__inline-2 m__inline-1"
-          aria-label="Synchronize" 
-          title="Synchronize"
+          aria-label={$_("Synchronize")} 
+          title={$_("Synchronize")}
           onclick={async (e) => {
             isSyncing = true
             await syncReplications(globals.replications)
@@ -86,7 +87,11 @@
           />
         </button>
       {/if}
-      <a href="/my?action=search" class="button__icon p__inline-2 m__inline-1" aria-label="Search" title="Search">
+      <a 
+        href="/my?action=search" 
+        class="button__icon p__inline-2 m__inline-1" 
+        aria-label={$_("Search")} 
+        title={$_("Search")}>
         <IconaMoonSearch
           role="presentation"
           class=" icon__size-3"
@@ -95,7 +100,11 @@
           alt=""
         />
       </a>
-      <a href="/settings" class="button__icon p__inline-2 m__inline-1" aria-label="Settings" title="Settings">
+      <a 
+        href="/settings" 
+        class="button__icon p__inline-2 m__inline-1" 
+        aria-label={$_("Settings")} 
+        title={$_("Settings")}>
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"
@@ -108,26 +117,26 @@
     <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add"
-          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">New note</span
+          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">{$_("New note")}</span
           ></MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/my">
-          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">All notes</span>
+          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">{$_("All notes")}</span>
           <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true">
-          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">Starred</span>
+          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">{$_("Starred")}</span>
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc"
           ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow"
-            >Recently modified</span
+            >{$_("Recently modified")}</span
           ></MainNavigationLink
         >
       </li>
@@ -136,18 +145,18 @@
           <IconaMoonMenuKebabVerticalSquare
             role="presentation"
             alt=""
-          />Todos</MainNavigationLink
+          />{$_("Todos")}</MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/board">
-          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">Board</span>
+          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">{$_("Board")}</span>
           <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
       </li>
       <li class="flex__row flex__justify-between flex__align-center">
         <h2>
-          Collections
+          {$_("Collections")}
         </h2>
 
         {#snippet newCollectionIcon()}
@@ -161,9 +170,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel="Add collection"
+          anchorLabel={$_("Add collection")}
           anchor={newCollectionIcon}
-          title="Add collection"
+          title={$_("Add collection")}
           onopen={() => {
             newCollection = getNewCollection()
           }}
@@ -187,10 +196,10 @@
           </MainNavigationLink>
         </li>
       {/each}
-      <li><h2>Data</h2></li>
+      <li><h2>{$_("Data")}</h2></li>
       <li>
         <MainNavigationLink href="/forms"
-          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">Forms</span
+          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">{$_("Forms")}</span
           ></MainNavigationLink
         >
       </li>

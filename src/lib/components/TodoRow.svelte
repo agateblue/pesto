@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { preventDefault } from 'svelte/legacy';
 
   import { createEventDispatcher, onMount } from 'svelte';
@@ -67,9 +68,9 @@
       oninput={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
-      placeholder="Add new todo…"
+      placeholder={$_("Add a new todo…", "")}
       rows="1"
-      aria-label="Add a new todo"
+      aria-label={$_("Add a new todo…", "")}
       {onblur}
       {onfocus}
     ></textarea>
@@ -84,8 +85,8 @@
     onclick={preventDefault((e) => {
       dispatch('delete');
     })}
-    aria-label="Delete todo"
-    title="Delete todo"
+    aria-label={$_("Delete todo", "")}
+    title={$_("Delete todo", "")}
   >
     <IconaMoonClose class="icon__size-3" height=none width=none role="presentation" alt="" />
   </button>

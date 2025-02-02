@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
+
   import FormFieldRendered from '$lib/components/FormFieldRendered.svelte';
   import FormBuilder from '$lib/components/FormBuilder.svelte';
   import DialogForm from '$lib/components/DialogForm.svelte';
@@ -41,8 +43,8 @@
       <div>
         <DialogForm
           anchorClass="button button__link"
-          anchorText="Edit…"
-          title={`Edit form ${form.name}`}
+          anchorText={$_("Edit", "Verb")}
+          title={$_(`Edit form %0`, "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             await createOrUpdateForm(id, form);
             return e.preventDefault();
@@ -53,8 +55,8 @@
         <br />
         <DialogForm
           anchorClass="button button__link"
-          anchorText="Delete…"
-          title={`Delete form ${form.name}`}
+          anchorText={$_("Delete", "")}
+          title={$_(`Delete form %0`, "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             let form = await getById(globals.db.documents, id);
             await form.remove();
@@ -62,8 +64,8 @@
           }}
         >
           <p>
-            Do you want to delete this form? Form data won't be deleted. This action is
-            irreversible.
+            {$_("Do you want to delete this form? Form data won't be deleted. This action is irreversible.", "")}
+            
           </p>
         </DialogForm>
       </div>
@@ -90,7 +92,7 @@
     {/each}
 
     <div class="flex__row flex__justify-between">
-      <button type="submit">Save</button>
+      <button type="submit">{$_("Save", "")}</button>
       <button
         type="button"
         class="button__link"
@@ -104,7 +106,7 @@
           if (last) {
             v = cloneDeep(last.fragments.form.data);
           }
-        }}>Use last values</button
+        }}>{$_("Pre-fill from last form", "")}</button
       >
     </div>
     {@render children?.()}

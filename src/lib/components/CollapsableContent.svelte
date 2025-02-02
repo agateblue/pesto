@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { getRandomId } from '$lib/ui';
   import type { HTMLBaseAttributes } from 'svelte/elements';
   interface Props extends HTMLBaseAttributes {
@@ -22,6 +23,6 @@
     type="button"
     onclick={() => (expanded = !expanded)}
   >
-    {#if expanded}Collapse{:else}Expand{/if}
+    {#if expanded}{$_("Collapse")}{:else}{$_("Expand")}{/if}
   </button>
 {/if}

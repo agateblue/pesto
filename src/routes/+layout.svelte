@@ -44,7 +44,6 @@
     if ($lang != defaultLanguage) {
       import(`../lib/i18n/messages/${$lang}.po.json`).then((r) => {
         $parsedTranslations[$lang] = r;	
-        console.log("HELLO", $parsedTranslations)
       });
     }
   })

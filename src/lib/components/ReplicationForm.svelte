@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { preventDefault } from 'svelte/legacy';
   import cloneDeep from 'lodash/cloneDeep';
   import PasswordInput from '$lib/components/PasswordInput.svelte';
@@ -19,7 +20,7 @@
 
 {#if replication.type === 'webrtc'}
   <div class="form__field">
-    <label for="webrtc-signaling-server">Signaling server</label>
+    <label for="webrtc-signaling-server">{$_("Signaling server", "")}</label>
     <input
       type="text"
       id="webrtc-signaling-server"
@@ -29,35 +30,35 @@
     />
   </div>
   <div class="form__field">
-    <label for="webrtc-room-id">Room ID</label>
+    <label for="webrtc-room-id">{$_("Room ID", "")}</label>
     <PasswordInput
       required
       name="webrtc-room-id"
       id="webrtc-room-id"
       bind:value={replication.room}
     />
-    <p>Anyone with this room identifier can access your data. Treat it like a password.</p>
+    <p>{$_("Anyone with this room identifier can access your data. Treat it like a password.", "")}</p>
   </div>
 {/if}
 {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
   {#if replication.type === 'couchdb-tempo'}
     <p>
       <strong
-        >Warning: this synchronisation mode is designed to help you transition from Tempo to Pesto.</strong
+        >{$_("Warning: this synchronisation mode is designed to help you transition from Tempo to Pesto.", "")}</strong
       >
     </p>
     <p>
-      Since Tempo does not support all Pesto features, writing data from Pesto to Tempo is disabled.
-      This means:
+      {$_("Since Tempo does not support all Pesto features, writing data from Pesto to Tempo is disabled. This means:", "")}
+      
     </p>
     <ul>
-      <li>Changes done on Tempo documents will be synchronized from Tempo to Pesto</li>
-      <li>Changes done on Pesto documents won't be synchronized from Pesto to Tempo</li>
+      <li>{$_("Changes done on Tempo documents will be synchronized from Tempo to Pesto", "")}</li>
+      <li>{$_("Changes done on Pesto documents won't be synchronized from Pesto to Tempo", "")}</li>
     </ul>
-    <p>It is also less performant and should be disabled when you switch definitely to Pesto.</p>
+    <p>{$_("It is also less performant and should be disabled when you switch definitely to Pesto.", "")}</p>
   {/if}
   <div class="form__field">
-    <label for="couchdb-server">Server URL</label>
+    <label for="couchdb-server">{$_("Server", "")} URL</label>
     <input
       name="couchdb-server"
       id="couchdb-url"
@@ -67,7 +68,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-database">Database name</label>
+    <label for="couchdb-database">{$_("Database", "")} name</label>
     <input
       name="couchdb-database"
       id="couchdb-database"
@@ -76,7 +77,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-username">Username</label>
+    <label for="couchdb-username">{$_("Username", "")}</label>
     <input
       name="couchdb-username"
       id="couchdb-username"
@@ -85,7 +86,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-password">Password</label>
+    <label for="couchdb-password">{$_("Password", "")}</label>
     <PasswordInput
       name="couchdb-password"
       id="couchdb-password"
@@ -96,9 +97,9 @@
 {/if}
 <div class="form__field">
   <input id="push" name="push" type="checkbox" bind:checked={replication.push} />
-  <label for="push">Push local changes</label>
+  <label for="push">{$_("Push local changes", "")}</label>
 </div>
 <div class="form__field">
   <input id="pull" name="pull" type="checkbox" bind:checked={replication.pull} />
-  <label for="pull">Pull remote changes</label>
+  <label for="pull">{$_("Pull remote changes", "")}</label>
 </div>

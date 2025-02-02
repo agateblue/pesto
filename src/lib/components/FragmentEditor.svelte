@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import debounce from 'lodash/debounce';
   import TextFragmentEditor from './TextFragmentEditor.svelte';
   import FormRendered from './FormRendered.svelte';
@@ -102,7 +103,7 @@
 
 <div class="flow">
   <div class="form__field">
-    <label for="note-title">Title</label>
+    <label for="note-title">{$_("Title", "")}</label>
     <input
       type="text"
       id="note-title"
@@ -114,7 +115,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="note-collection">Collection</label>
+    <label for="note-collection">{$_("Collection", "")}</label>
     <SelectDocument
       id="note-collection"
       name="note-collection"
@@ -169,7 +170,7 @@
         todolistKey += 1;
       }}
     >
-      Load todolist from text
+      {$_("Load todolist from text", "")}
     </button>
   {/if}
   {#key todolistKey}

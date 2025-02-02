@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { type DocumentDocument, formatDate, getNoteUpdateData } from '$lib/db';
   import { noteToText } from '$lib/ui';
   import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
@@ -59,7 +60,7 @@
           height="none"
           width="none"
         />
-        Edit note
+        {$_("Edit note", "")}
       </a>
     </li>
     <li>
@@ -77,7 +78,7 @@
           class="icon icon__size-3"
           height="none"
           width="none"
-        /> Copy content
+        /> {$_("Copy content", "")}
       </button>
     </li>
     <li>
@@ -98,7 +99,7 @@
             height="none"
             width="none"
           />
-          Unstar
+          {$_("Unstar", "Verb")}
         {:else}
           <IconaMoonStar
           role="presentation"
@@ -107,13 +108,13 @@
           height="none"
           width="none"
           />
-          Star
+          {$_("Star", "Verb")}
         {/if}
       </button>
     </li>
     <li>
       {#snippet trashIcon()}
-        Delete
+        {$_("Delete", "")}
         <IconaMoonTrash
           role="presentation"
           class="icon icon__size-3"
@@ -124,16 +125,18 @@
       {/snippet}
       <DialogForm
         anchorClass="button__icon"
-        anchorLabel="Delete note"
+        anchorLabel={$_("Delete note", "")}
         anchor={trashIcon}
-        title="Delete this note?"
+        title={$_("Delete this note?", "")}
         onsubmit={async (e: SubmitEvent) => {
           e.preventDefault();
           await note.incrementalRemove();
           onDelete?.();
         }}
       >
-        <p>This will remove the note from your diary. This action is irreversible.</p>
+        <p>
+          {$_("This will remove the note from your diary. This action is irreversible.", "")}
+        </p>
       </DialogForm>
     </li>
   </DropDown>

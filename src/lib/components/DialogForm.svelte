@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import { preventDefault } from 'svelte/legacy';
   import IconaMoonClose from 'virtual:icons/iconamoon/close';
-
+  
   interface Props {
     anchorClass: string;
     anchorText?: string;
@@ -12,7 +13,7 @@
     onsubmit: Function;
     onopen?: Function;
   }
-
+  
   let {
     anchorClass,
     anchorText,
@@ -25,6 +26,7 @@
   }: Props = $props();
   let dialog: HTMLDialogElement;
 </script>
+
 
 <button
   type="button"
@@ -53,8 +55,8 @@
       <button
         type="button"
         class="button__icon"
-        aria-label="Close dialog"
-        title="Close dialog"
+        aria-label={$_("Close dialog")}
+        title={$_("Close dialog")}
         onclick={() => {
           dialog.close();
         }}
@@ -79,7 +81,7 @@
         type="submit"
         onclick={(e) => {
           dialog.close();
-        }}>Confirm</button
+        }}>{$_("Confirm")}</button
       >
     </form>
   </div>

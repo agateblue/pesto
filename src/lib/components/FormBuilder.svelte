@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _, _n } from '$lib/i18n/index.svelte';
   import FormFieldBuilder from './FormFieldBuilder.svelte';
   import FormFieldRendered from './FormFieldRendered.svelte';
   import { type FormFieldConfiguration, type FormConfiguration } from '$lib/db';
@@ -15,7 +16,7 @@
   function getNewField() {
     let field: FormFieldConfiguration = {
       id: getRandomId().toLowerCase(),
-      label: 'My field',
+      label: $_("My field"),
       required: true,
       type: 'text',
       suggestions: [],
@@ -27,7 +28,7 @@
 </script>
 
 <div class="form__field">
-  <label for={`form-name-${form.id}`}>Name</label>
+  <label for={`form-name-${form.id}`}>{$_("Name")}</label>
   <input
     type="text"
     id={`form-name-${form.id}`}
@@ -37,9 +38,9 @@
 </div>
 {#if advanced}
   <div class="form__field">
-    <label for={`form-id-${form.id}`}>ID</label>
+    <label for={`form-id-${form.id}`}>{$_("ID")}</label>
     <input type="text" id={`form-id-${form.id}`} name={`form-id-${form.id}`} bind:value={form.id} />
-    <p class="form__help">A unique ID for the form. Used to build visualizations</p>
+    <p class="form__help">{$_("A unique ID for the form. Used to build visualizations.")}</p>
   </div>
 {/if}
 
@@ -50,7 +51,7 @@
     name={`form-advanced-${form.id}`}
     bind:checked={advanced}
   />
-  <label for={`form-advanced-${form.id}`}>Advanced mode</label>
+  <label for={`form-advanced-${form.id}`}>{$_("Advanced mode")}</label>
 </div>
 
 <div class="form__field">
@@ -60,7 +61,7 @@
     name={`form-rendered-${form.id}`}
     bind:checked={rendered}
   />
-  <label for={`form-rendered-${form.id}`}>Preview form</label>
+  <label for={`form-rendered-${form.id}`}>{$_("Preview form")}</label>
 </div>
 
 <div class="flex__stacking-container">
@@ -82,6 +83,6 @@
     type="button"
     onclick={(e) => {
       form.fields.push(getNewField());
-    }}>Add a new field</button
+    }}>{$_("Add a new field")}</button
   >
 {/if}
