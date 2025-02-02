@@ -3,17 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "yarn vendor-static && vite dev",
-    "build": "yarn vendor-static && vite build",
+    "dev": "yarn vendor-static && yarn i18n:compile && vite dev",
+    "build": "yarn vendor-static && yarn i18n:compile && vite build",
     "vendor-static": "cp node_modules/emoji-picker-element-data/en/emojibase/data.json static/emojis.json",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test": "vitest",
+    "test": "yarn i18n:compile && vitest",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "i18n:extract": "node src/i18n/extract.cjs",
+    "i18n:update": "find ./src/i18n/messages -name '*.po' -print0 -exec msgmerge -U {} './src/i18n/messages/messages.pot' ';'; rm ./src/i18n/messages/*.po~",
+    "i18n:compile": "find ./src/i18n/messages -name '*.po' -print0 -exec node node_modules/svelte-i18n-gettext/bin/po2json.cjs -i {} -o {}.json -v ';'"
   },
   "devDependencies": {
+    "@rgglez/gettext-extractor": "^3.8.1",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-static": "^3.0.4",
     "@sveltejs/kit": "^2.5.27",
@@ -52,6 +56,7 @@
     "plausible-tracker": "^0.3.9",
     "rxdb": "16.3.0",
     "rxjs": "^7.8.1",
+    "svelte-i18n-gettext": "^1.0.15",
     "svelte-lazy": "^1.2.10",
     "unplugin-icons": "^0.19.2"
   }
