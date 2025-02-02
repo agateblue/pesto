@@ -40,6 +40,8 @@ jobs:
           node-version: '18'
           cache: 'yarn'
 
+      - name: Install system dependencies
+        run: sudo apt install -y gettext
       - name: Install dependencies
         run: yarn install
 
