@@ -45,7 +45,7 @@
   <div>
     <DialogForm
       anchorClass="button__link"
-      anchorText={$_("Éditer", "Verb")}
+      anchorText={$_("Éditer", "")}
       title={$_("Modifier la synchronisation", "")}
       onsubmit={async (e: SubmitEvent) => {
         e.preventDefault();

@@ -55,8 +55,8 @@
       <button
         type="button"
         class="button__icon"
-        aria-label={$_("Close dialog")}
-        title={$_("Close dialog")}
+        aria-label={$_("Fermer la fenêtre", "")}
+        title={$_("Fermer la fenêtre", "")}
         onclick={() => {
           dialog.close();
         }}
@@ -81,7 +81,7 @@
         type="submit"
         onclick={(e) => {
           dialog.close();
-        }}>{$_("Confirm")}</button
+        }}>{$_("Confirmer", "")}</button
       >
     </form>
   </div>

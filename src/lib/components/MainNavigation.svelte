@@ -68,8 +68,8 @@
         <button
           type="button" 
           class="button__icon p__inline-2 m__inline-1"
-          aria-label={$_("Synchronize")} 
-          title={$_("Synchronize")}
+          aria-label={$_("Synchroniser", "")} 
+          title={$_("Synchroniser", "")}
           onclick={async (e) => {
             isSyncing = true
             await syncReplications(globals.replications)
@@ -90,8 +90,8 @@
       <a 
         href="/my?action=search" 
         class="button__icon p__inline-2 m__inline-1" 
-        aria-label={$_("Search")} 
-        title={$_("Search")}>
+        aria-label={$_("Rechercher", "")} 
+        title={$_("Rechercher", "")}>
         <IconaMoonSearch
           role="presentation"
           class=" icon__size-3"
@@ -103,8 +103,8 @@
       <a 
         href="/settings" 
         class="button__icon p__inline-2 m__inline-1" 
-        aria-label={$_("Settings")} 
-        title={$_("Settings")}>
+        aria-label={$_("Paramètres", "")} 
+        title={$_("Paramètres", "")}>
         <IconaMoonSettings
           role="presentation"
           class=" icon__size-3"
@@ -117,26 +117,26 @@
     <ul class="flex__column">
       <li>
         <MainNavigationLink href="/my/notes/add"
-          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">{$_("New note")}</span
+          ><IconaMoonSignPlusCircle role="presentation" alt="" /><span class="flex__grow">{$_("Nouvelle note", "")}</span
           ></MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/my">
-          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">{$_("All notes")}</span>
+          <IconaMoonCategory role="presentation" alt="" /><span class="flex__grow">{$_("Toutes les notes", "")}</span>
           <span class="badge float__end">{totalNotes}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true">
-          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">{$_("Starred")}</span>
+          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow">{$_("Favoris", "")}</span>
           <span class="badge float__end">{totalStarred}</span>
         </MainNavigationLink>
       </li>
       <li>
         <MainNavigationLink href="/my?o=modified_at:desc"
           ><IconaMoonClock role="presentation" alt="" /><span class="flex__grow"
-            >{$_("Recently modified")}</span
+            >{$_("Récemment modifié", "")}</span
           ></MainNavigationLink
         >
       </li>
@@ -145,18 +145,18 @@
           <IconaMoonMenuKebabVerticalSquare
             role="presentation"
             alt=""
-          />{$_("Todos")}</MainNavigationLink
+          />{$_("Tâches", "")}</MainNavigationLink
         >
       </li>
       <li>
         <MainNavigationLink href="/board">
-          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">{$_("Board")}</span>
+          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow">{$_("Tableau", "")}</span>
           <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
       </li>
       <li class="flex__row flex__justify-between flex__align-center">
         <h2>
-          {$_("Collections")}
+          {$_("Collections", "")}
         </h2>
 
         {#snippet newCollectionIcon()}
@@ -170,9 +170,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_("Add collection")}
+          anchorLabel={$_("Ajouter une collection", "")}
           anchor={newCollectionIcon}
-          title={$_("Add collection")}
+          title={$_("Ajouter une collection", "")}
           onopen={() => {
             newCollection = getNewCollection()
           }}
@@ -196,10 +196,10 @@
           </MainNavigationLink>
         </li>
       {/each}
-      <li><h2>{$_("Data")}</h2></li>
+      <li><h2>{$_("Données", "")}</h2></li>
       <li>
         <MainNavigationLink href="/forms"
-          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">{$_("Forms")}</span
+          ><IconaMoonFileDocument role="presentation" alt="" /><span class="flex__grow">{$_("Formulaires", "")}</span
           ></MainNavigationLink
         >
       </li>

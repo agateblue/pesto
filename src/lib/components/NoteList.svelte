@@ -120,9 +120,9 @@
           {/snippet}
           <DialogForm
             anchorClass="button__icon"
-            anchorLabel={$_(`Delete collection %0`, "", [collection.title])}
+            anchorLabel={$_("Supprimer la collection %0", "", [collection.title])}
             anchor={trashIcon}
-            title={$_(`Delete collection %0`, "", [collection.title])}
+            title={$_("Supprimer la collection %0", "", [collection.title])}
             onsubmit={async (e: SubmitEvent) => {
               await globals.db.documents.find({selector: {col: collection.id}}).patch({col: null})
               let document = await getById(globals.db.documents, collection.id);

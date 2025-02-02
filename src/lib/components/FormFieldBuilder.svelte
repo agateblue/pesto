@@ -24,7 +24,7 @@
   <div class="flow m__block-4">
     <div class="flex__row flex__gap">
       <div class="form__field flow">
-        <label for={`field-label-${field.id}`}>{$_("Libellé", "Name")}</label>
+        <label for={`field-label-${field.id}`}>{$_("Libellé", "")}</label>
         <input
           type="text"
           name={`field-label-${field.id}`}
@@ -33,7 +33,7 @@
         />
       </div>
       <div class="form__field flow">
-        <label for={`field-type-${field.id}`}>{$_("Type", "Name")}</label>
+        <label for={`field-type-${field.id}`}>{$_("Type", "Nom")}</label>
         <select name={`field-type-${field.id}`} id={`field-type-${field.id}`} bind:value={field.type}>
           <option value="text">Text</option>
           <option value="number">Number</option>

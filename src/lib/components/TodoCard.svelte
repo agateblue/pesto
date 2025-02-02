@@ -57,7 +57,7 @@
 
 <div class="flex__row | flex__align-center">
   <div class="flex__row flex__grow flex__align-center">
-    <span use:dragHandle aria-label={$_(`Drag-handle for %0`, "", [note.title || note.fragments?.todolist?.todos[0]?.text])}>
+    <span use:dragHandle aria-label={$_("Poignée pour glisser/déposer %0", "", [note.title || note.fragments?.todolist?.todos[0]?.text])}>
       <IconaMoonMoveThin role="presentation" alt="" />
     </span>
     {#if note.title?.trim()}

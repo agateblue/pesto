@@ -14,24 +14,24 @@
 
 <div class="form__field">
   <label for="collection-name">
-    {$_("Name")}
+    {$_("Nom", "")}
   </label>
   <input type="text" id="collection-name" name="collection-name" bind:value={collection.title}>
 </div>
 <div class="form__field">
   <label for="collection-query">
-    {$_("Query")}
+    {$_("Requête", "")}
   </label>
   <textarea
     class="autoresize"
     id="collection-query" name="collection-query" bind:value={collection.data.query}>
   </textarea>
   <p class="form__help">
-    {$_("Automatically include notes matching this query in the collection.")} 
+    {$_("Inclure automatiquement dan la collection les notes correspondant à cette requête.", "")} 
   </p>
 </div>
 <div class="form__field">
-  <label for="collection-icon">{$_("Icon:")} {collection.data.emoji || '📋️'}</label>
+  <label for="collection-icon">{$_("Icône :", "")} {collection.data.emoji || '📋️'}</label>
   <EmojiPicker 
     onemoji-click={(e) => {collection.data.emoji = e.detail.unicode}}
     style="width: 100%"

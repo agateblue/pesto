@@ -43,8 +43,8 @@
       <div>
         <DialogForm
           anchorClass="button button__link"
-          anchorText={$_("Éditer", "Verb")}
-          title={$_(`Edit form %0`, "", [form.name])}
+          anchorText={$_("Éditer", "")}
+          title={$_("Éditer le formulaire %0", "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             await createOrUpdateForm(id, form);
             return e.preventDefault();
@@ -56,7 +56,7 @@
         <DialogForm
           anchorClass="button button__link"
           anchorText={$_("Supprimer", "")}
-          title={$_(`Delete form %0`, "", [form.name])}
+          title={$_("Supprimer le formulaire %0", "", [form.name])}
           onsubmit={async (e: SubmitEvent) => {
             let form = await getById(globals.db.documents, id);
             await form.remove();

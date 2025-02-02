@@ -3,40 +3,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 #: ./src/lib/components/CollapsableContent.svelte:26
-msgid "Expand"
+msgid "Replier"
 msgstr ""
 
 #: ./src/lib/components/CollapsableContent.svelte:26
-msgid "Collapse"
+msgid "Déplier"
 msgstr ""
 
 #: ./src/lib/components/CollectionForm.svelte:17
 #: ./src/lib/components/FormBuilder.svelte:31
-msgid "Name"
+msgid "Nom"
 msgstr ""
 
 #: ./src/lib/components/CollectionForm.svelte:23
-msgid "Query"
+msgid "Requête"
 msgstr ""
 
 #: ./src/lib/components/CollectionForm.svelte:30
-msgid "Automatically include notes matching this query in the collection."
+msgid "Inclure automatiquement dan la collection les notes correspondant à cette requête."
 msgstr ""
 
 #: ./src/lib/components/CollectionForm.svelte:34
-msgid "Icon:"
+msgid "Icône :"
 msgstr ""
 
 #: ./src/lib/components/DialogForm.svelte:58
-msgid "Close dialog"
+msgid "Fermer la fenêtre"
 msgstr ""
 
 #: ./src/lib/components/DialogForm.svelte:84
-msgid "Confirm"
+msgid "Confirmer"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:19
-msgid "My field"
+msgid "Mon champ"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:41
@@ -45,53 +45,52 @@ msgid "ID"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:43
-msgid "A unique ID for the form. Used to build visualizations."
+msgid "Un identifiant unique pour le formulaire. Utilisé pour construire des visualisations."
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:54
-msgid "Advanced mode"
+msgid "Mode avancé"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:64
-msgid "Preview form"
+msgid "Aperçu du formulaire"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:86
-msgid "Add a new field"
+msgid "Ajouter un  nouveau champ"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:108
-msgid "Include future entered values in suggestions."
+msgid "Inclure les futures valeurs saisies dans les suggestions."
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:120
-msgid "Delete this field"
+msgid "Supprimer ce champ"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:27
-msgctxt "Name"
-msgid "Label"
+msgid "Libellé"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:36
-msgctxt "Name"
+msgctxt "Nom"
 msgid "Type"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:54
-msgid "A unique ID for the field. Used to build visualizations."
+msgid "Un identifiant unique pour ce champ. Utilisé pour construire des visualisations."
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:65
-msgid "This field is required"
+msgid "Ce champ est requis"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:72
-msgid "Help text"
+msgid "Texte d'aide"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:79
-msgid "A help text that will be displayabed below the field."
+msgid "Un texte d'aide qui sera affiché sous le champ."
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:85
@@ -99,42 +98,41 @@ msgid "Suggestions"
 msgstr ""
 
 #: ./src/lib/components/FormFieldBuilder.svelte:96
-msgid "Put a suggestion for the field values on each line. They will be available as autocomplete."
+msgid "Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées sous forme d'autocomplétion."
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:109
-msgid "Pre-fill from last form"
+msgid "Pré-remplir à partir du dernier formulaire"
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:46
 #: ./src/lib/components/ReplicationCard.svelte:48
-msgctxt "Verb"
-msgid "Edit"
+msgid "Éditer"
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:47
-msgid "Edit form %0"
+msgid "Éditer le formulaire %0"
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:58
 #: ./src/lib/components/RenderedNoteHeader.svelte:117
-msgid "Delete"
+msgid "Supprimer"
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:59
-msgid "Delete form %0"
+msgid "Supprimer le formulaire %0"
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:67
-msgid "Do you want to delete this form? Form data won't be deleted. This action is irreversible."
+msgid "Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas supprimées. Cette action est irréversible."
 msgstr ""
 
 #: ./src/lib/components/FormRendered.svelte:95
-msgid "Save"
+msgid "Sauvegarder"
 msgstr ""
 
 #: ./src/lib/components/FragmentEditor.svelte:106
-msgid "Title"
+msgid "Titre"
 msgstr ""
 
 #: ./src/lib/components/FragmentEditor.svelte:118
@@ -142,36 +140,36 @@ msgid "Collection"
 msgstr ""
 
 #: ./src/lib/components/FragmentEditor.svelte:173
-msgid "Load todolist from text"
+msgid "Charger la liste de tâche depuis le texte"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:106
-msgid "Settings"
+msgid "Paramètres"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:120
 #: ./src/lib/components/NoteForm.svelte:73
-msgid "New note"
+msgid "Nouvelle note"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:126
-msgid "All notes"
+msgid "Toutes les notes"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:132
-msgid "Starred"
+msgid "Favoris"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:139
-msgid "Recently modified"
+msgid "Récemment modifié"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:148
-msgid "Todos"
+msgid "Tâches"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:153
-msgid "Board"
+msgid "Tableau"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:159
@@ -179,285 +177,279 @@ msgid "Collections"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:173
-msgid "Add collection"
+msgid "Ajouter une collection"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:199
-msgid "Data"
+msgid "Données"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:202
-msgid "Forms"
+msgid "Formulaires"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:71
-msgid "Synchronize"
+msgid "Synchroniser"
 msgstr ""
 
 #: ./src/lib/components/MainNavigation.svelte:93
-msgid "Search"
+msgid "Rechercher"
 msgstr ""
 
 #: ./src/lib/components/MainNavigationToggle.svelte:26
-msgid "Open main navigation"
+msgid "Ouvrir le menu principal"
 msgstr ""
 
 #: ./src/lib/components/MainNavigationToggle.svelte:26
-msgid "Close main navigation"
+msgid "Fermer le menu principal"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:106
-msgid "Add form"
+msgid "Ajouter un formulaire"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:131
-msgctxt "Name"
-msgid "Form"
+msgid "Formulaire"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:139
-msgid "Attach this form to the note."
+msgid "Attacher ce formulaire à la note."
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:154
 #: ./src/lib/components/RenderedNoteHeader.svelte:128
-msgid "Delete note"
+msgid "Supprimer cette note"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:156
 #: ./src/lib/components/RenderedNoteHeader.svelte:130
-msgid "Delete this note?"
+msgid "Supprimer cette note ?"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:42
-msgctxt "Board column"
-msgid "Todo"
+msgctxt "Colonne du tableau"
+msgid "À faire"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:43
-msgctxt "Board column"
-msgid "Doing"
+msgctxt "Colonne du tableau"
+msgid "En cours"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:44
-msgctxt "Board column"
-msgid "Done"
+msgctxt "Colonne du tableau"
+msgid "Terminé"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:71
 #: ./src/lib/components/RenderedNoteHeader.svelte:63
-msgid "Edit note"
+msgid "Éditer cette note"
 msgstr ""
 
 #: ./src/lib/components/NoteForm.svelte:82
-msgid "View note"
+msgid "Voir cette note"
 msgstr ""
 
 #: ./src/lib/components/NoteList.svelte:123
-msgid "Delete collection %0"
+msgid "Supprimer la collection %0"
 msgstr ""
 
 #: ./src/lib/components/NoteList.svelte:135
-msgid "Do you want to delete this collection? Associated notes and data will be preserved. This action is irreversible."
+msgid "Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible."
 msgstr ""
 
 #: ./src/lib/components/NoteList.svelte:142
-msgid "1 note found"
-msgid_plural "%n notes found"
+msgid "1 note trouvée"
+msgid_plural "%n notes trouvées"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ./src/lib/components/NoteList.svelte:147
-msgid "Loading notes…"
+msgid "Chargement des notes…"
 msgstr ""
 
 #: ./src/lib/components/NoteList.svelte:173
-msgid "Load more notes"
+msgid "Montrer plus de notes"
 msgstr ""
 
 #: ./src/lib/components/PasswordInput.svelte:22
-msgctxt "Verb"
-msgid "Show"
+msgid "Montrer"
 msgstr ""
 
 #: ./src/lib/components/PasswordInput.svelte:22
-msgctxt "Verb"
-msgid "Hide"
+msgid "Masquer"
 msgstr ""
 
 #: ./src/lib/components/RenderedNoteHeader.svelte:102
-msgctxt "Verb"
-msgid "Unstar"
+msgid "Retirer des favoris"
 msgstr ""
 
 #: ./src/lib/components/RenderedNoteHeader.svelte:111
-msgctxt "Verb"
-msgid "Star"
+msgid "Ajouter aux favoris"
 msgstr ""
 
 #: ./src/lib/components/RenderedNoteHeader.svelte:138
-msgid "This will remove the note from your diary. This action is irreversible."
+msgid "La note sera supprimée de votre journal. Cette action est irréversible."
 msgstr ""
 
 #: ./src/lib/components/RenderedNoteHeader.svelte:81
-msgid "Copy content"
+msgid "Copier le contenu"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:25
-msgctxt "Name"
-msgid "Type:"
+msgctxt "Nom"
+msgid "Type :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:25
-msgid "WebRTC:"
+msgid "WebRTC :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:26
-msgid "Signaling server:"
+msgid "Serveur de mise en relation :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:31
-msgid "CouchDB:"
+msgid "CouchDB (Avec compatibilité Tempo)"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:31
-msgid "CouchDB (With Tempo compatibility):"
+msgid "CouchDB :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:32
-msgid "Server URL:"
+msgid "URL du serveur :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:34
-msgid "Database:"
+msgid "Base de données :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:36
-msgid "Username:"
+msgid "Nom d'utilisateur·ice :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:38
-msgid "Password:"
+msgid "Mot de passe :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:38
-msgid "[hidden]"
+msgid "[masqué]"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:40
-msgid "Push local data:"
+msgid "Envoyer les données locales :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:41
-msgid "Yes"
+msgid "Oui"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:41
-msgid "No"
+msgid "Non"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:42
-msgid "Pull remote data:"
+msgid "Télécharger les données distantes :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:49
-msgid "Edit synchronisation"
+msgid "Modifier la synchronisation"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:60
-msgid "Delete…"
+msgid "Supprimer…"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:61
-msgid "Delete this synchronisation?"
+msgid "Supprimer cette synchronisation ?"
 msgstr ""
 
 #: ./src/lib/components/ReplicationCard.svelte:68
-msgid "Data synchronization with other devices will stop. Data currently stored on your device won't be deleted."
+msgid "La synchronisation des données avec d'autres appareils sera interrompue. Les données actuellement stockées sur votre appareils seront conservées."
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:100
-msgid "Push local changes"
+msgid "Envoyer les changements locaux"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:104
-msgid "Pull remote changes"
+msgid "Télécharger les changements distants"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:23
-msgid "Signaling server"
+msgid "Serveur de mise en relation"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:33
-msgid "Room ID"
+msgid "Identifiant de salon"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:40
-msgid "Anyone with this room identifier can access your data. Treat it like a password."
+msgid "N'importe qui disposant de cette identifiant de salon pourra accéder à vos données. Protégez le comme un mot de passe."
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:47
-msgid "Warning: this synchronisation mode is designed to help you transition from Tempo to Pesto."
+msgid "Avertissement : ce mode de synchronisation est conçu pour vous permettre de migrer de Tempo à Pesto."
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:51
-msgid "Since Tempo does not support all Pesto features, writing data from Pesto to Tempo is disabled. This means:"
+msgid "Comme Tempo ne prend pas en charge toutes les fonctionnalités de Pesto, l'écriture de données de Pesto vers Tempo est désactivée. Cela signifie que :"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:55
-msgid "Changes done on Tempo documents will be synchronized from Tempo to Pesto"
+msgid "Les changements effectués sur Tempo seront répercutés de Tempo vers Pesto"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:56
-msgid "Changes done on Pesto documents won't be synchronized from Pesto to Tempo"
+msgid "Les changements effectués sur Pesto ne seront pas répercutés de Pesto vers Tempo"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:58
-msgid "It is also less performant and should be disabled when you switch definitely to Pesto."
+msgid "C'est moins performant et devrait être désactivé lorsque vous basculez entièrement sur Pesto."
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:61
-msgid "Server"
+msgid "Serveur"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:71
-msgid "Database"
+msgid "Base de données"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:80
-msgid "Username"
+msgid "Nom d'utilisateur·ice"
 msgstr ""
 
 #: ./src/lib/components/ReplicationForm.svelte:89
-msgid "Password"
+msgid "Mot de passe"
 msgstr ""
 
 #: ./src/lib/components/TextFragmentEditor.svelte:40
-msgctxt "Name"
-msgid "Content"
+msgid "Contenu"
 msgstr ""
 
 #: ./src/lib/components/TextFragmentEditor.svelte:46
-msgid "What's on your mind?"
+msgid "Quoi de neuf ?"
 msgstr ""
 
 #: ./src/lib/components/TodoCard.svelte:60
-msgid "Drag-handle for %0"
+msgid "Poignée pour glisser/déposer %0"
 msgstr ""
 
 #: ./src/lib/components/TodoListFragmentEditor.svelte:102
-msgctxt "Board"
-msgid "Column"
+msgctxt "Tableau"
+msgid "Colonne"
 msgstr ""
 
 #: ./src/lib/components/TodoRow.svelte:71
-msgid "Add a new todo…"
+msgid "Ajouter une nouvelle tâche…"
 msgstr ""
 
 #: ./src/lib/components/TodoRow.svelte:88
-msgid "Delete todo"
+msgid "Supprimer la tâche"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:227
-msgid "Language"
+msgid "Langue"
 msgstr ""

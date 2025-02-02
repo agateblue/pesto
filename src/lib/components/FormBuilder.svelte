@@ -16,7 +16,7 @@
   function getNewField() {
     let field: FormFieldConfiguration = {
       id: getRandomId().toLowerCase(),
-      label: $_("My field"),
+      label: $_("Mon champ", ""),
       required: true,
       type: 'text',
       suggestions: [],
@@ -28,7 +28,7 @@
 </script>
 
 <div class="form__field">
-  <label for={`form-name-${form.id}`}>{$_("Name")}</label>
+  <label for={`form-name-${form.id}`}>{$_("Nom", "")}</label>
   <input
     type="text"
     id={`form-name-${form.id}`}
@@ -38,9 +38,9 @@
 </div>
 {#if advanced}
   <div class="form__field">
-    <label for={`form-id-${form.id}`}>{$_("ID")}</label>
+    <label for={`form-id-${form.id}`}>{$_("ID", "")}</label>
     <input type="text" id={`form-id-${form.id}`} name={`form-id-${form.id}`} bind:value={form.id} />
-    <p class="form__help">{$_("A unique ID for the form. Used to build visualizations.")}</p>
+    <p class="form__help">{$_("Un identifiant unique pour le formulaire. Utilisé pour construire des visualisations.", "")}</p>
   </div>
 {/if}
 
@@ -51,7 +51,7 @@
     name={`form-advanced-${form.id}`}
     bind:checked={advanced}
   />
-  <label for={`form-advanced-${form.id}`}>{$_("Advanced mode")}</label>
+  <label for={`form-advanced-${form.id}`}>{$_("Mode avancé", "")}</label>
 </div>
 
 <div class="form__field">
@@ -61,7 +61,7 @@
     name={`form-rendered-${form.id}`}
     bind:checked={rendered}
   />
-  <label for={`form-rendered-${form.id}`}>{$_("Preview form")}</label>
+  <label for={`form-rendered-${form.id}`}>{$_("Aperçu du formulaire", "")}</label>
 </div>
 
 <div class="flex__stacking-container">
@@ -83,6 +83,6 @@
     type="button"
     onclick={(e) => {
       form.fields.push(getNewField());
-    }}>{$_("Add a new field")}</button
+    }}>{$_("Ajouter un  nouveau champ", "")}</button
   >
 {/if}
