@@ -333,6 +333,9 @@ body {
 .flex__justify-between {
   justify-content: space-between;
 }
+.flex__center {
+  justify-content: center;
+}
 
 /* spacing */
 

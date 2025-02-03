@@ -298,7 +298,7 @@
                         return { id: n.id, note: n };
                       })
                     ];
-                  }}>{$_('Charger plus', '')}</button
+                  }}>{$_('Afficher plus', '')}</button
                 >
               {/if}
             </section>

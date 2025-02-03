@@ -168,21 +168,23 @@
     {/key}
   {/each}
   {#if notes.length < matchingCount && !isLoading}
-    <button
-      onclick={async (e) => {
-        let newNotes = await globals.db.documents
-          .find({
-            limit: PAGE_SIZE,
-            sort: [getSortFromOrderQuery(orderQuery)],
-            selector: {
-              type: 'note',
-              id: { $lt: notes.slice(-1)[0].id },
-              ...getNoteSelector(searchQuery, collection)
-            }
-          })
-          .exec();
-        notes = [...notes, ...newNotes];
-      }}>{$_('Montrer plus de notes', '')}</button
-    >
+    <div class="flex__row flex__center m__block-4">
+      <button
+        onclick={async (e) => {
+          let newNotes = await globals.db.documents
+            .find({
+              limit: PAGE_SIZE,
+              sort: [getSortFromOrderQuery(orderQuery)],
+              selector: {
+                type: 'note',
+                id: { $lt: notes.slice(-1)[0].id },
+                ...getNoteSelector(searchQuery, collection)
+              }
+            })
+            .exec();
+          notes = [...notes, ...newNotes];
+        }}>{$_('Afficher plus de notes', '')}</button
+      >
+    </div>
   {/if}
 </div>

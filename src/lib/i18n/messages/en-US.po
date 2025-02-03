@@ -301,7 +301,7 @@ msgid "Chargement des notes…"
 msgstr "Loading notes…"
 
 #: src/lib/components/NoteList.svelte:173
-msgid "Montrer plus de notes"
+msgid "Afficher plus de notes"
 msgstr "Load more notes"
 
 #: src/lib/components/PasswordInput.svelte:22
@@ -533,7 +533,7 @@ msgid "Ajouter une colonne"
 msgstr "Add a column"
 
 #: src/routes/board/+page.svelte:303
-msgid "Charger plus"
+msgid "Afficher plus"
 msgstr "Load more"
 
 #: src/routes/forms/+page.svelte:112
