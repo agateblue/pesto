@@ -11,6 +11,7 @@ import {
   type RxState,
   type MangoQuerySelector
 } from 'rxdb';
+import { replicateRxCollection } from 'rxdb/plugins/replication';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
@@ -346,7 +347,14 @@ export type CouchDBReplication = Replication & {
   password: string;
 };
 
-export type AnyReplication = CouchDBReplication | WebRTCReplication;
+export type HTTPReplication = Replication & {
+  type: 'http';
+  url: string;
+  database: string;
+  key: string;
+};
+
+export type AnyReplication = CouchDBReplication | WebRTCReplication | HTTPReplication;
 
 export async function getDb() {
   if (globals.db) {
@@ -456,6 +464,50 @@ async function createReplication(db: Database, config: AnyReplication) {
       live: true,
       fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
       ...pushPullConfig
+    });
+  }
+  if (config.type === 'http') {
+    let baseUrl = `${config.url}${config.database}`
+    if (pushPullConfig.pull) {
+      pushPullConfig.pull.handler = async function pullHandler(checkpointOrNull, batchSize: number){
+        const checkpoint = checkpointOrNull ? checkpointOrNull.modified_at : '';
+        const id = checkpointOrNull ? checkpointOrNull.id : '';
+        const response = await fetch(
+          `${baseUrl}/pull?checkpoint=${checkpoint}&id=${id}&limit=${batchSize}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${config.key}`,
+            }
+          }
+        );
+        const data = await response.json();
+        return {
+          documents: data.documents,
+          checkpoint: data.checkpoint
+        };
+      }
+    }
+    if (pushPullConfig.push) {
+      pushPullConfig.push.handler = async function pushHandler(changeRows: []) {
+        const rawResponse = await fetch(`${baseUrl}/push`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${config.key}`,
+            },
+            body: JSON.stringify(changeRows)
+        });
+        const conflictsArray = await rawResponse.json();
+        return conflictsArray;
+      }
+    }
+    state = await replicateRxCollection({
+      collection: db.documents,
+      replicationIdentifier: `pesto-http-replication-${baseUrl}`,
+      live: true,
+      ...pushPullConfig,
     });
   }
   if (config.type === 'webrtc') {

@@ -39,9 +39,39 @@
     </p>
   </div>
 {/if}
+{#if replication.type === 'http'}
+  <div class="form__field">
+    <label for="http-server">{$_('Serveur', '')}</label>
+    <input
+      name="http-server"
+      id="http-url"
+      type="url"
+      bind:value={replication.url}
+      required
+    />
+  </div>
+  <div class="form__field">
+    <label for="http-database">{$_('Base de données', '')}</label>
+    <input
+      name="http-database"
+      id="http-database"
+      bind:value={replication.database}
+      required
+    />
+  </div>
+  <div class="form__field">
+    <label for="http-key">{$_("Clé d'accès", '')}</label>
+    <PasswordInput
+      name="http-key"
+      id="http-key"
+      bind:value={replication.key}
+      required
+    />
+  </div>
+{/if}
 {#if replication.type === 'couchdb'}
   <div class="form__field">
-    <label for="couchdb-server">{$_('Serveur', '')} URL</label>
+    <label for="couchdb-server">{$_('Serveur', '')}</label>
     <input
       name="couchdb-server"
       id="couchdb-url"
