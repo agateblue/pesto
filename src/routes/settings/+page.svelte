@@ -156,12 +156,23 @@
     });
   }
 
-  function getNewReplication(type: 'webrtc' | 'couchdb') {
+  function getNewReplication(type: 'webrtc' | 'couchdb' | 'http') {
     if (type === 'webrtc') {
       return {
         type: 'webrtc',
         signalingServer: DEFAULT_SIGNALING_SERVER,
         room: getRandomId(40),
+        push: true,
+        pull: true
+      };
+    }
+    
+    if (type === 'http') {
+      return {
+        type: 'http',
+        url: 'https://db.pesto.garden/sync/',
+        database: '',
+        key: '',
         push: true,
         pull: true
       };
@@ -283,8 +294,9 @@
                   }}
                 >
                   <option value={null}>---</option>
-                  <option value="webrtc">{$_('WebRTC', '')}</option>
-                  <option value="couchdb">{$_('CouchDB', '')}</option>
+                  <option value="webrtc">{$_("WebRTC", "")}</option>
+                  <option value="http">{$_("HTTP / Serveur Pesto", "")}</option>
+                  <option value="couchdb">{$_("CouchDB", '')}</option>
                 </select>
               </div>
               {#if newReplication}
