@@ -4977,11 +4977,6 @@ svelte-eslint-parser@^0.43.0:
     postcss "^8.4.39"
     postcss-scss "^4.0.9"
 
-svelte-lazy@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/svelte-lazy/-/svelte-lazy-1.2.10.tgz#8aa01ef49c13e356d23628e2b15bb534ea2d4a48"
-  integrity sha512-S9cCUMcznv+z1hs98NuiOGTTP9ODGva1IgW7LFo0V1j1ynRutYV14gMZrZCFd7A5TSHqKgJ7TC80Y52axd5PdQ==
-
 svelte@^5.0.0:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.1.4.tgz#2ea2764925f33a19fb609746a35d8a029862bde9"

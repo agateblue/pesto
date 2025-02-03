@@ -19,6 +19,7 @@
   --page-header-font-size: 1.1rem;
   --font-family: Helvetica, sans-serif;
   --background-color: white;
+  --background-secondary-color: #f7fbf7;
   --card-background: var(--background-color);
   --header-background: var(--background-color);
   --input-border-focus: 2px solid var(--accent-color);
@@ -29,6 +30,11 @@
   --button-radius: 2px;
   --button-border: 1px solid rgb(120, 112, 112, 0.2);
   --dialog-backdrop: rgba(55, 55, 55, 0.7);
+  --box-shadow-secondary: 0px 0px 3px rgba(55, 55, 55, 0.5);
+  --box-shadow-secondary: 2px 2px 1px rgba(55, 55, 55, 0.15);
+  --card-box-shadow: var(--box-shadow-secondary);
+  --card-border-radius: 5px;
+
 }
 
 @font-face {
@@ -119,7 +125,7 @@ h4 {
   text-wrap: balance;
 }
 
-*:focus-visible {
+*:focus-visible, .outlined {
   outline-color: var(--accent-color);
   outline-style: solid;
   outline-offset: 2px;
@@ -206,6 +212,9 @@ body {
     overflow-x: auto;
     overflow-y: auto;
     width: 100%;
+  }
+  > .scroll > *:last-child {
+    padding-block-end: var(--space-3);
   }
 }
 
@@ -765,25 +774,43 @@ input[type='text'].input__discrete {
   border-bottom: var(--layout-separator);
 }
 
+.background__secondary {
+  background-color: var(--background-secondary-color);
+}
 .board {
   min-width: 100vw;
   min-height: 100vh;
   display: flex;
   overflow-x: scroll;
-  padding: var(--space-2);
+  padding-inline: var(--space-2);
 }
 .board__column {
   --flow-space: var(--space-3);
-  padding: var(--space-2);
+  padding-inline: var(--space-2);
   flex: 1 1 0;
   min-width: clamp(20ch, 35ch, 90vw);
 }
+
+.dnd__shadow-item {
+  visibility: visible;
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 .card {
+  position: relative;
+}
+.card, .dnd__shadow-item {
   background: var(--card-background);
   border: var(--layout-separator);
+  border-radius: var(--card-border-radius);
   padding: var(--space-2);
   list-style: none;
   width: 100%;
+  box-shadow: var(--card-box-shadow);
 }
 
 .grid {
@@ -878,7 +905,7 @@ table {
     margin: 0;
     padding: 0;
     z-index: 1;
-    box-shadow: 0px 0px 3px var(--text-discrete-color);
+    box-shadow: var(--box-shadow-secondary);
   }
   > ul > li > *:not(dialog) {
     width: 100%;

@@ -9,11 +9,8 @@
   import LoadingState from '$lib/components/LoadingState.svelte';
   import DialogForm from '$lib/components/DialogForm.svelte';
   import { type RxDocument } from 'rxdb';
-  import Lazy from 'svelte-lazy';
   import {
     globals,
-    type DocumentDocument,
-    getNoteUpdateData,
     getNewNote,
     getNewTodoListFragment,
     createOrUpdateSetting,
@@ -22,7 +19,7 @@
   import type { MangoQuerySelector } from 'rxdb';
 
   import { flip } from 'svelte/animate';
-  import { dragHandle, dragHandleZone } from 'svelte-dnd-action';
+  import { dragHandle, dragHandleZone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action';
 
   async function handleDndConsider(e, column: BoardColumn) {
     column.cards = e.detail.items;
@@ -71,7 +68,7 @@
     ]
   };
   const DONE_COLUMN_SELECTOR = { 'fragments.todolist.done': { $eq: true } };
-
+  const DEFAULT_COLUMN_SIZE = 25
   function getColumnSelector(i: number) {
     return { 'fragments.todolist.done': { $eq: false }, 'fragments.todolist.column': { $eq: i } };
   }
@@ -91,7 +88,7 @@
             name: $_('À faire', 'Colonne du tableau'),
             cards: [],
             index: 0,
-            limit: 9999,
+            limit: DEFAULT_COLUMN_SIZE,
             selector: FIRST_COLUMN_SELECTOR,
             isLoading: true
           },
@@ -99,7 +96,7 @@
             name: $_('En cours', 'Colonne du tableau'),
             cards: [],
             index: 1,
-            limit: 9999,
+            limit: DEFAULT_COLUMN_SIZE,
             selector: getColumnSelector(1),
             isLoading: true
           },
@@ -107,7 +104,7 @@
             name: $_('Terminé', 'Colonne du tableau'),
             cards: [],
             index: -1,
-            limit: 30,
+            limit: DEFAULT_COLUMN_SIZE,
             selector: DONE_COLUMN_SELECTOR,
             isLoading: true
           }
@@ -119,7 +116,8 @@
             cards: [],
             index: i,
             selector: getColumnSelector(i),
-            isLoading: true
+            isLoading: true,
+            limit: DEFAULT_COLUMN_SIZE,
           };
           if (i === 0) {
             // unassign entries go to the first column
@@ -129,7 +127,6 @@
             // the last column automatically gets done entries
             c.selector = DONE_COLUMN_SELECTOR;
             c.index = -1;
-            c.limit = 30;
             c.isLoading = true;
           }
           columns = [...columns, c];
@@ -221,7 +218,7 @@
           >
         </DialogForm>
       </header>
-      <div class="scroll">
+      <div class="scroll background__secondary">
         <div class="flex__row | board">
           {#each columns as column}
             <section
@@ -259,23 +256,24 @@
               <LoadingState isLoading={column.isLoading}>Loading data…</LoadingState>
               <ol
                 class="flex__grow | p__block-0 p__inline-0 | flow"
-                use:dragHandleZone={{ items: column.cards, flipDurationMs: 100 }}
+                use:dragHandleZone={{ items: column.cards, flipDurationMs: 100, dropTargetStyle: {} }}
                 onconsider={async (e) => handleDndConsider(e, column)}
                 onfinalize={async (e) => handleDndFinalize(e, column)}
                 data-target={column.index}
               >
                 {#each column.cards as item (item.id)}
                   <li class="card" animate:flip={{ duration: 100 }}>
-                    <Lazy height={100} keep={true}>
-                      <TodoCard
-                        {dragHandle}
-                        autofocus={autofocusKey === item.id}
-                        note={item.note}
-                        on:delete={(e) => {
-                          e.detail.note.incrementalRemove();
-                        }}
-                      />
-                    </Lazy>
+                    <TodoCard
+                      {dragHandle}
+                      autofocus={autofocusKey === item.id}
+                      note={item.note}
+                      on:delete={(e) => {
+                        e.detail.note.incrementalRemove();
+                      }}
+                    />
+                    {#if item[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
+                      <div class='dnd__shadow-item'>{$_("Déposer ici", "Tableau")}</div>
+                    {/if}
                   </li>
                 {/each}
               </ol>
