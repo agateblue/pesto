@@ -261,6 +261,10 @@
               anchorClass="button"
               anchorText={$_('Configurer une nouvelle synchronisation', '')}
               title={$_('Configurer une nouvelle synchronisation', '')}
+              onopen={() => {
+                replicationType = 'webrtc'
+                newReplication = getNewReplication(replicationType)
+              }}
               onsubmit={async (e: SubmitEvent) => {
                 e.preventDefault();
                 await handleSubmitReplication(newReplication, null);
