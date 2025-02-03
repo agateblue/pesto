@@ -1,14 +1,8 @@
 <script lang="ts">
   import { _, _n } from '$lib/i18n/index.svelte';
-  import { preventDefault } from 'svelte/legacy';
   import cloneDeep from 'lodash/cloneDeep';
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import { type AnyReplication } from '$lib/db';
-  import { createEventDispatcher } from 'svelte';
-
-  const dispatch = createEventDispatcher<{
-    submit: { replication: AnyReplication };
-  }>();
 
   interface Props {
     replication: AnyReplication;
@@ -45,35 +39,7 @@
     </p>
   </div>
 {/if}
-{#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
-  {#if replication.type === 'couchdb-tempo'}
-    <p>
-      <strong
-        >{$_(
-          'Avertissement : ce mode de synchronisation est conçu pour vous permettre de migrer de Tempo à Pesto.',
-          ''
-        )}</strong
-      >
-    </p>
-    <p>
-      {$_(
-        "Comme Tempo ne prend pas en charge toutes les fonctionnalités de Pesto, l'écriture de données de Pesto vers Tempo est désactivée. Cela signifie que :",
-        ''
-      )}
-    </p>
-    <ul>
-      <li>{$_('Les changements effectués sur Tempo seront répercutés de Tempo vers Pesto', '')}</li>
-      <li>
-        {$_('Les changements effectués sur Pesto ne seront pas répercutés de Pesto vers Tempo', '')}
-      </li>
-    </ul>
-    <p>
-      {$_(
-        "C'est moins performant et devrait être désactivé lorsque vous basculez entièrement sur Pesto.",
-        ''
-      )}
-    </p>
-  {/if}
+{#if replication.type === 'couchdb'}
   <div class="form__field">
     <label for="couchdb-server">{$_('Serveur', '')} URL</label>
     <input

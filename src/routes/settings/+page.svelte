@@ -4,8 +4,6 @@
 
   import { PUBLIC_BUILD_ID } from '$env/static/public';
 
-  import { preventDefault } from 'svelte/legacy';
-
   import DialogForm from '$lib/components/DialogForm.svelte';
   import FormResult from '$lib/components/FormResult.svelte';
   import ReplicationForm from '$lib/components/ReplicationForm.svelte';
@@ -158,7 +156,7 @@
     });
   }
 
-  function getNewReplication(type: 'webrtc' | 'couchdb' | 'couchdb-tempo') {
+  function getNewReplication(type: 'webrtc' | 'couchdb') {
     if (type === 'webrtc') {
       return {
         type: 'webrtc',
@@ -180,9 +178,6 @@
     };
     if (type === 'couchdb') {
       return { ...baseCouchDb, type: 'couchdb' };
-    }
-    if (type === 'couchdb-tempo') {
-      return { ...baseCouchDb, type: 'couchdb-tempo' };
     }
   }
   async function handleSubmit() {
@@ -286,9 +281,6 @@
                   <option value={null}>---</option>
                   <option value="webrtc">{$_('WebRTC', '')}</option>
                   <option value="couchdb">{$_('CouchDB', '')}</option>
-                  <option value="couchdb-tempo"
-                    >{$_('CouchDB (avec compatibilité Tempo', '')}</option
-                  >
                 </select>
               </div>
               {#if newReplication}

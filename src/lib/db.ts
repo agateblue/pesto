@@ -346,11 +346,7 @@ export type CouchDBReplication = Replication & {
   password: string;
 };
 
-export type CouchDBReplicationTempo = CouchDBReplication & {
-  type: 'couchdb-tempo';
-};
-
-export type AnyReplication = CouchDBReplication | CouchDBReplicationTempo | WebRTCReplication;
+export type AnyReplication = CouchDBReplication | WebRTCReplication;
 
 export async function getDb() {
   if (globals.db) {
@@ -455,40 +451,6 @@ async function createReplication(db: Database, config: AnyReplication) {
     const couchdbUrl = `${config.server}/${config.database}/`;
     state = CouchDBPlugin.replicateCouchDB({
       replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
-      collection: db.documents,
-      url: couchdbUrl,
-      live: true,
-      fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
-      ...pushPullConfig
-    });
-  }
-  if (config.type === 'couchdb-tempo') {
-    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb');
-
-    let boardSettings = await getSettingData('board:settings', {
-      columns: ['Todo', 'Doing', 'Done']
-    });
-    let doneColumn = boardSettings.columns.length - 1;
-    const couchdbUrl = `${config.server}/${config.database}/`;
-
-    // pushing is disabled in this mode because we can't actually alter
-    // the ids to match Tempo format, which breaks replication and duplicates documents
-    delete pushPullConfig.push;
-
-    if (pushPullConfig.pull) {
-      pushPullConfig.pull.modifier = (d) => {
-        if (d._deleted && d.id.includes('T') && d.id.includes(':')) {
-          return d;
-        }
-        let c = tempoToPestoDocument(d, doneColumn);
-        if (c.id === 'settings:board') {
-          doneColumn = c.data.columns.length - 1;
-        }
-        return c;
-      };
-    }
-    state = CouchDBPlugin.replicateCouchDB({
-      replicationIdentifier: `pesto-tempo-couchdb-replication-${couchdbUrl}`,
       collection: db.documents,
       url: couchdbUrl,
       live: true,

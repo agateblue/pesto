@@ -26,7 +26,7 @@
     <strong>{$_('Serveur de mise en relation :', '')}</strong>
     {replication.signalingServer} <br />
   {/if}
-  {#if replication.type === 'couchdb' || replication.type === 'couchdb-tempo'}
+  {#if replication.type === 'couchdb'}
     <strong>{$_('Mode :', '')}</strong>
     {replication.type === 'couchdb'
       ? $_('CouchDB :', '')
