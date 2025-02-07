@@ -44,6 +44,7 @@
   "type": "module",
   "dependencies": {
     "@iconify-json/iconamoon": "^1.1.5",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@postalsys/gettext": "^4.0.1",
     "@sentry/sveltekit": "^8",
     "ajv": "^8.17.1",

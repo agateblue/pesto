@@ -1,3 +1,6 @@
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { Subject } from 'rxjs';
+
 import {
   type MangoQuery,
   type RxCollection,
@@ -9,7 +12,8 @@ import {
   addRxPlugin,
   toTypedRxJsonSchema,
   type RxState,
-  type MangoQuerySelector
+  type MangoQuerySelector,
+  getAssumedMasterState
 } from 'rxdb';
 import { replicateRxCollection } from 'rxdb/plugins/replication';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
@@ -469,11 +473,31 @@ async function createReplication(db: Database, config: AnyReplication) {
   if (config.type === 'http') {
     let baseUrl = `${config.url}${config.database}`
     if (pushPullConfig.pull) {
+      const myPullStream$ = new Subject();
+      fetchEventSource(`${baseUrl}/stream`, { 
+        headers: {
+          'Authorization': `Bearer ${config.key}`,
+        },
+        
+        onmessage: (event) => {
+          console.debug("received event", event)
+          const eventData = JSON.parse(event.data);
+          myPullStream$.next({
+            documents: eventData.documents.map(d => {
+              return {
+                id: d.id,
+                ...JSON.parse(d.content),
+              }
+            }),
+            checkpoint: eventData.checkpoint
+          });
+        }
+      });
       pushPullConfig.pull.handler = async function pullHandler(checkpointOrNull, batchSize: number){
         const checkpoint = checkpointOrNull ? checkpointOrNull.modified_at : '';
         const id = checkpointOrNull ? checkpointOrNull.id : '';
         const response = await fetch(
-          `${baseUrl}/pull?checkpoint=${checkpoint}&id=${id}&limit=${batchSize}`,
+          `${baseUrl}/pull?checkpoint=${checkpoint || ''}&id=${id || ''}&limit=${batchSize}`,
           {
             method: 'GET',
             headers: {
@@ -483,13 +507,24 @@ async function createReplication(db: Database, config: AnyReplication) {
         );
         const data = await response.json();
         return {
-          documents: data.documents,
+          documents: data.documents.map(d => {
+            return JSON.parse(d.content)
+          }),
           checkpoint: data.checkpoint
         };
       }
+      pushPullConfig.pull.stream$ = myPullStream$.asObservable()
     }
     if (pushPullConfig.push) {
       pushPullConfig.push.handler = async function pushHandler(changeRows: []) {
+        function serializeDocumentState(state) {
+          return {
+            id: state.id,
+            modified_at: state.modified_at,
+            content: JSON.stringify(state),
+            _deleted: state._deleted,
+          }
+        }
         const rawResponse = await fetch(`${baseUrl}/push`, {
             method: 'POST',
             headers: {
@@ -497,7 +532,13 @@ async function createReplication(db: Database, config: AnyReplication) {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${config.key}`,
             },
-            body: JSON.stringify(changeRows)
+            body: JSON.stringify(changeRows.map(r => {
+              return {
+                newDocumentState: serializeDocumentState(r.newDocumentState),
+                assumedMasterState: r.assumedMasterState ? serializeDocumentState(r.assumedMasterState) : undefined
+              }
+              
+            }))
         });
         const conflictsArray = await rawResponse.json();
         return conflictsArray;
@@ -558,6 +599,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     };
     console.log('REPLICATION STATE', state);
   }
+  state?.error$.subscribe(err => console.log('error$', err))
   return state;
 }
 
