@@ -426,6 +426,7 @@ export async function syncReplications(replications: []) {
 async function setupReplications(db: Database, current: [], config: AnyReplication[]) {
   // we stop and delete any existing replications
   for (const replicationState of current) {
+    replicationState?.pull?._fetch.abort()
     if (replicationState.remove) {
       await replicationState.remove();
     } else {
@@ -474,7 +475,10 @@ async function createReplication(db: Database, config: AnyReplication) {
     let baseUrl = `${config.url}${config.database}`
     if (pushPullConfig.pull) {
       const myPullStream$ = new Subject();
+      const controller = new AbortController();
+      const signal = controller.signal;
       fetchEventSource(`${baseUrl}/stream`, { 
+        signal: signal,
         headers: {
           'Authorization': `Bearer ${config.key}`,
         },
@@ -514,6 +518,7 @@ async function createReplication(db: Database, config: AnyReplication) {
         };
       }
       pushPullConfig.pull.stream$ = myPullStream$.asObservable()
+      pushPullConfig.pull._fetch = controller
     }
     if (pushPullConfig.push) {
       pushPullConfig.push.handler = async function pushHandler(changeRows: []) {
