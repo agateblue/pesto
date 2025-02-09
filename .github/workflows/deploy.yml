@@ -43,6 +43,9 @@ jobs:
         run: yarn build
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      
+      - name: Create build zip
+        run: zip -r pesto-app.zip ./build/
 
       - name: Release latest
         uses: softprops/action-gh-release@v2
@@ -50,4 +53,5 @@ jobs:
         with:
           generate_release_notes: false
           make_latest: true
-          files: build
+          files: |
+            pesto-app.zip
