@@ -26,3 +26,25 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+## Nginx config
+
+```
+server {
+
+    server_name yourdomain; 
+    listen [::]:443 ssl;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/yourdomain/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourdomain/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    index index.html;
+    root /var/www/html/pesto;
+    rewrite ^/(.*)/$ /$1;
+    location / {
+        try_files $uri/index.html $uri.html $uri/ $uri =404;
+    }
+}
+```
