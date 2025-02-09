@@ -293,7 +293,7 @@ export async function getPestoDocumentValidator() {
   let Ajv = await import('ajv');
   let addFormats = await import('ajv-formats');
   let ajv = new Ajv.default({ allErrors: true });;
-  addFormats(ajv);
+  addFormats.default(ajv);
   let schema = { ...documentSchemaLiteral };
   delete schema.version;
   delete schema.indexes;
