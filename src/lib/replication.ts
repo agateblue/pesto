@@ -279,6 +279,9 @@ export function migrateDocumentToLatest(document: DocumentType, version: number)
     let migration = migrationStrategies[version];
     document = migration(document);
   }
+  if (!document.col) {
+    document.col = null
+  }
   return document;
 }
 
@@ -289,7 +292,7 @@ type ValidateFunction = {
 export async function getPestoDocumentValidator() {
   let Ajv = await import('ajv');
   let addFormats = await import('ajv-formats');
-  let ajv = new Ajv();
+  let ajv = new Ajv.default({ allErrors: true });;
   addFormats(ajv);
   let schema = { ...documentSchemaLiteral };
   delete schema.version;
