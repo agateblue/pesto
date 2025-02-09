@@ -3,12 +3,15 @@
   import cloneDeep from 'lodash/cloneDeep';
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import { type AnyReplication } from '$lib/db';
+  import { PUBLIC_PESTO_DB_URL } from '$env/static/public';
 
   interface Props {
     replication: AnyReplication;
+    pestoServerInfo: object | null;
+    pestoServerError: string | null;
   }
 
-  let { replication = $bindable() }: Props = $props();
+  let { replication = $bindable(), pestoServerInfo = $bindable(), pestoServerError = $bindable() }: Props = $props();
   replication = cloneDeep(replication);
 </script>
 
@@ -39,35 +42,42 @@
     </p>
   </div>
 {/if}
-{#if replication.type === 'http'}
+{#if replication.type === 'pesto-server'}
+  {#if pestoServerError}
+    <p class="message message__error">{pestoServerError }</p>
+    <p>
+      <a class="button" href={`${PUBLIC_PESTO_DB_URL}/sync/redirect/app/settings`}>{$_("Connexion", "")}</a>
+    </p>
+  {/if}
   <div class="form__field">
-    <label for="http-server">{$_('Serveur', '')}</label>
+    <label for="pesto-server-server">{$_("Serveur", "")}</label>
     <input
-      name="http-server"
-      id="http-url"
+      name="pesto-server-server"
+      id="pesto-server-url"
       type="url"
-      bind:value={replication.url}
-      required
+      value={PUBLIC_PESTO_DB_URL}
+      disabled
     />
   </div>
-  <div class="form__field">
-    <label for="http-database">{$_('Base de données', '')}</label>
-    <input
-      name="http-database"
-      id="http-database"
-      bind:value={replication.database}
-      required
-    />
-  </div>
-  <div class="form__field">
-    <label for="http-key">{$_("Clé d'accès", '')}</label>
-    <PasswordInput
-      name="http-key"
-      id="http-key"
-      bind:value={replication.key}
-      required
-    />
-  </div>
+  {#if pestoServerInfo}
+    <p>
+      {$_("Connecté·e en tant que %0", "", [pestoServerInfo.user.email])} <br>
+      <a class="button button__link" href={`${PUBLIC_PESTO_DB_URL}/accounts/logout/`}>{$_("Déconnexion…", "")}</a>
+    </p>
+    <div class="form__field">
+      <label for="pesto-server-database">{$_("Base de données", "")}</label>
+      <select
+        name="pesto-server-database"
+        id="pesto-server-database"
+        bind:value={replication.database}
+        required
+      >
+        {#each pestoServerInfo.databases as database}
+          <option value={database.name}>{database.name}</option>
+        {/each}
+      </select>
+    </div>
+  {/if}
 {/if}
 {#if replication.type === 'couchdb'}
   <div class="form__field">

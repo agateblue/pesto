@@ -1,5 +1,6 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { Subject } from 'rxjs';
+import { PUBLIC_PESTO_DB_URL } from '$env/static/public';
 
 import {
   type MangoQuery,
@@ -351,14 +352,12 @@ export type CouchDBReplication = Replication & {
   password: string;
 };
 
-export type HTTPReplication = Replication & {
-  type: 'http';
-  url: string;
+export type PestoServer = Replication & {
+  type: 'pesto-server';
   database: string;
-  key: string;
 };
 
-export type AnyReplication = CouchDBReplication | WebRTCReplication | HTTPReplication;
+export type AnyReplication = CouchDBReplication | WebRTCReplication | PestoServer;
 
 export async function getDb() {
   if (globals.db) {
@@ -471,18 +470,15 @@ async function createReplication(db: Database, config: AnyReplication) {
       ...pushPullConfig
     });
   }
-  if (config.type === 'http') {
-    let baseUrl = `${config.url}${config.database}`
+  if (config.type === 'pesto-server') {
+    let baseUrl = `${PUBLIC_PESTO_DB_URL}/sync/db/${config.database}`
     if (pushPullConfig.pull) {
       const myPullStream$ = new Subject();
       const controller = new AbortController();
       const signal = controller.signal;
       fetchEventSource(`${baseUrl}/stream`, { 
         signal: signal,
-        headers: {
-          'Authorization': `Bearer ${config.key}`,
-        },
-        
+        credentials: 'include',
         onmessage: (event) => {
           console.debug("received event", event)
           const eventData = JSON.parse(event.data);
@@ -503,10 +499,8 @@ async function createReplication(db: Database, config: AnyReplication) {
         const response = await fetch(
           `${baseUrl}/pull?checkpoint=${checkpoint || ''}&id=${id || ''}&limit=${batchSize}`,
           {
+            credentials: 'include',
             method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${config.key}`,
-            }
           }
         );
         const data = await response.json();
@@ -532,10 +526,10 @@ async function createReplication(db: Database, config: AnyReplication) {
         }
         const rawResponse = await fetch(`${baseUrl}/push`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${config.key}`,
             },
             body: JSON.stringify(changeRows.map(r => {
               return {
@@ -551,7 +545,7 @@ async function createReplication(db: Database, config: AnyReplication) {
     }
     state = await replicateRxCollection({
       collection: db.documents,
-      replicationIdentifier: `pesto-http-replication-${baseUrl}`,
+      replicationIdentifier: `pesto-server-replication-${baseUrl}`,
       live: true,
       ...pushPullConfig,
     });

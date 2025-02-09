@@ -2,7 +2,7 @@
   import { _, _n } from '$lib/i18n/index.svelte';
   import { lang } from '$lib/i18n/stores';
 
-  import { PUBLIC_BUILD_ID } from '$env/static/public';
+  import { PUBLIC_BUILD_ID, PUBLIC_PESTO_DB_URL } from '$env/static/public';
 
   import DialogForm from '$lib/components/DialogForm.svelte';
   import FormResult from '$lib/components/FormResult.svelte';
@@ -23,7 +23,9 @@
 
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
-
+  let isLoadingPestoServerInfo = $state(false)
+  let pestoServerInfo: null | object = $state(null)
+  let pestoServerError: null | string = $state(null)
   let importFiles: FileList | null = $state(null);
   let importMessages: LogMessage[] = $state([]);
   let importType: 'tempo' | 'pesto' = $state('pesto');
@@ -156,7 +158,7 @@
     });
   }
 
-  function getNewReplication(type: 'webrtc' | 'couchdb' | 'http') {
+  function getNewReplication(type: 'webrtc' | 'couchdb' | 'pesto-server') {
     if (type === 'webrtc') {
       return {
         type: 'webrtc',
@@ -167,12 +169,10 @@
       };
     }
     
-    if (type === 'http') {
+    if (type === 'pesto-server') {
       return {
-        type: 'http',
-        url: 'https://db.pesto.garden/sync/',
-        database: '',
-        key: '',
+        type: 'pesto-server',
+        database: 'DEFAULT',
         push: true,
         pull: true
       };
@@ -209,6 +209,25 @@
     await globals.uiState.set('language', () => v);
     $lang = v;
   }
+  
+  function fetchPestoServerInfo() {
+    isLoadingPestoServerInfo = true
+    pestoServerError = null
+    pestoServerInfo = null
+    let infoUrl = `${PUBLIC_PESTO_DB_URL}/sync/info`
+    fetch(infoUrl, {credentials: 'include'}).then(async (response) => {
+      if (response.ok) {
+        pestoServerInfo = await response.json()
+      } else if (response.status === 403) {
+        pestoServerError = $_("Vous n'êtes pas connecté·e au serveur Pesto.", "")
+      } else {
+        pestoServerError = $_("Le serveur Pesto est injoignable.", "")
+      }
+    })
+  }
+  $effect(() => {
+    fetchPestoServerInfo()
+  })
 </script>
 
 <div class="my__layout">
@@ -239,10 +258,7 @@
             <hr class="hidden" />
             <h1>{$_('Synchronisation', '')}</h1>
             <p>
-              {$_(
-                "Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si vous utilisez le mode WebRTC, les données transitent directement d'un appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers.",
-                ''
-              )}
+              {$_("Les données de Pesto peuvent être synchronisées avec d'autres appareil.", '')}
             </p>
             {#if replications.length > 0}
               <h2>
@@ -251,6 +267,8 @@
               <div class="flow" role="list">
                 {#each replications as replication, i (i)}
                   <ReplicationCard
+                    {pestoServerInfo}
+                    {pestoServerError} 
                     bind:replication={replications[i]}
                     class="card"
                     role="listitem"
@@ -295,12 +313,14 @@
                 >
                   <option value={null}>---</option>
                   <option value="webrtc">{$_("WebRTC", "")}</option>
-                  <option value="http">{$_("HTTP / Serveur Pesto", "")}</option>
+                  {#if PUBLIC_PESTO_DB_URL}
+                    <option value="pesto-server">{$_("Serveur Pesto (Alpha)", "")}</option>
+                  {/if}
                   <option value="couchdb">{$_("CouchDB", '')}</option>
                 </select>
               </div>
               {#if newReplication}
-                <ReplicationForm bind:replication={newReplication} />
+                <ReplicationForm {pestoServerInfo} {pestoServerError} bind:replication={newReplication} />
               {/if}
             </DialogForm>
             <hr class="hidden" />

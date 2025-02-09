@@ -563,14 +563,14 @@ textarea {
   border: var(--input-border);
 }
 
-.message {
-  text-transform: capitalize;
-}
+
 .message__success,
 .message__error,
 .message__capitalize {
   font-weight: bold;
 }
+
+.message
 .form__field {
   label {
     display: block;
