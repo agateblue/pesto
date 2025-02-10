@@ -42,9 +42,43 @@ server {
 
     index index.html;
     root /var/www/html/pesto;
-    rewrite ^/(.*)/$ /$1;
+    
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_types
+        application/atom+xml
+        application/geo+json
+        application/javascript
+        application/x-javascript
+        application/json
+        application/ld+json
+        application/manifest+json
+        application/rdf+xml
+        application/rss+xml
+        application/xhtml+xml
+        application/xml
+        font/eot
+        font/otf
+        font/ttf
+        image/svg+xml
+        text/css
+        text/javascript
+        text/plain
+        text/xml;
+
+    #    add_header Content-Security-Policy  "default-src 'self'; style-src: 'self'; style-src-attr 'unsafe-inline'; style-src-elem 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'unsafe-eval' 'self'; connect-src *;";
     location / {
-        try_files $uri/index.html $uri.html $uri/ $uri =404;
+	    try_files $uri $uri/ $uri.html /404.html;
+    }
+    location ^~ /_app/immutable/ {
+        expires 14d;
+        add_header Cache-Control private;
+        access_log off;
+        try_files $uri $uri/;
     }
 }
 ```
