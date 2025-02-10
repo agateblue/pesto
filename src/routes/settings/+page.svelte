@@ -261,9 +261,6 @@
               {$_("Les données de Pesto peuvent être synchronisées avec d'autres appareil.", '')}
             </p>
             {#if replications.length > 0}
-              <h2>
-                {$_('Synchronisations existantes', '')}
-              </h2>
               <div class="flow" role="list">
                 {#each replications as replication, i (i)}
                   <ReplicationCard
@@ -286,43 +283,45 @@
                 {/each}
               </div>
             {/if}
-            <DialogForm
-              anchorClass="button"
-              anchorText={$_('Configurer une nouvelle synchronisation', '')}
-              title={$_('Configurer une nouvelle synchronisation', '')}
-              onopen={() => {
-                replicationType = 'webrtc'
-                newReplication = getNewReplication(replicationType)
-              }}
-              onsubmit={async (e: SubmitEvent) => {
-                e.preventDefault();
-                await handleSubmitReplication(newReplication, null);
-                newReplication = null;
-                replicationType = null;
-              }}
-            >
-              <div class="form__field">
-                <label for="replication-type">{$_('Mode', '')}</label>
-                <select
-                  name="replication-type"
-                  id="replication-type"
-                  bind:value={replicationType}
-                  onchange={() => {
-                    newReplication = getNewReplication(replicationType);
-                  }}
-                >
-                  <option value={null}>---</option>
-                  <option value="webrtc">{$_("WebRTC", "")}</option>
-                  {#if PUBLIC_PESTO_DB_URL}
-                    <option value="pesto-server">{$_("Serveur Pesto (Alpha)", "")}</option>
-                  {/if}
-                  <option value="couchdb">{$_("CouchDB", '')}</option>
-                </select>
-              </div>
-              {#if newReplication}
-                <ReplicationForm {pestoServerInfo} {pestoServerError} bind:replication={newReplication} />
-              {/if}
-            </DialogForm>
+            {#if replications.length === 0}
+              <DialogForm
+                anchorClass="button"
+                anchorText={$_('Configurer une nouvelle synchronisation', '')}
+                title={$_('Configurer une nouvelle synchronisation', '')}
+                onopen={() => {
+                  replicationType = 'webrtc'
+                  newReplication = getNewReplication(replicationType)
+                }}
+                onsubmit={async (e: SubmitEvent) => {
+                  e.preventDefault();
+                  await handleSubmitReplication(newReplication, null);
+                  newReplication = null;
+                  replicationType = null;
+                }}
+              >
+                <div class="form__field">
+                  <label for="replication-type">{$_('Mode', '')}</label>
+                  <select
+                    name="replication-type"
+                    id="replication-type"
+                    bind:value={replicationType}
+                    onchange={() => {
+                      newReplication = getNewReplication(replicationType);
+                    }}
+                  >
+                    <option value={null}>---</option>
+                    <option value="webrtc">{$_("WebRTC", "")}</option>
+                    {#if PUBLIC_PESTO_DB_URL}
+                      <option value="pesto-server">{$_("Serveur Pesto (Alpha)", "")}</option>
+                    {/if}
+                    <option value="couchdb">{$_("CouchDB", '')}</option>
+                  </select>
+                </div>
+                {#if newReplication}
+                  <ReplicationForm {pestoServerInfo} {pestoServerError} bind:replication={newReplication} />
+                {/if}
+              </DialogForm>
+            {/if}
             <hr class="hidden" />
 
             <form
