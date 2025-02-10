@@ -33,9 +33,8 @@
 <div class="form__field">
   <label for="collection-icon">{$_('Icône :', '')} {collection.data.emoji || '📋️'}</label>
   <EmojiPicker
-    onemoji-click={(e) => {
+    onEmojiClick={(e) => {
       collection.data.emoji = e.detail.unicode;
     }}
-    style="width: 100%"
   ></EmojiPicker>
 </div>
