@@ -352,13 +352,17 @@ export type CouchDBReplication = Replication & {
   password: string;
 };
 
-export type PestoServer = Replication & {
+export type PestoServerReplication = Replication & {
   type: 'pesto-server';
   database: string;
 };
 
-export type AnyReplication = CouchDBReplication | WebRTCReplication | PestoServer;
+export type AnyReplication = CouchDBReplication | WebRTCReplication | PestoServerReplication;
 
+export type PushPullConfig = {
+  pull?: {};
+  push?: {};
+};
 export async function getDb() {
   if (globals.db) {
     return globals;
@@ -449,154 +453,173 @@ async function setupReplications(db: Database, current: [], config: AnyReplicati
   return replicationStates;
 }
 
-async function createReplication(db: Database, config: AnyReplication) {
-  let state = null;
-  let pushPullConfig = {};
+
+function getPushPullConfig(config: AnyReplication) {
+  let pushPullConfig: PushPullConfig = {};
   if (config.push) {
     pushPullConfig.push = {};
   }
   if (config.pull) {
     pushPullConfig.pull = {};
   }
-  if (config.type === 'couchdb') {
-    let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb');
-    const couchdbUrl = `${config.server}/${config.database}/`;
-    state = CouchDBPlugin.replicateCouchDB({
-      replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
-      collection: db.documents,
-      url: couchdbUrl,
-      live: true,
-      fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
-      ...pushPullConfig
+  return pushPullConfig
+}
+
+async function getCouchDBReplicationState(db: Database, config: CouchDBReplication) {
+  let pushPullConfig = getPushPullConfig(config)
+  let CouchDBPlugin = await import('rxdb/plugins/replication-couchdb');
+  const couchdbUrl = `${config.server}/${config.database}/`;
+  return CouchDBPlugin.replicateCouchDB({
+    replicationIdentifier: `pesto-couchdb-replication-${couchdbUrl}`,
+    collection: db.documents,
+    url: couchdbUrl,
+    live: true,
+    fetch: CouchDBPlugin.getFetchWithCouchDBAuthorization(config.username, config.password),
+    ...pushPullConfig
+  });
+}
+async function getWebRTCReplicationState(db: Database, config: WebRTCReplication) {
+  let pushPullConfig = getPushPullConfig(config)
+  let WebRTCPlugin = await import('rxdb/plugins/replication-webrtc');
+  let state = await WebRTCPlugin.replicateWebRTC({
+    collection: db.documents,
+    topic: config.room,
+    ...pushPullConfig,
+    connectionHandlerCreator: WebRTCPlugin.getConnectionHandlerSimplePeer({
+      signalingServerUrl: config.signalingServer
+    })
+  });
+  state.error$.subscribe((err) => {
+    console.log('REPLICATION ERROR', err);
+  });
+  let initialAddPeer = state.addPeer.bind(state);
+  let replicationMonkeyPatched = false;
+  // if (!config.pull) {
+  //   // we protect from rogue/misconfigured instances that might push their changes
+  //   // even if we disabled pull locally
+  //   state.masterReplicationHandler.masterWrite = async function (rows) {
+  //     console.debug('Skip writing remote rows locally because pull is disabled', rows)
+  //     return []
+  //   }
+  // }
+  // let initialSend = state.connectionHandler.send
+  // state.connectionHandler.send = async function (peer, message) {
+  //   // drop some messages based on our push/pull configuration
+  //   // to protect ourselves from rogue clients
+  //   console.log("MESSAIGE", message)
+  //   if (!config.push && (message?.result?.documents || Array.isArray(message.result))) {
+  //     console.debug('Dropping message because push is disabled…', message)
+  //     return
+  //   }
+  //   return await initialSend(peer, message)
+  // }
+  state.addPeer = function addPeer(peer, replicationState) {
+    // let initialPushHandler = replicationState?.push?.handler
+    // async function pushHandler(docs) {
+    //   return await initialPushHandler(docs)
+    // }
+    // if (initialPushHandler && replicationState && !replicationMonkeyPatched) {
+    //   replicationState.push.handler = pushHandler
+    //   replicationMonkeyPatched = true
+    // }
+    console.log('PEER ADDED', replicationState);
+    return initialAddPeer(peer, replicationState);
+  };
+  return state
+}
+
+async function getPestoServerReplicationState(db: Database, config: PestoServerReplication) {
+  let pushPullConfig = getPushPullConfig(config)
+  let baseUrl = `${PUBLIC_PESTO_DB_URL}/sync/db/${config.database}`
+  if (pushPullConfig.pull) {
+    const myPullStream$ = new Subject();
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetchEventSource(`${baseUrl}/stream`, { 
+      signal: signal,
+      credentials: 'include',
+      onmessage: (event) => {
+        console.debug("received event", event)
+        const eventData = JSON.parse(event.data);
+        myPullStream$.next({
+          documents: eventData.documents.map(d => {
+            return {
+              id: d.id,
+              ...JSON.parse(d.content),
+            }
+          }),
+          checkpoint: eventData.checkpoint
+        });
+      }
     });
+    pushPullConfig.pull.handler = async function pullHandler(checkpointOrNull, batchSize: number){
+      const checkpoint = checkpointOrNull ? checkpointOrNull.updatedAt : '';
+      const id = checkpointOrNull ? checkpointOrNull.id : '';
+      const response = await fetch(
+        `${baseUrl}/pull?checkpoint=${checkpoint || ''}&id=${id || ''}&limit=${batchSize}`,
+        {
+          credentials: 'include',
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+      return {
+        documents: data.documents.map(d => {
+          return JSON.parse(d.content)
+        }),
+        checkpoint: data.checkpoint
+      };
+    }
+    pushPullConfig.pull.stream$ = myPullStream$.asObservable()
+    pushPullConfig.pull._fetch = controller
+  }
+  if (pushPullConfig.push) {
+    pushPullConfig.push.handler = async function pushHandler(changeRows: []) {
+      function serializeDocumentState(state) {
+        return {
+          id: state.id,
+          modified_at: state.modified_at,
+          content: JSON.stringify(state),
+          _deleted: state._deleted,
+        }
+      }
+      const rawResponse = await fetch(`${baseUrl}/push`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(changeRows.map(r => {
+            return {
+              newDocumentState: serializeDocumentState(r.newDocumentState),
+              assumedMasterState: r.assumedMasterState ? serializeDocumentState(r.assumedMasterState) : undefined
+            }
+            
+          }))
+      });
+      const conflictsArray = await rawResponse.json();
+      return conflictsArray;
+    }
+  }
+  return replicateRxCollection({
+    collection: db.documents,
+    replicationIdentifier: `pesto-server-replication-${baseUrl}`,
+    live: true,
+    ...pushPullConfig,
+  });
+}
+
+async function createReplication(db: Database, config: AnyReplication) {
+  let state = null;
+  if (config.type === 'couchdb') {
+    state = await getCouchDBReplicationState(db, config)
   }
   if (config.type === 'pesto-server') {
-    let baseUrl = `${PUBLIC_PESTO_DB_URL}/sync/db/${config.database}`
-    if (pushPullConfig.pull) {
-      const myPullStream$ = new Subject();
-      const controller = new AbortController();
-      const signal = controller.signal;
-      fetchEventSource(`${baseUrl}/stream`, { 
-        signal: signal,
-        credentials: 'include',
-        onmessage: (event) => {
-          console.debug("received event", event)
-          const eventData = JSON.parse(event.data);
-          myPullStream$.next({
-            documents: eventData.documents.map(d => {
-              return {
-                id: d.id,
-                ...JSON.parse(d.content),
-              }
-            }),
-            checkpoint: eventData.checkpoint
-          });
-        }
-      });
-      pushPullConfig.pull.handler = async function pullHandler(checkpointOrNull, batchSize: number){
-        const checkpoint = checkpointOrNull ? checkpointOrNull.updatedAt : '';
-        const id = checkpointOrNull ? checkpointOrNull.id : '';
-        const response = await fetch(
-          `${baseUrl}/pull?checkpoint=${checkpoint || ''}&id=${id || ''}&limit=${batchSize}`,
-          {
-            credentials: 'include',
-            method: 'GET',
-          }
-        );
-        const data = await response.json();
-        return {
-          documents: data.documents.map(d => {
-            return JSON.parse(d.content)
-          }),
-          checkpoint: data.checkpoint
-        };
-      }
-      pushPullConfig.pull.stream$ = myPullStream$.asObservable()
-      pushPullConfig.pull._fetch = controller
-    }
-    if (pushPullConfig.push) {
-      pushPullConfig.push.handler = async function pushHandler(changeRows: []) {
-        function serializeDocumentState(state) {
-          return {
-            id: state.id,
-            modified_at: state.modified_at,
-            content: JSON.stringify(state),
-            _deleted: state._deleted,
-          }
-        }
-        const rawResponse = await fetch(`${baseUrl}/push`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(changeRows.map(r => {
-              return {
-                newDocumentState: serializeDocumentState(r.newDocumentState),
-                assumedMasterState: r.assumedMasterState ? serializeDocumentState(r.assumedMasterState) : undefined
-              }
-              
-            }))
-        });
-        const conflictsArray = await rawResponse.json();
-        return conflictsArray;
-      }
-    }
-    state = await replicateRxCollection({
-      collection: db.documents,
-      replicationIdentifier: `pesto-server-replication-${baseUrl}`,
-      live: true,
-      ...pushPullConfig,
-    });
+    state = await getPestoServerReplicationState(db, config)
   }
   if (config.type === 'webrtc') {
-    let WebRTCPlugin = await import('rxdb/plugins/replication-webrtc');
-    state = await WebRTCPlugin.replicateWebRTC({
-      collection: db.documents,
-      topic: config.room,
-      ...pushPullConfig,
-      connectionHandlerCreator: WebRTCPlugin.getConnectionHandlerSimplePeer({
-        signalingServerUrl: config.signalingServer
-      })
-    });
-    state.error$.subscribe((err) => {
-      console.log('REPLICATION ERROR', err);
-    });
-    let initialAddPeer = state.addPeer.bind(state);
-    let replicationMonkeyPatched = false;
-    // if (!config.pull) {
-    //   // we protect from rogue/misconfigured instances that might push their changes
-    //   // even if we disabled pull locally
-    //   state.masterReplicationHandler.masterWrite = async function (rows) {
-    //     console.debug('Skip writing remote rows locally because pull is disabled', rows)
-    //     return []
-    //   }
-    // }
-    // let initialSend = state.connectionHandler.send
-    // state.connectionHandler.send = async function (peer, message) {
-    //   // drop some messages based on our push/pull configuration
-    //   // to protect ourselves from rogue clients
-    //   console.log("MESSAIGE", message)
-    //   if (!config.push && (message?.result?.documents || Array.isArray(message.result))) {
-    //     console.debug('Dropping message because push is disabled…', message)
-    //     return
-    //   }
-    //   return await initialSend(peer, message)
-    // }
-    state.addPeer = function addPeer(peer, replicationState) {
-      // let initialPushHandler = replicationState?.push?.handler
-      // async function pushHandler(docs) {
-      //   return await initialPushHandler(docs)
-      // }
-      // if (initialPushHandler && replicationState && !replicationMonkeyPatched) {
-      //   replicationState.push.handler = pushHandler
-      //   replicationMonkeyPatched = true
-      // }
-      console.log('PEER ADDED', replicationState);
-      return initialAddPeer(peer, replicationState);
-    };
-    console.log('REPLICATION STATE', state);
+    state = await getWebRTCReplicationState(db, config)
   }
   state?.error$.subscribe(err => console.log('error$', err))
   return state;
