@@ -71,9 +71,11 @@ server {
         text/xml;
 
     #    add_header Content-Security-Policy  "default-src 'self'; style-src: 'self'; style-src-attr 'unsafe-inline'; style-src-elem 'unsafe-inline' 'self'; script-src 'unsafe-inline' 'unsafe-eval' 'self'; connect-src *;";
+
     location / {
-	    try_files $uri $uri/ $uri.html /404.html;
+        try_files $uri /404.html;
     }
+
     location ^~ /_app/immutable/ {
         expires 14d;
         add_header Cache-Control private;
