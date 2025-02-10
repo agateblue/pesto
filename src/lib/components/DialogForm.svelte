@@ -17,6 +17,7 @@
   let { anchorClass, anchorText, anchorLabel, children, anchor, onsubmit, title, onopen }: Props =
     $props();
   let dialog: HTMLDialogElement;
+  let isOpen = $state(false)
 </script>
 
 <button
@@ -26,6 +27,7 @@
   title={anchorLabel}
   onclick={() => {
     onopen ? onopen() : null;
+    isOpen = true
     dialog.showModal();
   }}
 >
@@ -46,6 +48,7 @@
         title={$_('Fermer la fenêtre', '')}
         onclick={() => {
           dialog.close();
+          isOpen = false
         }}
       >
         <IconaMoonClose
@@ -66,7 +69,9 @@
     >
       <div id="dialog-description">
         <div class="p__inline-2 | flow">
-          {@render children?.()}
+          {#if isOpen}
+            {@render children?.()}
+          {/if}
         </div>
       </div>
       <hr />
@@ -74,6 +79,7 @@
         type="submit"
         onclick={(e) => {
           dialog.close();
+          isOpen = false
         }}>{$_('Confirmer', '')}</button
       >
     </form>
