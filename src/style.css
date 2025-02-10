@@ -930,3 +930,7 @@ table {
     right: 0;
   }
 }
+
+emoji-picker {
+  width: 100%;
+}
