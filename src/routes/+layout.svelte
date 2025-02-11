@@ -22,6 +22,18 @@
     trackRouteChange($page);
   });
 
+  function setBodyClass(e) {
+    let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    if (vw < 700) {
+      document.body.setAttribute('data-layout', 'single-column');
+    } else {
+      document.body.setAttribute('data-layout', 'multi-columns');
+    }
+  }
+  window.addEventListener('resize', setBodyClass);
+
+  setBodyClass();
+
   // to avoid firefox crashing locally because service worker can't register
   onMount(async () => {
     $lang = globals.uiState.language || window.navigator.language;
