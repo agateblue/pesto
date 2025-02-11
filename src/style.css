@@ -641,7 +641,7 @@ a:visited svg:only-child {
   li {
     a {
       padding: var(--space-1);
-      display: block;
+      display: flex;
       text-decoration: none;
       align-items: center;
       flex-direction: row;
@@ -658,7 +658,7 @@ a:visited svg:only-child {
     margin-inline: var(--space-2);
   }
   [data-current-page='true'] {
-    background-color: var(--primary-color);
+    background: var(--logo-gradient);
   }
 }
 

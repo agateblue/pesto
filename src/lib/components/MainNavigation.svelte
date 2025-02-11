@@ -152,16 +152,17 @@
         >
       </li>
       <li>
-        <MainNavigationLink href={`/my?q=is:todo`}>
-          <IconaMoonMenuKebabVerticalSquare role="presentation" alt="" />{$_('Tâches', '')}
+        <MainNavigationLink href="/board">
+          <IconaMoonApps role="presentation" alt="" />
+          <span class="flex__grow">
+            {$_('Tableau', '')}
+          </span>
           <span class="badge float__end">{totalTodos}</span>
         </MainNavigationLink>
       </li>
       <li>
-        <MainNavigationLink href="/board">
-          <IconaMoonApps role="presentation" alt="" /><span class="flex__grow"
-            >{$_('Tableau', '')}</span
-          >
+        <MainNavigationLink href={`/my?q=is:todo`}>
+          <IconaMoonMenuKebabVerticalSquare role="presentation" alt="" />{$_('Tâches', '')}
         </MainNavigationLink>
       </li>
       <li class="flex__row flex__justify-between flex__align-center">
