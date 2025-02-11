@@ -616,6 +616,12 @@ a:visited svg:only-child {
     padding-inline-start: var(--space-1);
     height: var(--page-header-height);
   }
+  #logo-wrapper {
+    line-height: 0;
+    img {
+      height: 3rem;
+    }
+  }
   h2 {
     font-size: var(--page-header-font-size);
     padding-inline: var(--space-2);

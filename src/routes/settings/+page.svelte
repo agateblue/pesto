@@ -466,6 +466,7 @@
             <hr class="hidden" />
             <h1>{$_("Informations de l'application", '')}</h1>
             <p>{$_('Version : %0', '', [PUBLIC_BUILD_ID])}</p>
+            <p><a href="https://flns.fr" target="_blank" noreferrer>{$_('Logo par flns.fr', '')}</a></p>
             <hr class="hidden" />
           </div>
         </div>

@@ -62,59 +62,63 @@
   <nav class="nav__main" aria-label="Main menu">
     <header class="flex__row flex__justify-between flex__align-center">
       <MainNavigationToggle class="layout__multi-hidden" />
-      <h1 class="m__block-1 p__inline-1 flex__grow">Pesto</h1>
+      <a id="logo-wrapper" class="flex__grow" href="/my">
+        <img src="/logo-horizontal.svg" alt="Pesto logo">
+      </a>
+      <div>
 
-      {#if replications.length > 0}
-        <button
-          type="button"
+        {#if replications.length > 0}
+          <button
+            type="button"
+            class="button__icon p__inline-2 m__inline-1"
+            aria-label={$_('Synchroniser', '')}
+            title={$_('Synchroniser', '')}
+            onclick={async (e) => {
+              isSyncing = true;
+              await syncReplications(globals.replications);
+              setTimeout(() => {
+                isSyncing = false;
+              }, 1000);
+            }}
+          >
+            <IconaMoonSynchronize
+              role="presentation"
+              class={`icon__size-3 ` + (isSyncing ? 'rotating' : '')}
+              height="none"
+              width="none"
+              alt=""
+            />
+          </button>
+        {/if}
+        <a
+          href="/my?action=search"
           class="button__icon p__inline-2 m__inline-1"
-          aria-label={$_('Synchroniser', '')}
-          title={$_('Synchroniser', '')}
-          onclick={async (e) => {
-            isSyncing = true;
-            await syncReplications(globals.replications);
-            setTimeout(() => {
-              isSyncing = false;
-            }, 1000);
-          }}
+          aria-label={$_('Rechercher', '')}
+          title={$_('Rechercher', '')}
         >
-          <IconaMoonSynchronize
+          <IconaMoonSearch
             role="presentation"
-            class={`icon__size-3 ` + (isSyncing ? 'rotating' : '')}
+            class=" icon__size-3"
             height="none"
             width="none"
             alt=""
           />
-        </button>
-      {/if}
-      <a
-        href="/my?action=search"
-        class="button__icon p__inline-2 m__inline-1"
-        aria-label={$_('Rechercher', '')}
-        title={$_('Rechercher', '')}
-      >
-        <IconaMoonSearch
-          role="presentation"
-          class=" icon__size-3"
-          height="none"
-          width="none"
-          alt=""
-        />
-      </a>
-      <a
-        href="/settings"
-        class="button__icon p__inline-2 m__inline-1"
-        aria-label={$_('Réglages', '')}
-        title={$_('Réglages', '')}
-      >
-        <IconaMoonSettings
-          role="presentation"
-          class=" icon__size-3"
-          height="none"
-          width="none"
-          alt=""
-        />
-      </a>
+        </a>
+        <a
+          href="/settings"
+          class="button__icon p__inline-2 m__inline-1"
+          aria-label={$_('Réglages', '')}
+          title={$_('Réglages', '')}
+        >
+          <IconaMoonSettings
+            role="presentation"
+            class=" icon__size-3"
+            height="none"
+            width="none"
+            alt=""
+          />
+        </a>
+      </div>
     </header>
     <ul class="flex__column">
       <li>

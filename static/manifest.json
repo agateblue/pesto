@@ -8,17 +8,36 @@
   "scope": "/",
   "icons": [
     {
-      "src": "icon-512.png",
-      "type": "image/png",
+      "src": "icons/icon-512-512.png",
       "sizes": "512x512"
     },
     {
-      "src": "favicon.svg",
+      "src": "icons/icon-192-192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-144-144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "icons/icon-96-96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "icons/icon-72-72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "icons/icon-48-48.png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "favicon-bg.svg",
       "type": "image/svg",
       "sizes": "any"
     }
   ],
-  "background_color": "#4cb248",
+  "background_color": "#FFFFFF",
   "display": "standalone",
   "theme_color": "#4cb248",
   "dir": "auto",
@@ -48,17 +67,6 @@
     {
       "name": "View board",
       "url": "/board",
-      "icons": [
-        {
-          "src": "icon-96.png",
-          "type": "image/png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Fill-in a form",
-      "url": "/forms",
       "icons": [
         {
           "src": "icon-96.png",
