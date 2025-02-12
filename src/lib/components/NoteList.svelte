@@ -168,7 +168,7 @@
     {/key}
   {/each}
   {#if notes.length < matchingCount && !isLoading}
-    <div class="flex__row flex__center m__block-4">
+    <div class="flex__row flex__center m__block-4 hide-for-print">
       <button
         onclick={async (e) => {
           let newNotes = await globals.db.documents

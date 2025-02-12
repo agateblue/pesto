@@ -12,7 +12,7 @@
 
 <details
   bind:this={el}
-  class={"dropdown " + (restProps.class || "")}
+  class={"hide-for-print dropdown " + (restProps.class || "")}
   onfocusout={(event) => {
     if (el.contains(event.relatedTarget)) return;
     el.open = false;

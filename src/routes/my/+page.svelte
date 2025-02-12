@@ -39,7 +39,7 @@
 
 <main class="flex__grow">
   <div class="scroll__wrapper">
-    <header class="p__inline-3">
+    <header class="p__inline-3 hide-for-print">
       <MainNavigationToggle class="layout__multi-hidden" />
       <input
         bind:this={searchInput}

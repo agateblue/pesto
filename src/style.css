@@ -939,3 +939,37 @@ table {
 emoji-picker {
   width: 100%;
 }
+
+@media print {
+  html {
+    font-size: 18px;
+  }
+  body {
+    --space-1: 0.25rem !important;
+    --space-2: 0.5rem !important;
+    --space-3: 0.75rem !important;
+    --space-4: 1rem !important;
+    line-height: 1.3;
+  }
+  .prose {
+    --flow-space: 0.5rem !important;
+  }
+  .my__layout > aside {
+    display: none !important;
+  }
+  .my__layout > main {
+    height: auto !important;
+    overflow: auto;
+  }
+  .scroll__wrapper {
+    display: block !important;
+    height: auto !important;
+    position: static !important;
+  }
+  [data-expanded="false"] > * {
+    display: block !important;
+  }
+  .hide-for-print {
+    display: none !important;
+  }
+}
