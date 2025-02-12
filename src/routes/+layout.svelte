@@ -17,9 +17,15 @@
 
   /** @type {Props} */
   let { children } = $props();
+
+  let telemetryEnabled = $state(true)
+ 
   afterNavigate(() => {
     globals.uiState.set("currentPage", () => null);
-    trackRouteChange($page);
+    if (telemetryEnabled) {
+      console.debug("Tracking page view")
+      trackRouteChange($page);
+    }
   });
 
   function setBodyClass(e) {
@@ -40,6 +46,9 @@
     if (!languagesById[$lang]) {
       $lang = defaultLanguage;
     }
+    globals.uiState.get$("telemetryEnabled").subscribe((value) => {
+      telemetryEnabled = value === undefined ? true : value
+    })
     if (dev) {
       console.warn("Will not register service worker in dev mode.");
     } else {

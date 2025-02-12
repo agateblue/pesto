@@ -255,6 +255,17 @@
                 {/each}
               </select>
             </div>
+            <div class="form__field">
+              <input type="checkbox"
+                name="telemetry"
+                id="telemetry"
+                value={globals.uiState.telemetryEnabled}
+                oninput={(e) => globals.uiState.set("telemetryEnabled", () => e.target.checked)}
+              />
+              <label for="telemetry">{$_("Partager les données d'utilisation", "")}</label>
+              <p class="form__help">
+                {$_("Les données d'utilisation nous servent à améliorer Pesto. Aucune adresse IP ni information personnelle n'est collectée.", "")}
+              </p>
             <hr class="hidden" />
             <h1>{$_("Synchronisation", "")}</h1>
             <p>
