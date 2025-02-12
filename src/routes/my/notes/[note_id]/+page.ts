@@ -1,4 +1,4 @@
-import { getById } from '$lib/db.js';
+import { getById } from "$lib/db.js";
 
 export async function load({ params, parent }) {
   let data = await parent();

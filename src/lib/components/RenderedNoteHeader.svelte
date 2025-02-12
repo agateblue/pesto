@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { type DocumentDocument, formatDate, getNoteUpdateData } from '$lib/db';
-  import { noteToText } from '$lib/ui';
-  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  import DropDown from './DropDown.svelte';
-  import DialogForm from './DialogForm.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { type DocumentDocument, formatDate, getNoteUpdateData } from "$lib/db";
+  import { noteToText } from "$lib/ui";
+  import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
+  import DropDown from "./DropDown.svelte";
+  import DialogForm from "./DialogForm.svelte";
 
-  import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
-  import IconaMoonCopy from 'virtual:icons/iconamoon/copy';
-  import IconaMoonStar from 'virtual:icons/iconamoon/star';
-  import IconaMoonStarFill from 'virtual:icons/iconamoon/star-fill';
-  import IconaMoonMenuKebabVerticalCircle from 'virtual:icons/iconamoon/menu-kebab-vertical-light';
-  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
+  import IconaMoonEdit from "virtual:icons/iconamoon/edit";
+  import IconaMoonCopy from "virtual:icons/iconamoon/copy";
+  import IconaMoonStar from "virtual:icons/iconamoon/star";
+  import IconaMoonStarFill from "virtual:icons/iconamoon/star-fill";
+  import IconaMoonMenuKebabVerticalCircle from "virtual:icons/iconamoon/menu-kebab-vertical-light";
+  import IconaMoonTrash from "virtual:icons/iconamoon/trash";
 
   interface Props {
     note: DocumentDocument;
@@ -55,7 +55,7 @@
           height="none"
           width="none"
         />
-        {$_('Éditer cette note', '')}
+        {$_("Éditer cette note", "")}
       </a>
     </li>
     <li>
@@ -73,7 +73,7 @@
           height="none"
           width="none"
         />
-        {$_('Copier le contenu', '')}
+        {$_("Copier le contenu", "")}
       </button>
     </li>
     <li>
@@ -94,7 +94,7 @@
             height="none"
             width="none"
           />
-          {$_('Retirer des favoris', '')}
+          {$_("Retirer des favoris", "")}
         {:else}
           <IconaMoonStar
             role="presentation"
@@ -103,13 +103,13 @@
             height="none"
             width="none"
           />
-          {$_('Ajouter aux favoris', '')}
+          {$_("Ajouter aux favoris", "")}
         {/if}
       </button>
     </li>
     <li>
       {#snippet trashIcon()}
-        {$_('Supprimer', '')}
+        {$_("Supprimer", "")}
         <IconaMoonTrash
           role="presentation"
           class="icon icon__size-3"
@@ -120,9 +120,9 @@
       {/snippet}
       <DialogForm
         anchorClass="button__icon"
-        anchorLabel={$_('Supprimer cette note', '')}
+        anchorLabel={$_("Supprimer cette note", "")}
         anchor={trashIcon}
-        title={$_('Supprimer cette note ?', '')}
+        title={$_("Supprimer cette note ?", "")}
         onsubmit={async (e: SubmitEvent) => {
           e.preventDefault();
           await note.incrementalRemove();
@@ -130,7 +130,7 @@
         }}
       >
         <p>
-          {$_('La note sera supprimée de votre journal. Cette action est irréversible.', '')}
+          {$_("La note sera supprimée de votre journal. Cette action est irréversible.", "")}
         </p>
       </DialogForm>
     </li>

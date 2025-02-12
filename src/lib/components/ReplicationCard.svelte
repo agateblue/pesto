@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import ReplicationForm from './ReplicationForm.svelte';
-  import DialogForm from './DialogForm.svelte';
-  import { type AnyReplication } from '$lib/db';
-  import { createEventDispatcher } from 'svelte';
-  import { PUBLIC_PESTO_DB_URL } from '$env/static/public';
-  
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import ReplicationForm from "./ReplicationForm.svelte";
+  import DialogForm from "./DialogForm.svelte";
+  import { type AnyReplication } from "$lib/db";
+  import { createEventDispatcher } from "svelte";
+  import { PUBLIC_PESTO_DB_URL } from "$env/static/public";
+
   const dispatch = createEventDispatcher<{
     submit: { replication: AnyReplication };
     delete: {};
@@ -23,15 +23,15 @@
 </script>
 
 <div {...rest}>
-  {#if replication.type === 'webrtc'}
+  {#if replication.type === "webrtc"}
     <strong>{$_("Mode :", "")}</strong>
     {$_("WebRTC :", "")} <br />
     <strong>{$_("Serveur de mise en relation :", "")}</strong>
     {replication.signalingServer} <br />
   {/if}
-  {#if replication.type === 'couchdb'}
+  {#if replication.type === "couchdb"}
     <strong>{$_("Mode :", "")}</strong>
-      {$_("CouchDB :", "")} <br />
+    {$_("CouchDB :", "")} <br />
     <strong>{$_("URL du serveur :", "")}</strong>
     {replication.server} <br />
     <strong>{$_("Base de données :", "")}</strong>
@@ -39,7 +39,7 @@
     <strong>{$_("Mot de passe :", "")}</strong>
     {$_("[masqué]", "")}<br />
   {/if}
-  {#if replication.type === 'pesto-server'}
+  {#if replication.type === "pesto-server"}
     <strong>{$_("Mode :", "")}</strong>
     {$_("Serveur Pesto", "")} <br />
     <strong>{$_("URL du serveur :", "")}</strong>
@@ -60,13 +60,10 @@
       onsubmit={async (e: SubmitEvent) => {
         e.preventDefault();
         replication = { ...replication };
-        dispatch('submit', { replication: { ...replication } });
+        dispatch("submit", { replication: { ...replication } });
       }}
     >
-      <ReplicationForm 
-        {pestoServerInfo}
-        {pestoServerError} 
-        bind:replication />
+      <ReplicationForm {pestoServerInfo} {pestoServerError} bind:replication />
     </DialogForm>
     <DialogForm
       anchorClass="button__link"
@@ -74,7 +71,7 @@
       title={$_("Supprimer cette synchronisation ?", "")}
       onsubmit={(e: SubmitEvent) => {
         e.preventDefault();
-        dispatch('delete', {});
+        dispatch("delete", {});
       }}
     >
       <p>

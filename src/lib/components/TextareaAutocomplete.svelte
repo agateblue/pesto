@@ -1,12 +1,12 @@
 <script lang="ts">
   // based on https://phuoc.ng/collection/mirror-a-text-area/add-autocomplete-to-your-text-area/
-  import { globals } from '$lib/db';
-  import { clearSubscriptions, signToType, parseTags } from '$lib/ui';
-  import { elementAt } from 'rxjs';
-  import { onMount, onDestroy, tick } from 'svelte';
+  import { globals } from "$lib/db";
+  import { clearSubscriptions, signToType, parseTags } from "$lib/ui";
+  import { elementAt } from "rxjs";
+  import { onMount, onDestroy, tick } from "svelte";
 
-  import type { HTMLBaseAttributes } from 'svelte/elements';
-  import { preventDefault } from 'svelte/legacy';
+  import type { HTMLBaseAttributes } from "svelte/elements";
+  import { preventDefault } from "svelte/legacy";
 
   interface Props extends HTMLBaseAttributes {}
   let { oninput, onclick, ...restProps }: Props = $props();
@@ -38,7 +38,7 @@
     globals.db.documents
       .find({
         limit: 20000,
-        selector: { type: 'note' }
+        selector: { type: "note" }
       })
       .$.subscribe((documents) => {
         suggestionsOptions = new Set();
@@ -58,26 +58,26 @@
 
     const textareaStyles = window.getComputedStyle(source);
     [
-      'border',
-      'boxSizing',
-      'fontFamily',
+      "border",
+      "boxSizing",
+      "fontFamily",
       // 'fontSize',
-      'fontWeight',
-      'letterSpacing',
-      'lineHeight',
-      'padding',
-      'textDecoration',
-      'textIndent',
-      'textTransform',
-      'whiteSpace',
-      'wordSpacing',
-      'wordWrap'
+      "fontWeight",
+      "letterSpacing",
+      "lineHeight",
+      "padding",
+      "textDecoration",
+      "textIndent",
+      "textTransform",
+      "whiteSpace",
+      "wordSpacing",
+      "wordWrap"
     ].forEach((property: string) => {
       reflection.style[property] = textareaStyles[property];
     });
-    reflection.style.borderColor = 'transparent';
+    reflection.style.borderColor = "transparent";
 
-    const parseValue = (v) => (v.endsWith('px') ? parseInt(v.slice(0, -2), 10) : 0);
+    const parseValue = (v) => (v.endsWith("px") ? parseInt(v.slice(0, -2), 10) : 0);
     const borderWidth = parseValue(textareaStyles.borderWidth);
 
     const ro = new ResizeObserver(() => {
@@ -111,7 +111,7 @@
     element.focus();
     element.selectionStart = element.selectionEnd = startIndex + 1 + newWord.length;
     if (input) {
-      var event = new Event('input', {
+      var event = new Event("input", {
         bubbles: true
       });
 
@@ -128,10 +128,10 @@
     const textAfterCursor = textarea.value.substring(cursorPos);
     const pre = document.createTextNode(textBeforeCursor);
     const post = document.createTextNode(textAfterCursor);
-    const caretEle = document.createElement('span');
-    caretEle.innerHTML = '&nbsp;';
+    const caretEle = document.createElement("span");
+    caretEle.innerHTML = "&nbsp;";
 
-    reflection.innerHTML = '';
+    reflection.innerHTML = "";
     reflection.append(pre, caretEle, post);
 
     caretElementRect = caretEle.getBoundingClientRect();
@@ -199,7 +199,7 @@
       reflection.scrollTop = textarea.scrollTop;
     }}
     onkeydown={(e) => {
-      if (!['ArrowDown', 'ArrowUp', 'ArrowRight', 'Enter', 'Escape'].includes(e.key)) {
+      if (!["ArrowDown", "ArrowUp", "ArrowRight", "Enter", "Escape"].includes(e.key)) {
         return;
       }
 
@@ -207,29 +207,29 @@
       if (numSuggestions === 0) {
         return;
       }
-      if (e.key === 'Enter' && currentSuggestionIndex === -1) {
+      if (e.key === "Enter" && currentSuggestionIndex === -1) {
         return;
       }
       e.preventDefault();
       switch (e.key) {
-        case 'ArrowDown':
+        case "ArrowDown":
           currentSuggestionIndex = clamp(0, currentSuggestionIndex + 1, numSuggestions - 1);
           replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           currentSuggestionIndex = clamp(0, currentSuggestionIndex - 1, numSuggestions - 1);
           replaceCurrentWord(textarea, matches[currentSuggestionIndex]);
           break;
-        case 'Enter':
+        case "Enter":
           replaceCurrentWord(textarea, matches[currentSuggestionIndex], true);
           matches = [];
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           currentSuggestionIndex = clamp(0, currentSuggestionIndex, numSuggestions - 1);
           replaceCurrentWord(textarea, matches[currentSuggestionIndex], true);
           matches = [];
           break;
-        case 'Escape':
+        case "Escape":
           matches = [];
           break;
         default:

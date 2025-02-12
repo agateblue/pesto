@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
-  import { type FormFragmentType, globals } from '$lib/db';
-  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
+  import { onDestroy } from "svelte";
+  import { type FormFragmentType, globals } from "$lib/db";
+  import { syncPropertiesWithExternalChanges, clearSubscriptions } from "$lib/ui";
 
   interface Props {
     fragment: FormFragmentType;

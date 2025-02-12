@@ -10,12 +10,12 @@ msgstr ""
 msgid "Déplier"
 msgstr ""
 
-#: ./src/lib/components/CollectionForm.svelte:17
+#: ./src/lib/components/CollectionForm.svelte:14
 #: ./src/lib/components/FormBuilder.svelte:31
 msgid "Nom"
 msgstr ""
 
-#: ./src/lib/components/CollectionForm.svelte:23
+#: ./src/lib/components/CollectionForm.svelte:20
 msgid "Requête"
 msgstr ""
 
@@ -27,11 +27,11 @@ msgstr ""
 msgid "Icône :"
 msgstr ""
 
-#: ./src/lib/components/DialogForm.svelte:58
+#: ./src/lib/components/DialogForm.svelte:47
 msgid "Fermer la fenêtre"
 msgstr ""
 
-#: ./src/lib/components/DialogForm.svelte:84
+#: ./src/lib/components/DialogForm.svelte:83
 msgid "Confirmer"
 msgstr ""
 
@@ -40,31 +40,27 @@ msgid "Mon champ"
 msgstr ""
 
 #: ./src/lib/components/FormBuilder.svelte:41
-#: ./src/lib/components/FormFieldBuilder.svelte:46
+#: ./src/lib/components/FormFieldBuilder.svelte:50
 msgid "ID"
 msgstr ""
 
-#: ./src/lib/components/FormBuilder.svelte:43
-msgid "Un identifiant unique pour le formulaire. Utilisé pour construire des visualisations."
-msgstr ""
-
-#: ./src/lib/components/FormBuilder.svelte:54
+#: ./src/lib/components/FormBuilder.svelte:59
 msgid "Mode avancé"
 msgstr ""
 
-#: ./src/lib/components/FormBuilder.svelte:64
+#: ./src/lib/components/FormBuilder.svelte:69
 msgid "Aperçu du formulaire"
 msgstr ""
 
-#: ./src/lib/components/FormBuilder.svelte:86
+#: ./src/lib/components/FormBuilder.svelte:95
 msgid "Ajouter un  nouveau champ"
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:108
+#: ./src/lib/components/FormFieldBuilder.svelte:117
 msgid "Inclure les futures valeurs saisies dans les suggestions."
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:120
+#: ./src/lib/components/FormFieldBuilder.svelte:129
 msgid "Supprimer ce champ"
 msgstr ""
 
@@ -77,360 +73,326 @@ msgctxt "Nom"
 msgid "Type"
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:54
-msgid "Un identifiant unique pour ce champ. Utilisé pour construire des visualisations."
-msgstr ""
-
-#: ./src/lib/components/FormFieldBuilder.svelte:65
+#: ./src/lib/components/FormFieldBuilder.svelte:72
 msgid "Ce champ est requis"
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:72
+#: ./src/lib/components/FormFieldBuilder.svelte:78
 msgid "Texte d'aide"
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:79
+#: ./src/lib/components/FormFieldBuilder.svelte:85
 msgid "Un texte d'aide qui sera affiché sous le champ."
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:85
+#: ./src/lib/components/FormFieldBuilder.svelte:91
 msgid "Suggestions"
 msgstr ""
 
-#: ./src/lib/components/FormFieldBuilder.svelte:96
-msgid "Saisissez une suggestion de valeur sur chaque ligne. Elles seront affichées sous forme d'autocomplétion."
-msgstr ""
-
-#: ./src/lib/components/FormRendered.svelte:109
+#: ./src/lib/components/FormRendered.svelte:110
 msgid "Pré-remplir"
 msgstr ""
 
-#: ./src/lib/components/FormRendered.svelte:46
-#: ./src/lib/components/ReplicationCard.svelte:48
+#: ./src/lib/components/FormRendered.svelte:54
+#: ./src/lib/components/ReplicationCard.svelte:58
 msgid "Éditer"
 msgstr ""
 
-#: ./src/lib/components/FormRendered.svelte:47
+#: ./src/lib/components/FormRendered.svelte:55
 msgid "Éditer le formulaire %0"
 msgstr ""
 
-#: ./src/lib/components/FormRendered.svelte:58
-#: ./src/lib/components/RenderedNoteHeader.svelte:117
-#: ./src/routes/board/+page.svelte:209
+#: ./src/lib/components/FormRendered.svelte:66
+#: ./src/lib/components/RenderedNoteHeader.svelte:112
+#: ./src/routes/board/+page.svelte:204
 msgid "Supprimer"
 msgstr ""
 
-#: ./src/lib/components/FormRendered.svelte:59
+#: ./src/lib/components/FormRendered.svelte:67
 msgid "Supprimer le formulaire %0"
 msgstr ""
 
-#: ./src/lib/components/FormRendered.svelte:67
-msgid "Voulez-vous supprimer ce formulaire ? Les données déjà saisies ne seront pas supprimées. Cette action est irréversible."
-msgstr ""
-
-#: ./src/lib/components/FormRendered.svelte:95
-#: ./src/routes/settings/+page.svelte:334
+#: ./src/lib/components/FormRendered.svelte:96
+#: ./src/routes/settings/+page.svelte:371
 msgid "Sauvegarder"
 msgstr ""
 
-#: ./src/lib/components/FragmentEditor.svelte:106
-msgid "Titre"
-msgstr ""
-
-#: ./src/lib/components/FragmentEditor.svelte:118
+#: ./src/lib/components/FragmentEditor.svelte:111
 msgid "Collection"
 msgstr ""
 
-#: ./src/lib/components/FragmentEditor.svelte:173
+#: ./src/lib/components/FragmentEditor.svelte:164
 msgid "Charger la liste de tâche depuis le texte"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:106
-#: ./src/routes/settings/+page.svelte:212
+#: ./src/lib/components/FragmentEditor.svelte:99
+msgid "Titre"
+msgstr ""
+
+#: ./src/lib/components/MainNavigation.svelte:110
+#: ./src/routes/settings/+page.svelte:236
 msgid "Réglages"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:120
-#: ./src/lib/components/NoteForm.svelte:73
+#: ./src/lib/components/MainNavigation.svelte:127
+#: ./src/lib/components/NoteForm.svelte:82
 msgid "Nouvelle note"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:126
+#: ./src/lib/components/MainNavigation.svelte:134
 msgid "Toutes les notes"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:132
+#: ./src/lib/components/MainNavigation.svelte:142
 msgid "Favoris"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:139
+#: ./src/lib/components/MainNavigation.svelte:150
 msgid "Récemment modifié"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:148
-msgid "Tâches"
-msgstr ""
-
-#: ./src/lib/components/MainNavigation.svelte:153
+#: ./src/lib/components/MainNavigation.svelte:158
 msgid "Tableau"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:159
+#: ./src/lib/components/MainNavigation.svelte:165
+msgid "Tâches"
+msgstr ""
+
+#: ./src/lib/components/MainNavigation.svelte:170
 msgid "Collections"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:173
+#: ./src/lib/components/MainNavigation.svelte:184
 msgid "Ajouter une collection"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:199
+#: ./src/lib/components/MainNavigation.svelte:209
 msgid "Données"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:202
-#: ./src/routes/forms/+page.svelte:67
+#: ./src/lib/components/MainNavigation.svelte:213
+#: ./src/routes/forms/+page.svelte:62
 msgid "Formulaires"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:71
+#: ./src/lib/components/MainNavigation.svelte:74
 msgid "Synchroniser"
 msgstr ""
 
-#: ./src/lib/components/MainNavigation.svelte:93
-#: ./src/routes/my/+page.svelte:48
+#: ./src/lib/components/MainNavigation.svelte:96
+#: ./src/routes/my/+page.svelte:51
 msgid "Rechercher"
 msgstr ""
 
-#: ./src/lib/components/MainNavigationToggle.svelte:26
-msgid "Ouvrir le menu principal"
-msgstr ""
-
-#: ./src/lib/components/MainNavigationToggle.svelte:26
+#: ./src/lib/components/MainNavigationToggle.svelte:27
 msgid "Fermer le menu principal"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:106
-#: ./src/routes/forms/+page.svelte:81
+#: ./src/lib/components/MainNavigationToggle.svelte:28
+msgid "Ouvrir le menu principal"
+msgstr ""
+
+#: ./src/lib/components/NoteForm.svelte:115
+#: ./src/routes/forms/+page.svelte:76
 msgid "Ajouter un formulaire"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:131
+#: ./src/lib/components/NoteForm.svelte:140
 msgid "Formulaire"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:139
+#: ./src/lib/components/NoteForm.svelte:148
 msgid "Attacher ce formulaire à la note."
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:154
-#: ./src/lib/components/RenderedNoteHeader.svelte:128
+#: ./src/lib/components/NoteForm.svelte:163
+#: ./src/lib/components/RenderedNoteHeader.svelte:123
 msgid "Supprimer cette note"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:156
-#: ./src/lib/components/RenderedNoteHeader.svelte:130
+#: ./src/lib/components/NoteForm.svelte:165
+#: ./src/lib/components/RenderedNoteHeader.svelte:125
 msgid "Supprimer cette note ?"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:42
-#: ./src/routes/board/+page.svelte:93
+#: ./src/lib/components/NoteForm.svelte:52
+#: ./src/routes/board/+page.svelte:88
 msgctxt "Colonne du tableau"
 msgid "À faire"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:43
-#: ./src/routes/board/+page.svelte:101
+#: ./src/lib/components/NoteForm.svelte:53
+#: ./src/routes/board/+page.svelte:96
 msgctxt "Colonne du tableau"
 msgid "En cours"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:44
-#: ./src/routes/board/+page.svelte:109
+#: ./src/lib/components/NoteForm.svelte:54
+#: ./src/routes/board/+page.svelte:104
 msgctxt "Colonne du tableau"
 msgid "Terminé"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:71
-#: ./src/lib/components/RenderedNoteHeader.svelte:63
+#: ./src/lib/components/NoteForm.svelte:80
+#: ./src/lib/components/RenderedNoteHeader.svelte:58
 msgid "Éditer cette note"
 msgstr ""
 
-#: ./src/lib/components/NoteForm.svelte:82
+#: ./src/lib/components/NoteForm.svelte:91
 msgid "Voir cette note"
 msgstr ""
 
-#: ./src/lib/components/NoteList.svelte:123
+#: ./src/lib/components/NoteList.svelte:129
 msgid "Supprimer la collection %0"
 msgstr ""
 
-#: ./src/lib/components/NoteList.svelte:135
-msgid "Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible."
-msgstr ""
-
-#: ./src/lib/components/NoteList.svelte:142
+#: ./src/lib/components/NoteList.svelte:153
 msgid "1 note trouvée"
 msgid_plural "%n notes trouvées"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ./src/lib/components/NoteList.svelte:147
+#: ./src/lib/components/NoteList.svelte:158
 msgid "Chargement des notes…"
 msgstr ""
 
-#: ./src/lib/components/NoteList.svelte:173
+#: ./src/lib/components/NoteList.svelte:186
 msgid "Afficher plus de notes"
 msgstr ""
 
-#: ./src/lib/components/PasswordInput.svelte:22
+#: ./src/lib/components/PasswordInput.svelte:23
 msgid "Montrer"
 msgstr ""
 
-#: ./src/lib/components/PasswordInput.svelte:22
+#: ./src/lib/components/PasswordInput.svelte:23
 msgid "Masquer"
 msgstr ""
 
-#: ./src/lib/components/RenderedNoteHeader.svelte:102
-msgid "Retirer des favoris"
-msgstr ""
-
-#: ./src/lib/components/RenderedNoteHeader.svelte:111
+#: ./src/lib/components/RenderedNoteHeader.svelte:106
 msgid "Ajouter aux favoris"
 msgstr ""
 
-#: ./src/lib/components/RenderedNoteHeader.svelte:138
+#: ./src/lib/components/RenderedNoteHeader.svelte:133
 msgid "La note sera supprimée de votre journal. Cette action est irréversible."
 msgstr ""
 
-#: ./src/lib/components/RenderedNoteHeader.svelte:81
+#: ./src/lib/components/RenderedNoteHeader.svelte:76
 msgid "Copier le contenu"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:25
-msgid "WebRTC :"
+#: ./src/lib/components/RenderedNoteHeader.svelte:97
+msgid "Retirer des favoris"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:25
+#: ./src/lib/components/ReplicationCard.svelte:27
 msgid "Mode :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:26
+#: ./src/lib/components/ReplicationCard.svelte:28
+msgid "WebRTC :"
+msgstr ""
+
+#: ./src/lib/components/ReplicationCard.svelte:29
 msgid "Serveur de mise en relation :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:31
-msgid "CouchDB (avec compatibilité Tempo)"
-msgstr ""
-
-#: ./src/lib/components/ReplicationCard.svelte:31
+#: ./src/lib/components/ReplicationCard.svelte:34
 msgid "CouchDB :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:32
+#: ./src/lib/components/ReplicationCard.svelte:35
 msgid "URL du serveur :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:34
+#: ./src/lib/components/ReplicationCard.svelte:37
 msgid "Base de données :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:36
-msgid "Nom d'utilisateur·ice :"
-msgstr ""
-
-#: ./src/lib/components/ReplicationCard.svelte:38
+#: ./src/lib/components/ReplicationCard.svelte:39
 msgid "Mot de passe :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:38
+#: ./src/lib/components/ReplicationCard.svelte:40
 msgid "[masqué]"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:40
+#: ./src/lib/components/ReplicationCard.svelte:44
+msgid "Serveur Pesto"
+msgstr ""
+
+#: ./src/lib/components/ReplicationCard.svelte:50
 msgid "Envoyer les données locales :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:41
+#: ./src/lib/components/ReplicationCard.svelte:51
 msgid "Oui"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:41
+#: ./src/lib/components/ReplicationCard.svelte:51
 msgid "Non"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:42
+#: ./src/lib/components/ReplicationCard.svelte:52
 msgid "Télécharger les données distantes :"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:49
+#: ./src/lib/components/ReplicationCard.svelte:59
 msgid "Modifier la synchronisation"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:60
+#: ./src/lib/components/ReplicationCard.svelte:73
 msgid "Supprimer…"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:61
+#: ./src/lib/components/ReplicationCard.svelte:74
 msgid "Supprimer cette synchronisation ?"
 msgstr ""
 
-#: ./src/lib/components/ReplicationCard.svelte:68
-msgid "La synchronisation des données avec d'autres appareils sera interrompue. Les données actuellement stockées sur votre appareils seront conservées."
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:100
-msgid "Envoyer les changements locaux"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:104
-msgid "Télécharger les changements distants"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:23
-msgid "Serveur de mise en relation"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:33
-msgid "Identifiant de salon"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:40
-msgid "N'importe qui disposant de cette identifiant de salon pourra accéder à vos données. Protégez le comme un mot de passe."
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:47
-msgid "Avertissement : ce mode de synchronisation est conçu pour vous permettre de migrer de Tempo à Pesto."
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:51
-msgid "Comme Tempo ne prend pas en charge toutes les fonctionnalités de Pesto, l'écriture de données de Pesto vers Tempo est désactivée. Cela signifie que :"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:55
-msgid "Les changements effectués sur Tempo seront répercutés de Tempo vers Pesto"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:56
-msgid "Les changements effectués sur Pesto ne seront pas répercutés de Pesto vers Tempo"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:58
-msgid "C'est moins performant et devrait être désactivé lorsque vous basculez entièrement sur Pesto."
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:61
-msgid "Serveur"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:71
-msgid "Base de données"
-msgstr ""
-
-#: ./src/lib/components/ReplicationForm.svelte:80
+#: ./src/lib/components/ReplicationForm.svelte:103
 msgid "Nom d'utilisateur·ice"
 msgstr ""
 
-#: ./src/lib/components/ReplicationForm.svelte:89
+#: ./src/lib/components/ReplicationForm.svelte:112
 msgid "Mot de passe"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:123
+msgid "Envoyer les changements locaux"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:127
+msgid "Télécharger les changements distants"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:20
+msgid "Serveur de mise en relation"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:30
+msgid "Identifiant de salon"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:49
+msgid "Connexion"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:53
+#: ./src/lib/components/ReplicationForm.svelte:84
+msgid "Serveur"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:64
+msgid "Connecté·e en tant que %0"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:65
+msgid "Déconnexion…"
+msgstr ""
+
+#: ./src/lib/components/ReplicationForm.svelte:68
+#: ./src/lib/components/ReplicationForm.svelte:94
+msgid "Base de données"
 msgstr ""
 
 #: ./src/lib/components/TextFragmentEditor.svelte:40
@@ -441,20 +403,16 @@ msgstr ""
 msgid "Quoi de neuf ?"
 msgstr ""
 
-#: ./src/lib/components/TodoCard.svelte:60
-msgid "Poignée pour glisser/déposer %0"
-msgstr ""
-
-#: ./src/lib/components/TodoListFragmentEditor.svelte:102
+#: ./src/lib/components/TodoListFragmentEditor.svelte:101
 msgctxt "Tableau"
 msgid "Colonne"
 msgstr ""
 
-#: ./src/lib/components/TodoRow.svelte:71
+#: ./src/lib/components/TodoRow.svelte:64
 msgid "Ajouter une nouvelle tâche…"
 msgstr ""
 
-#: ./src/lib/components/TodoRow.svelte:88
+#: ./src/lib/components/TodoRow.svelte:81
 msgid "Supprimer la tâche"
 msgstr ""
 
@@ -470,44 +428,37 @@ msgstr ""
 msgid "Préparation des données terminée, vous serez redirigé·e sous peu…"
 msgstr ""
 
-#: ./src/routes/board/+page.svelte:185
+#: ./src/routes/board/+page.svelte:180
 msgid "Réglages du tableau"
 msgstr ""
 
-#: ./src/routes/board/+page.svelte:196
+#: ./src/routes/board/+page.svelte:191
 msgctxt "Tableau"
 msgid "Colonne %0"
 msgstr ""
 
-#: ./src/routes/board/+page.svelte:222
+#: ./src/routes/board/+page.svelte:217
 msgid "Ajouter une colonne"
 msgstr ""
 
-#: ./src/routes/board/+page.svelte:303
+#: ./src/routes/board/+page.svelte:275
+msgctxt "Tableau"
+msgid "Déposer ici"
+msgstr ""
+
+#: ./src/routes/board/+page.svelte:299
 msgid "Afficher plus"
 msgstr ""
 
-#: ./src/routes/forms/+page.svelte:112
-msgid "Réglages du formulaire"
-msgstr ""
-
-#: ./src/routes/forms/+page.svelte:120
-msgid "URL de webhook"
-msgstr ""
-
-#: ./src/routes/forms/+page.svelte:128
-msgid "Notifier une URL via une requête POST lorsque une entrée de formulaire est créée, modifiée ou supprimée"
-msgstr ""
-
-#: ./src/routes/forms/+page.svelte:86
+#: ./src/routes/forms/+page.svelte:81
 msgid "Mon formulaire"
 msgstr ""
 
-#: ./src/routes/my/+page.svelte:106
+#: ./src/routes/my/+page.svelte:105
 msgid "Enregistrer et rédiger une nouvelle note"
 msgstr ""
 
-#: ./src/routes/my/+page.svelte:62
+#: ./src/routes/my/+page.svelte:65
 msgid "Effacer la recherche"
 msgstr ""
 
@@ -515,7 +466,7 @@ msgstr ""
 msgid "Cette note n'existe pas."
 msgstr ""
 
-#: ./src/routes/my/notes/add/+page.svelte:11
+#: ./src/routes/my/notes/add/+page.svelte:18
 msgid "Enregistrer"
 msgstr ""
 
@@ -532,7 +483,7 @@ msgid "Sauvegarder les réglages"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:121
-msgid "Créer une sauvegarde partielle ou complète au format JSON/Tempo."
+msgid "Créer une sauvegarde partielle ou complète au format Tempo / JSON."
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:130
@@ -540,71 +491,55 @@ msgid "Sauvegarder les tâches et le tableau"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:219
+msgid "Vous n'êtes pas connecté·e au serveur Pesto."
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:221
+msgid "Le serveur Pesto est injoignable."
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:243
 msgid "Langue"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:227
+#: ./src/routes/settings/+page.svelte:256
 msgid "Synchronisation"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:229
-msgid "Les données de Pesto peuvent être synchronisées avec d'autres appareil. Si vous utilisez le mode WebRTC, les données transitent directement d'un appareil à l'autre et ne sont jamais accessibles ou hébergées par un tiers."
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:234
-msgid "Synchronisations existantes"
-msgstr ""
-
 #: ./src/routes/settings/+page.svelte:258
+msgid "Les données de Pesto peuvent être synchronisées avec d'autres appareil."
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:286
 msgid "Configurer une nouvelle synchronisation"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:268
+#: ./src/routes/settings/+page.svelte:300
 msgid "Mode"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:278
+#: ./src/routes/settings/+page.svelte:310
 msgid "WebRTC"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:279
+#: ./src/routes/settings/+page.svelte:312
+msgid "Serveur Pesto (Alpha)"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:314
 msgid "CouchDB"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:280
-msgid "CouchDB (avec compatibilité Tempo"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:304
+#: ./src/routes/settings/+page.svelte:340
 msgid "Sauvegarde"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:306
-msgid "Sauvegarder les données de Pesto afin d'en garder une copie ou de les transférer vers une autre application."
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:309
+#: ./src/routes/settings/+page.svelte:348
 msgid "Format de sauvegarde"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:35
-msgid "Restaurer depuis un fichier JSON/Tempo."
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:352
-msgid "Restauration"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:354
-msgid "Restaurer les données d'une autre source dans Pesto. Les doublons sont ignorés et vos données locales sont toujours préservées en cas de conflit."
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:357
-msgid "Type de restauration"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:367
-msgid "Sélectionner le fichier à restaurer"
+msgid "Restaurer depuis un fichier Tempo / JSON."
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:39
@@ -612,39 +547,47 @@ msgid "Restaurer les notes"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:391
-msgid "Restaurer"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:396
-msgid "Effacer mes données"
+msgid "Restauration"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:399
-msgid "Vous pouvez supprimer l'intégralité de vos données Pesto. Une confirmation vous sera demandée."
+msgid "Type de restauration"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:403
-msgid "Effacer toutes mes données"
+#: ./src/routes/settings/+page.svelte:409
+msgid "Sélectionner le fichier à restaurer"
 msgstr ""
 
-#: ./src/routes/settings/+page.svelte:404
-msgid "Effacer toutes les données de Pesto ?"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:411
-msgid "Supprimer toutes les données locales y compris les notes, tâches, paramètres, collections et formulaires. Cette action est irréversible."
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:414
-msgid "Informations de l'application"
-msgstr ""
-
-#: ./src/routes/settings/+page.svelte:415
-msgid "Version : %0"
+#: ./src/routes/settings/+page.svelte:431
+msgid "Restaurer"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:44
 msgid "Restaurer les tâches et le tableau"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:440
+msgid "Effacer mes données"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:449
+msgid "Effacer toutes mes données"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:450
+msgid "Effacer toutes les données de Pesto ?"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:464
+msgid "Informations de l'application"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:465
+msgid "Version : %0"
+msgstr ""
+
+#: ./src/routes/settings/+page.svelte:466
+msgid "Logo par flns.fr"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:49
@@ -656,7 +599,7 @@ msgid "Restaurer les alias (en tant que collections)"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:62
-msgid "Restaurer depuis un fichier JSON/Pesto. C'est un moyen de restaurer une sauvegarde complète effectuée depuis une autre session Pesto."
+msgid "Restaurer depuis un fichier Pesto / JSON. C'est un moyen de restaurer une sauvegarde complète effectuée depuis une autre session Pesto."
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:71
@@ -668,13 +611,13 @@ msgid "Restaurer les réglages"
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:94
-msgid "Créer une sauvegarde partielle ou complète au format JSON/Pesto."
+msgid "Créer une sauvegarde partielle ou complète au format Pesto / JSON."
 msgstr ""
 
 #: ./src/routes/settings/+page.svelte:98
 msgid "Sauvegarder les notes"
 msgstr ""
 
-#: ./src/routes/share-receiver/+page.svelte:49
+#: ./src/routes/share-receiver/+page.svelte:51
 msgid "Traitement en cours…"
 msgstr ""

@@ -1,7 +1,7 @@
-import Plausible from 'plausible-tracker';
-import { PUBLIC_PLAUSIBLE_HOST, PUBLIC_PLAUSIBLE_DOMAIN } from '$env/static/public';
+import Plausible from "plausible-tracker";
+import { PUBLIC_PLAUSIBLE_HOST, PUBLIC_PLAUSIBLE_DOMAIN } from "$env/static/public";
 
-import { navigating } from '$app/stores';
+import { navigating } from "$app/stores";
 
 const { trackPageview } = Plausible({
   domain: PUBLIC_PLAUSIBLE_DOMAIN,

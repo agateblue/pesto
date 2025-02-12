@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import LoadingState from '$lib/components/LoadingState.svelte';
-  import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import { globals } from '$lib/db';
-  import { delay } from '$lib/ui';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import LoadingState from "$lib/components/LoadingState.svelte";
+  import MainNavigation from "$lib/components/MainNavigation.svelte";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { globals } from "$lib/db";
+  import { delay } from "$lib/ui";
 
   let isLoading = $state(true);
   onMount(async () => {
-    let title = $page.url.searchParams.get('title');
-    let text = $page.url.searchParams.get('text');
-    let url = $page.url.searchParams.get('url');
+    let title = $page.url.searchParams.get("title");
+    let text = $page.url.searchParams.get("text");
+    let url = $page.url.searchParams.get("url");
 
     if (!title && !text && !url) {
-      console.warn('Empty share');
-      await goto('/');
+      console.warn("Empty share");
+      await goto("/");
     }
     let noteParts = [];
 
@@ -25,22 +25,22 @@
     }
 
     if (text) {
-      let lines = text.split('\n');
-      if (lines[lines.length - 1].includes(':~:text=')) {
+      let lines = text.split("\n");
+      if (lines[lines.length - 1].includes(":~:text=")) {
         // remove included link to exact text in page if any
         // this happens when sharing text selection through a web browser
         lines.pop();
       }
-      noteParts.push(lines.join('\n'));
+      noteParts.push(lines.join("\n"));
     }
 
-    let body = noteParts.join('\n\n').trim();
+    let body = noteParts.join("\n\n").trim();
 
-    await globals.uiState.set('sharedNote', () => {
+    await globals.uiState.set("sharedNote", () => {
       return { title, body };
     });
     await delay(500);
-    await goto('/my/notes/add?from=share');
+    await goto("/my/notes/add?from=share");
   });
 </script>
 
@@ -48,7 +48,7 @@
   <MainNavigation />
   <main class="p__block-4">
     <LoadingState {isLoading}>
-      {$_('Traitement en cours…', '')}
+      {$_("Traitement en cours…", "")}
     </LoadingState>
   </main>
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import NoteForm from '$lib/components/NoteForm.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import NoteForm from "$lib/components/NoteForm.svelte";
 
   let { data } = $props();
   let key = $state(0);
@@ -15,7 +15,7 @@
         key++;
       }}
     >
-      {$_('Enregistrer', '')}
+      {$_("Enregistrer", "")}
     </a>
   </NoteForm>
 </main>

@@ -1,7 +1,7 @@
 // import { sentrySvelteKit } from '@sentry/sveltekit';
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
-import Icons from 'unplugin-icons/vite';
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vitest/config";
+import Icons from "unplugin-icons/vite";
 
 export default defineConfig({
   server: {
@@ -15,10 +15,10 @@ export default defineConfig({
     //   }
     // }),
     sveltekit(),
-    Icons({ compiler: 'svelte' }),
+    Icons({ compiler: "svelte" })
   ],
-  define: { global: 'window' }, // <--- Add "window" here
+  define: { global: "window" }, // <--- Add "window" here
   test: {
-    include: ['src/**/*.{test,spec}.{js,ts}']
+    include: ["src/**/*.{test,spec}.{js,ts}"]
   }
 });

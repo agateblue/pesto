@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
-  import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import IconaMoonSettings from "virtual:icons/iconamoon/settings";
+  import IconaMoonSignPlusCircle from "virtual:icons/iconamoon/sign-plus-circle";
 
-  import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  import DialogForm from '$lib/components/DialogForm.svelte';
-  import FormBuilder from '$lib/components/FormBuilder.svelte';
-  import FormRendered from '$lib/components/FormRendered.svelte';
-  import { goto } from '$app/navigation';
+  import MainNavigation from "$lib/components/MainNavigation.svelte";
+  import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
+  import DialogForm from "$lib/components/DialogForm.svelte";
+  import FormBuilder from "$lib/components/FormBuilder.svelte";
+  import FormRendered from "$lib/components/FormRendered.svelte";
+  import { goto } from "$app/navigation";
 
-  import { getRandomId, clearSubscriptions } from '$lib/ui';
+  import { getRandomId, clearSubscriptions } from "$lib/ui";
   import {
     type FormConfiguration,
     type DocumentType,
@@ -19,26 +19,25 @@
     getNewNote,
     createOrUpdateSetting,
     getNewFormFragment
-  } from '$lib/db';
-  import { onDestroy } from 'svelte';
-  import sortBy from 'lodash/sortBy';
+  } from "$lib/db";
+  import { onDestroy } from "svelte";
+  import sortBy from "lodash/sortBy";
 
   let editedForm: FormConfiguration | null = $state(null);
-  let subscriptions = [
-  ];
+  let subscriptions = [];
   let forms: DocumentType = $state([]);
   function loadForms() {
     return globals.db.documents
       .find({
         limit: 20000,
-        selector: { type: 'form' }
+        selector: { type: "form" }
       })
       .$.subscribe((documents) => {
         forms = sortBy(
           documents.map((d) => {
             return d.toMutableJSON();
           }),
-          ['data.name']
+          ["data.name"]
         );
       });
   }
@@ -59,7 +58,7 @@
       <header class="p__inline-3 flex__row flex__justify-between flex__align-center">
         <MainNavigationToggle class="layout__multi-hidden" />
 
-        <h2 class="flex__grow">{$_('Formulaires', '')}</h2>
+        <h2 class="flex__grow">{$_("Formulaires", "")}</h2>
 
         {#snippet plusIcon()}
           <IconaMoonSignPlusCircle
@@ -73,12 +72,12 @@
         <DialogForm
           anchorClass="button__icon"
           anchor={plusIcon}
-          anchorLabel={$_('Ajouter un formulaire', '')}
-          title={$_('Ajouter un formulaire', '')}
+          anchorLabel={$_("Ajouter un formulaire", "")}
+          title={$_("Ajouter un formulaire", "")}
           onopen={() =>
             (editedForm = {
               id: getRandomId().toLowerCase(),
-              name: $_('Mon formulaire', ''),
+              name: $_("Mon formulaire", ""),
               fields: []
             })}
           onsubmit={async (e: SubmitEvent) => {
@@ -91,7 +90,6 @@
             <FormBuilder bind:form={editedForm} />
           {/if}
         </DialogForm>
-
       </header>
       <div class="scroll p__inline-2">
         <div class="grid grid__gap">

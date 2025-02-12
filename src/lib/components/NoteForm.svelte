@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
 
-  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
-  import IconaMoonEye from 'virtual:icons/iconamoon/eye';
-  import FragmentEditor from './FragmentEditor.svelte';
-  import IconaMoonFileDocument from 'virtual:icons/iconamoon/file-document';
-  import MainNavigationToggle from './MainNavigationToggle.svelte';
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  import IconaMoonTrash from "virtual:icons/iconamoon/trash";
+  import IconaMoonEye from "virtual:icons/iconamoon/eye";
+  import FragmentEditor from "./FragmentEditor.svelte";
+  import IconaMoonFileDocument from "virtual:icons/iconamoon/file-document";
+  import MainNavigationToggle from "./MainNavigationToggle.svelte";
+  import { createEventDispatcher, onDestroy } from "svelte";
   import {
     type DocumentDocument,
     type DocumentType,
@@ -15,10 +15,10 @@
     buildUniqueId,
     getNewFormFragment,
     getNoteUpdateData
-  } from '$lib/db';
-  import sortBy from 'lodash/sortBy';
-  import DialogForm from './DialogForm.svelte';
-  import { clearSubscriptions } from '$lib/ui';
+  } from "$lib/db";
+  import sortBy from "lodash/sortBy";
+  import DialogForm from "./DialogForm.svelte";
+  import { clearSubscriptions } from "$lib/ui";
 
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
@@ -28,7 +28,7 @@
   interface Props {
     note: DocumentDocument | null;
     collection: string | null;
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
     onSubmitHandler?: Function;
   }
 
@@ -41,30 +41,30 @@
     selectedForm = localNote?.fragments?.form?.id;
   });
   function handleUpdate(n: DocumentDocument) {
-    dispatch('update', { note: n });
+    dispatch("update", { note: n });
   }
 
   let subscriptions = [
     globals.db?.documents
-      .findOne({ selector: { id: 'settings:board' } })
+      .findOne({ selector: { id: "settings:board" } })
       .$.subscribe((settings) => {
         columns = settings?.data.columns || [
-          $_('À faire', 'Colonne du tableau'),
-          $_('En cours', 'Colonne du tableau'),
-          $_('Terminé', 'Colonne du tableau')
+          $_("À faire", "Colonne du tableau"),
+          $_("En cours", "Colonne du tableau"),
+          $_("Terminé", "Colonne du tableau")
         ];
       }),
     globals.db.documents
       .find({
         limit: 20000,
-        selector: { type: 'form' }
+        selector: { type: "form" }
       })
       .$.subscribe((documents) => {
         forms = sortBy(
           documents.map((d) => {
             return d.toMutableJSON();
           }),
-          ['data.name']
+          ["data.name"]
         );
       })
   ];
@@ -77,9 +77,9 @@
     <MainNavigationToggle class="layout__multi-hidden" />
     <h2 class="flex__grow">
       {#if localNote}
-        {$_('Éditer cette note', '')}
+        {$_("Éditer cette note", "")}
       {:else}
-        {$_('Nouvelle note', '')}
+        {$_("Nouvelle note", "")}
       {/if}
     </h2>
 
@@ -88,8 +88,8 @@
         <a
           class="button__icon button layout__multi-hidden"
           href={`/my/notes/${localNote.id}?view=detail`}
-          aria-label={$_('Voir cette note', '')}
-          title={$_('Voir cette note', '')}
+          aria-label={$_("Voir cette note", "")}
+          title={$_("Voir cette note", "")}
         >
           <IconaMoonEye
             role="presentation"
@@ -112,9 +112,9 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_('Ajouter un formulaire', '')}
+          anchorLabel={$_("Ajouter un formulaire", "")}
           anchor={formIcon}
-          title={$_('Ajouter un formulaire', '')}
+          title={$_("Ajouter un formulaire", "")}
           onsubmit={async (e: SubmitEvent) => {
             if (!localNote) {
               let noteData = getNewNote();
@@ -137,7 +137,7 @@
           }}
         >
           <div class="form__field">
-            <label for="form-id">{$_('Formulaire', '')}</label>
+            <label for="form-id">{$_("Formulaire", "")}</label>
             <select name="form-id" id="form-id" bind:value={selectedForm}>
               <option value={undefined}>---</option>
               {#each forms as form}
@@ -145,7 +145,7 @@
               {/each}
             </select>
           </div>
-          <p>{$_('Attacher ce formulaire à la note.', '')}</p>
+          <p>{$_("Attacher ce formulaire à la note.", "")}</p>
         </DialogForm>
       {/if}
       {#if localNote}
@@ -160,13 +160,13 @@
         {/snippet}
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_('Supprimer cette note', '')}
+          anchorLabel={$_("Supprimer cette note", "")}
           anchor={trashIcon}
-          title={$_('Supprimer cette note ?', '')}
+          title={$_("Supprimer cette note ?", "")}
           onsubmit={(e: SubmitEvent) => {
             e.preventDefault();
             localNote.remove();
-            dispatch('delete', { note: localNote });
+            dispatch("delete", { note: localNote });
           }}
         >
           <p>This will remove the note from your diary. This action is irreversible.</p>

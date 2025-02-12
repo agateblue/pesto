@@ -32,7 +32,7 @@ You can preview the production build with `npm run preview`.
 ```
 server {
 
-    server_name yourdomain; 
+    server_name yourdomain;
     listen [::]:443 ssl;
     listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/yourdomain/fullchain.pem;
@@ -42,7 +42,7 @@ server {
 
     index index.html;
     root /var/www/html/pesto;
-    
+
     gzip_vary on;
     gzip_proxied any;
     gzip_comp_level 6;

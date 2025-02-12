@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import cloneDeep from 'lodash/cloneDeep';
-  import PasswordInput from '$lib/components/PasswordInput.svelte';
-  import { type AnyReplication } from '$lib/db';
-  import { PUBLIC_PESTO_DB_URL } from '$env/static/public';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import cloneDeep from "lodash/cloneDeep";
+  import PasswordInput from "$lib/components/PasswordInput.svelte";
+  import { type AnyReplication } from "$lib/db";
+  import { PUBLIC_PESTO_DB_URL } from "$env/static/public";
 
   interface Props {
     replication: AnyReplication;
@@ -11,13 +11,17 @@
     pestoServerError: string | null;
   }
 
-  let { replication = $bindable(), pestoServerInfo = $bindable(), pestoServerError = $bindable() }: Props = $props();
+  let {
+    replication = $bindable(),
+    pestoServerInfo = $bindable(),
+    pestoServerError = $bindable()
+  }: Props = $props();
   replication = cloneDeep(replication);
 </script>
 
-{#if replication.type === 'webrtc'}
+{#if replication.type === "webrtc"}
   <div class="form__field">
-    <label for="webrtc-signaling-server">{$_('Serveur de mise en relation', '')}</label>
+    <label for="webrtc-signaling-server">{$_("Serveur de mise en relation", "")}</label>
     <input
       type="text"
       id="webrtc-signaling-server"
@@ -27,7 +31,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="webrtc-room-id">{$_('Identifiant de salon', '')}</label>
+    <label for="webrtc-room-id">{$_("Identifiant de salon", "")}</label>
     <PasswordInput
       required
       name="webrtc-room-id"
@@ -37,16 +41,18 @@
     <p>
       {$_(
         "N'importe qui disposant de cette identifiant de salon pourra accéder à vos données. Protégez le comme un mot de passe.",
-        ''
+        ""
       )}
     </p>
   </div>
 {/if}
-{#if replication.type === 'pesto-server'}
+{#if replication.type === "pesto-server"}
   {#if pestoServerError}
-    <p class="message message__error">{pestoServerError }</p>
+    <p class="message message__error">{pestoServerError}</p>
     <p>
-      <a class="button" href={`${PUBLIC_PESTO_DB_URL}/sync/redirect/app/settings`}>{$_("Connexion", "")}</a>
+      <a class="button" href={`${PUBLIC_PESTO_DB_URL}/sync/redirect/app/settings`}
+        >{$_("Connexion", "")}</a
+      >
     </p>
   {/if}
   <div class="form__field">
@@ -61,8 +67,10 @@
   </div>
   {#if pestoServerInfo}
     <p>
-      {$_("Connecté·e en tant que %0", "", [pestoServerInfo.user.email])} <br>
-      <a class="button button__link" href={`${PUBLIC_PESTO_DB_URL}/accounts/logout/`}>{$_("Déconnexion…", "")}</a>
+      {$_("Connecté·e en tant que %0", "", [pestoServerInfo.user.email])} <br />
+      <a class="button button__link" href={`${PUBLIC_PESTO_DB_URL}/accounts/logout/`}
+        >{$_("Déconnexion…", "")}</a
+      >
     </p>
     <div class="form__field">
       <label for="pesto-server-database">{$_("Base de données", "")}</label>
@@ -79,9 +87,9 @@
     </div>
   {/if}
 {/if}
-{#if replication.type === 'couchdb'}
+{#if replication.type === "couchdb"}
   <div class="form__field">
-    <label for="couchdb-server">{$_('Serveur', '')}</label>
+    <label for="couchdb-server">{$_("Serveur", "")}</label>
     <input
       name="couchdb-server"
       id="couchdb-url"
@@ -91,7 +99,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-database">{$_('Base de données', '')}</label>
+    <label for="couchdb-database">{$_("Base de données", "")}</label>
     <input
       name="couchdb-database"
       id="couchdb-database"
@@ -100,7 +108,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-username">{$_("Nom d'utilisateur·ice", '')}</label>
+    <label for="couchdb-username">{$_("Nom d'utilisateur·ice", "")}</label>
     <input
       name="couchdb-username"
       id="couchdb-username"
@@ -109,7 +117,7 @@
     />
   </div>
   <div class="form__field">
-    <label for="couchdb-password">{$_('Mot de passe', '')}</label>
+    <label for="couchdb-password">{$_("Mot de passe", "")}</label>
     <PasswordInput
       name="couchdb-password"
       id="couchdb-password"
@@ -120,9 +128,9 @@
 {/if}
 <div class="form__field">
   <input id="push" name="push" type="checkbox" bind:checked={replication.push} />
-  <label for="push">{$_('Envoyer les changements locaux', '')}</label>
+  <label for="push">{$_("Envoyer les changements locaux", "")}</label>
 </div>
 <div class="form__field">
   <input id="pull" name="pull" type="checkbox" bind:checked={replication.pull} />
-  <label for="pull">{$_('Télécharger les changements distants', '')}</label>
+  <label for="pull">{$_("Télécharger les changements distants", "")}</label>
 </div>

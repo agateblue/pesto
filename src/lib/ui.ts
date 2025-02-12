@@ -1,16 +1,16 @@
-import DOMPurify from 'isomorphic-dompurify';
-import { marked } from 'marked';
-import debounce from 'lodash/debounce';
-import { type DocumentType, type TodolistType } from '$lib/db';
+import DOMPurify from "isomorphic-dompurify";
+import { marked } from "marked";
+import debounce from "lodash/debounce";
+import { type DocumentType, type TodolistType } from "$lib/db";
 
 export type LogMessage = {
   text: string;
-  type: 'debug' | 'info' | 'warning' | 'error' | 'critical' | 'success';
+  type: "debug" | "info" | "warning" | "error" | "critical" | "success";
 };
 
 export function ignoreTab(handler: Function) {
   return (e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       return e;
     }
     handler(e);
@@ -18,22 +18,22 @@ export function ignoreTab(handler: Function) {
 }
 
 const signToMood = {
-  '+': 1,
-  '-': -1,
-  '~': 0,
-  '?': null,
-  '#': null,
-  '!': null,
-  '@': null
+  "+": 1,
+  "-": -1,
+  "~": 0,
+  "?": null,
+  "#": null,
+  "!": null,
+  "@": null
 };
 export const signToType = {
-  '+': 'feeling',
-  '-': 'feeling',
-  '~': 'feeling',
-  '?': 'feeling',
-  '#': 'tag',
-  '!': 'tag',
-  '@': 'annotation'
+  "+": "feeling",
+  "-": "feeling",
+  "~": "feeling",
+  "?": "feeling",
+  "#": "tag",
+  "!": "tag",
+  "@": "annotation"
 };
 
 const tagRegex =
@@ -48,14 +48,14 @@ export function parseTags(text: string) {
       text: match[2],
       sign: match[3][0],
       fullSign: match[3],
-      id: match[4].replace(/"/g, ''),
+      id: match[4].replace(/"/g, ""),
       type: null,
       value: null
     };
     let include = true;
     tag.type = signToType[tag.sign];
-    if (tag.type === 'annotation') {
-      let parts = tag.id.replace(/"/g, '').split('=');
+    if (tag.type === "annotation") {
+      let parts = tag.id.replace(/"/g, "").split("=");
       tag.id = parts[0];
       tag.value = parts[1] || null;
     }
@@ -84,7 +84,7 @@ marked.use({
 
 export function renderMarkdown(text: string): string {
   text = insertTagMarkup(text);
-  return DOMPurify.sanitize(marked.parse(text || ''));
+  return DOMPurify.sanitize(marked.parse(text || ""));
 }
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -103,8 +103,8 @@ export function updateURLParam(searchParams, params: object[]) {
 }
 
 export function getRandomId(length = 8) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -140,13 +140,13 @@ export function makeFile(text: string, mimetype: string) {
 
 export function downloadFile(text: string, mimetype: string, name: string) {
   let f = makeFile(text, mimetype);
-  var link = document.createElement('a');
-  link.setAttribute('download', name);
+  var link = document.createElement("a");
+  link.setAttribute("download", name);
   link.href = f;
   document.body.appendChild(link);
 
   window.requestAnimationFrame(function () {
-    var event = new MouseEvent('click');
+    var event = new MouseEvent("click");
     link.dispatchEvent(event);
     document.body.removeChild(link);
   });
@@ -189,12 +189,12 @@ export function noteToText(note: DocumentType) {
     let formattedTodos = note.fragments.todolist.todos
       .filter((t) => t.text.trim())
       .map((t) => {
-        return `- [${t.done ? 'x' : ' '}] ${t.text.trim()}`;
+        return `- [${t.done ? "x" : " "}] ${t.text.trim()}`;
       });
-    let todos = formattedTodos.join('\n');
+    let todos = formattedTodos.join("\n");
     if (todos.trim()) {
       parts.push(todos);
     }
   }
-  return parts.join('\n\n');
+  return parts.join("\n\n");
 }

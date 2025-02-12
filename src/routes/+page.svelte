@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
-  import { globals } from '$lib/db';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+  import { globals } from "$lib/db";
 
   let migrationNeeded: boolean | null = $state(null);
   let migrationState: object | null = $state(null);
@@ -13,8 +13,8 @@
       globals.db.documents.getMigrationState().$.subscribe(
         (state) => {
           migrationState = state;
-          console.log('State', state);
-          if (state.status === 'DONE') {
+          console.log("State", state);
+          if (state.status === "DONE") {
             setTimeout(async () => {
               location.reload();
             }, 3000);
@@ -22,11 +22,11 @@
         },
         (error) => {
           migrationError = error;
-          console.log('HELLO', migrationError);
+          console.log("HELLO", migrationError);
         }
       );
     } else {
-      await goto('/my');
+      await goto("/my");
     }
   });
 </script>
@@ -35,9 +35,9 @@
   <main>
     <div class="wrapper">
       <header class="p__inline-3">
-        <h1>{$_('Chargement de Pesto', '')}</h1>
+        <h1>{$_("Chargement de Pesto", "")}</h1>
         {#if migrationNeeded}
-          <p>{$_('Préparation des données pour la nouvelle version', '')}</p>
+          <p>{$_("Préparation des données pour la nouvelle version", "")}</p>
           <div role="status" aria-live="polite">
             {#if migrationState}
               <p>
@@ -48,8 +48,8 @@
               {#if migrationState.error}
                 <p><strong>{migrationState.error.message}</strong></p>
               {/if}
-              {#if migrationState.status === 'DONE'}
-                <p>{$_('Préparation des données terminée, vous serez redirigé·e sous peu…', '')}</p>
+              {#if migrationState.status === "DONE"}
+                <p>{$_("Préparation des données terminée, vous serez redirigé·e sous peu…", "")}</p>
               {/if}
             {/if}
           </div>

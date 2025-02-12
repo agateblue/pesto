@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { LogMessage } from '$lib/ui';
+  import type { LogMessage } from "$lib/ui";
 
   interface Props {
     messages: LogMessage[];
     forEl?: string;
   }
-  let { messages, forEl = '' } = $props();
+  let { messages, forEl = "" } = $props();
 </script>
 
 <output for={forEl}>

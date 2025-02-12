@@ -1,5 +1,5 @@
 <script>
-  import { _, _n } from '$lib/i18n/index.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
   /**
    * @typedef {Object} Props
    * @property {boolean} [show]
@@ -12,7 +12,7 @@
 
 <input
   {value}
-  type={show ? 'text' : 'password'}
+  type={show ? "text" : "password"}
   {...rest}
   oninput={(e) => {
     value = e.target.value;
@@ -20,5 +20,5 @@
 />
 
 <button type="button" onclick={() => (show = !show)}
-  >{show ? $_('Masquer', '') : $_('Montrer', '')}</button
+  >{show ? $_("Masquer", "") : $_("Montrer", "")}</button
 >

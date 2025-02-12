@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { type DocumentDocument } from '$lib/db';
-  import EmojiPicker from './EmojiPicker.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { type DocumentDocument } from "$lib/db";
+  import EmojiPicker from "./EmojiPicker.svelte";
   interface Props {
     collection: DocumentDocument;
   }
@@ -11,13 +11,13 @@
 
 <div class="form__field">
   <label for="collection-name">
-    {$_('Nom', '')}
+    {$_("Nom", "")}
   </label>
   <input type="text" id="collection-name" name="collection-name" bind:value={collection.title} />
 </div>
 <div class="form__field">
   <label for="collection-query">
-    {$_('Requête', '')}
+    {$_("Requête", "")}
   </label>
   <textarea
     class="autoresize"
@@ -27,11 +27,11 @@
   >
   </textarea>
   <p class="form__help">
-    {$_('Inclure automatiquement dan la collection les notes correspondant à cette requête.', '')}
+    {$_("Inclure automatiquement dan la collection les notes correspondant à cette requête.", "")}
   </p>
 </div>
 <div class="form__field">
-  <label for="collection-icon">{$_('Icône :', '')} {collection.data.emoji || '📋️'}</label>
+  <label for="collection-icon">{$_("Icône :", "")} {collection.data.emoji || "📋️"}</label>
   <EmojiPicker
     onEmojiClick={(e) => {
       collection.data.emoji = e.detail.unicode;

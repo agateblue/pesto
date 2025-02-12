@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import debounce from 'lodash/debounce';
-  import isEmpty from 'lodash/isEmpty';
-  import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import debounce from "lodash/debounce";
+  import isEmpty from "lodash/isEmpty";
+  import TodoListFragmentEditor from "./TodoListFragmentEditor.svelte";
   import {
     type DocumentDocument,
     type TodolistType,
     getNoteUpdateData,
     formatDateShort,
     globals
-  } from '$lib/db';
-  import { createEventDispatcher } from 'svelte';
-  import IconaMoonMoveThin from 'virtual:icons/iconamoon/move-thin';
-  import { onDestroy } from 'svelte';
-  import { clearSubscriptions } from '$lib/ui';
+  } from "$lib/db";
+  import { createEventDispatcher } from "svelte";
+  import IconaMoonMoveThin from "virtual:icons/iconamoon/move-thin";
+  import { onDestroy } from "svelte";
+  import { clearSubscriptions } from "$lib/ui";
 
   const dispatch = createEventDispatcher<{
     delete: { note: DocumentDocument };
@@ -59,7 +59,7 @@
   <div class="flex__row flex__grow flex__align-center">
     <span
       use:dragHandle
-      aria-label={$_('Poignée pour glisser/déposer %0', '', [
+      aria-label={$_("Poignée pour glisser/déposer %0", "", [
         note.title || note.fragments?.todolist?.todos[0]?.text
       ])}
     >

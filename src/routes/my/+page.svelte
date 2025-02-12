@@ -1,36 +1,36 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import IconaMoonClose from 'virtual:icons/iconamoon/close';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import IconaMoonClose from "virtual:icons/iconamoon/close";
 
-  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  import NoteForm from '$lib/components/NoteForm.svelte';
-  import NoteList from '$lib/components/NoteList.svelte';
-  import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
+  import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
+  import NoteForm from "$lib/components/NoteForm.svelte";
+  import NoteList from "$lib/components/NoteList.svelte";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
 
-  import { updateURLParam } from '$lib/ui';
-  import { tick } from 'svelte';
+  import { updateURLParam } from "$lib/ui";
+  import { tick } from "svelte";
 
   let { data, children } = $props();
 
-  let searchQuery = $state('');
-  let orderQuery = $state('id:desc');
-  let action = $state('');
+  let searchQuery = $state("");
+  let orderQuery = $state("id:desc");
+  let action = $state("");
   let noteFormKey = $state(0);
   let searchInput: HTMLInputElement;
   function triggerSearch() {
     let params = updateURLParam($page.url.searchParams, [
-      { param: 'q', value: searchQuery },
-      { param: 'action', value: 'search' }
+      { param: "q", value: searchQuery },
+      { param: "action", value: "search" }
     ]);
     goto(`?${params.toString()}`);
   }
   $effect(() => {
-    searchQuery = $page.url.searchParams.get('q') || '';
-    orderQuery = $page.url.searchParams.get('o') || 'id:desc';
-    action = $page.url.searchParams.get('action') || '';
+    searchQuery = $page.url.searchParams.get("q") || "";
+    orderQuery = $page.url.searchParams.get("o") || "id:desc";
+    action = $page.url.searchParams.get("action") || "";
     tick().then(() => {
-      if (action === 'search') {
+      if (action === "search") {
         searchInput.focus();
       }
     });
@@ -48,11 +48,11 @@
         autocomplete="off"
         name="search"
         id="search"
-        placeholder={$_('Rechercher', '')}
+        placeholder={$_("Rechercher", "")}
         value={searchQuery}
         onkeydown={async (e) => {
-          if (e.key === 'Enter') {
-            action = '';
+          if (e.key === "Enter") {
+            action = "";
             searchQuery = e.target.value.trim();
             triggerSearch();
           }
@@ -62,9 +62,9 @@
         <button
           type="button"
           class="button__icon"
-          aria-label={$_('Effacer la recherche', '')}
+          aria-label={$_("Effacer la recherche", "")}
           onclick={() => {
-            searchQuery = '';
+            searchQuery = "";
             triggerSearch();
           }}
         >
@@ -102,7 +102,7 @@
           noteFormKey++;
         }}
       >
-        <button type="submit"> {$_('Enregistrer et rédiger une nouvelle note', '')} </button>
+        <button type="submit"> {$_("Enregistrer et rédiger une nouvelle note", "")} </button>
       </NoteForm>
     {/key}
   </section>

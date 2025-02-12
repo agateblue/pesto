@@ -1,8 +1,8 @@
 <script lang="ts">
-  import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
+  import IconaMoonSettings from "virtual:icons/iconamoon/settings";
 
   interface Props {
-    children: import('svelte').Snippet;
+    children: import("svelte").Snippet;
     isLoading: boolean;
   }
 

@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
 
-  import IconaMoonTrash from 'virtual:icons/iconamoon/trash';
-  import IconaMoonEdit from 'virtual:icons/iconamoon/edit';
+  import IconaMoonTrash from "virtual:icons/iconamoon/trash";
+  import IconaMoonEdit from "virtual:icons/iconamoon/edit";
 
-  import DialogForm from '$lib/components/DialogForm.svelte';
-  import CollectionForm from '$lib/components/CollectionForm.svelte';
-  import RenderedNote from '$lib/components/RenderedNote.svelte';
-  import LoadingState from '$lib/components/LoadingState.svelte';
+  import DialogForm from "$lib/components/DialogForm.svelte";
+  import CollectionForm from "$lib/components/CollectionForm.svelte";
+  import RenderedNote from "$lib/components/RenderedNote.svelte";
+  import LoadingState from "$lib/components/LoadingState.svelte";
   import {
     type DocumentDocument,
     globals,
     getById,
     type DocumentType,
     getNoteSelector
-  } from '$lib/db';
-  import { clearSubscriptions } from '$lib/ui';
-  import { onDestroy } from 'svelte';
-  import { goto } from '$app/navigation';
-  import cloneDeep from 'lodash/cloneDeep';
+  } from "$lib/db";
+  import { clearSubscriptions } from "$lib/ui";
+  import { onDestroy } from "svelte";
+  import { goto } from "$app/navigation";
+  import cloneDeep from "lodash/cloneDeep";
   interface Props {
     searchQuery: string;
     orderQuery: string;
@@ -37,7 +37,7 @@
   const PAGE_SIZE = 20;
   function getSortFromOrderQuery(o: string) {
     let field, direction;
-    [field, direction] = o.split(':');
+    [field, direction] = o.split(":");
     let sort = {};
     sort[field] = direction;
     return sort;
@@ -51,7 +51,7 @@
       .find({
         limit: PAGE_SIZE,
         sort: [getSortFromOrderQuery(o)],
-        selector: { type: 'note', ...getNoteSelector(q, currentCollection) }
+        selector: { type: "note", ...getNoteSelector(q, currentCollection) }
       })
       .$.subscribe((documents) => {
         isLoading = false;
@@ -59,7 +59,7 @@
         clearSubscriptions([countSubscription]);
         countSubscription = globals.db.documents
           .count({
-            selector: { type: 'note', ...getNoteSelector(q, currentCollection) }
+            selector: { type: "note", ...getNoteSelector(q, currentCollection) }
           })
           .$.subscribe((count) => {
             matchingCount = count;
@@ -84,7 +84,7 @@
       {#if collection}
         <div class="flex__grow">
           <strong>
-            {currentCollection.data.emoji || '📋️'}
+            {currentCollection.data.emoji || "📋️"}
             {currentCollection.title}
           </strong>
 
@@ -126,23 +126,23 @@
           {/snippet}
           <DialogForm
             anchorClass="button__icon"
-            anchorLabel={$_('Supprimer la collection %0', '', [collection.title])}
+            anchorLabel={$_("Supprimer la collection %0", "", [collection.title])}
             anchor={trashIcon}
-            title={$_('Supprimer la collection %0', '', [collection.title])}
+            title={$_("Supprimer la collection %0", "", [collection.title])}
             onsubmit={async (e: SubmitEvent) => {
               await globals.db.documents
                 .find({ selector: { col: collection.id } })
                 .patch({ col: null });
               let document = await getById(globals.db.documents, collection.id);
               await document.remove();
-              goto('/my');
+              goto("/my");
               return e.preventDefault();
             }}
           >
             <p>
               {$_(
-                'Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible.',
-                ''
+                "Souhaitez vous supprimer cette collection ? Les notes et données associées seront conservées. Cette action est irréversible.",
+                ""
               )}
             </p>
           </DialogForm>
@@ -155,7 +155,7 @@
       {/if}
     </header>
   {/if}
-  <LoadingState {isLoading}>{$_('Chargement des notes…', '')}</LoadingState>
+  <LoadingState {isLoading}>{$_("Chargement des notes…", "")}</LoadingState>
   {#each notes as note}
     {#key note._rev}
       <RenderedNote
@@ -176,14 +176,14 @@
               limit: PAGE_SIZE,
               sort: [getSortFromOrderQuery(orderQuery)],
               selector: {
-                type: 'note',
+                type: "note",
                 id: { $lt: notes.slice(-1)[0].id },
                 ...getNoteSelector(searchQuery, collection)
               }
             })
             .exec();
           notes = [...notes, ...newNotes];
-        }}>{$_('Afficher plus de notes', '')}</button
+        }}>{$_("Afficher plus de notes", "")}</button
       >
     </div>
   {/if}

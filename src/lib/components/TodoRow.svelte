@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { preventDefault } from 'svelte/legacy';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { preventDefault } from "svelte/legacy";
 
-  import { createEventDispatcher, onMount } from 'svelte';
-  import IconaMoonClose from 'virtual:icons/iconamoon/close';
+  import { createEventDispatcher, onMount } from "svelte";
+  import IconaMoonClose from "virtual:icons/iconamoon/close";
 
-  import { type TodoType } from '$lib/db';
-  import { ignoreTab, renderMarkdown, getRandomId } from '$lib/ui';
+  import { type TodoType } from "$lib/db";
+  import { ignoreTab, renderMarkdown, getRandomId } from "$lib/ui";
 
   const dispatch = createEventDispatcher<{
     update: { todo: TodoType };
@@ -26,7 +26,7 @@
   let id = $state(getRandomId());
   let textarea: HTMLTextAreaElement;
   function handleChange(args = {}) {
-    dispatch('update', { todo: { ...todo, ...args } });
+    dispatch("update", { todo: { ...todo, ...args } });
   }
   onMount(() => {
     if (autofocus) {
@@ -57,29 +57,29 @@
       autocomplete="off"
       id={`todo-${id}-text`}
       bind:this={textarea}
-      value={todo.text || ''}
+      value={todo.text || ""}
       oninput={ignoreTab((e) => {
         handleChange({ text: e.target.value });
       })}
-      placeholder={$_('Ajouter une nouvelle tâche…', '')}
+      placeholder={$_("Ajouter une nouvelle tâche…", "")}
       rows="1"
-      aria-label={$_('Ajouter une nouvelle tâche…', '')}
+      aria-label={$_("Ajouter une nouvelle tâche…", "")}
       {onblur}
       {onfocus}
     ></textarea>
   {:else}
     <label class="flex__grow flow m__block-2" for={`todo-${id}-done`}>
-      {@html renderMarkdown(todo.text || '')}
+      {@html renderMarkdown(todo.text || "")}
     </label>
   {/if}
   {#if showDelete}
     <button
       class="button__icon"
       onclick={preventDefault((e) => {
-        dispatch('delete');
+        dispatch("delete");
       })}
-      aria-label={$_('Supprimer la tâche', '')}
-      title={$_('Supprimer la tâche', '')}
+      aria-label={$_("Supprimer la tâche", "")}
+      title={$_("Supprimer la tâche", "")}
     >
       <IconaMoonClose class="icon__size-3" height="none" width="none" role="presentation" alt="" />
     </button>

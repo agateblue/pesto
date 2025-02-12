@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import IconaMoonSettings from 'virtual:icons/iconamoon/settings';
-  import IconaMoonSignPlusCircle from 'virtual:icons/iconamoon/sign-plus-circle';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import IconaMoonSettings from "virtual:icons/iconamoon/settings";
+  import IconaMoonSignPlusCircle from "virtual:icons/iconamoon/sign-plus-circle";
 
-  import MainNavigation from '$lib/components/MainNavigation.svelte';
-  import TodoCard from '$lib/components/TodoCard.svelte';
-  import MainNavigationToggle from '$lib/components/MainNavigationToggle.svelte';
-  import LoadingState from '$lib/components/LoadingState.svelte';
-  import DialogForm from '$lib/components/DialogForm.svelte';
-  import { type RxDocument } from 'rxdb';
+  import MainNavigation from "$lib/components/MainNavigation.svelte";
+  import TodoCard from "$lib/components/TodoCard.svelte";
+  import MainNavigationToggle from "$lib/components/MainNavigationToggle.svelte";
+  import LoadingState from "$lib/components/LoadingState.svelte";
+  import DialogForm from "$lib/components/DialogForm.svelte";
+  import { type RxDocument } from "rxdb";
   import {
     globals,
     getNewNote,
     getNewTodoListFragment,
     createOrUpdateSetting,
     getNewTodo
-  } from '$lib/db';
-  import type { MangoQuerySelector } from 'rxdb';
+  } from "$lib/db";
+  import type { MangoQuerySelector } from "rxdb";
 
-  import { flip } from 'svelte/animate';
-  import { dragHandle, dragHandleZone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action';
+  import { flip } from "svelte/animate";
+  import { dragHandle, dragHandleZone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
 
   async function handleDndConsider(e, column: BoardColumn) {
     column.cards = e.detail.items;
@@ -37,8 +37,8 @@
     };
     let updateData = {
       modified_at: new Date().toISOString(),
-      'fragments.todolist.column': newColumnIndex,
-      'fragments.todolist.done': newColumnIndex === -1 ? true : false
+      "fragments.todolist.column": newColumnIndex,
+      "fragments.todolist.done": newColumnIndex === -1 ? true : false
     };
     await globals.db?.documents.find({ selector }).update({
       $set: updateData
@@ -54,38 +54,38 @@
   };
 
   type SettingsBoard = DocumentType & {
-    id: 'settings:board';
+    id: "settings:board";
     data: {
       columns: string[];
     };
   };
 
   const FIRST_COLUMN_SELECTOR = {
-    'fragments.todolist.done': { $eq: false },
+    "fragments.todolist.done": { $eq: false },
     $or: [
-      { 'fragments.todolist.column': { $eq: 0 } },
-      { 'fragments.todolist.column': { $exists: false } }
+      { "fragments.todolist.column": { $eq: 0 } },
+      { "fragments.todolist.column": { $exists: false } }
     ]
   };
-  const DONE_COLUMN_SELECTOR = { 'fragments.todolist.done': { $eq: true } };
-  const DEFAULT_COLUMN_SIZE = 25
+  const DONE_COLUMN_SELECTOR = { "fragments.todolist.done": { $eq: true } };
+  const DEFAULT_COLUMN_SIZE = 25;
   function getColumnSelector(i: number) {
-    return { 'fragments.todolist.done': { $eq: false }, 'fragments.todolist.column': { $eq: i } };
+    return { "fragments.todolist.done": { $eq: false }, "fragments.todolist.column": { $eq: i } };
   }
 
   let columns: BoardColumn[] = $state([]);
   let boardColumnsConfig: string[] = $state([]);
 
-  let autofocusKey: string = $state('noop');
+  let autofocusKey: string = $state("noop");
 
   globals.db?.documents
-    .findOne({ selector: { id: 'settings:board' } })
+    .findOne({ selector: { id: "settings:board" } })
     .$.subscribe((settings: RxDocument<SettingsBoard> | null) => {
       if (!settings) {
         // we use the default settings
         columns = [
           {
-            name: $_('À faire', 'Colonne du tableau'),
+            name: $_("À faire", "Colonne du tableau"),
             cards: [],
             index: 0,
             limit: DEFAULT_COLUMN_SIZE,
@@ -93,7 +93,7 @@
             isLoading: true
           },
           {
-            name: $_('En cours', 'Colonne du tableau'),
+            name: $_("En cours", "Colonne du tableau"),
             cards: [],
             index: 1,
             limit: DEFAULT_COLUMN_SIZE,
@@ -101,7 +101,7 @@
             isLoading: true
           },
           {
-            name: $_('Terminé', 'Colonne du tableau'),
+            name: $_("Terminé", "Colonne du tableau"),
             cards: [],
             index: -1,
             limit: DEFAULT_COLUMN_SIZE,
@@ -117,7 +117,7 @@
             index: i,
             selector: getColumnSelector(i),
             isLoading: true,
-            limit: DEFAULT_COLUMN_SIZE,
+            limit: DEFAULT_COLUMN_SIZE
           };
           if (i === 0) {
             // unassign entries go to the first column
@@ -138,7 +138,7 @@
         globals.db.documents
           .find({
             limit: v.limit,
-            sort: [v.index === -1 ? { modified_at: 'desc' } : { created_at: 'desc' }],
+            sort: [v.index === -1 ? { modified_at: "desc" } : { created_at: "desc" }],
             selector: v.selector
           })
           .$.subscribe((notes) => {
@@ -154,7 +154,7 @@
     });
 
   async function saveBoard() {
-    return await createOrUpdateSetting('settings:board', { columns: boardColumnsConfig });
+    return await createOrUpdateSetting("settings:board", { columns: boardColumnsConfig });
   }
 </script>
 
@@ -177,9 +177,9 @@
 
         <DialogForm
           anchorClass="button__icon"
-          anchorLabel={$_('Réglages du tableau', '')}
+          anchorLabel={$_("Réglages du tableau", "")}
           anchor={settingsIcon}
-          title={$_('Réglages du tableau', '')}
+          title={$_("Réglages du tableau", "")}
           onsubmit={async (e: SubmitEvent) => {
             saveBoard();
             e.preventDefault();
@@ -188,7 +188,7 @@
         >
           {#each boardColumnsConfig as column, i (i)}
             <div class="form__field">
-              <label for={`column-${i}`}>{$_('Colonne %0', 'Tableau', [i + 1])}</label>
+              <label for={`column-${i}`}>{$_("Colonne %0", "Tableau", [i + 1])}</label>
               <input
                 type="text"
                 id={`column-${i}`}
@@ -201,7 +201,7 @@
                   onclick={() => {
                     boardColumnsConfig.splice(i, 1);
                     boardColumnsConfig = [...boardColumnsConfig];
-                  }}>{$_('Supprimer', '')}</button
+                  }}>{$_("Supprimer", "")}</button
                 >
               {/if}
             </div>
@@ -211,10 +211,10 @@
             onclick={() => {
               boardColumnsConfig = [
                 ...boardColumnsConfig.slice(0, boardColumnsConfig.length - 1),
-                'New column',
+                "New column",
                 ...boardColumnsConfig.slice(-1)
               ];
-            }}>{$_('Ajouter une colonne', '')}</button
+            }}>{$_("Ajouter une colonne", "")}</button
           >
         </DialogForm>
       </header>
@@ -234,7 +234,7 @@
                   type="button"
                   aria-label={`Add todo in ${column.name}`}
                   title={`Add todo in ${column.name}`}
-                  style={column.index === -1 ? 'visibility: hidden' : ''}
+                  style={column.index === -1 ? "visibility: hidden" : ""}
                   onclick={async (e) => {
                     let note = getNewNote();
                     note.fragments.todolist = getNewTodoListFragment();
@@ -256,7 +256,11 @@
               <LoadingState isLoading={column.isLoading}>Loading data…</LoadingState>
               <ol
                 class="flex__grow | p__block-0 p__inline-0 | flow"
-                use:dragHandleZone={{ items: column.cards, flipDurationMs: 100, dropTargetStyle: {} }}
+                use:dragHandleZone={{
+                  items: column.cards,
+                  flipDurationMs: 100,
+                  dropTargetStyle: {}
+                }}
                 onconsider={async (e) => handleDndConsider(e, column)}
                 onfinalize={async (e) => handleDndFinalize(e, column)}
                 data-target={column.index}
@@ -272,7 +276,7 @@
                       }}
                     />
                     {#if item[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-                      <div class='dnd__shadow-item'>{$_("Déposer ici", "Tableau")}</div>
+                      <div class="dnd__shadow-item">{$_("Déposer ici", "Tableau")}</div>
                     {/if}
                   </li>
                 {/each}
@@ -283,7 +287,7 @@
                     let newCards = await globals.db.documents
                       .find({
                         limit: column.limit,
-                        sort: [{ modified_at: 'desc' }],
+                        sort: [{ modified_at: "desc" }],
                         selector: {
                           id: { $lt: column.cards.slice(-1)[0].id },
                           ...column.selector
@@ -296,7 +300,7 @@
                         return { id: n.id, note: n };
                       })
                     ];
-                  }}>{$_('Afficher plus', '')}</button
+                  }}>{$_("Afficher plus", "")}</button
                 >
               {/if}
             </section>

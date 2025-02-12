@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { globals } from '$lib/db';
-  import { onDestroy, onMount } from 'svelte';
-  import type { HTMLSelectAttributes } from 'svelte/elements';
+  import { globals } from "$lib/db";
+  import { onDestroy, onMount } from "svelte";
+  import type { HTMLSelectAttributes } from "svelte/elements";
   interface Props extends HTMLSelectAttributes {
     findOptions: object;
     choiceConverter: Function;
   }
 
-  let select = $state(document.createElement('select'));
+  let select = $state(document.createElement("select"));
   let choices = $state([]);
   let subscription = null;
 

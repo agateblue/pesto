@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { createEventDispatcher } from 'svelte';
-  import { onDestroy } from 'svelte';
-  import { type TextType } from '$lib/db';
-  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
-  import TextareaAutocomplete from './TextareaAutocomplete.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { createEventDispatcher } from "svelte";
+  import { onDestroy } from "svelte";
+  import { type TextType } from "$lib/db";
+  import { syncPropertiesWithExternalChanges, clearSubscriptions } from "$lib/ui";
+  import TextareaAutocomplete from "./TextareaAutocomplete.svelte";
   const dispatch = createEventDispatcher<{
     update: { fragment: TextType };
     delete: {};
@@ -29,21 +29,21 @@
   onDestroy(clearSubscriptions(subscriptions));
   function handleChange(content) {
     if (content) {
-      dispatch('update', { fragment: { ...fragment, content } });
+      dispatch("update", { fragment: { ...fragment, content } });
     } else {
-      dispatch('delete', {});
+      dispatch("delete", {});
     }
   }
 </script>
 
 <div class="form__field">
-  <label for={fieldId}>{$_('Contenu', '')}</label>
+  <label for={fieldId}>{$_("Contenu", "")}</label>
   <TextareaAutocomplete
     id={fieldId}
     onfocus={() => (focused = true)}
     onblur={() => (focused = false)}
     class="editor autoresize"
-    placeholder={$_('Quoi de neuf ?', '')}
+    placeholder={$_("Quoi de neuf ?", "")}
     oninput={(e) => handleChange(e.target.value)}
     value={content}
   ></TextareaAutocomplete>

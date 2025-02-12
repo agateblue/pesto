@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { globals, type FormFieldConfiguration } from '$lib/db';
-  import sortBy from 'lodash/sortBy';
+  import { globals, type FormFieldConfiguration } from "$lib/db";
+  import sortBy from "lodash/sortBy";
 
   interface Props {
-    children: import('svelte').Snippet;
+    children: import("svelte").Snippet;
     formId: string;
     field: FormFieldConfiguration;
     label?: string;
@@ -24,7 +24,7 @@
       .find({
         limit: 300,
         selector,
-        sort: [{ id: 'desc' }]
+        sort: [{ id: "desc" }]
       })
       .exec();
     for (const result of results) {
@@ -39,7 +39,7 @@
 </script>
 
 <div class="form__field">
-  {#if field.type === 'text' || field.type === 'number'}
+  {#if field.type === "text" || field.type === "number"}
     <label for={`field-${formId}-${field.id}`}>{label || field.label}</label>
     <input
       onfocus={() => {
@@ -58,7 +58,7 @@
       {/each}
     </datalist>
   {/if}
-  {#if field.type === 'boolean'}
+  {#if field.type === "boolean"}
     <input
       id={`field-${formId}-${field.id}`}
       name={`field-${formId}-${field.id}`}

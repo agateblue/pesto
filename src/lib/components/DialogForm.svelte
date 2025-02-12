@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { preventDefault } from 'svelte/legacy';
-  import IconaMoonClose from 'virtual:icons/iconamoon/close';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { preventDefault } from "svelte/legacy";
+  import IconaMoonClose from "virtual:icons/iconamoon/close";
 
   interface Props {
     anchorClass: string;
     anchorText?: string;
     anchorLabel?: string;
     title: string;
-    anchor: import('svelte').Snippet;
-    children: import('svelte').Snippet;
+    anchor: import("svelte").Snippet;
+    children: import("svelte").Snippet;
     onsubmit: Function;
     onopen?: Function;
   }
@@ -17,7 +17,7 @@
   let { anchorClass, anchorText, anchorLabel, children, anchor, onsubmit, title, onopen }: Props =
     $props();
   let dialog: HTMLDialogElement;
-  let isOpen = $state(false)
+  let isOpen = $state(false);
 </script>
 
 <button
@@ -27,7 +27,7 @@
   title={anchorLabel}
   onclick={() => {
     onopen ? onopen() : null;
-    isOpen = true
+    isOpen = true;
     dialog.showModal();
   }}
 >
@@ -44,11 +44,11 @@
       <button
         type="button"
         class="button__icon"
-        aria-label={$_('Fermer la fenêtre', '')}
-        title={$_('Fermer la fenêtre', '')}
+        aria-label={$_("Fermer la fenêtre", "")}
+        title={$_("Fermer la fenêtre", "")}
         onclick={() => {
           dialog.close();
-          isOpen = false
+          isOpen = false;
         }}
       >
         <IconaMoonClose
@@ -79,8 +79,8 @@
         type="submit"
         onclick={(e) => {
           dialog.close();
-          isOpen = false
-        }}>{$_('Confirmer', '')}</button
+          isOpen = false;
+        }}>{$_("Confirmer", "")}</button
       >
     </form>
   </div>

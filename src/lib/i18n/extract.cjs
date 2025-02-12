@@ -1,9 +1,9 @@
-const { GettextExtractor } = require('@rgglez/gettext-extractor');
-const pofile = require('pofile');
-const fs = require('fs');
+const { GettextExtractor } = require("@rgglez/gettext-extractor");
+const pofile = require("pofile");
+const fs = require("fs");
 
-const { RegexUtils } = require('@rgglez/gettext-extractor/dist/regex/utils');
-const { Validate } = require('@rgglez/gettext-extractor/dist/utils/validate');
+const { RegexUtils } = require("@rgglez/gettext-extractor/dist/regex/utils");
+const { Validate } = require("@rgglez/gettext-extractor/dist/utils/validate");
 
 // type IAddConditionExtractorArgument = {
 //   regex: RegExp,
@@ -15,22 +15,22 @@ function addConditionExtractor({ regex, text, textPlural, context }) {
   // to support context strings
   Validate.required.argument({ regex });
   Validate.required.argument({ text });
-  Validate.required.regexProperty({ regex }, 'arguments[0].regex');
-  Validate.required.numberProperty({ text }, 'arguments[0].text');
-  Validate.optional.numberProperty({ textPlural }, 'arguments[0].textPlural');
-  Validate.optional.numberProperty({ context }, 'arguments[0].context');
+  Validate.required.regexProperty({ regex }, "arguments[0].regex");
+  Validate.required.numberProperty({ text }, "arguments[0].text");
+  Validate.optional.numberProperty({ textPlural }, "arguments[0].textPlural");
+  Validate.optional.numberProperty({ context }, "arguments[0].context");
 
   return (sourceFileContent, sourceFilePath, messages) => {
     // Check if the flags have a global flag
-    if (regex.flags.indexOf('g') === -1) {
+    if (regex.flags.indexOf("g") === -1) {
       // If not, add it.
-      regex = new RegExp(regex.source, regex.flags + 'g');
+      regex = new RegExp(regex.source, regex.flags + "g");
     }
 
     // Check if the flags have a multiline flag
-    if (regex.flags.indexOf('m') === -1) {
+    if (regex.flags.indexOf("m") === -1) {
       // If not, add it.
-      regex = new RegExp(regex.source, regex.flags + 'm');
+      regex = new RegExp(regex.source, regex.flags + "m");
     }
 
     const matches = sourceFileContent.match(regex);
@@ -74,7 +74,7 @@ extractor
       context: 2
     })
   ])
-  .parseFilesGlob('./src/**/*.@(ts|js|tsx|jsx|svelte)');
+  .parseFilesGlob("./src/**/*.@(ts|js|tsx|jsx|svelte)");
 
 extractor
   .createRegexParser([
@@ -86,17 +86,17 @@ extractor
       context: 4
     })
   ])
-  .parseFilesGlob('./src/**/*.@(ts|js|tsx|jsx|svelte)');
+  .parseFilesGlob("./src/**/*.@(ts|js|tsx|jsx|svelte)");
 
 function getPotString(headers = {}) {
   const po = new pofile();
   po.items = extractor
     .getPofileItems()
     .sort((a, b) => (a.references.sort()[0] > b.references.sort()[0] ? 1 : -1));
-  po.headers = Object.assign({ 'Content-Type': 'text/plain; charset=UTF-8' }, headers);
+  po.headers = Object.assign({ "Content-Type": "text/plain; charset=UTF-8" }, headers);
   return po.toString();
 }
 
-fs.writeFileSync('./src/lib/i18n/messages/messages.pot', getPotString());
+fs.writeFileSync("./src/lib/i18n/messages/messages.pot", getPotString());
 
 extractor.printStats();

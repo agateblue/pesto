@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
-export const lang = writable('fr-FR');
+export const lang = writable("fr-FR");
 export const parsedTranslations = writable({});

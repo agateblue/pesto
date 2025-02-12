@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import type { HTMLBaseAttributes } from 'svelte/elements';
+  import { onMount } from "svelte";
+  import type { HTMLBaseAttributes } from "svelte/elements";
   interface Props extends HTMLBaseAttributes {
-    children: import('svelte').Snippet;
-    control: import('svelte').Snippet;
+    children: import("svelte").Snippet;
+    control: import("svelte").Snippet;
     controlClass?: string;
   }
   let el;
@@ -12,7 +12,7 @@
 
 <details
   bind:this={el}
-  class={'dropdown ' + (restProps.class || '')}
+  class={"dropdown " + (restProps.class || "")}
   onfocusout={(event) => {
     if (el.contains(event.relatedTarget)) return;
     el.open = false;

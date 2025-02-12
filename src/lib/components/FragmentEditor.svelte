@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import debounce from 'lodash/debounce';
-  import TextFragmentEditor from './TextFragmentEditor.svelte';
-  import FormRendered from './FormRendered.svelte';
-  import SelectDocument from './SelectDocument.svelte';
-  import TodoListFragmentEditor from './TodoListFragmentEditor.svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import debounce from "lodash/debounce";
+  import TextFragmentEditor from "./TextFragmentEditor.svelte";
+  import FormRendered from "./FormRendered.svelte";
+  import SelectDocument from "./SelectDocument.svelte";
+  import TodoListFragmentEditor from "./TodoListFragmentEditor.svelte";
   import {
     globals,
     buildUniqueId,
@@ -17,9 +17,9 @@
     type TextType,
     type TodolistType,
     type Database
-  } from '$lib/db';
-  import { clearSubscriptions, getTodoListFromMarkdown } from '$lib/ui';
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  } from "$lib/db";
+  import { clearSubscriptions, getTodoListFromMarkdown } from "$lib/ui";
+  import { createEventDispatcher, onDestroy } from "svelte";
   const dispatch = createEventDispatcher<{
     update: { note: DocumentDocument };
   }>();
@@ -35,7 +35,7 @@
   let db = globals.db;
   let todolistKey = $state(0);
   let todolistFromText: TodolistType | null = $state(
-    getTodoListFromMarkdown(note?.fragments?.text?.content || '', buildUniqueId)
+    getTodoListFromMarkdown(note?.fragments?.text?.content || "", buildUniqueId)
   );
   let subscriptions = [];
 
@@ -49,13 +49,13 @@
       note = await db.documents.insert(noteData);
     }
     let updateData = {};
-    updateData['title'] = title || null;
+    updateData["title"] = title || null;
     updateData[`modified_at`] = new Date().toISOString();
     await note.incrementalUpdate({
       $set: getNoteUpdateData(note, updateData)
     });
     note = await note.getLatest();
-    dispatch('update', { note });
+    dispatch("update", { note });
   }
   async function updateCollection(collection: string) {
     if (!note) {
@@ -64,12 +64,12 @@
       note = await db.documents.insert(noteData);
     }
     let updateData = {};
-    updateData['col'] = collection || null;
+    updateData["col"] = collection || null;
     await note.incrementalUpdate({
       $set: getNoteUpdateData(note, updateData)
     });
     note = await note.getLatest();
-    dispatch('update', { note });
+    dispatch("update", { note });
   }
   async function updateFragment(
     fragmentType: string,
@@ -87,7 +87,7 @@
       $set: getNoteUpdateData(note, updateData)
     });
     note = await note.getLatest();
-    dispatch('update', { note });
+    dispatch("update", { note });
   }
   onDestroy(() => {
     clearSubscriptions(subscriptions);
@@ -96,19 +96,19 @@
 
 <div class="flow">
   <div class="form__field">
-    <label for="note-title">{$_('Titre', '')}</label>
+    <label for="note-title">{$_("Titre", "")}</label>
     <input
       type="text"
       id="note-title"
       name="note-title"
-      value={note?.title || ''}
+      value={note?.title || ""}
       oninput={debounce(async (e) => {
         await updateTitle(e.target.value);
       }, 300)}
     />
   </div>
   <div class="form__field">
-    <label for="note-collection">{$_('Collection', '')}</label>
+    <label for="note-collection">{$_("Collection", "")}</label>
     <SelectDocument
       id="note-collection"
       name="note-collection"
@@ -116,9 +116,9 @@
       onchange={async (e) => {
         await updateCollection(e.target.value);
       }}
-      findOptions={{ selector: { type: 'collection' }, sort: [{ title: 'asc' }] }}
+      findOptions={{ selector: { type: "collection" }, sort: [{ title: "asc" }] }}
       choiceConverter={(c) => {
-        return { value: c.id, text: `${c.data.emoji || '📋️'} ${c.title}` };
+        return { value: c.id, text: `${c.data.emoji || "📋️"} ${c.title}` };
       }}
     ></SelectDocument>
   </div>
@@ -130,7 +130,7 @@
       id={note.fragments.form.id}
       ignoredEntryId={note.id}
       onsubmit={async (values: object) => {
-        updateFragment('form', {
+        updateFragment("form", {
           id: note.fragments.form.id,
           data: values,
           annotations: note.fragments.form.annotations || {}
@@ -144,12 +144,12 @@
     fragment={note?.fragments?.text || getNewTextFragment()}
     fieldId={`note-text-${id}`}
     on:update={debounce((event) => {
-      updateFragment('text', event.detail.fragment);
+      updateFragment("text", event.detail.fragment);
       if (!note?.fragments?.todolist) {
         todolistFromText = getTodoListFromMarkdown(event.detail.fragment.content, buildUniqueId);
       }
     }, 200)}
-    on:delete={(event) => updateFragment('text', undefined)}
+    on:delete={(event) => updateFragment("text", undefined)}
   />
 
   {#if todolistFromText && !note?.fragments?.todolist}
@@ -157,11 +157,11 @@
       type="button"
       class="button__link"
       onclick={async () => {
-        await updateFragment('todolist', todolistFromText);
+        await updateFragment("todolist", todolistFromText);
         todolistKey += 1;
       }}
     >
-      {$_('Charger la liste de tâche depuis le texte', '')}
+      {$_("Charger la liste de tâche depuis le texte", "")}
     </button>
   {/if}
   {#key todolistKey}
@@ -170,8 +170,8 @@
       editText={true}
       fragment={note?.fragments?.todolist || getNewTodoListFragment()}
       autofocus={false}
-      on:update={debounce((event) => updateFragment('todolist', event.detail.fragment), 200)}
-      on:delete={(event) => updateFragment('todolist', undefined)}
+      on:update={debounce((event) => updateFragment("todolist", event.detail.fragment), 200)}
+      on:delete={(event) => updateFragment("todolist", undefined)}
     />
   {/key}
 </div>

@@ -1,5 +1,5 @@
 <script>
-  import MainNavigation from '$lib/components/MainNavigation.svelte';
+  import MainNavigation from "$lib/components/MainNavigation.svelte";
   /**
    * @typedef {Object} Props
    * @property {import('svelte').Snippet} [children]

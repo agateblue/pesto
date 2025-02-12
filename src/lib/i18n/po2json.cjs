@@ -2,14 +2,14 @@
 
 // from https://github.com/rgglez/svelte-i18n-gettext/blob/main/bin/po2json.cjs
 
-const { program } = require('commander');
-const gettextParser = require('gettext-parser');
-const fs = require('fs');
+const { program } = require("commander");
+const gettextParser = require("gettext-parser");
+const fs = require("fs");
 
 program
-  .option('-i, --input <input>', 'input PO file')
-  .option('-o, --output <output>', 'output JSON file')
-  .option('-v, --verbose', 'verbose?');
+  .option("-i, --input <input>", "input PO file")
+  .option("-o, --output <output>", "output JSON file")
+  .option("-v, --verbose", "verbose?");
 
 program.parse();
 

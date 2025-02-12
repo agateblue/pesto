@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { _, _n } from '$lib/i18n/index.svelte';
-  import { createEventDispatcher } from 'svelte';
-  import TodoRow from './TodoRow.svelte';
-  import { writable } from 'svelte/store';
-  import cloneDeep from 'lodash/cloneDeep';
-  import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from '$lib/db';
-  import { syncPropertiesWithExternalChanges, clearSubscriptions } from '$lib/ui';
-  import { onDestroy } from 'svelte';
+  import { _, _n } from "$lib/i18n/index.svelte";
+  import { createEventDispatcher } from "svelte";
+  import TodoRow from "./TodoRow.svelte";
+  import { writable } from "svelte/store";
+  import cloneDeep from "lodash/cloneDeep";
+  import { getNewTodo, type TodolistType, type TodoType, buildUniqueId } from "$lib/db";
+  import { syncPropertiesWithExternalChanges, clearSubscriptions } from "$lib/ui";
+  import { onDestroy } from "svelte";
   const dispatch = createEventDispatcher<{
     update: { fragment: TodolistType };
     delete: {};
@@ -49,7 +49,7 @@
 
   onDestroy(clearSubscriptions(subscriptions));
   function handleChange() {
-    dispatch('update', { fragment: { ...fragment, done, todos, column } });
+    dispatch("update", { fragment: { ...fragment, done, todos, column } });
   }
   function updateTodo(index: number, todo: TodoType | null) {
     todos = cloneDeep(todos);
@@ -98,7 +98,7 @@
 
 {#if todos[0]?.text?.trim() && columns}
   <div class="form__field">
-    <label for="todolist-column">{$_('Colonne', 'Tableau')}</label>
+    <label for="todolist-column">{$_("Colonne", "Tableau")}</label>
     <select
       name="todolist-column"
       id="todolist-column"
