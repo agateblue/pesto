@@ -226,7 +226,7 @@
               aria-busy={column.isloading}
               aria-live="polite"
             >
-              <div class="flex__row flex__justify-between flex__align-center">
+              <div class="p__block-3 flex__row flex__justify-between flex__align-center">
                 <h3 class="m__block-0">{column.name}</h3>
 
                 <button

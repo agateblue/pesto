@@ -91,7 +91,7 @@
           {/if}
         </DialogForm>
       </header>
-      <div class="scroll p__inline-2">
+      <div class="scroll p__block-2 p__inline-2">
         <div class="grid grid__gap">
           {#each forms as form}
             <FormRendered

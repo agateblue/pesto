@@ -26,7 +26,7 @@
 
       <div class="scroll">
         {#key note._rev}
-          <div class="wrapper p__inline-3">
+          <div class="wrapper p__inline-3 p__block-3">
             <RenderedNote
               {note}
               limitSize={false}
