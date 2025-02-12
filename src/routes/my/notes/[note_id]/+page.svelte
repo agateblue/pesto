@@ -5,13 +5,14 @@
   import NoteForm from "$lib/components/NoteForm.svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import type { DocumentDocument } from "$lib/db.js";
-
+  import { formatDate, type DocumentDocument } from "$lib/db.js";
+  import { title } from "$lib/store";
   let { data } = $props();
 
   let note: DocumentDocument = $state(data.note);
   let viewQuery: "detail" | "edit" = $state("detail");
 
+  title.set(note.title || formatDate(note.created_at))
   $effect(() => {
     viewQuery = $page.url.searchParams.get("view") || "detail";
   });

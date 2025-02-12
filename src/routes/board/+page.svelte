@@ -20,7 +20,8 @@
 
   import { flip } from "svelte/animate";
   import { dragHandle, dragHandleZone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
-
+  import { title } from "$lib/store";
+  title.set($_("Tableau", ""))
   async function handleDndConsider(e, column: BoardColumn) {
     column.cards = e.detail.items;
   }
@@ -164,7 +165,7 @@
     <div class="scroll__wrapper">
       <header class="flex__row flex__justify-between flex__align-center p__inline-3">
         <MainNavigationToggle class="layout__multi-hidden" />
-        <h2 class="flex__grow">Tableau</h2>
+        <h2 class="flex__grow">{$_("Tableau", "")}</h2>
         {#snippet settingsIcon()}
           <IconaMoonSettings
             role="presentation"

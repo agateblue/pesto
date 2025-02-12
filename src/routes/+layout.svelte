@@ -7,9 +7,10 @@
   import { globals } from "$lib/db";
   import { languagesById, defaultLanguage } from "$lib/i18n";
   import { onMount } from "svelte";
+	import { title } from "$lib/store";
 
   import { lang, parsedTranslations } from "$lib/i18n/stores";
-
+  title.set("")
   /**
    * @typedef {Object} Props
    * @property {import('svelte').Snippet} [children]
@@ -69,5 +70,9 @@
     document.documentElement.setAttribute("lang", $lang);
   });
 </script>
+
+<svelte:head>
+	<title>{$title}</title>
+</svelte:head>
 
 {@render children?.()}

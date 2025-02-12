@@ -22,7 +22,8 @@
   } from "$lib/db";
   import { onDestroy } from "svelte";
   import sortBy from "lodash/sortBy";
-
+  import { title } from "$lib/store";
+  title.set($_("Formulaires", ""))
   let editedForm: FormConfiguration | null = $state(null);
   let subscriptions = [];
   let forms: DocumentType = $state([]);

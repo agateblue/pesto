@@ -7,9 +7,9 @@
   import NoteList from "$lib/components/NoteList.svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
-
   import { updateURLParam } from "$lib/ui";
   import { tick } from "svelte";
+  import { title } from "$lib/store.js";
 
   let { data, children } = $props();
 
@@ -26,6 +26,11 @@
     goto(`?${params.toString()}`);
   }
   $effect(() => {
+    if (data.collection?.id) {
+      title.set(data.collection.title)
+    } else {
+      title.set($_("Notes", ""))
+    }
     searchQuery = $page.url.searchParams.get("q") || "";
     orderQuery = $page.url.searchParams.get("o") || "id:desc";
     action = $page.url.searchParams.get("action") || "";

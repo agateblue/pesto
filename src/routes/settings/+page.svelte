@@ -20,7 +20,8 @@
     handleExportPesto,
     handleExportTempo
   } from "$lib/replication";
-
+  import { title } from "$lib/store";
+  title.set($_("Réglages", ""))
   let replications: AnyReplication[] = $state([]);
   let newReplication = $state(null);
   let isLoadingPestoServerInfo = $state(false);
