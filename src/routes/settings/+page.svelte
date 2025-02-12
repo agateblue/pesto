@@ -260,7 +260,7 @@
               <input type="checkbox"
                 name="telemetry"
                 id="telemetry"
-                value={globals.uiState.telemetryEnabled}
+                checked={globals.uiState.telemetryEnabled === undefined ? true : globals.uiState.telemetryEnabled}
                 oninput={(e) => globals.uiState.set("telemetryEnabled", () => e.target.checked)}
               />
               <label for="telemetry">{$_("Partager les données d'utilisation", "")}</label>
