@@ -18,18 +18,13 @@
     globals,
     getNewNote,
     createOrUpdateSetting,
-    getSetting,
     getNewFormFragment
   } from '$lib/db';
   import { onDestroy } from 'svelte';
   import sortBy from 'lodash/sortBy';
 
   let editedForm: FormConfiguration | null = $state(null);
-  let webhookUrl = $state('');
   let subscriptions = [
-    getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
-      webhookUrl = s?.data?.url || '';
-    })
   ];
   let forms: DocumentType = $state([]);
   function loadForms() {
@@ -97,41 +92,6 @@
           {/if}
         </DialogForm>
 
-        {#snippet settingsIcon()}
-          <IconaMoonSettings
-            role="presentation"
-            class=" icon__size-3"
-            height="none"
-            width="none"
-            alt=""
-          />
-        {/snippet}
-        <DialogForm
-          anchorClass="button__icon"
-          anchor={settingsIcon}
-          anchorLabel={$_('Réglages du formulaire', '')}
-          title={$_('Réglages du formulaire', '')}
-          onsubmit={async (e: SubmitEvent) => {
-            e.preventDefault();
-            await createOrUpdateSetting('settings:form-webhook-url', { url: webhookUrl });
-          }}
-        >
-          <div class="form__field">
-            <label for="form-webhook-url">{$_('URL de webhook', '')}</label>
-            <input
-              name="form-webhook-url"
-              id="form-webhook-url"
-              type="url"
-              bind:value={webhookUrl}
-            />
-            <p class="form__help">
-              {$_(
-                'Notifier une URL via une requête POST lorsque une entrée de formulaire est créée, modifiée ou supprimée',
-                ''
-              )}
-            </p>
-          </div>
-        </DialogForm>
       </header>
       <div class="scroll p__inline-2">
         <div class="grid grid__gap">
@@ -140,7 +100,6 @@
               elClass="card card__narrow | flow"
               form={form.data}
               id={form.id}
-              {webhookUrl}
               onsubmit={async (values: object) => {
                 let noteData = getNewNote();
                 noteData.fragments = {

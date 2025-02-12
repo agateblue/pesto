@@ -12,7 +12,6 @@
     getNewTextFragment,
     getNewTodoListFragment,
     getNoteUpdateData,
-    getSetting,
     type DocumentDocument,
     type DocumentType,
     type TextType,
@@ -38,12 +37,7 @@
   let todolistFromText: TodolistType | null = $state(
     getTodoListFromMarkdown(note?.fragments?.text?.content || '', buildUniqueId)
   );
-  let webhookUrl = $state('');
-  let subscriptions = [
-    getSetting('settings:form-webhook-url')?.$.subscribe((s) => {
-      webhookUrl = s?.data?.url || '';
-    })
-  ];
+  let subscriptions = [];
 
   async function updateTitle(title: string) {
     if (!note && !title.trim()) {
@@ -135,7 +129,6 @@
       form={globals.forms[note.fragments.form.id]}
       id={note.fragments.form.id}
       ignoredEntryId={note.id}
-      {webhookUrl}
       onsubmit={async (values: object) => {
         updateFragment('form', {
           id: note.fragments.form.id,

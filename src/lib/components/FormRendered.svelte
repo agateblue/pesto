@@ -15,7 +15,6 @@
     showActions: boolean;
     values?: object;
     elClass?: string;
-    webhookUrl?: string;
     ignoredEntryId?: string;
   }
 
@@ -27,7 +26,6 @@
     showActions = true,
     values,
     elClass,
-    webhookUrl,
     ignoredEntryId
   } = $props();
 
@@ -88,15 +86,6 @@
     onsubmit={(e) => {
       e.preventDefault();
       onsubmit(cloneDeep(v));
-      if (webhookUrl) {
-        fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({})
-        });
-      }
     }}
   >
     {#each form.fields as field, i (i)}
