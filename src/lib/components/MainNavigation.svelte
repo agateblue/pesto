@@ -12,7 +12,7 @@
   import IconaMoonApps from "virtual:icons/iconamoon/apps";
   import IconaMoonClock from "virtual:icons/iconamoon/clock";
   import IconaMoonFileDocument from "virtual:icons/iconamoon/file-document";
-  import IconaMoonStarFill from "virtual:icons/iconamoon/star-fill";
+  import IconaMoonStar from "virtual:icons/iconamoon/star";
   import IconaMoonCategory from "virtual:icons/iconamoon/category";
   import IconaMoonMenuKebabVerticalSquare from "virtual:icons/iconamoon/menu-kebab-vertical-square";
 
@@ -137,7 +137,7 @@
       </li>
       <li>
         <MainNavigationLink href="/my?q=starred:true">
-          <IconaMoonStarFill role="presentation" alt="" /><span class="flex__grow"
+          <IconaMoonStar role="presentation" alt="" /><span class="flex__grow"
             >{$_("Favoris", "")}</span
           >
           <span class="badge float__end">{totalStarred}</span>
