@@ -251,7 +251,7 @@ body {
   aside,
   main {
     display: var(--display, block);
-    overflow: scroll;
+    overflow: auto;
   }
 }
 
